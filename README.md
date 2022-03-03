@@ -15,7 +15,7 @@ GitHub page for the 4th semester project on SDU
 * [Sebastian Christensen Mondrup](https://github.com/SebMon)
 
 ### Branch naming convention
-You should name your branch #<issuenumber>-<some-description>
+You should name your branch **#**\<**issuenumber**\>-\<**some-description**\>
   
 ### Linking issues and branchen
 When you have created your branch, create a pull request (draft) for the branch and link the pull request to the issue
