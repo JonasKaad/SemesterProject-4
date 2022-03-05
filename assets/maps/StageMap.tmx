@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<map version="1.8" tiledversion="1.8.2" orientation="orthogonal" renderorder="right-down" width="32" height="32" tilewidth="32" tileheight="32" infinite="0" nextlayerid="4" nextobjectid="1">
+ <tileset firstgid="1" source="TX_Tileset_Grass.tsx"/>
+ <tileset firstgid="65" source="TX_Plant.tsx"/>
+ <tileset firstgid="321" source="TX_Props.tsx"/>
+ <layer id="1" name="Tile Layer 1" width="32" height="32">
+  <data encoding="base64" compression="zlib">
+   eJzNlt0KwjAMhYuPsLFdWCy4CxUvVPr+D2cHDRxi0zbdnxeHQKXmfEvatDPG9EHdQfEcZA+MR3Fr+YegUck3VOyr9Un/o+G7gAdpfy3H2MBvowf0MWb46XfOQetuQZ25hxR/ql7IvrTf6Vs4gZ97xLq7Rm5t/6PHUt9PUVudf59RD/m3Ov9znqegk5K/V/IPhfxeyW+F9dx59yyfZ2tafsyd45fyS/y3gu5BjxjJ0xJ+H+t/jZoyegW9gz4x1vDT+avtP+m+c1H87lpr/pfqjx54L64x/2v6nzzgHbYXvzW/ddibH/tpFs6/s5KXz0fN+ScPFMmb5v2Ds0nDz88c9kHNu4/nbp1/qTs5x4t5kVtbf4k/VX8p7xrzP+WJ3/s5XtyzBX+JF/e0vn9q65+LrfxdwkvLvUff8ih+8tDy/vs3/i8EE2L9
+  </data>
+ </layer>
+ <layer id="2" name="trees" width="32" height="32">
+  <data encoding="base64" compression="zlib">
+   eJzt1jtSwkAcx/HkaLxaENEGHHwgDTAIPhqxUaFRS0vKlDkCNxA4AXAC4Ax+LXYkO1nzkizF/mY+A/mz2X82bAYsy8Tk8OLovgDLew1V1HCmqX8LbXRS7L+bRwzwlGLPsf37/g3v+JDq+4yr6KOqByWDLHLIoxAwfrLT58v2r/ulyOclHEnjyjhGBSc4VZwvP3tT5plhHnLddcad40Iaf4krNHCNZoi5fta9wBIr23sfRD6lWpfjG/Skeh+3uMM9HhQ9xfrFPlvzusHW9taj5hkveMUQI0VfEVfx/cfdf1Gj2mdB+8/E5L9+v5POo/N/RNzeToJz/5pTR18TE5PDzTdPOy+7
+  </data>
+ </layer>
+ <layer id="3" name="ues" width="32" height="32">
+  <data encoding="base64" compression="zlib">
+   eJztzcENABAABEF1ogJUgApQtGtCzmMn2feGAAAAfhBVUtn0L6qqZvp3NdQ0/Zfa6pj+AAC8dgHf2AVl
+  </data>
+ </layer>
+</map>
