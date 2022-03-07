@@ -1,6 +1,8 @@
 # SemesterProject-4
 GitHub page for the 4th semester project on SDU
 
+<img src="./assets/icons/cat-icon-fullsize.png" alt="Modulemon Icon" width="150" height="150" />
+
 ## Authors
 * [Alexander Vinding Nørup](https://github.com/AlexanderNorup)
 
