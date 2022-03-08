@@ -43,6 +43,6 @@ class AgeCalculatorTest {
          int age = calculator.calculateAge(LocalDate.of(1999, Month.SEPTEMBER, 15));
 
          // Assert
-         assertEquals(age, 22 , "at March 1st 2022 a guy born in september 1999 should be 22 years old");
+         assertEquals(22, age , "at March 1st 2022 a guy born in september 1999 should be 22 years old");
      }
 }
