@@ -15,6 +15,6 @@ public class AgeCalculator {
 
     public int calculateAge(LocalDate birthdate){
         LocalDateTime currentTime = _dateTimeProvider.getCurrentTime();
-        return (int) birthdate.until(currentTime, ChronoUnit.YEARS) + 2;
+        return (int) birthdate.until(currentTime, ChronoUnit.YEARS);
     }
 }
