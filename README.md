@@ -18,6 +18,8 @@ GitHub page for the 4th semester project on SDU
 
 ### Branch naming convention
 You should name your branch **#**\<**issuenumber**\>-\<**some-description**\>
-  
+
+TIP: If using the CLI, you need to escape the `#`. So for example changing to a branch should be `git checkout \#7-Setup-Project`
+
 ### Linking issues and branchen
 When you have created your branch, create a pull request (draft) for the branch and link the pull request to the issue
