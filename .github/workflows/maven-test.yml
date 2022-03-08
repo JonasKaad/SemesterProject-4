@@ -22,10 +22,10 @@ jobs:
           java-version: '16'
           distribution: 'temurin'
           cache: maven
-      - name: Test with Maven
+      - name: Build and Test with Maven
         run: mvn --batch-mode --update-snapshots verify
       - name: Copy artifacts
-        run: mkdir staging && cp target/*.jar staging
+        run: mkdir staging && find ./ -type f -name "*.jar" -exec /bin/cp {} staging/ \; -print
       - name: Upload artifacts
         uses: actions/upload-artifact@v3
         with:
