@@ -24,10 +24,15 @@ jobs:
           cache: maven
       - name: Build and Test with Maven
         run: mvn --batch-mode --update-snapshots verify
-      - name: Copy artifacts
-        run: mkdir staging && find ./ -type f -name "*.jar" -exec /bin/cp {} staging/ \; -print
-      - name: Upload artifacts
-        uses: actions/upload-artifact@v3
-        with:
-          name: Package
-          path: staging
+      - name: Publish Test Report
+        if: ${{ always() }}
+        uses: scacap/action-surefire-report@v1.0.5
+
+# UNCOMMENT FOR ARTIFACT PUBLISHING
+#      - name: Copy artifacts
+#        run: mkdir staging && find ./ -type f -name "*.jar" -exec /bin/cp {} staging/ \; -print
+#      - name: Upload artifacts
+#        uses: actions/upload-artifact@v3
+#        with:
+#          name: Package
+#          path: staging
