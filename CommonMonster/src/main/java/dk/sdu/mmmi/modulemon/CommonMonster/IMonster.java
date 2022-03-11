@@ -13,6 +13,6 @@ public interface IMonster {
     int getSpeed();
     Texture getSprite();
     MonsterType getMonsterType();
-    ArrayList<IMonsterMove> actions();
+    ArrayList<IMonsterMove> getMoves();
 
 }
