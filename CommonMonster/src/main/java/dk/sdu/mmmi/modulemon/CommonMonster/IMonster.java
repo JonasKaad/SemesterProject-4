@@ -8,11 +8,12 @@ public interface IMonster {
 
     String getName();
     int getHitPoints();
+    int setHitPoint();
     int getAttack();
     int getDefence();
     int getSpeed();
     Texture getSprite();
     MonsterType getMonsterType();
     List<IMonsterMove> getMoves();
-
+    int takeDamage();
 }
