@@ -5,11 +5,8 @@ import dk.sdu.mmmi.modulemon.CommonMonster.IMonster;
 import java.util.List;
 
 public interface IBattleParticipant {
-    BattleParticipantType getParticipantType();
-
+    boolean isPlayerControlled();
     IMonster getActiveMonster();
-
     void setActiveMonster(IMonster monster);
-
     List<IMonster> getMonsterTeam();
 }
