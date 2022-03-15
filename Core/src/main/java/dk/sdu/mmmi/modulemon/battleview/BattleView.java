@@ -1,11 +1,9 @@
 package dk.sdu.mmmi.modulemon.battleview;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.Color;
-import com.badlogic.gdx.graphics.g2d.BitmapFont;
-import com.badlogic.gdx.graphics.g2d.GlyphLayout;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
-import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGenerator;
 import dk.sdu.mmmi.modulemon.CommonBattle.IBattleSimulation;
 import dk.sdu.mmmi.modulemon.CommonBattle.IBattleView;
 import dk.sdu.mmmi.modulemon.CommonBattleParticipant.IBattleParticipant;
@@ -14,25 +12,28 @@ import dk.sdu.mmmi.modulemon.battleview.animations.BattleViewAnimation;
 import dk.sdu.mmmi.modulemon.battleview.scenes.BattleScene;
 import dk.sdu.mmmi.modulemon.gamestates.GameState;
 import dk.sdu.mmmi.modulemon.main.Game;
+import dk.sdu.mmmi.modulemon.managers.GameKeys;
 import dk.sdu.mmmi.modulemon.managers.GameStateManager;
 
 import java.util.LinkedList;
 import java.util.Queue;
-import java.util.concurrent.ArrayBlockingQueue;
 
 public class BattleView extends GameState implements IBattleView {
     private IBattleSimulation _battleSimulation;
     private BattleScene _battleScene;
+    private Sound _battleMusic;
+    private long bgm_loopingId;
     private Queue<BattleViewAnimation> blockingAnimations;
     private Queue<BattleViewAnimation> backgroundAnimations;
+
+    private String[] actions = new String[]{"Fight", "Switch", "Quit"};
+    private int selectedAction = 0;
 
 
     /**
      * Creates the necessary variables used for custom fonts.
      */
-    private GlyphLayout glyphLayout;
     private SpriteBatch spriteBatch;
-    private BitmapFont menuOptionsFont;
 
     public BattleView(GameStateManager gsm) {
         super(gsm);
@@ -47,6 +48,8 @@ public class BattleView extends GameState implements IBattleView {
         _battleSimulation.StartBattle(player, enemy);
         blockingAnimations = new LinkedList<>();
         backgroundAnimations = new LinkedList<>();
+        bgm_loopingId = _battleMusic.loop();
+
         BattleViewAnimation openingAnimation = new BattleSceneOpenAnimation(_battleScene);
         openingAnimation.start();
         blockingAnimations.add(openingAnimation);
@@ -57,20 +60,9 @@ public class BattleView extends GameState implements IBattleView {
      */
     @Override
     public void init() {
+        _battleMusic = Gdx.audio.newSound(Gdx.files.internal("assets/music/battle_music.mp3"));
         spriteBatch = new SpriteBatch();
-        glyphLayout = new GlyphLayout();
         _battleScene = new BattleScene();
-
-        FreeTypeFontGenerator fontGenerator = new FreeTypeFontGenerator(Gdx.files.internal("assets/fonts/Roboto-Medium.ttf"));
-
-        // Font size
-        FreeTypeFontGenerator.FreeTypeFontParameter parameter = new FreeTypeFontGenerator.FreeTypeFontParameter();
-        parameter.size = 34;
-
-        // Sets the @menuOptionsFont to use our custom font file with the chosen font size
-        menuOptionsFont = fontGenerator.generateFont(parameter);
-        fontGenerator.dispose();
-
         init(new MockPlayer(), new MockEnemy());
     }
 
@@ -79,14 +71,7 @@ public class BattleView extends GameState implements IBattleView {
         spriteBatch.setProjectionMatrix(Game.cam.combined);
         if (_battleSimulation == null) {
             spriteBatch.begin();
-            glyphLayout.setText(menuOptionsFont, "Waiting for battle participants");
-            menuOptionsFont.setColor(Color.WHITE);
-            menuOptionsFont.draw(
-                    spriteBatch,
-                    "Waiting for battle participants",
-                    (Game.WIDTH - glyphLayout.width) / 2f,
-                    (Game.HEIGHT - glyphLayout.height) / 2f
-            );
+            TextUtils.getInstance().drawBigRoboto(spriteBatch, "Waiting for battle participants", Color.WHITE, 100, Game.HEIGHT / 2f);
             spriteBatch.end();
             return;
         }
@@ -97,16 +82,35 @@ public class BattleView extends GameState implements IBattleView {
             currentAnimation.update(dt);
             if (!currentAnimation.isRunning()) {
                 //If the animation is done, then we remove the animation from the queue
+                System.out.println("Animation is done");
                 blockingAnimations.remove();
                 BattleViewAnimation nextAnimation = blockingAnimations.peek();
                 if (nextAnimation != null) {
                     nextAnimation.start();
-                    ;
                 }
             }
 
             _battleScene.draw();
             return; //The animation is blocking. We don't continue
+        }
+
+        //Take input
+        _battleScene.setTextToDisplay("Choose an action!");
+        _battleScene.setActions(this.actions);
+        if (GameKeys.isDown(GameKeys.DOWN)) {
+            this._battleScene.setSelectedActionIndex((++selectedAction % actions.length));
+        }
+        if (GameKeys.isDown(GameKeys.UP)) {
+            this._battleScene.setSelectedActionIndex((--selectedAction % actions.length));
+        }
+        if (GameKeys.isDown(GameKeys.ENTER)) {
+            String selectedAction = actions[this.selectedAction % actions.length];
+            System.out.println("DU HAR VALGT: " + selectedAction);
+            _battleScene.setTextToDisplay("You have chosen: " + selectedAction);
+            if (selectedAction.equalsIgnoreCase("quit")) {
+                System.out.println("Bye!!");
+                Gdx.app.exit();
+            }
         }
 
 
@@ -117,6 +121,7 @@ public class BattleView extends GameState implements IBattleView {
     public void draw() {
     }
 
+
     @Override
     public void handleInput() {
 
@@ -124,6 +129,6 @@ public class BattleView extends GameState implements IBattleView {
 
     @Override
     public void dispose() {
-
+        _battleMusic.stop(bgm_loopingId);
     }
 }

@@ -20,6 +20,9 @@ public class GameInputManager extends InputAdapter {
         if (k == Input.Keys.ENTER) {
             GameKeys.setKey(GameKeys.ENTER, true);
         }
+        if (k == Input.Keys.ESCAPE) {
+            GameKeys.setKey(GameKeys.ESCAPE, true);
+        }
         if (k == Input.Keys.E) {
             GameKeys.setKey(GameKeys.E, true);
         }

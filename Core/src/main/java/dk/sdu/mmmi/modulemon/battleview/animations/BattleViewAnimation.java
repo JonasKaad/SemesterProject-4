@@ -1,5 +1,7 @@
 package dk.sdu.mmmi.modulemon.battleview.animations;
 
+import com.badlogic.gdx.utils.TimeUtils;
+
 import java.util.List;
 import java.util.logging.Logger;
 
@@ -8,13 +10,14 @@ public abstract class BattleViewAnimation {
     protected int[] Timeline;
     protected List<float[]> States;
     private int currentTimelineIndex;
+    private long animationStartMillis;
     private long millisecondCounter;
     private boolean isRunning = false;
     protected IAnimationCurve animationCurve = AnimationCurves.Linear();
 
-    protected void tick(float dt) {
+    protected void tick() {
         if (isRunning)
-            millisecondCounter += dt / 1000f;
+            millisecondCounter = TimeUtils.timeSinceMillis(animationStartMillis);
     }
 
     public abstract void update(float dt);
@@ -51,6 +54,7 @@ public abstract class BattleViewAnimation {
 
         currentTimelineIndex = 0;
         millisecondCounter = 0;
+        animationStartMillis = TimeUtils.millis();
         isRunning = true;
     }
 
@@ -62,49 +66,36 @@ public abstract class BattleViewAnimation {
         return this.isRunning;
     }
 
-    private void setCorrectTimelineIndex() {
-        for (int i = 0; i < Timeline.length - 1; i++) {
-            if (Timeline[i] >= millisecondCounter) {
-                currentTimelineIndex = i;
-                return;
-            }
-        }
-        //Fallback, should never be hit
-        LOGGER.warning("Could not determine the correct timeline index");
-        currentTimelineIndex = 0;
-    }
-
     protected float[] getCurrentStates() {
-        setCorrectTimelineIndex();
         int fuse = 0;
         int startOfCurrentState;
         int startOfNextState = 0;
         do {
             if (millisecondCounter >= getAnimationLength()) {
                 isRunning = false;
-                return States.get(Timeline[Timeline.length - 1]);
+                return States.get(States.size() - 1);
             }
 
             startOfCurrentState = Timeline[currentTimelineIndex];
-            if(startOfCurrentState > millisecondCounter){
+            startOfNextState = Timeline[currentTimelineIndex + 1];
+            if (startOfCurrentState > millisecondCounter || startOfNextState < millisecondCounter) {
                 currentTimelineIndex++;
+                startOfNextState = 0;
                 continue;
             }
-            startOfNextState = Timeline[currentTimelineIndex + 1];
-        }while(startOfNextState == 0 || ++fuse < 20);
+        } while (startOfNextState == 0 || ++fuse < 20);
 
 
         float[] currentStates = States.get(currentTimelineIndex);
-        float[] nextStates = States.get(currentTimelineIndex+1);
+        float[] nextStates = States.get(currentTimelineIndex + 1);
 
-        long timeElapsed = startOfCurrentState + millisecondCounter;
-        float stateTransitionProgress = 0;
-        if(timeElapsed != 0) {
-            stateTransitionProgress = startOfNextState / timeElapsed;
-        }
+        float curentStateTime = startOfNextState - startOfCurrentState;
+        float timeLeftOfState = curentStateTime - (startOfNextState - millisecondCounter);
+
+        float stateTransitionProgress = timeLeftOfState / curentStateTime;
 
         float[] intermediateValues = new float[currentStates.length];
-        for(int i = 0; i < currentStates.length; i++){
+        for (int i = 0; i < currentStates.length; i++) {
             intermediateValues[i] = animationCurve.getValue(currentStates[i], nextStates[i], stateTransitionProgress);
         }
 
