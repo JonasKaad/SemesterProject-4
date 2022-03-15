@@ -97,13 +97,25 @@ public class BattleView extends GameState implements IBattleView {
         //Take input
         _battleScene.setTextToDisplay("Choose an action!");
         _battleScene.setActions(this.actions);
-        if (GameKeys.isDown(GameKeys.DOWN)) {
-            this._battleScene.setSelectedActionIndex((++selectedAction % actions.length));
+        if (GameKeys.isPressed(GameKeys.DOWN)) {
+            if(selectedAction < actions.length-1){
+                selectedAction++;
+            }
+            else{
+                selectedAction = 0;
+            }
+            this._battleScene.setSelectedActionIndex(selectedAction);
         }
-        if (GameKeys.isDown(GameKeys.UP)) {
-            this._battleScene.setSelectedActionIndex((--selectedAction % actions.length));
+        if (GameKeys.isPressed(GameKeys.UP)) {
+            if(selectedAction > 0){
+                selectedAction--;
+            }
+            else{
+                selectedAction = actions.length-1;
+            }
+            this._battleScene.setSelectedActionIndex(selectedAction);
         }
-        if (GameKeys.isDown(GameKeys.ENTER)) {
+        if (GameKeys.isPressed(GameKeys.ENTER)) {
             String selectedAction = actions[this.selectedAction % actions.length];
             System.out.println("DU HAR VALGT: " + selectedAction);
             _battleScene.setTextToDisplay("You have chosen: " + selectedAction);
