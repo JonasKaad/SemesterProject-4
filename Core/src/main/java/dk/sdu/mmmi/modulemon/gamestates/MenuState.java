@@ -152,7 +152,7 @@ public class MenuState extends GameState{
      */
     private void selectOption() {
         if(Objects.equals(menuOptions[currentOption], "Play")){
-            gsm.setState(GameStateManager.PLAY);
+            gsm.setState(GameStateManager.BATTLE);
         }
         if(Objects.equals(menuOptions[currentOption], "Settings")){
             System.out.println("No settings yet, but coming soon™!");

@@ -6,21 +6,17 @@ import com.badlogic.gdx.backends.lwjgl.LwjglApplicationConfiguration;
 
 /**
  * Hello world!
- *
  */
-public class Main
-{
-
-    public static void main( String[] args )
-    {
+public class Main {
+    public static void main(String[] args) {
         Game game = new Game();
 
         LwjglApplicationConfiguration cfg = new LwjglApplicationConfiguration();
         cfg.title = "Modulemon";
-        cfg.width = 1000;
-        cfg.height = 800;
+        cfg.width = 1280;
+        cfg.height = 720;
         cfg.useGL30 = false;
-        cfg.resizable = false;
+        cfg.resizable = true;
         cfg.addIcon("assets/icons/cat-icon.png", Files.FileType.Internal);
 
         new LwjglApplication(game, cfg);
