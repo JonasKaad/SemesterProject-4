@@ -12,6 +12,8 @@
     <modules>
         <module>Core</module>
         <module>Common</module>
+        <module>CommonBattleParticipant</module>
+        <module>CommonBattle</module>
         <module>CommonMonster</module>
         <module>DemoComponent</module>
     </modules>
