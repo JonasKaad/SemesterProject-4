@@ -14,6 +14,7 @@
         <module>Common</module>
         <module>CommonMonster</module>
         <module>DemoComponent</module>
+        <module>Monster</module>
     </modules>
 
     <properties>

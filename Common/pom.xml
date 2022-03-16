@@ -7,7 +7,7 @@
     </parent>
     <modelVersion>4.0.0</modelVersion>
     <artifactId>Common</artifactId>
-    <packaging>jar</packaging>
+    <packaging>pom</packaging>
     
     <build>
         <plugins>
