@@ -23,7 +23,7 @@ public class BattleSceneOpenAnimation extends BattleViewAnimation {
                 850, Gdx.graphics.getHeight() + 500f, //Enemy mon,
                 -500f, 550, //enemy health box,
                 -500f, 300, //player health box,
-               Gdx.graphics.getWidth() + 500, 125  // Action box position
+               Gdx.graphics.getWidth() + 500, 135  // Action box position
         });
 
         States.add(new float[]{
@@ -34,7 +34,7 @@ public class BattleSceneOpenAnimation extends BattleViewAnimation {
                 850, Gdx.graphics.getHeight() + 500f,
                 -500f, 550,
                 -500f, 300,
-                Gdx.graphics.getWidth() + 500, 125
+                Gdx.graphics.getWidth() + 500, 135
         });
 
         States.add(new float[]{
@@ -45,7 +45,7 @@ public class BattleSceneOpenAnimation extends BattleViewAnimation {
                 850, 400,
                 480, 550,
                 100, 300,
-                Gdx.graphics.getWidth() - 300, 125
+                Gdx.graphics.getWidth() - 300, 135
         });
 
         battleScene.setBackdropPosition(new Position(Gdx.graphics.getWidth(), 0));
@@ -54,7 +54,7 @@ public class BattleSceneOpenAnimation extends BattleViewAnimation {
         battleScene.setPlayerMonsterPosition(new Position(300, -500));
         battleScene.setEnemyMonsterPosition(new Position(850, Gdx.graphics.getHeight() + 500));
         battleScene.setEnemyHealthBoxPosition(new Position(Gdx.graphics.getWidth() - 500f, 300));
-        battleScene.setActionBoxPosition(new Position(Gdx.graphics.getWidth() + 500, 125));
+        battleScene.setActionBoxPosition(new Position(Gdx.graphics.getWidth() + 500, 135));
         this._battleScene = battleScene;
     }
 

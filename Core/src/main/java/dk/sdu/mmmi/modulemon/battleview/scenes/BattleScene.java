@@ -60,6 +60,7 @@ public class BattleScene {
         //DRAW THE IMAGES
 
         int textBoxHeight = 100;
+        int borderWidth = 2;
         spriteBatch.begin();
 
         _backdropPosition.updatePosition(_backdrop);
@@ -87,34 +88,49 @@ public class BattleScene {
         shapeRenderer.begin(ShapeRenderer.ShapeType.Filled);
 
         //HP Box
-        shapeRenderer.rect(
+
+        //shapeRenderer.rect(
+        DrawingUtils.borderedRect(
+                shapeRenderer,
                 _enemyHealthBoxPosition.getX(),
                 _enemyHealthBoxPosition.getY(),
-                300, 100
+                300, 100,
+                Color.BLACK, Color.WHITE,
+                borderWidth
         );
 
-        shapeRenderer.rect(
+        DrawingUtils.borderedRect(
+                shapeRenderer,
                 _playerHealthBoxPosition.getX(),
                 _playerHealthBoxPosition.getY(),
-                300, 100
+                350, 100,
+                Color.BLACK, Color.WHITE,
+                borderWidth
         );
 
         //Action box
         if (actions.length > 0) {
             shapeRenderer.setColor(1, 1, 1, _actionBoxAlpha);
-            shapeRenderer.rect(
+            DrawingUtils.borderedRect(
+                    shapeRenderer,
                     _actionBoxPosition.getX(),
                     _actionBoxPosition.getY(),
-                    250, 200
+                    250, 200,
+                    new Color(0, 0, 0, _actionBoxAlpha),
+                    new Color(1, 1, 1, _actionBoxAlpha),
+                    borderWidth
             );
             shapeRenderer.setColor(Color.WHITE);
         }
 
         //Text box
-        shapeRenderer.rect(
+        DrawingUtils.borderedRect(
+                shapeRenderer,
                 20,
                 20,
-                Game.WIDTH - 40, textBoxHeight
+                Game.WIDTH - 40, textBoxHeight,
+                Color.BLACK, Color.WHITE,
+                borderWidth
         );
 
         shapeRenderer.end();
@@ -305,6 +321,6 @@ public class BattleScene {
         _playerMonsterPosition = new Position(300, 80);
         _enemyHealthBoxPosition = new Position(480, 550);
         _playerHealthBoxPosition = new Position(100, 300);
-        _actionBoxPosition = new Position(Game.WIDTH - 300, 125);
+        _actionBoxPosition = new Position(Game.WIDTH - 300, 135);
     }
 }

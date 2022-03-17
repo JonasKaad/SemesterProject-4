@@ -102,6 +102,16 @@ public class BattleView extends GameState implements IBattleView {
 
     @Override
     public void draw() {
+        //Update information
+        IMonster playerActiveMonster = _battleSimulation.getPlayer().getActiveMonster();
+        _battleScene.setPlayerMonsterName(playerActiveMonster.getName());
+        _battleScene.setPlayerHP(Integer.toString(playerActiveMonster.getHitPoints()));
+
+        IMonster enemyActiveMonster = _battleSimulation.getEnemy().getActiveMonster();
+        _battleScene.setEnemyMonsterName(enemyActiveMonster.getName());
+        _battleScene.setEnemyHP(Integer.toString(enemyActiveMonster.getHitPoints()));
+
+        _battleScene.setSelectedActionIndex(selectedAction);
         _battleScene.draw();
     }
 
@@ -114,7 +124,6 @@ public class BattleView extends GameState implements IBattleView {
             return;
         }
         _battleScene.setActionBoxAlpha(1f);
-        _battleScene.setSelectedActionIndex(selectedAction);
 
         if(menuState == MenuState.DEFAULT) {
             _battleScene.setTextToDisplay("Choose an action!");
