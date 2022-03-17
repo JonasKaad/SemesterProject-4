@@ -10,7 +10,6 @@ import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import dk.sdu.mmmi.modulemon.battleview.Position;
 import dk.sdu.mmmi.modulemon.battleview.TextUtils;
 import dk.sdu.mmmi.modulemon.main.Game;
-import org.lwjgl.opengl.GL11;
 
 public class BattleScene {
 
@@ -25,7 +24,8 @@ public class BattleScene {
     private Position _enemyBasePosition;
     private Position _playerMonsterPosition;
     private Position _enemyMonsterPosition;
-    private Position _healthBoxPosition;
+    private Position _enemyHealthBoxPosition;
+    private Position _playerHealthBoxPosition;
     private Position _actionBoxPosition;
     private float _actionBoxAlpha = 1;
 
@@ -88,9 +88,15 @@ public class BattleScene {
 
         //HP Box
         shapeRenderer.rect(
-                _healthBoxPosition.getX(),
-                _healthBoxPosition.getY(),
-                300, 400
+                _enemyHealthBoxPosition.getX(),
+                _enemyHealthBoxPosition.getY(),
+                300, 100
+        );
+
+        shapeRenderer.rect(
+                _playerHealthBoxPosition.getX(),
+                _playerHealthBoxPosition.getY(),
+                300, 100
         );
 
         //Action box
@@ -118,10 +124,10 @@ public class BattleScene {
         spriteBatch.begin();
 
         //Health box
-        textUtils.drawNormalRoboto(spriteBatch, "Opponent: " + this.enemyMonsterName, Color.BLACK, _healthBoxPosition.getX() + 10, _healthBoxPosition.getY() + 386);
-        textUtils.drawNormalRoboto(spriteBatch, "HP: " + this.enemyHP, Color.BLACK, _healthBoxPosition.getX() + 10, _healthBoxPosition.getY() + 356);
-        textUtils.drawNormalRoboto(spriteBatch, "Your monster: " + this.playerMonsterName, Color.BLACK, _healthBoxPosition.getX() + 10, _healthBoxPosition.getY() + 55);
-        textUtils.drawNormalRoboto(spriteBatch, "HP: " + this.playerHP, Color.BLACK, _healthBoxPosition.getX() + 10, _healthBoxPosition.getY() + 25);
+        textUtils.drawNormalRoboto(spriteBatch, "Opponent: " + this.enemyMonsterName, Color.BLACK, _enemyHealthBoxPosition.getX() + 10, _enemyHealthBoxPosition.getY() + 85);
+        textUtils.drawNormalRoboto(spriteBatch, "HP: " + this.enemyHP, Color.BLACK, _enemyHealthBoxPosition.getX() + 10, _enemyHealthBoxPosition.getY() + 55);
+        textUtils.drawNormalRoboto(spriteBatch, "Your monster: " + this.playerMonsterName, Color.BLACK, _playerHealthBoxPosition.getX() + 10, _playerHealthBoxPosition.getY() + 85);
+        textUtils.drawNormalRoboto(spriteBatch, "HP: " + this.playerHP, Color.BLACK, _playerHealthBoxPosition.getX() + 10, _playerHealthBoxPosition.getY() + 55);
 
 
         //Action box
@@ -257,9 +263,22 @@ public class BattleScene {
         this._enemyMonsterPosition = _enemyMonsterPosition;
     }
 
-    public Position getHealthBoxPosition() {
-        return _healthBoxPosition;
+    public Position getEnemyHealthBoxPosition() {
+        return _enemyHealthBoxPosition;
     }
+
+    public void setEnemyHealthBoxPosition(Position _enemyHealthBoxPosition) {
+        this._enemyHealthBoxPosition = _enemyHealthBoxPosition;
+    }
+
+    public Position getPlayerHealthBoxPosition() {
+        return _playerHealthBoxPosition;
+    }
+
+    public void setPlayerHealthBoxPosition(Position _playerHealthBoxPosition) {
+        this._playerHealthBoxPosition = _playerHealthBoxPosition;
+    }
+
 
     public Position getActionBoxPosition() {
         return _actionBoxPosition;
@@ -277,9 +296,6 @@ public class BattleScene {
         this._actionBoxAlpha = _actionBoxOpacity;
     }
 
-    public void setHealthBoxPosition(Position _healthBoxPosition) {
-        this._healthBoxPosition = _healthBoxPosition;
-    }
 
     private void resetPositions() {
         _backdropPosition = new Position(0, 0);
@@ -287,9 +303,8 @@ public class BattleScene {
         _enemyBasePosition = new Position(800, 400);
         _enemyMonsterPosition = new Position(850, 400);
         _playerMonsterPosition = new Position(300, 80);
-        _healthBoxPosition = new Position(100, 300);
+        _enemyHealthBoxPosition = new Position(480, 550);
+        _playerHealthBoxPosition = new Position(100, 300);
         _actionBoxPosition = new Position(Game.WIDTH - 300, 125);
     }
-
-
 }
