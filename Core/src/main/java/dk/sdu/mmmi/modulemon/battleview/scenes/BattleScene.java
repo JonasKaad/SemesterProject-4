@@ -2,6 +2,7 @@ package dk.sdu.mmmi.modulemon.battleview.scenes;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Color;
+import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
@@ -9,7 +10,7 @@ import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import dk.sdu.mmmi.modulemon.battleview.Position;
 import dk.sdu.mmmi.modulemon.battleview.TextUtils;
 import dk.sdu.mmmi.modulemon.main.Game;
-import org.lwjgl.util.glu.Project;
+import org.lwjgl.opengl.GL11;
 
 public class BattleScene {
 
@@ -26,6 +27,7 @@ public class BattleScene {
     private Position _enemyMonsterPosition;
     private Position _healthBoxPosition;
     private Position _actionBoxPosition;
+    private float _actionBoxAlpha = 1;
 
     private String enemyMonsterName;
     private String enemyHP;
@@ -56,6 +58,7 @@ public class BattleScene {
 
     public void draw() {
         //DRAW THE IMAGES
+
         int textBoxHeight = 100;
         spriteBatch.begin();
 
@@ -79,6 +82,8 @@ public class BattleScene {
         //DRAW THE BOXES
         shapeRenderer.setAutoShapeType(true);
         shapeRenderer.setColor(Color.WHITE);
+
+        Gdx.gl.glEnable(GL20.GL_BLEND); //Alows for opacity
         shapeRenderer.begin(ShapeRenderer.ShapeType.Filled);
 
         //HP Box
@@ -90,11 +95,13 @@ public class BattleScene {
 
         //Action box
         if (actions.length > 0) {
+            shapeRenderer.setColor(1, 1, 1, _actionBoxAlpha);
             shapeRenderer.rect(
                     _actionBoxPosition.getX(),
                     _actionBoxPosition.getY(),
                     250, 200
             );
+            shapeRenderer.setColor(Color.WHITE);
         }
 
         //Text box
@@ -120,10 +127,11 @@ public class BattleScene {
         //Action box
         int topActionTextOffset = 150;
         if (actions.length > 0) {
-            textUtils.drawNormalRoboto(spriteBatch, actionTitle, Color.BLACK, _actionBoxPosition.getX() + 10, _actionBoxPosition.getY() + 186);
+            Color actionTextColor = new Color(0,0,0, _actionBoxAlpha);
+            textUtils.drawNormalRoboto(spriteBatch, actionTitle, actionTextColor, _actionBoxPosition.getX() + 10, _actionBoxPosition.getY() + 186);
 
             for (int i = 0; i < actions.length; i++) {
-                textUtils.drawSmallRoboto(spriteBatch, actions[i].toString(), Color.BLACK, _actionBoxPosition.getX() + 60, _actionBoxPosition.getY() + topActionTextOffset - (i * 30));
+                textUtils.drawSmallRoboto(spriteBatch, actions[i].toString(), actionTextColor, _actionBoxPosition.getX() + 60, _actionBoxPosition.getY() + topActionTextOffset - (i * 30));
             }
         }
 
@@ -136,8 +144,10 @@ public class BattleScene {
         // ACTION SELECTOR TRIANGLE
 
         if (actions.length > 0) {
-            shapeRenderer.setColor(Color.BLACK);
+
+            Gdx.gl.glEnable(GL20.GL_BLEND); //Alows for opacity
             shapeRenderer.begin(ShapeRenderer.ShapeType.Filled);
+            shapeRenderer.setColor(0,0,0, _actionBoxAlpha);
 
             int renderHeight = (topActionTextOffset - ((selectedActionIndex + 1) * 25));
 
@@ -146,11 +156,12 @@ public class BattleScene {
                     _actionBoxPosition.getX() + 45, _actionBoxPosition.getY() + 10 + renderHeight,
                     _actionBoxPosition.getX() + 30, _actionBoxPosition.getY() + 20 + renderHeight
             );
-
             shapeRenderer.end();
+
         }
-
-
+        //Cleanup for opacity
+        Gdx.gl.glBlendFunc(GL20.GL_SRC_ALPHA, GL20.GL_ONE_MINUS_SRC_ALPHA);
+        Gdx.gl.glDisable(GL20.GL_BLEND);
     }
 
     /* VISUAL SHENANIGANS */
@@ -206,7 +217,6 @@ public class BattleScene {
         this._backdropPosition = _backdropPosition;
     }
 
-
     public Position getPayerBasePosition() {
         return _playerBasePosition;
     }
@@ -241,6 +251,14 @@ public class BattleScene {
 
     public Position getHealthBoxPosition() {
         return _healthBoxPosition;
+    }
+
+    public float getActionBoxAlpha() {
+        return _actionBoxAlpha;
+    }
+
+    public void setActionBoxAlpha(float _actionBoxOpacity) {
+        this._actionBoxAlpha = _actionBoxOpacity;
     }
 
     public void setHealthBoxPosition(Position _healthBoxPosition) {

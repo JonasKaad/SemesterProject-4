@@ -1,7 +1,7 @@
 package dk.sdu.mmmi.modulemon.battleview;
 
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.audio.Sound;
+import com.badlogic.gdx.audio.Music;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import dk.sdu.mmmi.modulemon.CommonBattle.IBattleSimulation;
@@ -23,8 +23,7 @@ import java.util.Queue;
 public class BattleView extends GameState implements IBattleView {
     private IBattleSimulation _battleSimulation;
     private BattleScene _battleScene;
-    private Sound _battleMusic;
-    private long bgmLoopingId;
+    private Music _battleMusic;
     private MenuState menuState = MenuState.DEFAULT;
     private Queue<BattleViewAnimation> blockingAnimations;
     private Queue<BattleViewAnimation> backgroundAnimations;
@@ -51,7 +50,8 @@ public class BattleView extends GameState implements IBattleView {
         _battleSimulation.StartBattle(player, enemy);
         blockingAnimations = new LinkedList<>();
         backgroundAnimations = new LinkedList<>();
-        bgmLoopingId = _battleMusic.loop();
+        _battleMusic.play();
+        _battleMusic.setLooping(true);
         menuState = MenuState.DEFAULT;
 
         BattleViewAnimation openingAnimation = new BattleSceneOpenAnimation(_battleScene);
@@ -64,7 +64,7 @@ public class BattleView extends GameState implements IBattleView {
      */
     @Override
     public void init() {
-        _battleMusic = Gdx.audio.newSound(Gdx.files.internal("assets/music/battle_music.mp3"));
+        _battleMusic = Gdx.audio.newMusic(Gdx.files.internal("assets/music/battle_music.ogg"));
         spriteBatch = new SpriteBatch();
         _battleScene = new BattleScene();
         init(new MockPlayer(), new MockEnemy());
@@ -107,8 +107,10 @@ public class BattleView extends GameState implements IBattleView {
     public void handleInput() {
         if(!blockingAnimations.isEmpty()){
             //If any blocking animations, don't allow any input.
+            _battleScene.setActionBoxAlpha(0.5f);
             return;
         }
+        _battleScene.setActionBoxAlpha(1f);
 
         if(menuState == MenuState.DEFAULT) {
             _battleScene.setTextToDisplay("Choose an action!");
@@ -188,6 +190,6 @@ public class BattleView extends GameState implements IBattleView {
 
     @Override
     public void dispose() {
-        _battleMusic.stop(bgmLoopingId);
+        _battleMusic.stop();
     }
 }
