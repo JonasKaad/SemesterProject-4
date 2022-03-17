@@ -30,6 +30,7 @@ public class GameStateManager {
 	
 	public void update(float dt) {
 		gameState.update(dt);
+		gameState.handleInput();
 	}
 	
 	public void draw() {

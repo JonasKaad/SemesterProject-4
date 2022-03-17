@@ -9,6 +9,7 @@ import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import dk.sdu.mmmi.modulemon.battleview.Position;
 import dk.sdu.mmmi.modulemon.battleview.TextUtils;
 import dk.sdu.mmmi.modulemon.main.Game;
+import org.lwjgl.util.glu.Project;
 
 public class BattleScene {
 
@@ -32,7 +33,8 @@ public class BattleScene {
     private String playerHP;
     private String textToDisplay = "";
 
-    private String[] actions = new String[0];
+    private String actionTitle = "";
+    private Object[] actions = new Object[0];
     private int selectedActionIndex;
 
     private SpriteBatch spriteBatch;
@@ -118,10 +120,10 @@ public class BattleScene {
         //Action box
         int topActionTextOffset = 150;
         if (actions.length > 0) {
-            textUtils.drawNormalRoboto(spriteBatch, "Your actions:", Color.BLACK, _actionBoxPosition.getX() + 10, _actionBoxPosition.getY() + 186);
+            textUtils.drawNormalRoboto(spriteBatch, actionTitle, Color.BLACK, _actionBoxPosition.getX() + 10, _actionBoxPosition.getY() + 186);
 
             for (int i = 0; i < actions.length; i++) {
-                textUtils.drawSmallRoboto(spriteBatch, actions[i], Color.BLACK, _actionBoxPosition.getX() + 60, _actionBoxPosition.getY() + topActionTextOffset - (i * 30));
+                textUtils.drawSmallRoboto(spriteBatch, actions[i].toString(), Color.BLACK, _actionBoxPosition.getX() + 60, _actionBoxPosition.getY() + topActionTextOffset - (i * 30));
             }
         }
 
@@ -173,14 +175,27 @@ public class BattleScene {
         this.playerHP = playerHP;
     }
 
-    public void setActions(String[] actions) {
+    public void setActions(Object[] actions) {
         this.actions = actions;
+    }
+
+    public Object[] getActions() {
+        return this.actions;
     }
 
     public void setSelectedActionIndex(int selectedActionIndex) {
         this.selectedActionIndex = selectedActionIndex;
         System.out.println("Action index is now: " + selectedActionIndex);
     }
+
+    public String getActionTitle() {
+        return actionTitle;
+    }
+
+    public void setActionTitle(String actionTitle) {
+        this.actionTitle = actionTitle;
+    }
+
     /* POSITION SHENANIGANS */
 
     public Position getBackdropPosition() {
@@ -241,4 +256,6 @@ public class BattleScene {
         _healthBoxPosition = new Position(100, 300);
         _actionBoxPosition = new Position(Game.WIDTH - 300, 125);
     }
+
+
 }

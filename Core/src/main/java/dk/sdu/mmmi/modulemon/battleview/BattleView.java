@@ -7,6 +7,8 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import dk.sdu.mmmi.modulemon.CommonBattle.IBattleSimulation;
 import dk.sdu.mmmi.modulemon.CommonBattle.IBattleView;
 import dk.sdu.mmmi.modulemon.CommonBattleParticipant.IBattleParticipant;
+import dk.sdu.mmmi.modulemon.CommonMonster.IMonster;
+import dk.sdu.mmmi.modulemon.CommonMonster.IMonsterMove;
 import dk.sdu.mmmi.modulemon.battleview.animations.BattleSceneOpenAnimation;
 import dk.sdu.mmmi.modulemon.battleview.animations.BattleViewAnimation;
 import dk.sdu.mmmi.modulemon.battleview.scenes.BattleScene;
@@ -22,11 +24,12 @@ public class BattleView extends GameState implements IBattleView {
     private IBattleSimulation _battleSimulation;
     private BattleScene _battleScene;
     private Sound _battleMusic;
-    private long bgm_loopingId;
+    private long bgmLoopingId;
+    private MenuState menuState = MenuState.DEFAULT;
     private Queue<BattleViewAnimation> blockingAnimations;
     private Queue<BattleViewAnimation> backgroundAnimations;
 
-    private String[] actions = new String[]{"Fight", "Switch", "Quit"};
+    private String[] defaultActions = new String[]{"Fight", "Switch", "Animate", "Quit"};
     private int selectedAction = 0;
 
 
@@ -48,7 +51,8 @@ public class BattleView extends GameState implements IBattleView {
         _battleSimulation.StartBattle(player, enemy);
         blockingAnimations = new LinkedList<>();
         backgroundAnimations = new LinkedList<>();
-        bgm_loopingId = _battleMusic.loop();
+        bgmLoopingId = _battleMusic.loop();
+        menuState = MenuState.DEFAULT;
 
         BattleViewAnimation openingAnimation = new BattleSceneOpenAnimation(_battleScene);
         openingAnimation.start();
@@ -95,33 +99,78 @@ public class BattleView extends GameState implements IBattleView {
         }
 
         //Take input
-        _battleScene.setTextToDisplay("Choose an action!");
-        _battleScene.setActions(this.actions);
-        if (GameKeys.isPressed(GameKeys.DOWN)) {
-            if(selectedAction < actions.length-1){
-                selectedAction++;
+        if(menuState == MenuState.DEFAULT) {
+            _battleScene.setTextToDisplay("Choose an action!");
+            _battleScene.setActionTitle("Your actions:");
+            _battleScene.setActions(this.defaultActions);
+
+            if (GameKeys.isPressed(GameKeys.ENTER)) {
+                String selectedAction = defaultActions[this.selectedAction % defaultActions.length];
+                _battleScene.setTextToDisplay("You have chosen: " + selectedAction);
+                if (selectedAction.equalsIgnoreCase("quit")) {
+                    System.out.println("Bye!!");
+                    Gdx.app.exit();
+                } else if (selectedAction.equalsIgnoreCase("Animate")) {
+                    BattleViewAnimation openingAnimation = new BattleSceneOpenAnimation(_battleScene);
+                    openingAnimation.start();
+                    blockingAnimations.add(openingAnimation);
+                } else if(selectedAction.equalsIgnoreCase("Fight")){
+                    this.menuState = MenuState.FIGHT;
+                }
             }
-            else{
-                selectedAction = 0;
+        } else if(menuState == MenuState.FIGHT){
+            _battleScene.setActionTitle("Moves:");
+            IMonster playerMonster = _battleSimulation.getPlayer().getActiveMonster();
+
+            Object[] monsterMoves = new Object[playerMonster.getMoves().size()+1];
+            monsterMoves[0] = "Cancel";
+            for(int i = 1; i <= playerMonster.getMoves().size(); i++){
+                monsterMoves[i] = playerMonster.getMoves().get(i-1);
             }
-            this._battleScene.setSelectedActionIndex(selectedAction);
+            _battleScene.setActions(monsterMoves);
+
+
+            //Get selected move
+            Object selectedAction = monsterMoves[this.selectedAction % monsterMoves.length];
+            if(selectedAction instanceof String){
+                _battleScene.setTextToDisplay("Go back");
+                if (GameKeys.isPressed(GameKeys.ENTER)) {
+                    this.menuState = MenuState.DEFAULT;
+                }
+            }else if(selectedAction instanceof IMonsterMove){
+                IMonsterMove move = ((IMonsterMove) selectedAction);
+                _battleScene.setTextToDisplay("Move: ["+move.getType()+"] " + move.getName() + ". Deals damage: " + move.getDamage());
+                if (GameKeys.isPressed(GameKeys.ENTER)) {
+                    System.out.println("I'm supposed to try and use the move: " + move.getName());
+                    this.menuState = MenuState.DEFAULT;
+                    this.selectedAction = 0;
+                }
+            }
         }
-        if (GameKeys.isPressed(GameKeys.UP)) {
-            if(selectedAction > 0){
-                selectedAction--;
-            }
-            else{
-                selectedAction = actions.length-1;
-            }
-            this._battleScene.setSelectedActionIndex(selectedAction);
+
+
+        //Handle up/down for choosing actions
+        Object[] currentlyShownActions = this._battleScene.getActions();
+        if(selectedAction > currentlyShownActions.length-1){
+            selectedAction = 0;
         }
-        if (GameKeys.isPressed(GameKeys.ENTER)) {
-            String selectedAction = actions[this.selectedAction % actions.length];
-            System.out.println("DU HAR VALGT: " + selectedAction);
-            _battleScene.setTextToDisplay("You have chosen: " + selectedAction);
-            if (selectedAction.equalsIgnoreCase("quit")) {
-                System.out.println("Bye!!");
-                Gdx.app.exit();
+
+        if(currentlyShownActions.length > 0){
+            if (GameKeys.isPressed(GameKeys.DOWN)) {
+                if (selectedAction < currentlyShownActions.length - 1) {
+                    selectedAction++;
+                } else {
+                    selectedAction = 0;
+                }
+                this._battleScene.setSelectedActionIndex(selectedAction);
+            }
+            if (GameKeys.isPressed(GameKeys.UP)) {
+                if (selectedAction > 0) {
+                    selectedAction--;
+                } else {
+                    selectedAction = currentlyShownActions.length - 1;
+                }
+                this._battleScene.setSelectedActionIndex(selectedAction);
             }
         }
 
@@ -136,11 +185,10 @@ public class BattleView extends GameState implements IBattleView {
 
     @Override
     public void handleInput() {
-
     }
 
     @Override
     public void dispose() {
-        _battleMusic.stop(bgm_loopingId);
+        _battleMusic.stop(bgmLoopingId);
     }
 }

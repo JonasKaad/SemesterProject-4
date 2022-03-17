@@ -15,6 +15,11 @@ public class MockMonsterMove implements IMonsterMove {
         this._damage = _damage;
     }
 
+    @Override
+    public String toString() {
+        return this.getName();
+    }
+
     public static MockMonsterMove getDefaultMonsterMove(){
         return new MockMonsterMove("Blow", MonsterType.AIR, 0);
     }

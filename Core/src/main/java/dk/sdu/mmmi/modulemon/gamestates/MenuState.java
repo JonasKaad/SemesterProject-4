@@ -1,6 +1,7 @@
 package dk.sdu.mmmi.modulemon.gamestates;
 
 //import com.badlogic.gdx.Game;
+import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Texture;
 import dk.sdu.mmmi.modulemon.main.Game;
@@ -25,6 +26,8 @@ public class MenuState extends GameState{
     private BitmapFont menuOptionsFont;
 
     private Texture logo;
+    private Sound menuMusic;
+    private long menuMusicLoopId;
 
     private final String title = "ModulemoN";
 
@@ -38,6 +41,8 @@ public class MenuState extends GameState{
     @Override
     public void init() {
         // Instantiates the variables
+        menuMusic = Gdx.audio.newSound(Gdx.files.internal("assets/music/lobby.mp3"));
+        menuMusicLoopId = menuMusic.loop();
         spriteBatch = new SpriteBatch();
         glyphLayout = new GlyphLayout();
 
@@ -76,7 +81,7 @@ public class MenuState extends GameState{
 
     @Override
     public void update(float dt) {
-        handleInput();
+
     }
 
     @Override
@@ -164,6 +169,6 @@ public class MenuState extends GameState{
 
     @Override
     public void dispose() {
-
+        menuMusic.stop(menuMusicLoopId);
     }
 }

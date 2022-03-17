@@ -13,7 +13,6 @@ public class BattleSceneOpenAnimation extends BattleViewAnimation {
     public BattleSceneOpenAnimation(BattleScene battleScene) {
         super();
         Timeline = new int[]{0, 2000, 2500};
-
         States = new ArrayList<>(Timeline.length);
 
         States.add(new float[]{
