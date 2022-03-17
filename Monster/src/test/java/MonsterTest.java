@@ -17,15 +17,13 @@ class MonsterTest {
         // Arrange
         MonsterPlugin monsterPlugin = new MonsterPlugin();
         IMonster monster = monsterPlugin.getPigMonster();
-        int checkHitPoints = monster.getHitPoints();
-        int toBeReduced = 25;
+        int newHP = 25;
 
         // Act
-        monster.setHitPoints(toBeReduced);
-        checkHitPoints = checkHitPoints - toBeReduced;
+        monster.setHitPoints(newHP);
 
         // Assert
-        assertEquals(monster.getHitPoints(), checkHitPoints, "Hitpoints should be reduced by " + toBeReduced);
+        assertEquals(monster.getHitPoints(), newHP, "Hitpoints should be reduced by " + newHP);
     }
 
     @Test

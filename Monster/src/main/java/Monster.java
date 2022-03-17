@@ -56,7 +56,7 @@ public class Monster implements IMonster {
 
     @Override
     public void setHitPoints(int hitPoint) {
-        hitPoints -= hitPoint;
+        hitPoints = hitPoint;
     }
 
     @Override
