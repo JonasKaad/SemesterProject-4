@@ -93,12 +93,23 @@ public class BattleView extends GameState implements IBattleView {
                     nextAnimation.start();
                 }
             }
+            return;
+        }
+    }
 
-            _battleScene.draw();
-            return; //The animation is blocking. We don't continue
+    @Override
+    public void draw() {
+        _battleScene.draw();
+    }
+
+
+    @Override
+    public void handleInput() {
+        if(!blockingAnimations.isEmpty()){
+            //If any blocking animations, don't allow any input.
+            return;
         }
 
-        //Take input
         if(menuState == MenuState.DEFAULT) {
             _battleScene.setTextToDisplay("Choose an action!");
             _battleScene.setActionTitle("Your actions:");
@@ -173,18 +184,6 @@ public class BattleView extends GameState implements IBattleView {
                 this._battleScene.setSelectedActionIndex(selectedAction);
             }
         }
-
-
-        _battleScene.draw();
-    }
-
-    @Override
-    public void draw() {
-    }
-
-
-    @Override
-    public void handleInput() {
     }
 
     @Override
