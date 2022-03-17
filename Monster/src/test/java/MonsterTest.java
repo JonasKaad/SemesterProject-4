@@ -23,7 +23,7 @@ class MonsterTest {
         monster.setHitPoints(newHP);
 
         // Assert
-        assertEquals(monster.getHitPoints(), newHP, "Hitpoints should be reduced by " + newHP);
+        assertEquals(monster.getHitPoints(), newHP, "Hitpoints should be reduced to " + newHP);
     }
 
     @Test
