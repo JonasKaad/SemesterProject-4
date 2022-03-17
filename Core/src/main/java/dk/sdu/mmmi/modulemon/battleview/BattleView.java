@@ -28,7 +28,7 @@ public class BattleView extends GameState implements IBattleView {
     private Queue<BattleViewAnimation> blockingAnimations;
     private Queue<BattleViewAnimation> backgroundAnimations;
 
-    private String[] defaultActions = new String[]{"Fight", "Switch", "Animate", "Quit"};
+    private String[] defaultActions;
     private int selectedAction = 0;
 
 
@@ -53,6 +53,9 @@ public class BattleView extends GameState implements IBattleView {
         _battleMusic.play();
         _battleMusic.setLooping(true);
         menuState = MenuState.DEFAULT;
+        defaultActions = new String[]{"Fight", "Switch", "Animate", "Quit"};
+        _battleScene.setActionTitle("Your actions:");
+        _battleScene.setActions(this.defaultActions);
 
         BattleViewAnimation openingAnimation = new BattleSceneOpenAnimation(_battleScene);
         openingAnimation.start();
@@ -111,6 +114,7 @@ public class BattleView extends GameState implements IBattleView {
             return;
         }
         _battleScene.setActionBoxAlpha(1f);
+        _battleScene.setSelectedActionIndex(selectedAction);
 
         if(menuState == MenuState.DEFAULT) {
             _battleScene.setTextToDisplay("Choose an action!");
@@ -175,7 +179,6 @@ public class BattleView extends GameState implements IBattleView {
                 } else {
                     selectedAction = 0;
                 }
-                this._battleScene.setSelectedActionIndex(selectedAction);
             }
             if (GameKeys.isPressed(GameKeys.UP)) {
                 if (selectedAction > 0) {
@@ -183,7 +186,6 @@ public class BattleView extends GameState implements IBattleView {
                 } else {
                     selectedAction = currentlyShownActions.length - 1;
                 }
-                this._battleScene.setSelectedActionIndex(selectedAction);
             }
         }
     }

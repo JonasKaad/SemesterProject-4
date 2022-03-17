@@ -149,12 +149,21 @@ public class BattleScene {
             shapeRenderer.begin(ShapeRenderer.ShapeType.Filled);
             shapeRenderer.setColor(0,0,0, _actionBoxAlpha);
 
-            int renderHeight = (topActionTextOffset - ((selectedActionIndex + 1) * 25));
+            //int renderHeight = (topActionTextOffset - ((selectedActionIndex + 1) * 25));
+            int triangleHeight = 20;
+            int smallTextHeight = 15;
+            int normalTextHeight = 24;
+            int actionTopTextHeight = 186;
+            int offsetFromActionHeadToFirstAction = 8;
+
+
+            int renderHeight = actionTopTextHeight - triangleHeight - normalTextHeight - offsetFromActionHeadToFirstAction;
+            renderHeight = renderHeight + selectedActionIndex * -smallTextHeight * 2;
 
             shapeRenderer.triangle(
                     _actionBoxPosition.getX() + 30, _actionBoxPosition.getY() + renderHeight,
-                    _actionBoxPosition.getX() + 45, _actionBoxPosition.getY() + 10 + renderHeight,
-                    _actionBoxPosition.getX() + 30, _actionBoxPosition.getY() + 20 + renderHeight
+                    _actionBoxPosition.getX() + 45, _actionBoxPosition.getY() + triangleHeight/2f + renderHeight,
+                    _actionBoxPosition.getX() + 30, _actionBoxPosition.getY() + triangleHeight + renderHeight
             );
             shapeRenderer.end();
 
@@ -196,7 +205,6 @@ public class BattleScene {
 
     public void setSelectedActionIndex(int selectedActionIndex) {
         this.selectedActionIndex = selectedActionIndex;
-        System.out.println("Action index is now: " + selectedActionIndex);
     }
 
     public String getActionTitle() {
@@ -251,6 +259,14 @@ public class BattleScene {
 
     public Position getHealthBoxPosition() {
         return _healthBoxPosition;
+    }
+
+    public Position getActionBoxPosition() {
+        return _actionBoxPosition;
+    }
+
+    public void setActionBoxPosition(Position _actionBoxPosition) {
+        this._actionBoxPosition = _actionBoxPosition;
     }
 
     public float getActionBoxAlpha() {

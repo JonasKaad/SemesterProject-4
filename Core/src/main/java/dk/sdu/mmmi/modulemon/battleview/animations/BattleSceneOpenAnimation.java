@@ -21,7 +21,8 @@ public class BattleSceneOpenAnimation extends BattleViewAnimation {
                 0 - Gdx.graphics.getWidth() * 1.25f, 0, // Playerbase
                 300, -500, //Player mon
                 850, Gdx.graphics.getHeight() + 500f, //Enemy mon,
-                -500f, 300 //Info box
+                -500f, 300, //Info box,
+               Gdx.graphics.getWidth() + 500, 125  // Action box position
         });
 
         States.add(new float[]{
@@ -30,7 +31,8 @@ public class BattleSceneOpenAnimation extends BattleViewAnimation {
                 200, 0,
                 300, -500,
                 850, Gdx.graphics.getHeight() + 500f,
-                -500f, 300
+                -500f, 300,
+                Gdx.graphics.getWidth() + 500, 125
         });
 
         States.add(new float[]{
@@ -39,7 +41,8 @@ public class BattleSceneOpenAnimation extends BattleViewAnimation {
                 200, 120,
                 300, 120,
                 850, 400,
-                100, 300
+                100, 300,
+                Gdx.graphics.getWidth() - 300, 125
         });
 
         battleScene.setBackdropPosition(new Position(Gdx.graphics.getWidth(), 0));
@@ -48,6 +51,7 @@ public class BattleSceneOpenAnimation extends BattleViewAnimation {
         battleScene.setPlayerMonsterPosition(new Position(300, -500));
         battleScene.setEnemyMonsterPosition(new Position(850, Gdx.graphics.getHeight() + 500));
         battleScene.setHealthBoxPosition(new Position(Gdx.graphics.getWidth() - 500f, 300));
+        battleScene.setActionBoxPosition(new Position(Gdx.graphics.getWidth() + 500, 125));
         this._battleScene = battleScene;
     }
 
@@ -61,5 +65,6 @@ public class BattleSceneOpenAnimation extends BattleViewAnimation {
         _battleScene.setPlayerMonsterPosition(new Position(states[6], states[7]));
         _battleScene.setEnemyMonsterPosition(new Position(states[8], states[9]));
         _battleScene.setHealthBoxPosition(new Position(states[10], states[11]));
+        _battleScene.setActionBoxPosition(new Position(states[12], states[13]));
     }
 }
