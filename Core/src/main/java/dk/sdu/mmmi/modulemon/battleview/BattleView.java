@@ -14,10 +14,7 @@ import dk.sdu.mmmi.modulemon.CommonMonster.IMonsterMove;
 import dk.sdu.mmmi.modulemon.battleevents.MonsterAttackMoveBattleEvent;
 import dk.sdu.mmmi.modulemon.battleevents.TextDisplayBattleEvent;
 import dk.sdu.mmmi.modulemon.battleevents.VictoryBattleEvent;
-import dk.sdu.mmmi.modulemon.battleview.animations.BattleSceneOpenAnimation;
-import dk.sdu.mmmi.modulemon.battleview.animations.BattleViewAnimation;
-import dk.sdu.mmmi.modulemon.battleview.animations.EmptyAnimation;
-import dk.sdu.mmmi.modulemon.battleview.animations.PlayerBattleAttackAnimation;
+import dk.sdu.mmmi.modulemon.battleview.animations.*;
 import dk.sdu.mmmi.modulemon.battleview.scenes.BattleScene;
 import dk.sdu.mmmi.modulemon.gamestates.GameState;
 import dk.sdu.mmmi.modulemon.main.Game;
@@ -130,9 +127,10 @@ public class BattleView extends GameState implements IBattleView {
                     _battleScene.setHealthIndicatorText(String.format("-%d HP", event.getDamageDealt()));
                 } else {
                     //Enemy attacked
-                    EmptyAnimation emptyAnimation = new EmptyAnimation(2000);
-                    emptyAnimation.start();
-                    blockingAnimations.add(emptyAnimation);
+                    EnemyBattleAttackAnimation battleAnimation = new EnemyBattleAttackAnimation(_battleScene, _attackSound);
+                    battleAnimation.start();
+                    blockingAnimations.add(battleAnimation);
+                    _battleScene.setHealthIndicatorText(String.format("-%d HP", event.getDamageDealt()));
                 }
 
                 this._battleScene.setTextToDisplay(event.getText());
@@ -140,10 +138,10 @@ public class BattleView extends GameState implements IBattleView {
                 addEmptyAnimation(2000);
                 this._battleScene.setTextToDisplay(battleEvent.getText());
             } else if (battleEvent instanceof VictoryBattleEvent) {
-                EmptyAnimation emptyAnimation = new EmptyAnimation(2000);
-                emptyAnimation.setOnEventDone(() -> gsm.setState(GameStateManager.MENU));
-                emptyAnimation.start();
-                blockingAnimations.add(emptyAnimation);
+                EnemyDieAnimation enemyDieAnimation = new EnemyDieAnimation(_battleScene);
+                enemyDieAnimation.setOnEventDone(() -> gsm.setState(GameStateManager.MENU));
+                enemyDieAnimation.start();
+                blockingAnimations.add(enemyDieAnimation);
                 this._winSound.play();
                 this._battleScene.setTextToDisplay(battleEvent.getText());
             }

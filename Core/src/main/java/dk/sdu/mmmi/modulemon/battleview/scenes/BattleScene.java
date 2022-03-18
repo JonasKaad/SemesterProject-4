@@ -5,11 +5,14 @@ import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.graphics.g3d.particles.ParticleShader;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import dk.sdu.mmmi.modulemon.battleview.Position;
 import dk.sdu.mmmi.modulemon.battleview.TextUtils;
 import dk.sdu.mmmi.modulemon.main.Game;
+
+import javax.swing.*;
 
 public class BattleScene {
 
@@ -23,7 +26,9 @@ public class BattleScene {
     private Position _playerBasePosition;
     private Position _enemyBasePosition;
     private Position _playerMonsterPosition;
+    private float _playerMonsterRotation;
     private Position _enemyMonsterPosition;
+    private float _enemyMonsterRotation;
     private Position _enemyHealthBoxPosition;
     private Position _playerHealthBoxPosition;
     private Position _healthIndicator;
@@ -69,8 +74,13 @@ public class BattleScene {
         _backdropPosition.updatePosition(_backdrop);
         _playerBasePosition.updatePosition(_playerBase);
         _enemyBasePosition.updatePosition(_enemyBase);
+        _playerMonster.setOrigin(_playerMonster.getImageWidth()/2, _playerMonster.getImageHeight()/2);
+        _playerMonster.setRotation(_playerMonsterRotation);
         _playerMonsterPosition.updatePosition(_playerMonster);
+        _enemyMonster.setOrigin(_enemyMonster.getImageWidth()/2, _enemyMonster.getImageHeight()/2);
+        _enemyMonster.setRotation(_enemyMonsterRotation);
         _enemyMonsterPosition.updatePosition(_enemyMonster);
+
 
         _backdrop.setSize(Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
 
@@ -285,6 +295,22 @@ public class BattleScene {
         this._enemyMonsterPosition = _enemyMonsterPosition;
     }
 
+    public float getPlayerMonsterRotation() {
+        return _playerMonsterRotation;
+    }
+
+    public void setPlayerMonsterRotation(float playerMonsterRotation) {
+        this._playerMonsterRotation = playerMonsterRotation;
+    }
+
+    public float getEnemyMonsterRotation() {
+        return _enemyMonsterRotation;
+    }
+
+    public void setEnemyMonsterRotation(float enemyMonsterRotation) {
+        this._enemyMonsterRotation = enemyMonsterRotation;
+    }
+
     public Position getEnemyHealthBoxPosition() {
         return _enemyHealthBoxPosition;
     }
@@ -352,6 +378,8 @@ public class BattleScene {
         _actionBoxPosition = new Position(Game.WIDTH - 300, 135 );
         _healthIndicator = new Position(-100, -100);
         _healthIndicatorColor = Color.RED;
+        _enemyMonsterRotation = 0f;
+        _playerMonsterRotation = 0f;
     }
 
 }

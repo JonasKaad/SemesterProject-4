@@ -10,27 +10,24 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class MockPlayer implements IBattleParticipant {
-    @Override
-    public boolean isPlayerControlled() {
-        return true;
-    }
+    private IMonster monster;
 
-    @Override
-    public IMonster getActiveMonster() {
-        return new IMonster() {
+    public MockPlayer(){
+        monster =new IMonster() {
+            private int health = 50;
             @Override
             public String getName() {
-                return "Swag monster";
+                return "Bulbasaur";
             }
 
             @Override
             public int getHitPoints() {
-                return 100;
+                return health;
             }
 
             @Override
             public void setHitPoints(int hitPoint) {
-                ;
+                this.health = hitPoint;
             }
 
             @Override
@@ -62,10 +59,20 @@ public class MockPlayer implements IBattleParticipant {
             public List<IMonsterMove> getMoves() {
                 List<IMonsterMove> moves = new ArrayList<>();
                 moves.add(new MockMonsterMove("Swag move", MonsterType.FIRE, 10));
-                moves.add( new MockMonsterMove("Ding dong", MonsterType.AIR, 1000));
+                moves.add(new MockMonsterMove("Swinge ding", MonsterType.FIRE, 32));
+                moves.add(new MockMonsterMove("Ding dong", MonsterType.AIR, 1000));
                 return moves;
             }
         };
+    }
+    @Override
+    public boolean isPlayerControlled() {
+        return true;
+    }
+
+    @Override
+    public IMonster getActiveMonster() {
+        return monster;
     }
 
     @Override
@@ -76,7 +83,7 @@ public class MockPlayer implements IBattleParticipant {
     @Override
     public List<IMonster> getMonsterTeam() {
         List<IMonster> monsters = new ArrayList<>();
-        monsters.add(getActiveMonster());
+        monsters.add(monster);
         return monsters;
     }
 }
