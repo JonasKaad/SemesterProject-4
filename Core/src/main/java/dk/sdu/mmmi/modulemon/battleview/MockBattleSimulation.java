@@ -9,20 +9,22 @@ import dk.sdu.mmmi.modulemon.battleevents.MonsterAttackMoveBattleEvent;
 import dk.sdu.mmmi.modulemon.battleevents.MonsterSwitchBattleEvent;
 import dk.sdu.mmmi.modulemon.battleevents.VictoryBattleEvent;
 
+import java.util.LinkedList;
 import java.util.Optional;
 import java.util.PriorityQueue;
+import java.util.Queue;
 
 public class MockBattleSimulation implements IBattleSimulation {
     private IMonsterMove _defaultMove = MockMonsterMove.getDefaultMonsterMove();
     private IBattleParticipant _player;
     private IBattleParticipant _enemy;
-    private PriorityQueue<IBattleEvent> _eventqueue;
+    private Queue<IBattleEvent> _eventqueue;
 
     @Override
     public void StartBattle(IBattleParticipant player, IBattleParticipant enemy) {
         _player = player;
         _enemy = enemy;
-        _eventqueue = new PriorityQueue<IBattleEvent>();
+        _eventqueue = new LinkedList<>();
     }
 
     @Override
@@ -50,7 +52,7 @@ public class MockBattleSimulation implements IBattleSimulation {
 
         //Player does attack
         _eventqueue.add(new MonsterAttackMoveBattleEvent(_player.getActiveMonster(), _enemy.getActiveMonster(), move, _player));
-        _enemy.getActiveMonster().setHitPoints(_enemy.getActiveMonster().getHitPoints() - move.getDamage());
+        _enemy.getActiveMonster().setHitPoints(Math.max(_enemy.getActiveMonster().getHitPoints() - move.getDamage(), 0));
         if (_enemy.getActiveMonster().getHitPoints() <= 0) {
             Optional<IMonster> newEnemyMonster = _enemy.getMonsterTeam().stream().filter(x -> x.getHitPoints() > 0).findFirst();
             if (newEnemyMonster.isPresent()) {

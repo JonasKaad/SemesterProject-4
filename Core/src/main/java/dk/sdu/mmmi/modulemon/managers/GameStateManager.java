@@ -29,7 +29,7 @@ public class GameStateManager {
 	}
 	
 	public void update(float dt) {
-		gameState.update(dt);
+		gameState.update(dt); //Do not change the order of these calls -Alexander
 		gameState.handleInput();
 	}
 	

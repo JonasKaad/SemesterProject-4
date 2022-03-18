@@ -53,7 +53,8 @@ public class BattleSceneOpenAnimation extends BattleViewAnimation {
         battleScene.setPlayerBasePosition(new Position(0 - Gdx.graphics.getWidth() * 1.25f, 0));
         battleScene.setPlayerMonsterPosition(new Position(300, -500));
         battleScene.setEnemyMonsterPosition(new Position(850, Gdx.graphics.getHeight() + 500));
-        battleScene.setEnemyHealthBoxPosition(new Position(Gdx.graphics.getWidth() - 500f, 300));
+        battleScene.setEnemyHealthBoxPosition(new Position(-500f, 550));
+        battleScene.setPlayerHealthBoxPosition(new Position(-500f, 300));
         battleScene.setActionBoxPosition(new Position(Gdx.graphics.getWidth() + 500, 135));
         this._battleScene = battleScene;
     }

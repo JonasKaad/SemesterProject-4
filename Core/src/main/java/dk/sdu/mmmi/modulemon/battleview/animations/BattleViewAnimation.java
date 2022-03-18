@@ -14,6 +14,7 @@ public abstract class BattleViewAnimation {
     private long millisecondCounter;
     private boolean isRunning = false;
     protected IAnimationCurve animationCurve = AnimationCurves.Linear();
+    protected Runnable onEventDone;
 
     protected void tick() {
         if (isRunning)
@@ -100,5 +101,20 @@ public abstract class BattleViewAnimation {
         }
 
         return intermediateValues;
+    }
+
+    public void runEventDoneIfSet(){
+        if(this.onEventDone != null){
+            this.onEventDone.run();
+        }
+    }
+
+
+    public void setOnEventDone(Runnable runnable){
+        this.onEventDone = runnable;
+    }
+
+    public Runnable getOnEventDone(){
+        return this.onEventDone;
     }
 }

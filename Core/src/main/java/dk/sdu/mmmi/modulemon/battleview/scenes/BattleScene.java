@@ -26,6 +26,9 @@ public class BattleScene {
     private Position _enemyMonsterPosition;
     private Position _enemyHealthBoxPosition;
     private Position _playerHealthBoxPosition;
+    private Position _healthIndicator;
+    private Color _healthIndicatorColor;
+    private String _healthIndicatorText;
     private Position _actionBoxPosition;
     private float _actionBoxAlpha = 1;
 
@@ -145,6 +148,9 @@ public class BattleScene {
         textUtils.drawNormalRoboto(spriteBatch, "Your monster: " + this.playerMonsterName, Color.BLACK, _playerHealthBoxPosition.getX() + 10, _playerHealthBoxPosition.getY() + 85);
         textUtils.drawNormalRoboto(spriteBatch, "HP: " + this.playerHP, Color.BLACK, _playerHealthBoxPosition.getX() + 10, _playerHealthBoxPosition.getY() + 55);
 
+        //Draw health indicator
+        if(_healthIndicatorText != null && !_healthIndicatorText.isEmpty())
+            textUtils.drawNormalRoboto(spriteBatch, _healthIndicatorText, _healthIndicatorColor, _healthIndicator.getX(), _healthIndicator.getY());
 
         //Action box
         int topActionTextOffset = 150;
@@ -312,7 +318,29 @@ public class BattleScene {
         this._actionBoxAlpha = _actionBoxOpacity;
     }
 
+    public Position getHealthIndicator() {
+        return _healthIndicator;
+    }
 
+    public void setHealthIndicatorPosition(Position _healthIndicator) {
+        this._healthIndicator = _healthIndicator;
+    }
+
+    public Color getHealthIndicatorColor() {
+        return _healthIndicatorColor;
+    }
+
+    public void setHealthIndicatorColor(Color _healthIndicatorColor) {
+        this._healthIndicatorColor = _healthIndicatorColor;
+    }
+
+    public void setHealthIndicatorText(String healthIndicatorText) {
+        this._healthIndicatorText = healthIndicatorText;
+    }
+
+    public String getHealthIndicatorText(){
+        return this._healthIndicatorText;
+    }
     private void resetPositions() {
         _backdropPosition = new Position(0, 0);
         _playerBasePosition = new Position(200, 80);
@@ -321,6 +349,9 @@ public class BattleScene {
         _playerMonsterPosition = new Position(300, 80);
         _enemyHealthBoxPosition = new Position(480, 550);
         _playerHealthBoxPosition = new Position(100, 300);
-        _actionBoxPosition = new Position(Game.WIDTH - 300, 135);
+        _actionBoxPosition = new Position(Game.WIDTH - 300, 135 );
+        _healthIndicator = new Position(-100, -100);
+        _healthIndicatorColor = Color.RED;
     }
+
 }

@@ -10,14 +10,11 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class MockEnemy implements IBattleParticipant {
-    @Override
-    public boolean isPlayerControlled() {
-        return false;
-    }
+    private IMonster monster;
 
-    @Override
-    public IMonster getActiveMonster() {
-        return new IMonster() {
+    public MockEnemy(){
+        monster = new IMonster() {
+            private int health = 100;
             @Override
             public String getName() {
                 return "Wooper";
@@ -25,12 +22,12 @@ public class MockEnemy implements IBattleParticipant {
 
             @Override
             public int getHitPoints() {
-                return 13;
+                return health;
             }
 
             @Override
             public void setHitPoints(int hitPoint) {
-
+                this.health = hitPoint;
             }
 
             @Override
@@ -68,14 +65,24 @@ public class MockEnemy implements IBattleParticipant {
     }
 
     @Override
-    public void setActiveMonster(IMonster monster) {
+    public boolean isPlayerControlled() {
+        return false;
+    }
 
+    @Override
+    public IMonster getActiveMonster() {
+        return monster;
+    }
+
+    @Override
+    public void setActiveMonster(IMonster monster) {
+        this.monster = monster;
     }
 
     @Override
     public List<IMonster> getMonsterTeam() {
         List<IMonster> monsters = new ArrayList<>();
-        monsters.add(getActiveMonster());
+        monsters.add(monster);
         return monsters;
     }
 }
