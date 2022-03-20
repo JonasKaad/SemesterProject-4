@@ -1,7 +1,6 @@
 package dk.sdu.mmmi.modulemon.gamestates;
 
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
-import dk.sdu.mmmi.modulemon.managers.GameKeys;
 import dk.sdu.mmmi.modulemon.managers.GameStateManager;
 
 

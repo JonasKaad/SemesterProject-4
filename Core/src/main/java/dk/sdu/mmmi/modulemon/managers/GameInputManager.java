@@ -2,26 +2,35 @@ package dk.sdu.mmmi.modulemon.managers;
 
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.InputAdapter;
+import dk.sdu.mmmi.modulemon.common.data.GameData;
+import dk.sdu.mmmi.modulemon.common.data.GameKeys;
 
 public class GameInputManager extends InputAdapter {
+
+    private final GameData gameData;
+
+    public GameInputManager(GameData gameData) {
+        this.gameData = gameData;
+    }
+
     public boolean keyDown(int k) {
         if (k == Input.Keys.UP) {
-            GameKeys.setKey(GameKeys.UP, true);
+            gameData.getKeys().setKey(GameKeys.UP, true);
         }
         if (k == Input.Keys.LEFT) {
-            GameKeys.setKey(GameKeys.LEFT, true);
+            gameData.getKeys().setKey(GameKeys.LEFT, true);
         }
         if (k == Input.Keys.DOWN) {
-            GameKeys.setKey(GameKeys.DOWN, true);
+            gameData.getKeys().setKey(GameKeys.DOWN, true);
         }
         if (k == Input.Keys.RIGHT) {
-            GameKeys.setKey(GameKeys.RIGHT, true);
+            gameData.getKeys().setKey(GameKeys.RIGHT, true);
         }
         if (k == Input.Keys.ENTER) {
-            GameKeys.setKey(GameKeys.ENTER, true);
+            gameData.getKeys().setKey(GameKeys.ENTER, true);
         }
         if (k == Input.Keys.E) {
-            GameKeys.setKey(GameKeys.E, true);
+            gameData.getKeys().setKey(GameKeys.E, true);
         }
         return true;
     }
@@ -29,22 +38,22 @@ public class GameInputManager extends InputAdapter {
 
     public boolean keyUp(int k) {
         if(k == Input.Keys.UP) {
-            GameKeys.setKey(GameKeys.UP, false);
+            gameData.getKeys().setKey(GameKeys.UP, false);
         }
         if(k == Input.Keys.LEFT) {
-            GameKeys.setKey(GameKeys.LEFT, false);
+            gameData.getKeys().setKey(GameKeys.LEFT, false);
         }
         if(k == Input.Keys.DOWN) {
-            GameKeys.setKey(GameKeys.DOWN, false);
+            gameData.getKeys().setKey(GameKeys.DOWN, false);
         }
         if(k == Input.Keys.RIGHT) {
-            GameKeys.setKey(GameKeys.RIGHT, false);
+            gameData.getKeys().setKey(GameKeys.RIGHT, false);
         }
         if(k == Input.Keys.ENTER) {
-            GameKeys.setKey(GameKeys.ENTER, false);
+            gameData.getKeys().setKey(GameKeys.ENTER, false);
         }
         if (k == Input.Keys.E) {
-            GameKeys.setKey(GameKeys.E, false);
+            gameData.getKeys().setKey(GameKeys.E, false);
         }
         return true;
     }

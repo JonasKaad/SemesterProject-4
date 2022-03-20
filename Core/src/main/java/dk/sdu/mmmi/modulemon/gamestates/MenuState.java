@@ -1,15 +1,15 @@
 package dk.sdu.mmmi.modulemon.gamestates;
 
-//import com.badlogic.gdx.Game;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Texture;
-import dk.sdu.mmmi.modulemon.main.Game;
+import dk.sdu.mmmi.modulemon.Game;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.GlyphLayout;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGenerator;
-import dk.sdu.mmmi.modulemon.managers.GameKeys;
+import dk.sdu.mmmi.modulemon.common.data.GameData;
+import dk.sdu.mmmi.modulemon.common.data.GameKeys;
 import dk.sdu.mmmi.modulemon.managers.GameStateManager;
 
 import java.util.Objects;
@@ -31,6 +31,8 @@ public class MenuState extends GameState{
     private int currentOption;
     private String[] menuOptions;
 
+    GameData gameData = new GameData();
+
     public MenuState(GameStateManager gsm) {
         super(gsm);
     }
@@ -44,8 +46,11 @@ public class MenuState extends GameState{
         /*
           Sets up FontGenerator to enable us to use our own fonts.
          */
+        String font = String.valueOf(getClass().getResource("/fonts/Modulemon-Solid.ttf"));
+        System.out.println(font);
         FreeTypeFontGenerator fontGenerator = new FreeTypeFontGenerator(
-                Gdx.files.internal("assets/fonts/Modulemon-Solid.ttf")
+               // Gdx.files.internal("assets/fonts/Modulemon-Solid.ttf")
+                Gdx.files.internal(font)
         );
         FreeTypeFontGenerator.FreeTypeFontParameter parameter = new FreeTypeFontGenerator.FreeTypeFontParameter();
         // Font size
@@ -122,7 +127,7 @@ public class MenuState extends GameState{
     @Override
     public void handleInput() {
         // Moves up in the menu
-        if(GameKeys.isPressed(GameKeys.UP) || GameKeys.isPressed(GameKeys.LEFT)){
+        if(gameData.getKeys().isPressed(GameKeys.UP) || gameData.getKeys().isPressed(GameKeys.LEFT)){
             if(currentOption > 0){
                 currentOption--;
             }
@@ -131,7 +136,7 @@ public class MenuState extends GameState{
             }
         }
         // Moves down in the menu
-        if(GameKeys.isPressed(GameKeys.DOWN) || GameKeys.isPressed(GameKeys.RIGHT)){
+        if(gameData.getKeys().isPressed(GameKeys.DOWN) || gameData.getKeys().isPressed(GameKeys.RIGHT)){
             if(currentOption < menuOptions.length-1){
                 currentOption++;
             }
@@ -140,7 +145,7 @@ public class MenuState extends GameState{
             }
         }
         // Selects the current option
-        if(GameKeys.isPressed(GameKeys.ENTER) || GameKeys.isPressed(GameKeys.E)){
+        if(gameData.getKeys().isPressed(GameKeys.ENTER) || gameData.getKeys().isPressed(GameKeys.E)){
             selectOption();
         }
 

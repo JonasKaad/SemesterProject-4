@@ -3,12 +3,15 @@ import com.badlogic.gdx.graphics.Texture;
 import dk.sdu.mmmi.modulemon.CommonMonster.IMonster;
 import dk.sdu.mmmi.modulemon.CommonMonster.IMonsterMove;
 import dk.sdu.mmmi.modulemon.CommonMonster.MonsterType;
+import dk.sdu.mmmi.modulemon.Monster.Monster;
+import dk.sdu.mmmi.modulemon.Monster.MonsterPlugin;
 import org.junit.jupiter.api.Test;
 
 
 import java.util.ArrayList;
 
 import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.Mockito.*;
 
 class MonsterTest {
 
@@ -16,6 +19,7 @@ class MonsterTest {
     void monster_health_should_be_reduced(){
         // Arrange
         MonsterPlugin monsterPlugin = new MonsterPlugin();
+        IMonsterMove monsterMove = mock(IMonsterMove.class);
         IMonster monster = monsterPlugin.getPigMonster();
         int newHP = 25;
 
