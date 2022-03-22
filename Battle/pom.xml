@@ -1,60 +1,74 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project xmlns="http://maven.apache.org/POM/4.0.0" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
 
-  <parent>
-    <relativePath>../poms/compiled/pom.xml</relativePath>
-    <groupId>modulemon.build</groupId>
-    <artifactId>compiled-bundle-settings</artifactId>
+    <parent>
+        <relativePath>../poms/compiled/pom.xml</relativePath>
+        <groupId>modulemon.build</groupId>
+        <artifactId>compiled-bundle-settings</artifactId>
+        <version>1.0-SNAPSHOT</version>
+    </parent>
+
+    <properties>
+        <bundle.symbolicName>dk.sdu.mmmi.modulemon.Battle</bundle.symbolicName>
+        <bundle.namespace>dk.sdu.mmmi.modulemon</bundle.namespace>
+    </properties>
+
+    <modelVersion>4.0.0</modelVersion>
+    <artifactId>Battle</artifactId>
     <version>1.0-SNAPSHOT</version>
-  </parent>
+    <name>Battle</name>
+    <packaging>bundle</packaging>
 
-  <properties>
-    <bundle.symbolicName>dk.sdu.mmmi.modulemon.Battle</bundle.symbolicName>
-    <bundle.namespace>dk.sdu.mmmi.modulemon</bundle.namespace>
-  </properties>
-
-  <modelVersion>4.0.0</modelVersion>
-  <artifactId>Battle</artifactId>
-  <version>1.0-SNAPSHOT</version>
-  <name>Battle</name>
-  <packaging>bundle</packaging>
-
-  <dependencies>
-    <dependency>
-      <groupId>org.osgi</groupId>
-      <artifactId>org.osgi.core</artifactId>
-      <version>4.3.0</version>
-      <scope>provided</scope>
-    </dependency>
-    <dependency>
-      <groupId>${project.groupId}</groupId>
-      <artifactId>LibGDX</artifactId>
-      <version>${project.version}</version>
-    </dependency>
-    <dependency>
-      <groupId>modulemon.build</groupId>
-      <artifactId>Common</artifactId>
-      <version>1.0-SNAPSHOT</version>
-      <scope>compile</scope>
-    </dependency>
-    <dependency>
-      <groupId>modulemon.build</groupId>
-      <artifactId>CommonBattle</artifactId>
-      <version>1.0-SNAPSHOT</version>
-      <scope>compile</scope>
-    </dependency>
-    <dependency>
-      <groupId>modulemon.build</groupId>
-      <artifactId>CommonBattleParticipant</artifactId>
-      <version>1.0-SNAPSHOT</version>
-      <scope>compile</scope>
-    </dependency>
-    <dependency>
-      <groupId>modulemon.build</groupId>
-      <artifactId>CommonMonster</artifactId>
-      <version>1.0-SNAPSHOT</version>
-      <scope>compile</scope>
-    </dependency>
-  </dependencies>
+    <dependencies>
+        <dependency>
+            <groupId>org.osgi</groupId>
+            <artifactId>org.osgi.core</artifactId>
+            <version>4.3.0</version>
+            <scope>provided</scope>
+        </dependency>
+        <dependency>
+            <groupId>${project.groupId}</groupId>
+            <artifactId>LibGDX</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>modulemon.build</groupId>
+            <artifactId>Common</artifactId>
+            <version>1.0-SNAPSHOT</version>
+            <scope>compile</scope>
+        </dependency>
+        <dependency>
+            <groupId>modulemon.build</groupId>
+            <artifactId>CommonBattle</artifactId>
+            <version>1.0-SNAPSHOT</version>
+            <scope>compile</scope>
+        </dependency>
+        <dependency>
+            <groupId>modulemon.build</groupId>
+            <artifactId>CommonBattleParticipant</artifactId>
+            <version>1.0-SNAPSHOT</version>
+            <scope>compile</scope>
+        </dependency>
+        <dependency>
+            <groupId>modulemon.build</groupId>
+            <artifactId>CommonMonster</artifactId>
+            <version>1.0-SNAPSHOT</version>
+            <scope>compile</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.junit.jupiter</groupId>
+            <artifactId>junit-jupiter-api</artifactId>
+            <version>5.8.2</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.mockito</groupId>
+            <artifactId>mockito-core</artifactId>
+            <version>4.4.0</version>
+            <scope>test</scope>
+        </dependency>
+    </dependencies>
 
 </project>
