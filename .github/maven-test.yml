@@ -1,0 +1,40 @@
+# This workflow will build a Java project with Maven, and cache/restore any dependencies to improve the workflow execution time
+# For more information see: https://help.github.com/actions/language-and-framework-guides/building-and-testing-java-with-maven
+
+name: Java CI with Maven
+
+on:
+  push:
+    branches: [ master ]
+  pull_request:
+    branches: [ master ]
+
+jobs:
+  build:
+
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v2
+      - name: Set up JDK 8
+        uses: actions/setup-java@v2
+        with:
+          java-version: '8'
+          distribution: 'temurin'
+          cache: maven
+      - name: Build and Test with Maven
+        run: mvn --batch-mode --update-snapshots verify
+      - name: Publish Test Report
+        if: ${{ always() }}
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+        uses: scacap/action-surefire-report@v1.0.5
+
+# UNCOMMENT FOR ARTIFACT PUBLISHING
+#      - name: Copy artifacts
+#        run: mkdir staging && find ./ -type f -name "*.jar" -exec /bin/cp {} staging/ \; -print
+#      - name: Upload artifacts
+#        uses: actions/upload-artifact@v3
+#        with:
+#          name: Package
+#          path: staging
