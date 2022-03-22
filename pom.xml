@@ -35,6 +35,7 @@
     <module>CommonBattleParticipant</module>
     <module>Monster</module>
     <module>DemoComponent</module>
+    <module>Battle</module>
   </modules>
 
   <build>
