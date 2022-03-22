@@ -12,4 +12,11 @@ public interface IBattleSimulation {
     void doMove(IBattleParticipant battleParticipant, IMonsterMove move);
     void switchMonster(IBattleParticipant battleParticipant, IMonster monster);
     void runAway(IBattleParticipant battleParticipant);
+
+    /**
+     *
+     * @return The next battle event to be shown.
+     * Returns `null` if there is no more battle events
+     */
+    IBattleEvent getNextBattleEvent();
 }

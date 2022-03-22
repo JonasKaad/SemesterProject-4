@@ -1,8 +1,9 @@
 package dk.sdu.mmmi.modulemon.gamestates;
 
+import dk.sdu.mmmi.modulemon.common.services.IGameViewService;
 import dk.sdu.mmmi.modulemon.managers.GameStateManager;
 
-public abstract class GameState {
+public abstract class GameState implements IGameViewService {
 	
 	protected GameStateManager gsm;
 	
