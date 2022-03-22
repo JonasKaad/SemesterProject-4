@@ -9,10 +9,7 @@ import dk.sdu.mmmi.modulemon.Battle.BattleSimulation;
 import dk.sdu.mmmi.modulemon.BattleScene.animations.*;
 import dk.sdu.mmmi.modulemon.BattleScene.scenes.BattleScene;
 import dk.sdu.mmmi.modulemon.BattleSceneMock.BattleParticipantMocks;
-import dk.sdu.mmmi.modulemon.CommonBattle.BattleEvents.IBattleEvent;
-import dk.sdu.mmmi.modulemon.CommonBattle.BattleEvents.InfoBattleEvent;
-import dk.sdu.mmmi.modulemon.CommonBattle.BattleEvents.MoveBattleEvent;
-import dk.sdu.mmmi.modulemon.CommonBattle.BattleEvents.VictoryBattleEvent;
+import dk.sdu.mmmi.modulemon.CommonBattle.BattleEvents.*;
 import dk.sdu.mmmi.modulemon.CommonBattle.IBattleSimulation;
 import dk.sdu.mmmi.modulemon.CommonBattle.IBattleView;
 import dk.sdu.mmmi.modulemon.CommonBattleParticipant.IBattleParticipant;
@@ -121,7 +118,7 @@ public class BattleView implements IGameViewService, IBattleView {
                     //Player attacked
                     PlayerBattleAttackAnimation battleAnimation = new PlayerBattleAttackAnimation(_battleScene, _attackSound);
                     battleAnimation.setOnEventDone(() -> {
-                        addEmptyAnimation(1000);
+                        addEmptyAnimation(1000, true);
                         _battleScene.setTextToDisplay("...");
                     });
                     battleAnimation.start();
@@ -137,8 +134,24 @@ public class BattleView implements IGameViewService, IBattleView {
 
                 this._battleScene.setTextToDisplay(event.getText());
             } else if (battleEvent instanceof InfoBattleEvent) {
-                addEmptyAnimation(2000);
+                addEmptyAnimation(2000, true);
                 this._battleScene.setTextToDisplay(battleEvent.getText());
+            } else if (battleEvent instanceof ChangeMonsterBattleEvent) {
+                ChangeMonsterBattleEvent event = (ChangeMonsterBattleEvent) battleEvent;
+                if (event.getParticipant().isPlayerControlled()) {
+                    //There is no player enemy animation. Just a still frame for now
+                    addEmptyAnimation(2000, true);
+                    this._battleScene.setTextToDisplay(battleEvent.getText());
+                } else {
+                    EnemyDieAnimation enemyDieAnimation = new EnemyDieAnimation(_battleScene);
+                    enemyDieAnimation.start();
+                    enemyDieAnimation.setOnEventDone(() -> _battleScene.resetPositions());
+                    blockingAnimations.add(enemyDieAnimation);
+
+                    EmptyAnimation emptyAnimation = new EmptyAnimation(2000);
+                    blockingAnimations.add(emptyAnimation);
+                    _battleScene.setTextToDisplay(battleEvent.getText());
+                }
             } else if (battleEvent instanceof VictoryBattleEvent) {
                 EnemyDieAnimation enemyDieAnimation = new EnemyDieAnimation(_battleScene);
                 enemyDieAnimation.setOnEventDone(() -> gameStateManager.setDefaultState());
@@ -205,10 +218,9 @@ public class BattleView implements IGameViewService, IBattleView {
                     blockingAnimations.add(openingAnimation);
                 }
             } else if (selectedAction.equalsIgnoreCase("Quit")) {
-                _battleScene.setTextToDisplay("Quits the game");
+                _battleScene.setTextToDisplay("Ends the battle");
                 if (keys.isPressed(GameKeys.ENTER)) {
-                    System.out.println("Byee!!");
-                    Gdx.app.exit();
+                    gameStateManager.setDefaultState();
                 }
             }
         } else if (menuState == MenuState.FIGHT) {
@@ -268,13 +280,13 @@ public class BattleView implements IGameViewService, IBattleView {
 
     @Override
     public void dispose() {
-        spriteBatch.dispose();
         _battleMusic.stop();
     }
 
-    private void addEmptyAnimation(int duration) {
+    private void addEmptyAnimation(int duration, boolean autoStart) {
         EmptyAnimation emptyAnimation = new EmptyAnimation(duration);
-        emptyAnimation.start();
+        if(autoStart)
+            emptyAnimation.start();
         blockingAnimations.add(emptyAnimation);
     }
 }

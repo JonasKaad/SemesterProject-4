@@ -7,9 +7,9 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
+import dk.sdu.mmmi.modulemon.BattleScene.OSGiFileHandle;
 import dk.sdu.mmmi.modulemon.BattleScene.Position;
 import dk.sdu.mmmi.modulemon.BattleScene.TextUtils;
-import dk.sdu.mmmi.modulemon.BattleScene.OSGiFileHandle;
 
 public class BattleScene {
 
@@ -72,10 +72,10 @@ public class BattleScene {
         _backdropPosition.updatePosition(_backdrop);
         _playerBasePosition.updatePosition(_playerBase);
         _enemyBasePosition.updatePosition(_enemyBase);
-        _playerMonster.setOrigin(_playerMonster.getImageWidth()/2, _playerMonster.getImageHeight()/2);
+        _playerMonster.setOrigin(_playerMonster.getImageWidth() / 2, _playerMonster.getImageHeight() / 2);
         _playerMonster.setRotation(_playerMonsterRotation);
         _playerMonsterPosition.updatePosition(_playerMonster);
-        _enemyMonster.setOrigin(_enemyMonster.getImageWidth()/2, _enemyMonster.getImageHeight()/2);
+        _enemyMonster.setOrigin(_enemyMonster.getImageWidth() / 2, _enemyMonster.getImageHeight() / 2);
         _enemyMonster.setRotation(_enemyMonsterRotation);
         _enemyMonsterPosition.updatePosition(_enemyMonster);
 
@@ -84,10 +84,10 @@ public class BattleScene {
         _backdrop.draw(spriteBatch, 1);
         _playerBase.draw(spriteBatch, 1);
         _enemyBase.draw(spriteBatch, 1);
-        if(_playerMonster != null)
+        if (_playerMonster != null)
             _playerMonster.draw(spriteBatch, 1);
 
-        if(_enemyMonster != null)
+        if (_enemyMonster != null)
             _enemyMonster.draw(spriteBatch, 1);
 
         spriteBatch.end();
@@ -159,13 +159,13 @@ public class BattleScene {
         textUtils.drawNormalRoboto(spriteBatch, "HP: " + this.playerHP, Color.BLACK, _playerHealthBoxPosition.getX() + 10, _playerHealthBoxPosition.getY() + 55);
 
         //Draw health indicator
-        if(_healthIndicatorText != null && !_healthIndicatorText.isEmpty())
+        if (_healthIndicatorText != null && !_healthIndicatorText.isEmpty())
             textUtils.drawNormalRoboto(spriteBatch, _healthIndicatorText, _healthIndicatorColor, _healthIndicator.getX(), _healthIndicator.getY());
 
         //Action box
         int topActionTextOffset = 150;
         if (actions.length > 0) {
-            Color actionTextColor = new Color(0,0,0, _actionBoxAlpha);
+            Color actionTextColor = new Color(0, 0, 0, _actionBoxAlpha);
             textUtils.drawNormalRoboto(spriteBatch, actionTitle, actionTextColor, _actionBoxPosition.getX() + 10, _actionBoxPosition.getY() + 186);
 
             for (int i = 0; i < actions.length; i++) {
@@ -174,7 +174,7 @@ public class BattleScene {
         }
 
         // Text box
-        if(!textToDisplay.isEmpty())
+        if (!textToDisplay.isEmpty())
             textUtils.drawNormalRoboto(spriteBatch, textToDisplay, Color.BLACK, 30, textBoxHeight);
 
         spriteBatch.end();
@@ -185,7 +185,7 @@ public class BattleScene {
 
             Gdx.gl.glEnable(GL20.GL_BLEND); //Alows for opacity
             shapeRenderer.begin(ShapeRenderer.ShapeType.Filled);
-            shapeRenderer.setColor(0,0,0, _actionBoxAlpha);
+            shapeRenderer.setColor(0, 0, 0, _actionBoxAlpha);
 
             //int renderHeight = (topActionTextOffset - ((selectedActionIndex + 1) * 25));
             int triangleHeight = 20;
@@ -200,7 +200,7 @@ public class BattleScene {
 
             shapeRenderer.triangle(
                     _actionBoxPosition.getX() + 30, _actionBoxPosition.getY() + renderHeight,
-                    _actionBoxPosition.getX() + 45, _actionBoxPosition.getY() + triangleHeight/2f + renderHeight,
+                    _actionBoxPosition.getX() + 45, _actionBoxPosition.getY() + triangleHeight / 2f + renderHeight,
                     _actionBoxPosition.getX() + 30, _actionBoxPosition.getY() + triangleHeight + renderHeight
             );
             shapeRenderer.end();
@@ -387,18 +387,19 @@ public class BattleScene {
         this._healthIndicatorText = healthIndicatorText;
     }
 
-    public String getHealthIndicatorText(){
+    public String getHealthIndicatorText() {
         return this._healthIndicatorText;
     }
-    private void resetPositions() {
+
+    public void resetPositions() {
         _backdropPosition = new Position(0, 0);
-        _playerBasePosition = new Position(200, 80);
+        _playerBasePosition = new Position(200, 120);
         _enemyBasePosition = new Position(800, 400);
         _enemyMonsterPosition = new Position(850, 400);
         _playerMonsterPosition = new Position(300, 80);
         _enemyHealthBoxPosition = new Position(480, 550);
         _playerHealthBoxPosition = new Position(100, 300);
-        _actionBoxPosition = new Position(this.gameWidth - 300, 135 );
+        _actionBoxPosition = new Position(this.gameWidth - 300, 135);
         _healthIndicator = new Position(-100, -100);
         _healthIndicatorColor = Color.RED;
         _enemyMonsterRotation = 0f;

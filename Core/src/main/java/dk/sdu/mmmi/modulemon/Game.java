@@ -1,7 +1,6 @@
 package dk.sdu.mmmi.modulemon;
 
 import com.badlogic.gdx.ApplicationListener;
-import com.badlogic.gdx.Files;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.backends.lwjgl.LwjglApplication;
 import com.badlogic.gdx.backends.lwjgl.LwjglApplicationConfiguration;
@@ -17,18 +16,13 @@ import dk.sdu.mmmi.modulemon.common.services.IPostEntityProcessingService;
 import dk.sdu.mmmi.modulemon.managers.GameInputManager;
 import dk.sdu.mmmi.modulemon.managers.GameStateManager;
 import org.lwjgl.opengl.Display;
-import org.osgi.framework.Bundle;
 
-import java.io.*;
-import java.net.URI;
-import java.net.URISyntaxException;
-import java.net.URL;
 import java.nio.ByteBuffer;
-import java.nio.file.Paths;
 import java.util.ArrayList;
+import java.util.LinkedList;
 import java.util.List;
+import java.util.Queue;
 import java.util.concurrent.CopyOnWriteArrayList;
-import java.util.logging.FileHandler;
 
 public class Game implements ApplicationListener {
     public static int WIDTH;
@@ -41,6 +35,7 @@ public class Game implements ApplicationListener {
     private static List<IGamePluginService> gamePluginList = new CopyOnWriteArrayList<>();
     private static List<IPostEntityProcessingService> postEntityProcessorList = new CopyOnWriteArrayList<>();
     private static List<IGameViewService> gameViewServiceList = new CopyOnWriteArrayList<>();
+    private static Queue<Runnable> gdxThreadTasks = new LinkedList<>();
 
     public Game(){
         init();
@@ -86,6 +81,13 @@ public class Game implements ApplicationListener {
         gameData.setDisplayWidth(Gdx.graphics.getWidth());
         gameData.setDisplayHeight(Gdx.graphics.getHeight());
         gameData.setDelta(Gdx.graphics.getDeltaTime());
+
+        //Run tasks on the LibGDX thread for OSGi
+        if(!gdxThreadTasks.isEmpty()){
+            do{
+                gdxThreadTasks.poll().run();
+            }while(!gdxThreadTasks.isEmpty());
+        }
 
         gsm.update(gameData);
         gsm.draw(gameData);
@@ -153,7 +155,7 @@ public class Game implements ApplicationListener {
 
     public void removeGameViewServiceList(IGameViewService gameViewService){
         if(gsm.getCurrentGameState().equals(gameViewService)){
-            gsm.setDefaultState();
+            gdxThreadTasks.add(() -> gsm.setDefaultState());
             System.out.println("Threw player out of scene because it was unloaded!");
         }
         gameViewServiceList.remove(gameViewService);

@@ -3,7 +3,7 @@ package dk.sdu.mmmi.modulemon.CommonBattle.BattleEvents;
 import dk.sdu.mmmi.modulemon.CommonBattleParticipant.IBattleParticipant;
 import dk.sdu.mmmi.modulemon.CommonMonster.IMonster;
 
-public class ChangeMonsterBattleEvent implements IBattleEvent{
+public class ChangeMonsterBattleEvent implements IBattleEvent {
 
     private String text;
 
@@ -27,6 +27,6 @@ public class ChangeMonsterBattleEvent implements IBattleEvent{
 
     @Override
     public String getText() {
-        return null;
+        return text;
     }
 }
