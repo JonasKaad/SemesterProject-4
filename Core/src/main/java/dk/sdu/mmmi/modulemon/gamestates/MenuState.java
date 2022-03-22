@@ -1,5 +1,6 @@
 package dk.sdu.mmmi.modulemon.gamestates;
 
+import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Texture;
 import dk.sdu.mmmi.modulemon.Game;
@@ -8,10 +9,13 @@ import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.GlyphLayout;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGenerator;
+import dk.sdu.mmmi.modulemon.OSGiFileHandle;
 import dk.sdu.mmmi.modulemon.common.data.GameData;
 import dk.sdu.mmmi.modulemon.common.data.GameKeys;
 import dk.sdu.mmmi.modulemon.managers.GameStateManager;
 
+import java.io.File;
+import java.net.URISyntaxException;
 import java.util.Objects;
 
 public class MenuState extends GameState{
@@ -26,7 +30,7 @@ public class MenuState extends GameState{
 
     private Texture logo;
 
-    private final String title = "ModulemoN";
+    private final String title = "ModulémoN";
 
     private int currentOption;
     private String[] menuOptions;
@@ -46,11 +50,8 @@ public class MenuState extends GameState{
         /*
           Sets up FontGenerator to enable us to use our own fonts.
          */
-        String font = String.valueOf(getClass().getResource("/fonts/Modulemon-Solid.ttf"));
-        System.out.println(font);
         FreeTypeFontGenerator fontGenerator = new FreeTypeFontGenerator(
-               // Gdx.files.internal("assets/fonts/Modulemon-Solid.ttf")
-                Gdx.files.internal(font)
+                new OSGiFileHandle("/fonts/Modulemon-Solid.ttf")
         );
         FreeTypeFontGenerator.FreeTypeFontParameter parameter = new FreeTypeFontGenerator.FreeTypeFontParameter();
         // Font size
@@ -60,7 +61,8 @@ public class MenuState extends GameState{
         titleFont = fontGenerator.generateFont(parameter);
 
 
-        fontGenerator = new FreeTypeFontGenerator(Gdx.files.internal("assets/fonts/Roboto-Medium.ttf"));
+        fontGenerator = new FreeTypeFontGenerator(
+                new OSGiFileHandle("/fonts/Roboto-Medium.ttf"));
         // Font size
         parameter.size = 34;
 
@@ -69,7 +71,7 @@ public class MenuState extends GameState{
 
         fontGenerator.dispose();
 
-        logo = new Texture(Gdx.files.internal("assets/icons/cat-logo.png"));
+        logo = new Texture(new OSGiFileHandle("/icons/cat-logo.png"));
 
         // Sets the options for the menu
         menuOptions = new String[] {
@@ -94,7 +96,7 @@ public class MenuState extends GameState{
 
         spriteBatch.draw(logo, (Game.WIDTH) / 2.2f, (Game.HEIGHT - glyphLayout.height) / 1.2f);
 
-        titleFont.setColor(Color.valueOf("#ffcb05"));
+        titleFont.setColor(Color.valueOf("ffcb05"));
         titleFont.draw(
                 spriteBatch,
                 title,
@@ -109,7 +111,7 @@ public class MenuState extends GameState{
          */
         for (int i = 0; i < menuOptions.length; i++) {
             glyphLayout.setText(menuOptionsFont, menuOptions[i]);
-            if (currentOption == i) menuOptionsFont.setColor(Color.valueOf("#2a75bb"));
+            if (currentOption == i) menuOptionsFont.setColor(Color.valueOf("2a75bb"));
             else menuOptionsFont.setColor(Color.WHITE);
             menuOptionsFont.draw(
                     spriteBatch,

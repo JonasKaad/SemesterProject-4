@@ -31,7 +31,7 @@
         <version>3.0.1</version>
         <configuration>
           <instructions>
-            <Export-Package>com.badlogic.gdx.*</Export-Package>
+            <Export-Package>com.badlogic.gdx.*, org.lwjgl.*</Export-Package>
             <Import-Package>!com.apple.eio,!com.sun.*,!org.objectweb.*,*</Import-Package>
             <Embed-Dependency>*</Embed-Dependency>
             <Embed-Transitive>true</Embed-Transitive>

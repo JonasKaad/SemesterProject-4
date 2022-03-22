@@ -7,6 +7,7 @@ import com.badlogic.gdx.backends.lwjgl.LwjglApplication;
 import com.badlogic.gdx.backends.lwjgl.LwjglApplicationConfiguration;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
+import com.badlogic.gdx.graphics.Pixmap;
 import dk.sdu.mmmi.modulemon.common.data.GameData;
 import dk.sdu.mmmi.modulemon.common.data.World;
 import dk.sdu.mmmi.modulemon.common.services.IEntityProcessingService;
@@ -14,12 +15,14 @@ import dk.sdu.mmmi.modulemon.common.services.IGamePluginService;
 import dk.sdu.mmmi.modulemon.common.services.IPostEntityProcessingService;
 import dk.sdu.mmmi.modulemon.managers.GameInputManager;
 import dk.sdu.mmmi.modulemon.managers.GameStateManager;
+import org.lwjgl.opengl.Display;
 import org.osgi.framework.Bundle;
 
 import java.io.*;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.net.URL;
+import java.nio.ByteBuffer;
 import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
@@ -43,38 +46,20 @@ public class Game implements ApplicationListener {
 
 
     public void init(){
-        //Testing java 1.8 stream()
-//        List<String> test = new ArrayList<>();
-//        test.add("lol");
-//        boolean streamsWorking = test.stream().anyMatch(x->x.equalsIgnoreCase("lol"));
-//        System.out.println("Streams working?: " + (streamsWorking ? "Yes" : "No!!"));
-
         LwjglApplicationConfiguration cfg = new LwjglApplicationConfiguration();
-        cfg.title = "Modulemon";
-        cfg.width = 1000;
-        cfg.height = 800;
+        cfg.title = "Modulémon";
+        cfg.width = 1280;
+        cfg.height = 720;
         cfg.useGL30 = false;
-        cfg.resizable = false;
-        //InputStream inStream = new java.io.BufferedInputStream(this.getClass().getClassLoader().getResourceAsStream("cat-icon.png"));
-        System.out.println(getClass().getResource("/icons/cat-icon.png"));
-        //Bundle bundle;
-        System.out.println(getClass().getResource("/icons/cat-icon.png"));
-
-        //File.createTempFile(getClass().getResource("/icons/cat-icon.png"))
-        URL url2 = getClass().getResource("/icons/cat-icon.png");
-        URL url = getClass().getResource("/icons/test.txt");
-        //File configFile = new File(FileLocator.toFileURL(url).getPath());
-
-
-        //cfg.addIcon(String.valueOf(getClass().getResource("/icons/cat-icon.png")), Files.FileType.Classpath);
+        cfg.resizable = true;
 
         new LwjglApplication(this, cfg);
     }
 
-
     @Override
     public void create() {
-
+        //Line below doesn't work yet, but just let it be - Alexander
+        Display.setIcon(hackIcon("/icons/cat-icon.png"));
         WIDTH = Gdx.graphics.getWidth();
         HEIGHT = Gdx.graphics.getHeight();
 
@@ -158,4 +143,19 @@ public class Game implements ApplicationListener {
         gamePluginService.stop(gameData, world);
     }
 
+
+    private ByteBuffer[] hackIcon(String resourceName){
+        ByteBuffer[] byteBuffer = new ByteBuffer[1];
+        Pixmap pixmap = new Pixmap(new OSGiFileHandle(resourceName));
+        if (pixmap.getFormat() != Pixmap.Format.RGBA8888) {
+            Pixmap rgba = new Pixmap(pixmap.getWidth(), pixmap.getHeight(), Pixmap.Format.RGBA8888);
+            rgba.drawPixmap(pixmap, 0, 0);
+            pixmap = rgba;
+        }
+
+        byteBuffer[0] = ByteBuffer.allocateDirect(pixmap.getPixels().limit());
+        byteBuffer[0].put(pixmap.getPixels()).flip();
+        pixmap.dispose();
+        return byteBuffer;
+    }
 }
