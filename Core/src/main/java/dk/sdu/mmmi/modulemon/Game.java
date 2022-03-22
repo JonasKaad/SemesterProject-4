@@ -21,6 +21,7 @@ import java.net.URI;
 import java.net.URISyntaxException;
 import java.net.URL;
 import java.nio.file.Paths;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.logging.FileHandler;
@@ -42,6 +43,12 @@ public class Game implements ApplicationListener {
 
 
     public void init(){
+        //Testing java 1.8 stream()
+//        List<String> test = new ArrayList<>();
+//        test.add("lol");
+//        boolean streamsWorking = test.stream().anyMatch(x->x.equalsIgnoreCase("lol"));
+//        System.out.println("Streams working?: " + (streamsWorking ? "Yes" : "No!!"));
+
         LwjglApplicationConfiguration cfg = new LwjglApplicationConfiguration();
         cfg.title = "Modulemon";
         cfg.width = 1000;
