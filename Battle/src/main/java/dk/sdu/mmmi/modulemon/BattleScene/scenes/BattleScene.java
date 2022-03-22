@@ -56,8 +56,6 @@ public class BattleScene {
         _backdrop = new Image(new Texture(new OSGiFileHandle("/battleart/backdrop1.png")));
         _playerBase = new Image(new Texture(new OSGiFileHandle("/battleart/playerbase.png")));
         _enemyBase = new Image(new Texture(new OSGiFileHandle("/battleart/enemybase.png")));
-        _playerMonster = new Image(new Texture(new OSGiFileHandle("/monsters/001b.png")));
-        _enemyMonster = new Image(new Texture(new OSGiFileHandle("/monsters/001.png")));
         spriteBatch = new SpriteBatch();
         //spriteBatch.setProjectionMatrix(Game.cam.combined);
         shapeRenderer = new ShapeRenderer();
@@ -86,8 +84,11 @@ public class BattleScene {
         _backdrop.draw(spriteBatch, 1);
         _playerBase.draw(spriteBatch, 1);
         _enemyBase.draw(spriteBatch, 1);
-        _playerMonster.draw(spriteBatch, 1);
-        _enemyMonster.draw(spriteBatch, 1);
+        if(_playerMonster != null)
+            _playerMonster.draw(spriteBatch, 1);
+
+        if(_enemyMonster != null)
+            _enemyMonster.draw(spriteBatch, 1);
 
         spriteBatch.end();
 
@@ -216,12 +217,20 @@ public class BattleScene {
         this.textToDisplay = textToDisplay;
     }
 
+    public void setEnemySprite(Texture frontSprite) {
+        this._enemyMonster = new Image(frontSprite);
+    }
+
     public void setEnemyMonsterName(String enemyMonsterName) {
         this.enemyMonsterName = enemyMonsterName;
     }
 
     public void setEnemyHP(String enemyHP) {
         this.enemyHP = enemyHP;
+    }
+
+    public void setPlayerSprite(Texture frontSprite) {
+        this._playerMonster = new Image(frontSprite);
     }
 
     public void setPlayerMonsterName(String playerMonsterName) {
@@ -395,5 +404,4 @@ public class BattleScene {
         _enemyMonsterRotation = 0f;
         _playerMonsterRotation = 0f;
     }
-
 }

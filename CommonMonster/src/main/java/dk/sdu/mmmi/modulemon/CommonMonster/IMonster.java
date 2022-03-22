@@ -11,7 +11,8 @@ public interface IMonster {
     int getAttack();
     int getDefence();
     int getSpeed();
-    Texture getSprite();
+    Texture getFrontSprite();
+    Texture getBackSprite();
     MonsterType getMonsterType();
     List<IMonsterMove> getMoves();
 }
