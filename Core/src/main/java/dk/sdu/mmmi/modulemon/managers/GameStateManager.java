@@ -9,8 +9,6 @@ import dk.sdu.mmmi.modulemon.gamestates.MenuState;
 public class GameStateManager implements IGameStateManager {
 	private IGameViewService currentGameState;
 
-	public static final int DEFAULT_VIEW = 0;
-	
 	public GameStateManager() {
 		setDefaultState();
 	}
