@@ -54,8 +54,8 @@ public class BattleScene {
 
     public BattleScene() {
         _backdrop = new Image(new Texture(new OSGiFileHandle("/battleart/backdrop1.png")));
-        _playerBase = new Image(new Texture(new OSGiFileHandle("/battleart/playerbase.png")));
-        _enemyBase = new Image(new Texture(new OSGiFileHandle("/battleart/enemybase.png")));
+        _playerBase = new Image(new Texture(new OSGiFileHandle("/battleart/playerbase1.png")));
+        _enemyBase = new Image(new Texture(new OSGiFileHandle("/battleart/enemybase1.png")));
         spriteBatch = new SpriteBatch();
         //spriteBatch.setProjectionMatrix(Game.cam.combined);
         shapeRenderer = new ShapeRenderer();
@@ -393,7 +393,7 @@ public class BattleScene {
 
     public void resetPositions() {
         _backdropPosition = new Position(0, 0);
-        _playerBasePosition = new Position(200, 120);
+        _playerBasePosition = new Position(145, -8);
         _enemyBasePosition = new Position(800, 400);
         _enemyMonsterPosition = new Position(850, 400);
         _playerMonsterPosition = new Position(300, 80);

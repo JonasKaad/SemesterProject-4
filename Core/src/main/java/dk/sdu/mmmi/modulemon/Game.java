@@ -83,10 +83,8 @@ public class Game implements ApplicationListener {
         gameData.setDelta(Gdx.graphics.getDeltaTime());
 
         //Run tasks on the LibGDX thread for OSGi
-        if(!gdxThreadTasks.isEmpty()){
-            do{
-                gdxThreadTasks.poll().run();
-            }while(!gdxThreadTasks.isEmpty());
+        while(!gdxThreadTasks.isEmpty()){
+            gdxThreadTasks.poll().run();
         }
 
         gsm.update(gameData);

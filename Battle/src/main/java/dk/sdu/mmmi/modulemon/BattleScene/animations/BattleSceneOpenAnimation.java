@@ -30,7 +30,7 @@ public class BattleSceneOpenAnimation extends BattleViewAnimation {
         States.add(new float[]{
                 0, 0,
                 800, 400,
-                200, 0,
+                145, 0,
                 300, -500,
                 850, Gdx.graphics.getHeight() + 500f,
                 -500f, 550,
@@ -41,7 +41,7 @@ public class BattleSceneOpenAnimation extends BattleViewAnimation {
         States.add(new float[]{
                 0, 0,
                 800, 400,
-                200, 120,
+                145, -8,
                 300, 120,
                 850, 400,
                 480, 550,
