@@ -1,38 +1,42 @@
 package dk.sdu.mmmi.modulemon.managers;
 
+import dk.sdu.mmmi.modulemon.common.data.GameData;
+import dk.sdu.mmmi.modulemon.common.data.IGameStateManager;
+import dk.sdu.mmmi.modulemon.common.services.IGameViewService;
 import dk.sdu.mmmi.modulemon.gamestates.GameState;
 import dk.sdu.mmmi.modulemon.gamestates.MenuState;
-import dk.sdu.mmmi.modulemon.gamestates.PlayState;
 
-public class GameStateManager {
+public class GameStateManager implements IGameStateManager {
+	private IGameViewService currentGameState;
 
-	private GameState gameState;
-
-	public static final int MENU = 0;
-	public static final int PLAY = 1;
-	
 	public GameStateManager() {
-		setState(MENU);
+		setDefaultState();
 	}
 	
-	public void setState(int state) {
-		if(gameState != null) gameState.dispose();
-		if(state == MENU) {
-			gameState = new MenuState(this);
-		}
-		if(state == PLAY) {
-			gameState = new PlayState(this);
-		}
+	public void setState(IGameViewService state) {
+		if(currentGameState != null) currentGameState.dispose();
+		System.out.println(String.format("Changed state to: %s", state.getClass().getName()));
+		currentGameState = state;
+		currentGameState.init();
 	}
 	
-	public void update(float dt) {
-		gameState.update(dt);
+	public void update(GameData gameData) {
+		currentGameState.update(gameData, this);
+		currentGameState.handleInput(gameData, this);
 	}
 	
-	public void draw() {
-		gameState.draw();
+	public void draw(GameData gameData) {
+		currentGameState.draw(gameData);
 	}
-	
+
+	public IGameViewService getCurrentGameState() {
+		return currentGameState;
+	}
+
+	@Override
+	public void setDefaultState() {
+		setState(new MenuState());
+	}
 }
 
 

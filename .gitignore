@@ -1,3 +1,5 @@
+## CUSTOM
+runner/
 
 # Created by https://www.toptal.com/developers/gitignore/api/maven,java,intellij+all,netbeans
 # Edit at https://www.toptal.com/developers/gitignore?templates=maven,java,intellij+all,netbeans
@@ -31,7 +33,8 @@
 # Gradle
 .idea/**/gradle.xml
 .idea/**/libraries
-
+.gradle
+.runner/*
 # Gradle and Maven with auto-import
 # When using Gradle or Maven with auto-import, you should exclude module files,
 # since they will be recreated, and may cause churn.  Uncomment if using

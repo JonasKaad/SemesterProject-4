@@ -1,26 +1,39 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project xmlns="http://maven.apache.org/POM/4.0.0"
-         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
-    <parent>
-        <artifactId>Modulemon</artifactId>
-        <groupId>dk.sdu.mmmi.modulemon</groupId>
-        <version>1.0-SNAPSHOT</version>
-    </parent>
-    <modelVersion>4.0.0</modelVersion>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
 
-    <artifactId>CommonMonster</artifactId>
-    <dependencies>
-        <dependency>
-            <groupId>com.badlogicgames.gdx</groupId>
-            <artifactId>gdx</artifactId>
-            <version>1.9.10</version>
-        </dependency>
-    </dependencies>
+  <parent>
+    <relativePath>../poms/compiled/pom.xml</relativePath>
+    <groupId>modulemon.build</groupId>
+    <artifactId>compiled-bundle-settings</artifactId>
+    <version>1.0-SNAPSHOT</version>
+  </parent>
 
-    <properties>
-        <maven.compiler.source>1.8</maven.compiler.source>
-        <maven.compiler.target>1.8</maven.compiler.target>
-    </properties>
+  <properties>
+    <bundle.symbolicName>dk.sdu.mmmi.modulemon.CommonMonster</bundle.symbolicName>
+    <bundle.namespace>dk.sdu.mmmi.modulemon</bundle.namespace>
+    <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+    <maven.compiler.target>1.8</maven.compiler.target>
+    <maven.compiler.source>1.8</maven.compiler.source>
+  </properties>
+
+  <modelVersion>4.0.0</modelVersion>
+  <artifactId>CommonMonster</artifactId>
+  <version>1.0-SNAPSHOT</version>
+  <name>CommonMonster</name>
+  <packaging>bundle</packaging>
+
+  <dependencies>
+    <dependency>
+      <groupId>org.osgi</groupId>
+      <artifactId>org.osgi.core</artifactId>
+      <version>4.3.0</version>
+      <scope>provided</scope>
+    </dependency>
+    <dependency>
+      <groupId>${project.groupId}</groupId>
+      <artifactId>LibGDX</artifactId>
+      <version>${project.version}</version>
+    </dependency>
+  </dependencies>
 
 </project>
