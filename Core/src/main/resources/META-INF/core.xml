@@ -13,4 +13,9 @@
     <reference bind="addGamePluginService" cardinality="0..n"
                interface="dk.sdu.mmmi.modulemon.common.services.IGamePluginService"
                name="IGamePluginService" policy="dynamic" unbind="removeGamePluginService"/>
+
+    <reference bind="addGameViewServiceList" cardinality="0..n"
+               interface="dk.sdu.mmmi.modulemon.common.services.IGameViewService"
+               name="IGameViewService" policy="dynamic" unbind="removeGameViewServiceList"/>
+
 </scr:component>

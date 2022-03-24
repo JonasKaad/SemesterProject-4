@@ -1,7 +1,6 @@
 package dk.sdu.mmmi.modulemon;
 
 import com.badlogic.gdx.ApplicationListener;
-import com.badlogic.gdx.Files;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.backends.lwjgl.LwjglApplication;
 import com.badlogic.gdx.backends.lwjgl.LwjglApplicationConfiguration;
@@ -12,22 +11,18 @@ import dk.sdu.mmmi.modulemon.common.data.GameData;
 import dk.sdu.mmmi.modulemon.common.data.World;
 import dk.sdu.mmmi.modulemon.common.services.IEntityProcessingService;
 import dk.sdu.mmmi.modulemon.common.services.IGamePluginService;
+import dk.sdu.mmmi.modulemon.common.services.IGameViewService;
 import dk.sdu.mmmi.modulemon.common.services.IPostEntityProcessingService;
 import dk.sdu.mmmi.modulemon.managers.GameInputManager;
 import dk.sdu.mmmi.modulemon.managers.GameStateManager;
 import org.lwjgl.opengl.Display;
-import org.osgi.framework.Bundle;
 
-import java.io.*;
-import java.net.URI;
-import java.net.URISyntaxException;
-import java.net.URL;
 import java.nio.ByteBuffer;
-import java.nio.file.Paths;
 import java.util.ArrayList;
+import java.util.LinkedList;
 import java.util.List;
+import java.util.Queue;
 import java.util.concurrent.CopyOnWriteArrayList;
-import java.util.logging.FileHandler;
 
 public class Game implements ApplicationListener {
     public static int WIDTH;
@@ -35,10 +30,12 @@ public class Game implements ApplicationListener {
     private static World world = new World();
     public static OrthographicCamera cam;
     private final GameData gameData = new GameData();
-    private GameStateManager gsm;
+    private static GameStateManager gsm;
     private static List<IEntityProcessingService> entityProcessorList = new CopyOnWriteArrayList<>();
     private static List<IGamePluginService> gamePluginList = new CopyOnWriteArrayList<>();
     private static List<IPostEntityProcessingService> postEntityProcessorList = new CopyOnWriteArrayList<>();
+    private static List<IGameViewService> gameViewServiceList = new CopyOnWriteArrayList<>();
+    private static Queue<Runnable> gdxThreadTasks = new LinkedList<>();
 
     public Game(){
         init();
@@ -71,7 +68,6 @@ public class Game implements ApplicationListener {
         );
 
         gsm = new GameStateManager();
-
     }
 
     @Override
@@ -82,14 +78,21 @@ public class Game implements ApplicationListener {
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 
         cam.update();
+        gameData.setDisplayWidth(Gdx.graphics.getWidth());
+        gameData.setDisplayHeight(Gdx.graphics.getHeight());
+        gameData.setDelta(Gdx.graphics.getDeltaTime());
 
-        gsm.update(Gdx.graphics.getDeltaTime());
-        gsm.draw();
+        //Run tasks on the LibGDX thread for OSGi
+        while(!gdxThreadTasks.isEmpty()){
+            gdxThreadTasks.poll().run();
+        }
+
+        gsm.update(gameData);
+        gsm.draw(gameData);
 
         gameData.getKeys().update();
 
         update();
-
     }
 
     private void update() {
@@ -143,6 +146,22 @@ public class Game implements ApplicationListener {
         gamePluginService.stop(gameData, world);
     }
 
+    public void addGameViewServiceList(IGameViewService gameViewService){
+        System.out.println("WOOT, GAMEVIEWSERVICE LOADED: " + gameViewService.getClass().getName());
+        gameViewServiceList.add(gameViewService);
+    }
+
+    public void removeGameViewServiceList(IGameViewService gameViewService){
+        if(gsm.getCurrentGameState().equals(gameViewService)){
+            gdxThreadTasks.add(() -> gsm.setDefaultState());
+            System.out.println("Threw player out of scene because it was unloaded!");
+        }
+        gameViewServiceList.remove(gameViewService);
+    }
+
+    public static List<IGameViewService> getGameViewServiceList() {
+        return gameViewServiceList;
+    }
 
     private ByteBuffer[] hackIcon(String resourceName){
         ByteBuffer[] byteBuffer = new ByteBuffer[1];

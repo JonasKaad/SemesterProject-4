@@ -78,7 +78,12 @@ public class Monster extends Entity implements IMonster {
     }
 
     @Override
-    public Texture getSprite() {
+    public Texture getFrontSprite() {
+        return sprite;
+    }
+
+    @Override
+    public Texture getBackSprite() {
         return sprite;
     }
 
