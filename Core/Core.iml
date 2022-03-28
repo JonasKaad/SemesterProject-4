@@ -11,6 +11,7 @@
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />
     <orderEntry type="module" module-name="LibGDX" />
+    <orderEntry type="module" module-name="LibGDX" />
     <orderEntry type="library" name="Maven: com.badlogicgames.gdx:gdx:1.6.3" level="project" />
     <orderEntry type="library" name="Maven: com.badlogicgames.gdx:gdx-platform:1.6.3" level="project" />
     <orderEntry type="library" name="Maven: com.badlogicgames.gdx:gdx-backend-lwjgl:1.6.3" level="project" />
