@@ -1,62 +1,66 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project xmlns="http://maven.apache.org/POM/4.0.0"
-         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd"
-         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
 
-    <modelVersion>4.0.0</modelVersion>
-    <groupId>dk.sdu.mmmi.modulemon</groupId>
-    <artifactId>Modulemon</artifactId>
-    <version>1.0-SNAPSHOT</version>
+  <modelVersion>4.0.0</modelVersion>
+  <groupId>dk.sdu.mmmi.modulemon</groupId>
+  <artifactId>Modulemon</artifactId>
+  <version>1.0-SNAPSHOT</version>
 
-    <name>Modulemon (OSGi project)</name>
+  <name>Modulemon (OSGi project)</name>
 
-    <!--
+  <!--
      | describe your project here
     -->
 
-    <description>Generated using Pax-Construct</description>
+  <description>Generated using Pax-Construct</description>
 
-    <properties>
-        <!--
+  <properties>
+    <!--
         <org.osgi.service.http.port>8080</org.osgi.service.http.port>
         <org.osgi.service.http.port.secure>8443</org.osgi.service.http.port.secure> -->
-        <maven.compiler.target>1.8</maven.compiler.target>
-        <maven.compiler.source>1.8</maven.compiler.source>
-    </properties>
+    <maven.compiler.target>1.8</maven.compiler.target>
+    <maven.compiler.source>1.8</maven.compiler.source>
+  </properties>
 
-    <packaging>pom</packaging>
+  <packaging>pom</packaging>
 
-    <modules>
-        <module>poms</module>
-        <module>provision</module>
-        <module>LibGDX</module>
-        <module>Core</module>
-        <module>Common</module>
-        <module>CommonBattle</module>
-        <module>CommonMonster</module>
-        <module>CommonBattleParticipant</module>
-        <module>Monster</module>
-        <module>DemoComponent</module>
-        <module>Battle</module>
-    </modules>
+  <modules>
+    <module>poms</module>
+    <module>provision</module>
+    <module>LibGDX</module>
+    <module>Core</module>
+    <module>Common</module>
+    <module>CommonBattle</module>
+    <module>CommonMonster</module>
+    <module>CommonBattleParticipant</module>
+    <module>Monster</module>
+    <module>DemoComponent</module>
+    <module>Battle</module>
+    <module>Player</module>
+    <module>NPC</module>
+    <module>Map</module>
+    <module>BattleSimulation</module>
+    <module>BattleAI</module>
+    <module>MonsterRegistry</module>
+  </modules>
 
-    <build>
-        <plugins>
-            <plugin>
-                <groupId>org.ops4j</groupId>
-                <artifactId>maven-pax-plugin</artifactId>
-                <version>1.6.0</version>
-                <configuration>
-                    <!--
+  <build>
+    <plugins>
+      <plugin>
+        <groupId>org.ops4j</groupId>
+        <artifactId>maven-pax-plugin</artifactId>
+        <version>1.6.0</version>
+        <configuration>
+          <!--
                      | some example Pax-Runner settings
                     -->
-                    <provision>
-                        <param>--platform=felix</param>
-                        <param>--vmOptions=-agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=5005</param>
-                    </provision>
-                </configuration>
-                <executions>
-                    <!--
+          <provision>
+            <param>--platform=felix</param>
+            <param>--vmOptions=-agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=5005</param>
+          </provision>
+        </configuration>
+        <executions>
+          <!--
                      | uncomment to auto-generate IDE files
                     <execution>
                       <id>ide-support</id>
@@ -65,9 +69,9 @@
                       </goals>
                     </execution>
                     -->
-                </executions>
-            </plugin>
-        </plugins>
-    </build>
+        </executions>
+      </plugin>
+    </plugins>
+  </build>
 
 </project>
