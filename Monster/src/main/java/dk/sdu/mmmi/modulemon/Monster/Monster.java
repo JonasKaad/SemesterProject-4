@@ -43,6 +43,16 @@ public class Monster extends Entity implements IMonster {
         this.frontSprite = frontSprite;
         this.backSprite = backSprite;
     }
+    public Monster(String name, MonsterType type, int hitPoints, int defence, int attack, int speed,  List<IMonsterMove> moves) {
+        this.name = name;
+        this.type = type;
+        this.hitPoints = hitPoints;
+        this.defence = defence;
+        this.attack = attack;
+        this.speed = speed;
+        this.moves = moves;
+    }
+
 
 
     @Override

@@ -18,10 +18,8 @@ class MonsterTest {
     @Test
     void monster_health_should_be_reduced(){
         // Arrange
-        MonsterPlugin monsterPlugin = new MonsterPlugin();
-        IMonsterMove monsterMove = mock(IMonsterMove.class);
-        IMonster monster = monsterPlugin.getPigMonster();
         int newHP = 25;
+        IMonster monster = new Monster("Hippopotamus", MonsterType.EARTH, 50, 1, 1, 1, new ArrayList<>());
 
         // Act
         monster.setHitPoints(newHP);
@@ -33,7 +31,6 @@ class MonsterTest {
     @Test
     void monster_getName_returns_correct_name(){
         // Arrange
-        MonsterPlugin monsterPlugin = new MonsterPlugin();
         String nameToCheck = "Hippopotamus";
         IMonster monster = new Monster(nameToCheck, MonsterType.EARTH, 1, 1, 1, 1, new ArrayList<>());
         Monster monster2 = new Monster(nameToCheck, MonsterType.EARTH, 1, 1, 1, 1, new ArrayList<>());
