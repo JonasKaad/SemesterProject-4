@@ -15,7 +15,8 @@ public class Monster extends Entity implements IMonster {
     int defence;
     int attack;
     int speed;
-    Texture sprite;
+    String frontSprite;
+    String backSprite;
     List<IMonsterMove> moves;
 
     // For some reason using Libgdx gives a null pointer on the texture, uncommented for now
@@ -31,7 +32,7 @@ public class Monster extends Entity implements IMonster {
         this.moves = moves;
     }*/
 
-    public Monster(String name, MonsterType type, int hitPoints, int defence, int attack, int speed,  List<IMonsterMove> moves) {
+    public Monster(String name, MonsterType type, int hitPoints, int defence, int attack, int speed,  List<IMonsterMove> moves, String frontSprite, String backSprite) {
         this.name = name;
         this.type = type;
         this.hitPoints = hitPoints;
@@ -39,6 +40,8 @@ public class Monster extends Entity implements IMonster {
         this.attack = attack;
         this.speed = speed;
         this.moves = moves;
+        this.frontSprite = frontSprite;
+        this.backSprite = backSprite;
     }
 
 
@@ -78,13 +81,13 @@ public class Monster extends Entity implements IMonster {
     }
 
     @Override
-    public Texture getFrontSprite() {
-        return sprite;
+    public String getFrontSprite() {
+        return frontSprite;
     }
 
     @Override
-    public Texture getBackSprite() {
-        return sprite;
+    public String getBackSprite() {
+        return backSprite;
     }
 
     @Override

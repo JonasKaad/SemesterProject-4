@@ -4,6 +4,7 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.audio.Music;
 import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.Color;
+import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import dk.sdu.mmmi.modulemon.Battle.BattleSimulation;
 import dk.sdu.mmmi.modulemon.BattleScene.animations.*;
@@ -73,9 +74,9 @@ public class BattleView implements IGameViewService, IBattleView {
      */
     @Override
     public void init() {
-        _battleMusic = Gdx.audio.newMusic(new OSGiFileHandle("/music/battle_music.ogg"));
-        _attackSound = Gdx.audio.newSound(new OSGiFileHandle("/sounds/slam.ogg"));
-        _winSound = Gdx.audio.newSound(new OSGiFileHandle("/sounds/you_won.ogg"));
+        _battleMusic = Gdx.audio.newMusic(new OSGiFileHandle("/music/battle_music.ogg", this.getClass()));
+        _attackSound = Gdx.audio.newSound(new OSGiFileHandle("/sounds/slam.ogg", this.getClass()));
+        _winSound = Gdx.audio.newSound(new OSGiFileHandle("/sounds/you_won.ogg", this.getClass()));
         spriteBatch = new SpriteBatch();
         _battleScene = new BattleScene();
         init(BattleParticipantMocks.getPlayer(), BattleParticipantMocks.getOpponent());
@@ -171,12 +172,12 @@ public class BattleView implements IGameViewService, IBattleView {
 
         //Update information
         IMonster playerActiveMonster = _battleSimulation.getPlayer().getActiveMonster();
-        _battleScene.setPlayerSprite(playerActiveMonster.getBackSprite());
+        _battleScene.setPlayerSprite(new Texture(new OSGiFileHandle(playerActiveMonster.getBackSprite(), playerActiveMonster.getClass())));
         _battleScene.setPlayerMonsterName(playerActiveMonster.getName());
         _battleScene.setPlayerHP(Integer.toString(playerActiveMonster.getHitPoints()));
 
         IMonster enemyActiveMonster = _battleSimulation.getEnemy().getActiveMonster();
-        _battleScene.setEnemySprite(enemyActiveMonster.getFrontSprite());
+        _battleScene.setEnemySprite(new Texture(new OSGiFileHandle(enemyActiveMonster.getFrontSprite(), enemyActiveMonster.getClass())));
         _battleScene.setEnemyMonsterName(enemyActiveMonster.getName());
         _battleScene.setEnemyHP(Integer.toString(enemyActiveMonster.getHitPoints()));
 

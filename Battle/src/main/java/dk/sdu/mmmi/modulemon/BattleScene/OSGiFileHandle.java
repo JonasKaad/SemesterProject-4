@@ -9,8 +9,8 @@ public class OSGiFileHandle extends FileHandle {
 
     private String resourceName;
     private byte[] cachedBytes;
-    public OSGiFileHandle(String resourceName){
-        super(String.valueOf(OSGiFileHandle.class.getResource(resourceName)));
+    public OSGiFileHandle(String resourceName, Class classToPullFrom){
+        super(String.valueOf(classToPullFrom.getResource(resourceName)));
         this.resourceName = resourceName;
     }
 

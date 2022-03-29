@@ -30,8 +30,8 @@ public class BattleParticipantMocks {
                 10,
                 20,
                 5,
-                new Texture(new OSGiFileHandle("/monsters/001.png")),
-                new Texture(new OSGiFileHandle("/monsters/001b.png")),
+                "/monsters/001.png",
+                "/monsters/001b.png",
                 MonsterType.GRASS,
                 bulbasaurMoves
         ));
@@ -46,8 +46,8 @@ public class BattleParticipantMocks {
                 10,
                 20,
                 5,
-                new Texture(new OSGiFileHandle("/monsters/004.png")),
-                new Texture(new OSGiFileHandle("/monsters/004b.png")),
+                "/monsters/004.png",
+                "/monsters/004b.png",
                 MonsterType.FIRE,
                 charmanderMoves
         ));
@@ -69,8 +69,8 @@ public class BattleParticipantMocks {
                 10,
                 20,
                 5,
-                new Texture(new OSGiFileHandle("/monsters/079.png")),
-                new Texture(new OSGiFileHandle("/monsters/079b.png")),
+                "/monsters/079.png",
+                "/monsters/079b.png",
                 MonsterType.WATER,
                 slowpokeMoves
         ));
@@ -84,8 +84,8 @@ public class BattleParticipantMocks {
                 10,
                 20,
                 5,
-                new Texture(new OSGiFileHandle("/monsters/007.png")),
-                new Texture(new OSGiFileHandle("/monsters/007b.png")),
+                "/monsters/007.png",
+                "/monsters/007b.png",
                 MonsterType.FIRE,
                 squrtleMoves
         ));

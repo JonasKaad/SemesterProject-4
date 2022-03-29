@@ -53,9 +53,9 @@ public class BattleScene {
     private TextUtils textUtils = TextUtils.getInstance();
 
     public BattleScene() {
-        _backdrop = new Image(new Texture(new OSGiFileHandle("/battleart/backdrop1.png")));
-        _playerBase = new Image(new Texture(new OSGiFileHandle("/battleart/playerbase1.png")));
-        _enemyBase = new Image(new Texture(new OSGiFileHandle("/battleart/enemybase1.png")));
+        _backdrop = new Image(new Texture(new OSGiFileHandle("/battleart/backdrop1.png", this.getClass())));
+        _playerBase = new Image(new Texture(new OSGiFileHandle("/battleart/playerbase1.png", this.getClass())));
+        _enemyBase = new Image(new Texture(new OSGiFileHandle("/battleart/enemybase1.png", this.getClass())));
         spriteBatch = new SpriteBatch();
         //spriteBatch.setProjectionMatrix(Game.cam.combined);
         shapeRenderer = new ShapeRenderer();
