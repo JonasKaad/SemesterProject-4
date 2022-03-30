@@ -5,7 +5,6 @@ import com.badlogic.gdx.audio.Music;
 import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
-import dk.sdu.mmmi.modulemon.BattleSimulation.BattleSimulation;
 import dk.sdu.mmmi.modulemon.BattleScene.animations.*;
 import dk.sdu.mmmi.modulemon.BattleScene.scenes.BattleScene;
 import dk.sdu.mmmi.modulemon.BattleSceneMock.BattleParticipantMocks;
@@ -49,7 +48,6 @@ public class BattleView implements IGameViewService{
      * Initialize for IBattleView
      */
     public void init(IBattleParticipant player, IBattleParticipant enemy) {
-        _battleSimulation = new BattleSimulation();
         _battleSimulation.StartBattle(player, enemy);
         blockingAnimations = new LinkedList<>();
         backgroundAnimations = new LinkedList<>();
@@ -286,5 +284,9 @@ public class BattleView implements IGameViewService{
         if(autoStart)
             emptyAnimation.start();
         blockingAnimations.add(emptyAnimation);
+    }
+
+    private void setBattleSimulation(IBattleSimulation simulation) {
+        this._battleSimulation = simulation;
     }
 }
