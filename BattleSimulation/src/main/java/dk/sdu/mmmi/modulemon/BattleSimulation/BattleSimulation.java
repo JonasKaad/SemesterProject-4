@@ -1,8 +1,9 @@
 package dk.sdu.mmmi.modulemon.BattleSimulation;
 
 import dk.sdu.mmmi.modulemon.CommonBattle.BattleEvents.*;
+import dk.sdu.mmmi.modulemon.CommonBattle.IBattleMonsterProcessor;
 import dk.sdu.mmmi.modulemon.CommonBattle.IBattleSimulation;
-import dk.sdu.mmmi.modulemon.CommonBattleParticipant.IBattleParticipant;
+import dk.sdu.mmmi.modulemon.CommonBattle.IBattleParticipant;
 import dk.sdu.mmmi.modulemon.CommonMonster.IMonster;
 import dk.sdu.mmmi.modulemon.CommonMonster.IMonsterMove;
 import java.util.Optional;
@@ -19,6 +20,7 @@ public class BattleSimulation implements IBattleSimulation {
 
     //"Mocked" enemyControlSystem. Should be moved somewhere else and hidden behind an interface
     private TempEnemyControlSystem ecs = new TempEnemyControlSystem();
+    private IBattleMonsterProcessor monsterProcessor;
 
     @Override
     public void StartBattle(IBattleParticipant player, IBattleParticipant enemy) {
@@ -29,7 +31,9 @@ public class BattleSimulation implements IBattleSimulation {
             throw new RuntimeException("Active monsters should have at least 1 HP");
         }
 
-        IBattleParticipant firstToTakeTurn = assignFirstTurn();
+        // Assign first turn
+        IMonster firstMonster = monsterProcessor.whichMonsterStarts(player.getActiveMonster(), enemy.getActiveMonster());
+        IBattleParticipant firstToTakeTurn = firstMonster == player.getActiveMonster() ? player : enemy;
 
         if (!firstToTakeTurn.isPlayerControlled()) {
             nextEvent = new InfoBattleEvent("enemy starts the battle");
@@ -46,15 +50,6 @@ public class BattleSimulation implements IBattleSimulation {
 
     }
 
-    private IBattleParticipant assignFirstTurn() {
-        // Player will start if the speeds are equal
-        if (player.getActiveMonster().getSpeed()>=enemy.getActiveMonster().getSpeed()){
-            return player;
-        } else {
-            return enemy;
-        }
-    }
-
     private void switchTurns() {
         if (activeParticipant == player) {
             activeParticipant = enemy;
@@ -66,11 +61,7 @@ public class BattleSimulation implements IBattleSimulation {
     }
 
     private String getActiveParticipantTitle() {
-        if (activeParticipant.isPlayerControlled()) {
-            return "player";
-        } else {
-            return "enemy";
-        }
+        return activeParticipant.isPlayerControlled() ? "player" : "enemy";
     }
 
     @Override
@@ -115,15 +106,9 @@ public class BattleSimulation implements IBattleSimulation {
             opposingParticipant = player;
         }
 
-        float moveDamage = (float) move.getDamage();
-        float sourceAttack = (float) source.getAttack();
-        float targetDefence = (float) target.getDefence();
-
-        int damage = Math.round(moveDamage*(sourceAttack/targetDefence));
-
+        int damage = monsterProcessor.calculateDamage(source, move, target);
 
         nextEvent = new MoveBattleEvent(participantTitle + " monster used " + move.getName() + " for " + damage + " damage", battleParticipant, move, damage);
-
 
         onNextEvent = () -> {
             int newHitPoints = target.getHitPoints()-damage;
@@ -131,7 +116,6 @@ public class BattleSimulation implements IBattleSimulation {
                 target.setHitPoints(newHitPoints);
 
                 switchTurns();
-
 
             } else {
                 target.setHitPoints(0);
@@ -188,6 +172,10 @@ public class BattleSimulation implements IBattleSimulation {
             onNextEvent.run();
         }
         return event;
+    }
+
+    public void setMonsterProcessor(IBattleMonsterProcessor monsterProcessor) {
+        this.monsterProcessor = monsterProcessor;
     }
 
     //Should be moved into another component at some point

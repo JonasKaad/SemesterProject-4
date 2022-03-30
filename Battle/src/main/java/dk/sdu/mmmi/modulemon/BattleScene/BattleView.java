@@ -10,7 +10,7 @@ import dk.sdu.mmmi.modulemon.BattleScene.scenes.BattleScene;
 import dk.sdu.mmmi.modulemon.BattleSceneMock.BattleParticipantMocks;
 import dk.sdu.mmmi.modulemon.CommonBattle.BattleEvents.*;
 import dk.sdu.mmmi.modulemon.CommonBattle.IBattleSimulation;
-import dk.sdu.mmmi.modulemon.CommonBattleParticipant.IBattleParticipant;
+import dk.sdu.mmmi.modulemon.CommonBattle.IBattleParticipant;
 import dk.sdu.mmmi.modulemon.CommonMonster.IMonster;
 import dk.sdu.mmmi.modulemon.CommonMonster.IMonsterMove;
 import dk.sdu.mmmi.modulemon.common.data.GameData;

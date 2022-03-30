@@ -5,4 +5,8 @@
         <provide interface="dk.sdu.mmmi.modulemon.CommonBattle.IBattleSimulation"/>
     </service>
 
+    <reference bind="setMonsterProcessor" cardinality="0..1"
+               interface="dk.sdu.mmmi.modulemon.CommonBattle.IBattleMonsterProcessor"
+               name="IBattleMonsterProcessor" policy="dynamic"/>
+
 </scr:component>
