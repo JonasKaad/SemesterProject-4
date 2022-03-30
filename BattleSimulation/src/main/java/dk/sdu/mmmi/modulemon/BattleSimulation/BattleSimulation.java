@@ -1,12 +1,10 @@
-package dk.sdu.mmmi.modulemon.Battle;
+package dk.sdu.mmmi.modulemon.BattleSimulation;
 
 import dk.sdu.mmmi.modulemon.CommonBattle.BattleEvents.*;
 import dk.sdu.mmmi.modulemon.CommonBattle.IBattleSimulation;
 import dk.sdu.mmmi.modulemon.CommonBattleParticipant.IBattleParticipant;
 import dk.sdu.mmmi.modulemon.CommonMonster.IMonster;
 import dk.sdu.mmmi.modulemon.CommonMonster.IMonsterMove;
-
-import java.lang.reflect.Executable;
 import java.util.Optional;
 
 public class BattleSimulation implements IBattleSimulation {

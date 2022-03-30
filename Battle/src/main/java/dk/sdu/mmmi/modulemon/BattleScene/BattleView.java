@@ -5,13 +5,12 @@ import com.badlogic.gdx.audio.Music;
 import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
-import dk.sdu.mmmi.modulemon.Battle.BattleSimulation;
+import dk.sdu.mmmi.modulemon.BattleSimulation.BattleSimulation;
 import dk.sdu.mmmi.modulemon.BattleScene.animations.*;
 import dk.sdu.mmmi.modulemon.BattleScene.scenes.BattleScene;
 import dk.sdu.mmmi.modulemon.BattleSceneMock.BattleParticipantMocks;
 import dk.sdu.mmmi.modulemon.CommonBattle.BattleEvents.*;
 import dk.sdu.mmmi.modulemon.CommonBattle.IBattleSimulation;
-import dk.sdu.mmmi.modulemon.CommonBattle.IBattleView;
 import dk.sdu.mmmi.modulemon.CommonBattleParticipant.IBattleParticipant;
 import dk.sdu.mmmi.modulemon.CommonMonster.IMonster;
 import dk.sdu.mmmi.modulemon.CommonMonster.IMonsterMove;
@@ -23,7 +22,7 @@ import dk.sdu.mmmi.modulemon.common.services.IGameViewService;
 import java.util.LinkedList;
 import java.util.Queue;
 
-public class BattleView implements IGameViewService, IBattleView {
+public class BattleView implements IGameViewService{
     private IBattleSimulation _battleSimulation;
     private BattleScene _battleScene;
     private Music _battleMusic;
@@ -49,7 +48,6 @@ public class BattleView implements IGameViewService, IBattleView {
     /**
      * Initialize for IBattleView
      */
-    @Override
     public void init(IBattleParticipant player, IBattleParticipant enemy) {
         _battleSimulation = new BattleSimulation();
         _battleSimulation.StartBattle(player, enemy);
