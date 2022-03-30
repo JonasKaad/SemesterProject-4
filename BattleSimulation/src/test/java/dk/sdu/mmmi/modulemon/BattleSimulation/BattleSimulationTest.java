@@ -7,12 +7,12 @@ import dk.sdu.mmmi.modulemon.CommonMonster.IMonsterMove;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.mockito.Mockito;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.Mockito.*;
 
 public class BattleSimulationTest {
 
@@ -32,35 +32,35 @@ public class BattleSimulationTest {
 
     private void initMonsterMocks() {
 
-        playerMonster = Mockito.mock(IMonster.class);
-        enemyMonster = Mockito.mock(IMonster.class);
+        playerMonster = mock(IMonster.class);
+        enemyMonster = mock(IMonster.class);
 
-        IMonsterMove simpleMove = Mockito.mock(IMonsterMove.class);
-        Mockito.when(simpleMove.getName()).thenReturn("basic attack");
-        Mockito.when(simpleMove.getDamage()).thenReturn(10);
+        IMonsterMove simpleMove = mock(IMonsterMove.class);
+        when(simpleMove.getName()).thenReturn("basic attack");
+        when(simpleMove.getDamage()).thenReturn(10);
         moveList = new ArrayList<>();
         moveList.add(simpleMove);
 
-        Mockito.when(playerMonster.getMoves()).thenReturn(moveList);
-        Mockito.when(enemyMonster.getMoves()).thenReturn(moveList);
-        Mockito.when(playerMonster.getAttack()).thenReturn(10);
-        Mockito.when(enemyMonster.getAttack()).thenReturn(10);
-        Mockito.when(playerMonster.getDefence()).thenReturn(10);
-        Mockito.when(enemyMonster.getDefence()).thenReturn(10);
-        Mockito.when(playerMonster.getHitPoints()).thenReturn(50);
-        Mockito.when(enemyMonster.getHitPoints()).thenReturn(50);
+        when(playerMonster.getMoves()).thenReturn(moveList);
+        when(enemyMonster.getMoves()).thenReturn(moveList);
+        when(playerMonster.getAttack()).thenReturn(10);
+        when(enemyMonster.getAttack()).thenReturn(10);
+        when(playerMonster.getDefence()).thenReturn(10);
+        when(enemyMonster.getDefence()).thenReturn(10);
+        when(playerMonster.getHitPoints()).thenReturn(50);
+        when(enemyMonster.getHitPoints()).thenReturn(50);
 
     }
 
     private void initBattleParticipantMocks() {
 
-        player = Mockito.mock(IBattleParticipant.class);
-        enemy = Mockito.mock(IBattleParticipant.class);
-        Mockito.when(player.isPlayerControlled()).thenReturn(true);
-        Mockito.when(enemy.isPlayerControlled()).thenReturn(false);
+        player = mock(IBattleParticipant.class);
+        enemy = mock(IBattleParticipant.class);
+        when(player.isPlayerControlled()).thenReturn(true);
+        when(enemy.isPlayerControlled()).thenReturn(false);
 
-        Mockito.when(player.getActiveMonster()).thenReturn(playerMonster);
-        Mockito.when(enemy.getActiveMonster()).thenReturn(enemyMonster);
+        when(player.getActiveMonster()).thenReturn(playerMonster);
+        when(enemy.getActiveMonster()).thenReturn(enemyMonster);
     }
 
     private BattleSimulation startBattle() {
@@ -97,7 +97,7 @@ public class BattleSimulationTest {
     @Test
     void enemyShouldStartWhenHigherSpeed() {
         initMonsterMocks();
-        Mockito.when(enemyMonster.getSpeed()).thenReturn(60);
+        when(enemyMonster.getSpeed()).thenReturn(60);
         initBattleParticipantMocks();
         BattleSimulation battleSimulation = startBattle();
         IBattleEvent event = battleSimulation.getNextBattleEvent();
@@ -107,7 +107,7 @@ public class BattleSimulationTest {
     @Test
     void firstTwoEventsShouldBeInfoAndMove() {
         initMonsterMocks();
-        Mockito.when(enemyMonster.getSpeed()).thenReturn(60);
+        when(enemyMonster.getSpeed()).thenReturn(60);
         initBattleParticipantMocks();
         BattleSimulation battleSimulation = startBattle();
         IBattleEvent event = battleSimulation.getNextBattleEvent();
@@ -156,33 +156,33 @@ public class BattleSimulationTest {
             battleSimulation.getNextBattleEvent();
         }
         Assertions.assertThrows(IllegalArgumentException.class, () ->
-                battleSimulation.doMove(player, Mockito.mock(IMonsterMove.class))
+                battleSimulation.doMove(player, mock(IMonsterMove.class))
         );
     }
 
     @Test
     void playerMonsterShouldTakeDamage() {
         initMonsterMocks();
-        playerMonster = Mockito.spy(playerMonster);
-        Mockito.when(enemyMonster.getSpeed()).thenReturn(60);
-        Mockito.when(playerMonster.getHitPoints()).thenReturn(50);
-        Mockito.when(playerMonster.getDefence()).thenReturn(10);
+        playerMonster = spy(playerMonster);
+        when(enemyMonster.getSpeed()).thenReturn(60);
+        when(playerMonster.getHitPoints()).thenReturn(50);
+        when(playerMonster.getDefence()).thenReturn(10);
         initBattleParticipantMocks();
         BattleSimulation battleSimulation = startBattle();
         while (!battleSimulation.isPlayersTurn()) {
             battleSimulation.getNextBattleEvent();
         }
-        Mockito.verify(playerMonster).setHitPoints(40);
+        verify(playerMonster).setHitPoints(40);
 
     }
 
     @Test
     void enemyMonsterShouldTakeDamage() {
         initMonsterMocks();
-        enemyMonster = Mockito.spy(enemyMonster);
-        Mockito.when(enemyMonster.getMoves()).thenReturn(moveList);
-        Mockito.when(enemyMonster.getHitPoints()).thenReturn(50);
-        Mockito.when(enemyMonster.getDefence()).thenReturn(10);
+        enemyMonster = spy(enemyMonster);
+        when(enemyMonster.getMoves()).thenReturn(moveList);
+        when(enemyMonster.getHitPoints()).thenReturn(50);
+        when(enemyMonster.getDefence()).thenReturn(10);
         initBattleParticipantMocks();
         BattleSimulation battleSimulation = startBattle();
         while (!battleSimulation.isPlayersTurn()) {
@@ -190,13 +190,13 @@ public class BattleSimulationTest {
         }
         battleSimulation.doMove(player, player.getActiveMonster().getMoves().get(0));
         battleSimulation.getNextBattleEvent();
-        Mockito.verify(enemyMonster).setHitPoints(40);
+        verify(enemyMonster).setHitPoints(40);
     }
 
     @Test
     void shouldNotBeAbleToDoMoveWhenNotTheirTurn() {
         initMonsterMocks();
-        Mockito.when(enemyMonster.getSpeed()).thenReturn(60);
+        when(enemyMonster.getSpeed()).thenReturn(60);
         initBattleParticipantMocks();
         BattleSimulation battleSimulation = startBattle();
         Assertions.assertThrows(IllegalArgumentException.class,
@@ -208,15 +208,15 @@ public class BattleSimulationTest {
     @Test
     void shouldNotBeAbleToDoSwitchMonsterWhenNotTheirTurn() {
         initMonsterMocks();
-        IMonster newMonster = Mockito.mock(IMonster.class);
+        IMonster newMonster = mock(IMonster.class);
         List<IMonster> playerTeam = new ArrayList<>();
         playerTeam.add(playerMonster);
         playerTeam.add(newMonster);
         initBattleParticipantMocks();
-        player = Mockito.spy(player);
-        Mockito.when(player.isPlayerControlled()).thenReturn(true);
-        Mockito.when(player.getActiveMonster()).thenReturn(playerMonster);
-        Mockito.when(player.getMonsterTeam()).thenReturn(playerTeam);
+        player = spy(player);
+        when(player.isPlayerControlled()).thenReturn(true);
+        when(player.getActiveMonster()).thenReturn(playerMonster);
+        when(player.getMonsterTeam()).thenReturn(playerTeam);
         BattleSimulation battleSimulation = startBattle();
         Assertions.assertThrows(IllegalArgumentException.class,
                 () -> {
@@ -227,7 +227,7 @@ public class BattleSimulationTest {
     @Test
     void shouldNotBeAbleToRunAwayWhenNotTheirTurn() {
         initMonsterMocks();
-        Mockito.when(enemyMonster.getSpeed()).thenReturn(60);
+        when(enemyMonster.getSpeed()).thenReturn(60);
         initBattleParticipantMocks();
         BattleSimulation battleSimulation = startBattle();
         Assertions.assertThrows(IllegalArgumentException.class,
@@ -239,15 +239,15 @@ public class BattleSimulationTest {
     @Test
     void playerCanChangeMonster() {
         initMonsterMocks();
-        IMonster newMonster = Mockito.mock(IMonster.class);
+        IMonster newMonster = mock(IMonster.class);
         List<IMonster> playerTeam = new ArrayList<>();
         playerTeam.add(playerMonster);
         playerTeam.add(newMonster);
         initBattleParticipantMocks();
-        player = Mockito.spy(player);
-        Mockito.when(player.isPlayerControlled()).thenReturn(true);
-        Mockito.when(player.getActiveMonster()).thenReturn(playerMonster);
-        Mockito.when(player.getMonsterTeam()).thenReturn(playerTeam);
+        player = spy(player);
+        when(player.isPlayerControlled()).thenReturn(true);
+        when(player.getActiveMonster()).thenReturn(playerMonster);
+        when(player.getMonsterTeam()).thenReturn(playerTeam);
         BattleSimulation battleSimulation = startBattle();
         while (!battleSimulation.isPlayersTurn()) {
             battleSimulation.getNextBattleEvent();
@@ -258,7 +258,7 @@ public class BattleSimulationTest {
         Assertions.assertInstanceOf(ChangeMonsterBattleEvent.class, event);
         event = battleSimulation.getNextBattleEvent();
         Assertions.assertInstanceOf(MoveBattleEvent.class, event, "It should be the enemy's turn, when the player has changed their monster");
-        Mockito.verify(player).setActiveMonster(newMonster);
+        verify(player).setActiveMonster(newMonster);
     }
 
     @Test
@@ -292,11 +292,11 @@ public class BattleSimulationTest {
     @Test
     void doubleAttackShouldDoubleDamage() {
         initMonsterMocks();
-        enemyMonster = Mockito.spy(enemyMonster);
-        Mockito.when(enemyMonster.getMoves()).thenReturn(moveList);
-        Mockito.when(enemyMonster.getHitPoints()).thenReturn(50);
-        Mockito.when(enemyMonster.getDefence()).thenReturn(10);
-        Mockito.when(playerMonster.getAttack()).thenReturn(20);
+        enemyMonster = spy(enemyMonster);
+        when(enemyMonster.getMoves()).thenReturn(moveList);
+        when(enemyMonster.getHitPoints()).thenReturn(50);
+        when(enemyMonster.getDefence()).thenReturn(10);
+        when(playerMonster.getAttack()).thenReturn(20);
         initBattleParticipantMocks();
         BattleSimulation battleSimulation = startBattle();
         while (!battleSimulation.isPlayersTurn()) {
@@ -304,16 +304,16 @@ public class BattleSimulationTest {
         }
         battleSimulation.doMove(player, player.getActiveMonster().getMoves().get(0));
         battleSimulation.getNextBattleEvent();
-        Mockito.verify(enemyMonster).setHitPoints(30);
+        verify(enemyMonster).setHitPoints(30);
     }
 
     @Test
     void doubleDefenceShouldHalfDamage() {
         initMonsterMocks();
-        enemyMonster = Mockito.spy(enemyMonster);
-        Mockito.when(enemyMonster.getMoves()).thenReturn(moveList);
-        Mockito.when(enemyMonster.getHitPoints()).thenReturn(50);
-        Mockito.when(enemyMonster.getDefence()).thenReturn(20);
+        enemyMonster = spy(enemyMonster);
+        when(enemyMonster.getMoves()).thenReturn(moveList);
+        when(enemyMonster.getHitPoints()).thenReturn(50);
+        when(enemyMonster.getDefence()).thenReturn(20);
         initBattleParticipantMocks();
         BattleSimulation battleSimulation = startBattle();
         while (!battleSimulation.isPlayersTurn()) {
@@ -321,13 +321,13 @@ public class BattleSimulationTest {
         }
         battleSimulation.doMove(player, player.getActiveMonster().getMoves().get(0));
         battleSimulation.getNextBattleEvent();
-        Mockito.verify(enemyMonster).setHitPoints(45);
+        verify(enemyMonster).setHitPoints(45);
     }
 
     @Test
     void playerShouldWin() {
         initMonsterMocks();
-        Mockito.when(enemyMonster.getHitPoints()).thenReturn(10);
+        when(enemyMonster.getHitPoints()).thenReturn(10);
         initBattleParticipantMocks();
         BattleSimulation battleSimulation = startBattle();
         while (!battleSimulation.isPlayersTurn()) {
@@ -344,9 +344,9 @@ public class BattleSimulationTest {
     @Test
     void enemyShouldWin() {
         initMonsterMocks();
-        Mockito.when(playerMonster.getHitPoints()).thenReturn(10);
-        Mockito.when(playerMonster.getSpeed()).thenReturn(10);
-        Mockito.when(enemyMonster.getSpeed()).thenReturn(15);
+        when(playerMonster.getHitPoints()).thenReturn(10);
+        when(playerMonster.getSpeed()).thenReturn(10);
+        when(enemyMonster.getSpeed()).thenReturn(15);
         initBattleParticipantMocks();
         BattleSimulation battleSimulation = startBattle();
 
@@ -364,22 +364,22 @@ public class BattleSimulationTest {
     @Test
     void ChangesMonsterOnFaint() {
         initMonsterMocks();
-        Mockito.when(playerMonster.getHitPoints()).thenReturn(10);
-        Mockito.when(playerMonster.getSpeed()).thenReturn(10);
-        Mockito.when(enemyMonster.getSpeed()).thenReturn(15);
+        when(playerMonster.getHitPoints()).thenReturn(10);
+        when(playerMonster.getSpeed()).thenReturn(10);
+        when(enemyMonster.getSpeed()).thenReturn(15);
         initBattleParticipantMocks();
-        player = Mockito.spy(player);
+        player = spy(player);
 
 
         List<IMonster> playerTeam = new ArrayList<>();
-        IMonster playerMonster2 = Mockito.mock(IMonster.class);
+        IMonster playerMonster2 = mock(IMonster.class);
         playerTeam.add(playerMonster2);
         playerTeam.add(playerMonster);
-        Mockito.when(playerMonster2.getHitPoints()).thenReturn(10);
-        Mockito.when(player.getMonsterTeam()).thenReturn(playerTeam);
-        Mockito.when(player.getActiveMonster()).thenReturn(playerMonster);
-        Mockito.when(player.isPlayerControlled()).thenReturn(true);
-        Mockito.when(enemy.isPlayerControlled()).thenReturn(false);
+        when(playerMonster2.getHitPoints()).thenReturn(10);
+        when(player.getMonsterTeam()).thenReturn(playerTeam);
+        when(player.getActiveMonster()).thenReturn(playerMonster);
+        when(player.isPlayerControlled()).thenReturn(true);
+        when(enemy.isPlayerControlled()).thenReturn(false);
         BattleSimulation battleSimulation = startBattle();
 
         //BattleStartEvent
@@ -392,6 +392,6 @@ public class BattleSimulationTest {
         //Player should do a move
         Assertions.assertInstanceOf(MoveBattleEvent.class, battleSimulation.getNextBattleEvent());
 
-        Mockito.verify(player).setActiveMonster(playerMonster2);
+        verify(player).setActiveMonster(playerMonster2);
     }
 }
