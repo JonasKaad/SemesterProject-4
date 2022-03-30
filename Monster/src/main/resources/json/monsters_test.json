@@ -7,8 +7,8 @@
     "attack" : 60,
     "speed" : 60,
     "moves" : [
-      1,
-      2
+      "spit",
+      "trample"
     ]
   },
   {
@@ -19,7 +19,7 @@
     "attack" : 70,
     "speed" : 70,
     "moves" : [
-      3
+      "zap"
     ]
   }
 ]

@@ -5,9 +5,11 @@ import dk.sdu.mmmi.modulemon.Monster.MonsterMove;
 import dk.sdu.mmmi.modulemon.Monster.MonsterParser;
 import org.junit.jupiter.api.Test;
 
+import java.io.IOException;
 import java.net.URISyntaxException;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
@@ -24,10 +26,17 @@ public class MonsterParserTest {
         IMonster monster2 = new Monster("Eel", MonsterType.WATER, 90, 20, 70, 70, Arrays.asList(moveThree));
 
         // Act
-        List<IMonster> monsters = MonsterParser.parseMonsters(
-                "json/monsters_test.json",
-                "json/monsters_moves_test.json"
-        );
+        List<IMonster> monsters = new ArrayList<>();
+
+        try {
+            monsters = MonsterParser.parseMonsters(
+                    "json/monsters_test.json",
+                    "json/monsters_moves_test.json"
+            );
+        } catch (IOException | URISyntaxException e) {
+            e.printStackTrace();
+        }
+
 
         //// Assert
         // Monster 1

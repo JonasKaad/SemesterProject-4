@@ -1,18 +1,18 @@
 [
   {
-    "id" : 1,
+    "id" : "spit",
     "name" : "Spit",
     "damage" : 10,
     "type" : "WATER"
   },
   {
-    "id" : 2,
+    "id" : "trample",
     "name" : "Trample",
     "damage" : 25,
     "type" : "GRASS"
   },
   {
-    "id" : 3,
+    "id" : "zap",
     "name" : "Zap",
     "damage" : 20,
     "type" : "LIGHTNING"

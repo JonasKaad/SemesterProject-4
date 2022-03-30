@@ -32,27 +32,14 @@ public class MonsterParser {
      * @param movesPath A path to the relevant resource
      * @return Returns a list of monsters
      */
-    public static List<IMonster> parseMonsters(String monstersURL, String movesURL) {
-        Path monstersPath = null;
-        Path movesPath = null;
+    public static List<IMonster> parseMonsters(String monstersURL, String movesURL) throws IOException, URISyntaxException {
+        Path monstersPath = monstersPath = Paths.get(ClassLoader.getSystemResource(monstersURL).toURI());
+        Path movesPath = movesPath = Paths.get(ClassLoader.getSystemResource(movesURL).toURI());
 
-        try {
-            monstersPath = Paths.get(ClassLoader.getSystemResource(monstersURL).toURI());
-            movesPath = Paths.get(ClassLoader.getSystemResource(movesURL).toURI());
-        } catch (URISyntaxException e) {
-            e.printStackTrace();
-        }
+        JSONArray JSONmonsters = loadJSONArray(monstersPath);
+        JSONArray JSONmoves = loadJSONArray(movesPath);
 
-        JSONArray JSONmonsters = new JSONArray();
-        JSONArray JSONmoves = new JSONArray();
-        try {
-            JSONmonsters = loadJSONArray(monstersPath);
-            JSONmoves = loadJSONArray(movesPath);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-
-        HashMap<Integer, IMonsterMove> monsterMoveHashMap = instantiateMoves(JSONmoves);
+        HashMap<String, IMonsterMove> monsterMoveHashMap = instantiateMoves(JSONmoves);
         List<IMonster> monsters = instantiateMonsters(JSONmonsters, monsterMoveHashMap);
 
         return monsters;
@@ -63,25 +50,25 @@ public class MonsterParser {
         return new JSONArray(jsonString);
     }
 
-    private static HashMap<Integer, IMonsterMove> instantiateMoves(JSONArray jsonMoves) {
-        HashMap<Integer, IMonsterMove> moves = new HashMap<>();
+    private static HashMap<String, IMonsterMove> instantiateMoves(JSONArray jsonMoves) {
+        HashMap<String, IMonsterMove> moves = new HashMap<>();
         for (int i = 0; i < jsonMoves.length(); i++) {
             JSONObject JSONMove = jsonMoves.getJSONObject(i);
             IMonsterMove move = new MonsterMove(JSONMove.getString("name"),
                     JSONMove.getInt("damage"),
                     monsterTypeHashMap.get(JSONMove.getString("type").toLowerCase()));
-            moves.put(JSONMove.getInt("id"), move);
+            moves.put(JSONMove.getString("id"), move);
         }
         return moves;
     }
 
-    private static List<IMonster> instantiateMonsters(JSONArray JSONMonsters, HashMap<Integer, IMonsterMove> movesHash) {
+    private static List<IMonster> instantiateMonsters(JSONArray JSONMonsters, HashMap<String, IMonsterMove> movesHash) {
         List<IMonster> monsters = new ArrayList<>();
         for (int i = 0; i < JSONMonsters.length(); i++) {
             JSONObject JSONMonster = JSONMonsters.getJSONObject(i);
             List<IMonsterMove> currentMonsterMoves = new ArrayList<>();
             for (int j = 0; j < JSONMonster.getJSONArray("moves").length(); j++) {
-                currentMonsterMoves.add(movesHash.get(JSONMonster.getJSONArray("moves").getInt(j)));
+                currentMonsterMoves.add(movesHash.get(JSONMonster.getJSONArray("moves").getString(j)));
             }
             IMonster monster = new Monster(JSONMonster.getString("name"),
                     monsterTypeHashMap.get(JSONMonster.getString("type").toLowerCase()),
