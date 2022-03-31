@@ -17,7 +17,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 
 public class MonsterParserTest {
     @Test
-    void monsterParser_parseMonster_isAccurate() {
+    void monsterParser_parseMonster_isAccurate() throws IOException, URISyntaxException {
         // Arrange
         MonsterMove moveOne = new MonsterMove("Spit", 10, MonsterType.WATER);
         MonsterMove moveTwo = new MonsterMove("Trample", 25, MonsterType.GRASS);
@@ -26,16 +26,10 @@ public class MonsterParserTest {
         IMonster monster2 = new Monster("Eel", MonsterType.WATER, 90, 20, 70, 70, Arrays.asList(moveThree));
 
         // Act
-        List<IMonster> monsters = new ArrayList<>();
-
-        try {
-            monsters = MonsterParser.parseMonsters(
+        List<IMonster> monsters = MonsterParser.parseMonsters(
                     "json/monsters_test.json",
                     "json/monsters_moves_test.json"
             );
-        } catch (IOException | URISyntaxException e) {
-            e.printStackTrace();
-        }
 
 
         //// Assert
