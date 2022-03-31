@@ -16,7 +16,7 @@ public class TextUtils {
     private TextUtils() {
         glyphLayout = new GlyphLayout();
 
-        FreeTypeFontGenerator fontGenerator = new FreeTypeFontGenerator(new OSGiFileHandle("/fonts/Roboto-Medium.ttf"));
+        FreeTypeFontGenerator fontGenerator = new FreeTypeFontGenerator(new OSGiFileHandle("/fonts/Roboto-Medium.ttf", this.getClass()));
 
         // Font size
         FreeTypeFontGenerator.FreeTypeFontParameter parameter = new FreeTypeFontGenerator.FreeTypeFontParameter();

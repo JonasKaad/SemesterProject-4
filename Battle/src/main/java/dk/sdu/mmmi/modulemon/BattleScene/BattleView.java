@@ -4,6 +4,7 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.audio.Music;
 import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.Color;
+import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import dk.sdu.mmmi.modulemon.BattleScene.animations.*;
 import dk.sdu.mmmi.modulemon.BattleScene.scenes.BattleScene;
@@ -55,9 +56,9 @@ public class BattleView implements IGameViewService, IBattleView {
      * Initialize for IBattleView
      */
     public void startBattle(IBattleParticipant player, IBattleParticipant enemy, IBattleCallback callback) {
-        _battleMusic = Gdx.audio.newMusic(new OSGiFileHandle("/music/battle_music.ogg"));
-        _attackSound = Gdx.audio.newSound(new OSGiFileHandle("/sounds/slam.ogg"));
-        _winSound = Gdx.audio.newSound(new OSGiFileHandle("/sounds/you_won.ogg"));
+        _battleMusic = Gdx.audio.newMusic(new OSGiFileHandle("/music/battle_music.ogg", this.getClass()));
+        _attackSound = Gdx.audio.newSound(new OSGiFileHandle("/sounds/slam.ogg", this.getClass()));
+        _winSound = Gdx.audio.newSound(new OSGiFileHandle("/sounds/you_won.ogg", this.getClass()));
         _battleSimulation.StartBattle(player, enemy);
         _battleCallback = callback;
         blockingAnimations = new LinkedList<>();
@@ -215,12 +216,12 @@ public class BattleView implements IGameViewService, IBattleView {
         //Update information
         if(_battleSimulation != null) {
             IMonster playerActiveMonster = _battleSimulation.getPlayer().getActiveMonster();
-            _battleScene.setPlayerSprite(playerActiveMonster.getBackSprite());
+            _battleScene.setPlayerSprite(new Texture(new OSGiFileHandle(playerActiveMonster.getBackSprite(), this.getClass())));
             _battleScene.setPlayerMonsterName(playerActiveMonster.getName());
             _battleScene.setPlayerHP(Integer.toString(playerActiveMonster.getHitPoints()));
 
             IMonster enemyActiveMonster = _battleSimulation.getEnemy().getActiveMonster();
-            _battleScene.setEnemySprite(enemyActiveMonster.getFrontSprite());
+            _battleScene.setEnemySprite(new Texture(new OSGiFileHandle(enemyActiveMonster.getFrontSprite(), this.getClass())));
             _battleScene.setEnemyMonsterName(enemyActiveMonster.getName());
             _battleScene.setEnemyHP(Integer.toString(enemyActiveMonster.getHitPoints()));
         }
@@ -273,9 +274,9 @@ public class BattleView implements IGameViewService, IBattleView {
             IMonster playerMonster = _battleSimulation.getPlayer().getActiveMonster();
 
             Object[] monsterMoves = new Object[playerMonster.getMoves().size() + 1];
-            monsterMoves[0] = "Cancel";
-            for (int i = 1; i <= playerMonster.getMoves().size(); i++) {
-                monsterMoves[i] = playerMonster.getMoves().get(i - 1);
+            monsterMoves[monsterMoves.length-1] = "Cancel";
+            for (int i = 0; i < playerMonster.getMoves().size(); i++) {
+                monsterMoves[i] = playerMonster.getMoves().get(i);
             }
             _battleScene.setActions(monsterMoves);
 
@@ -286,6 +287,7 @@ public class BattleView implements IGameViewService, IBattleView {
                 _battleScene.setTextToDisplay("Go back");
                 if (keys.isPressed(GameKeys.ENTER)) {
                     this.menuState = MenuState.DEFAULT;
+                    this.selectedAction = 0;
                 }
             } else if (selectedAction instanceof IMonsterMove) {
                 IMonsterMove move = ((IMonsterMove) selectedAction);
