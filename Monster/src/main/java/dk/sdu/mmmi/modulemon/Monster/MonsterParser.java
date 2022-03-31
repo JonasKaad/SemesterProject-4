@@ -28,8 +28,8 @@ public class MonsterParser {
 
     /**
      *
-     * @param monstersPath A path to the relevant resource
-     * @param movesPath A path to the relevant resource
+     * @param monstersURL A path to the relevant resource
+     * @param movesURL A path to the relevant resource
      * @return Returns a list of monsters
      */
     public static List<IMonster> parseMonsters(String monstersURL, String movesURL) throws IOException, URISyntaxException {
@@ -76,7 +76,10 @@ public class MonsterParser {
                     JSONMonster.getInt("defence"),
                     JSONMonster.getInt("attack"),
                     JSONMonster.getInt("speed"),
-                    currentMonsterMoves
+                    currentMonsterMoves,
+                    JSONMonster.getString("front"),
+                    JSONMonster.getString("back"),
+                    JSONMonster.getInt("id")
             );
             monsters.add(monster);
         }
