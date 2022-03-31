@@ -69,7 +69,6 @@ public class BattleView implements IGameViewService{
         _battleScene.setActions(this.defaultActions);
 
         BattleViewAnimation openingAnimation = new BattleSceneOpenAnimation(_battleScene);
-        openingAnimation.start();
         blockingAnimations.add(openingAnimation);
     }
 
@@ -115,9 +114,19 @@ public class BattleView implements IGameViewService{
 
         //Is there any animations active?
         if (!blockingAnimations.isEmpty()) {
+            //Set in update() because some animations depend on it.
+            if(_battleScene != null) {
+                _battleScene.setGameHeight(gameData.getDisplayHeight());
+                _battleScene.setGameWidth(gameData.getDisplayWidth());
+            }
+
             BattleViewAnimation currentAnimation = blockingAnimations.peek();
+            if(!currentAnimation.isStarted()){
+                currentAnimation.start();
+            }
+
             currentAnimation.update(gameData);
-            if (!currentAnimation.isRunning()) {
+            if (currentAnimation.isFinished()) {
                 //If the animation is done, then we remove the animation from the queue
                 currentAnimation.runEventDoneIfSet();
                 blockingAnimations.remove();
@@ -130,6 +139,7 @@ public class BattleView implements IGameViewService{
                 return; //Current animation still working, so just return
             }
         }
+
 
         //Check for events
         IBattleEvent battleEvent = _battleSimulation.getNextBattleEvent();
@@ -187,7 +197,6 @@ public class BattleView implements IGameViewService{
 
     @Override
     public void draw(GameData gameData) {
-        //Game data
         _battleScene.setGameHeight(gameData.getDisplayHeight());
         _battleScene.setGameWidth(gameData.getDisplayWidth());
 
