@@ -33,8 +33,8 @@ public class MonsterParser {
      * @return Returns a list of monsters
      */
     public static List<IMonster> parseMonsters(String monstersURL, String movesURL) throws IOException, URISyntaxException {
-        Path monstersPath = Paths.get(ClassLoader.getSystemResource(monstersURL).toURI());
-        Path movesPath = Paths.get(ClassLoader.getSystemResource(movesURL).toURI());
+        Path monstersPath = monstersPath = Paths.get(MonsterParser.class.getResource(monstersURL).toURI());
+        Path movesPath = movesPath = Paths.get(MonsterParser.class.getResource(movesURL).toURI());
 
         JSONArray JSONmonsters = loadJSONArray(monstersPath);
         JSONArray JSONmoves = loadJSONArray(movesPath);

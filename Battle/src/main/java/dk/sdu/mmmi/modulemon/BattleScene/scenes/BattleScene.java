@@ -57,7 +57,7 @@ public class BattleScene {
         _playerBase = new Image(new Texture(new OSGiFileHandle("/battleart/playerbase1.png", this.getClass())));
         _enemyBase = new Image(new Texture(new OSGiFileHandle("/battleart/enemybase1.png", this.getClass())));
         spriteBatch = new SpriteBatch();
-        //spriteBatch.setProjectionMatrix(Game.cam.combined);
+//        spriteBatch.setProjectionMatrix(Game.cam.combined);
         shapeRenderer = new ShapeRenderer();
         resetPositions();
     }
@@ -72,12 +72,16 @@ public class BattleScene {
         _backdropPosition.updatePosition(_backdrop);
         _playerBasePosition.updatePosition(_playerBase);
         _enemyBasePosition.updatePosition(_enemyBase);
-        _playerMonster.setOrigin(_playerMonster.getImageWidth() / 2, _playerMonster.getImageHeight() / 2);
-        _playerMonster.setRotation(_playerMonsterRotation);
-        _playerMonsterPosition.updatePosition(_playerMonster);
-        _enemyMonster.setOrigin(_enemyMonster.getImageWidth() / 2, _enemyMonster.getImageHeight() / 2);
-        _enemyMonster.setRotation(_enemyMonsterRotation);
-        _enemyMonsterPosition.updatePosition(_enemyMonster);
+        if(_playerMonster != null) {
+            _playerMonster.setOrigin(_playerMonster.getImageWidth() / 2, _playerMonster.getImageHeight() / 2);
+            _playerMonster.setRotation(_playerMonsterRotation);
+            _playerMonsterPosition.updatePosition(_playerMonster);
+        }
+        if(_enemyMonster != null) {
+            _enemyMonster.setOrigin(_enemyMonster.getImageWidth() / 2, _enemyMonster.getImageHeight() / 2);
+            _enemyMonster.setRotation(_enemyMonsterRotation);
+            _enemyMonsterPosition.updatePosition(_enemyMonster);
+        }
 
         _backdrop.setSize(this.gameWidth, this.gameHeight);
 
@@ -215,6 +219,10 @@ public class BattleScene {
 
     public void setTextToDisplay(String textToDisplay) {
         this.textToDisplay = textToDisplay;
+    }
+
+    public String getTextToDisplay() {
+        return this.textToDisplay;
     }
 
     public void setEnemySprite(Texture frontSprite) {

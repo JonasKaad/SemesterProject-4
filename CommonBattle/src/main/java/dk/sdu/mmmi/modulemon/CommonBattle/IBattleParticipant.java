@@ -1,4 +1,4 @@
-package dk.sdu.mmmi.modulemon.CommonBattleParticipant;
+package dk.sdu.mmmi.modulemon.CommonBattle;
 
 import dk.sdu.mmmi.modulemon.CommonMonster.IMonster;
 
