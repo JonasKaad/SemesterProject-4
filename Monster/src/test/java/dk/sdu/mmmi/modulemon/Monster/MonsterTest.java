@@ -1,3 +1,5 @@
+package dk.sdu.mmmi.modulemon.Monster;
+
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Texture;
 import dk.sdu.mmmi.modulemon.CommonMonster.IMonster;
