@@ -54,7 +54,7 @@ public class MapView extends ApplicationAdapter implements IGameViewService {
         mapBottom = 360;
         mapTop = mapBottom + mapHeight * tilePixelHeight - (cam.viewportWidth / 2f) - 80;
         spriteBatch = new SpriteBatch();
-        cam.position.set(cam.viewportWidth / 2f, cam.viewportHeight / 2f, 0);
+        cam.position.set(mapRight /2f, mapTop / 2f, 0);
 
     }
 
@@ -80,18 +80,30 @@ public class MapView extends ApplicationAdapter implements IGameViewService {
                 Texture sprite = getSpriteTexture(entity.getSpriteString());
                 //System.out.println("My sprite is" + sprite);
                 //spriteBatch.setProjectionMatrix(Game.cam.combined);
+                //System.out.println("before drawing:" + entity.getPosX() + "  -  " + entity.getPosY());
+
+                spriteBatch.setProjectionMatrix(cam.combined);
                 spriteBatch.begin();
                 spriteBatch.draw(sprite, entity.getPosX(), entity.getPosY());
                 spriteBatch.end();
 
-                System.out.println(entity.getClass());
+                //System.out.println(entity.getClass());
                 if (entity.getClass() == dk.sdu.mmmi.modulemon.Player.Player.class) {
                     playerPosX = entity.getPosX() * 1;
                     playerPosY = entity.getPosY() * 1;
-                    cam.position.set(playerPosX + cam.viewportWidth / 2f, playerPosY + cam.viewportHeight / 2f, 0);
+                    if(playerPosY > mapBottom && playerPosY < mapTop){
+                        cam.position.set(cam.position.x, playerPosY, 0);
+
+                        //cam.position.set(playerPosX + cam.viewportWidth / 2f, playerPosY + cam.viewportHeight / 2f, 0);
+                        cam.update();
+                    }
+                    if (playerPosX > mapLeft && playerPosX < mapRight) {
+                        cam.position.set(playerPosX, cam.position.y, 0);
+                        cam.update();
+                    }
+                    //System.out.println("following cam: " + playerPosX + "  -  " + playerPosY);
                 }
             } else {
-                //System.out.println("no fucking file");
                 //System.out.println("spritestring is:" + entity.getSpriteString());
             }
         }
