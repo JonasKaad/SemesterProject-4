@@ -1,6 +1,6 @@
 package dk.sdu.mmmi.modulemon.CommonBattle.BattleEvents;
 
-import dk.sdu.mmmi.modulemon.CommonBattleParticipant.IBattleParticipant;
+import dk.sdu.mmmi.modulemon.CommonBattle.IBattleParticipant;
 
 public class VictoryBattleEvent implements IBattleEvent {
     private String text;

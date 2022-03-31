@@ -1,13 +1,12 @@
-package dk.sdu.mmmi.modulemon.Battle;
+package dk.sdu.mmmi.modulemon.BattleSimulation;
 
 import dk.sdu.mmmi.modulemon.CommonBattle.BattleEvents.*;
-import dk.sdu.mmmi.modulemon.CommonBattleParticipant.IBattleParticipant;
+import dk.sdu.mmmi.modulemon.CommonBattle.IBattleMonsterProcessor;
+import dk.sdu.mmmi.modulemon.CommonBattle.IBattleParticipant;
 import dk.sdu.mmmi.modulemon.CommonMonster.IMonster;
 import dk.sdu.mmmi.modulemon.CommonMonster.IMonsterMove;
-import dk.sdu.mmmi.modulemon.CommonMonster.MonsterType;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.mockito.Mockito;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -66,6 +65,24 @@ public class BattleSimulationTest {
 
     private BattleSimulation startBattle() {
         BattleSimulation sim = new BattleSimulation();
+        // Mock battleProcessor
+        sim.setMonsterProcessor(new IBattleMonsterProcessor() {
+            @Override
+            public IMonster whichMonsterStarts(IMonster monster1, IMonster monster2) {
+                return monster1.getSpeed() >= monster2.getSpeed() ? monster1 : monster2;
+            }
+
+            @Override
+            public int calculateDamage(IMonster source, IMonsterMove move, IMonster target) {
+                float moveDamage = (float) move.getDamage();
+                float sourceAttack = (float) source.getAttack();
+                float targetDefence = (float) target.getDefence();
+
+                int damage = Math.round(moveDamage*(sourceAttack/targetDefence));
+
+                return damage;
+            }
+        });
         sim.StartBattle(player, enemy);
         return sim;
     }
