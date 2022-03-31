@@ -1,5 +1,5 @@
 #-----------------------------------------------------------------
 # Use this file to add customized Bnd instructions for the bundle
 #-----------------------------------------------------------------
-Service-Component: META-INF/gameview.xml
+Service-Component: META-INF/gameview.xml, META-INF/battleview.xml
 Bundle-ActivationPolicy: lazy
