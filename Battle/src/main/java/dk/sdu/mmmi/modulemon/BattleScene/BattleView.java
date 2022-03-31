@@ -252,9 +252,9 @@ public class BattleView implements IGameViewService{
             IMonster playerMonster = _battleSimulation.getPlayer().getActiveMonster();
 
             Object[] monsterMoves = new Object[playerMonster.getMoves().size() + 1];
-            monsterMoves[0] = "Cancel";
-            for (int i = 1; i <= playerMonster.getMoves().size(); i++) {
-                monsterMoves[i] = playerMonster.getMoves().get(i - 1);
+            monsterMoves[monsterMoves.length-1] = "Cancel";
+            for (int i = 0; i < playerMonster.getMoves().size(); i++) {
+                monsterMoves[i] = playerMonster.getMoves().get(i);
             }
             _battleScene.setActions(monsterMoves);
 
@@ -265,6 +265,7 @@ public class BattleView implements IGameViewService{
                 _battleScene.setTextToDisplay("Go back");
                 if (keys.isPressed(GameKeys.ENTER)) {
                     this.menuState = MenuState.DEFAULT;
+                    this.selectedAction = 0;
                 }
             } else if (selectedAction instanceof IMonsterMove) {
                 IMonsterMove move = ((IMonsterMove) selectedAction);
