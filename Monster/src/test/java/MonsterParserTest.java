@@ -22,8 +22,26 @@ public class MonsterParserTest {
         MonsterMove moveOne = new MonsterMove("Spit", 10, MonsterType.WATER);
         MonsterMove moveTwo = new MonsterMove("Trample", 25, MonsterType.GRASS);
         MonsterMove moveThree = new MonsterMove("Zap", 20, MonsterType.LIGHTNING);
-        IMonster monster1 = new Monster("Alpaca", MonsterType.GRASS, 100, 25, 60, 60, Arrays.asList(moveOne, moveTwo));
-        IMonster monster2 = new Monster("Eel", MonsterType.WATER, 90, 20, 70, 70, Arrays.asList(moveThree));
+        IMonster monster1 = new Monster("Alpaca",
+                MonsterType.GRASS,
+                100,
+                25,
+                60,
+                60,
+                Arrays.asList(moveOne, moveTwo),
+                "images/alpaca_1.png",
+                "images/alpaca_2.png",
+                0);
+        IMonster monster2 = new Monster("Eel",
+                MonsterType.WATER,
+                90,
+                20,
+                70,
+                70,
+                Arrays.asList(moveThree),
+                "images/eel_1.png",
+                "images/eel_2.png",
+                1);
 
         // Act
         List<IMonster> monsters = MonsterParser.parseMonsters(
@@ -39,6 +57,9 @@ public class MonsterParserTest {
         assertEquals(monster1.getDefence(), monsters.get(0).getDefence());
         assertEquals(monster1.getAttack(), monsters.get(0).getAttack());
         assertEquals(monster1.getSpeed(), monsters.get(0).getSpeed());
+        assertEquals(monster1.getFrontSprite(), monsters.get(0).getFrontSprite());
+        assertEquals(monster1.getBackSprite(), monsters.get(0).getBackSprite());
+        assertEquals(monster1.getID(), monsters.get(0).getID());
         // Monster 1 moves
         assertEquals(monster1.getMoves().get(0).getName(), monsters.get(0).getMoves().get(0).getName());
         assertEquals(monster1.getMoves().get(0).getDamage(), monsters.get(0).getMoves().get(0).getDamage());
@@ -53,6 +74,9 @@ public class MonsterParserTest {
         assertEquals(monster2.getDefence(), monsters.get(1).getDefence());
         assertEquals(monster2.getAttack(), monsters.get(1).getAttack());
         assertEquals(monster2.getSpeed(), monsters.get(1).getSpeed());
+        assertEquals(monster2.getFrontSprite(), monsters.get(1).getFrontSprite());
+        assertEquals(monster2.getBackSprite(), monsters.get(1).getBackSprite());
+        assertEquals(monster2.getID(), monsters.get(1).getID());
         // Monster 2 moves
         assertEquals(monster2.getMoves().get(0).getName(), monsters.get(1).getMoves().get(0).getName());
         assertEquals(monster2.getMoves().get(0).getDamage(), monsters.get(1).getMoves().get(0).getDamage());

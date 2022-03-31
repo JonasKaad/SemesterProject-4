@@ -79,4 +79,9 @@ public class MockMonster implements IMonster {
     public List<IMonsterMove> getMoves() {
         return this.moves;
     }
+
+    @Override
+    public int getID() {
+        return 0;
+    }
 }

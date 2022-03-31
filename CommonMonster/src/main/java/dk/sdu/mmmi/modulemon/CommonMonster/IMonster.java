@@ -1,7 +1,5 @@
 package dk.sdu.mmmi.modulemon.CommonMonster;
 
-import com.badlogic.gdx.graphics.Texture;
-
 import java.util.List;
 
 public interface IMonster {
@@ -15,4 +13,5 @@ public interface IMonster {
     String getBackSprite();
     MonsterType getMonsterType();
     List<IMonsterMove> getMoves();
+    int getID();
 }

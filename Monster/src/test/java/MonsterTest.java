@@ -1,10 +1,6 @@
-import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.graphics.Texture;
 import dk.sdu.mmmi.modulemon.CommonMonster.IMonster;
-import dk.sdu.mmmi.modulemon.CommonMonster.IMonsterMove;
 import dk.sdu.mmmi.modulemon.CommonMonster.MonsterType;
 import dk.sdu.mmmi.modulemon.Monster.Monster;
-import dk.sdu.mmmi.modulemon.Monster.MonsterPlugin;
 import org.junit.jupiter.api.Test;
 
 

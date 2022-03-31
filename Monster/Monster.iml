@@ -12,7 +12,7 @@
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />
     <orderEntry type="library" scope="PROVIDED" name="Maven: org.osgi:org.osgi.core:4.3.0" level="project" />
-    <orderEntry type="module" module-name="CommonMonster" />
+    <orderEntry type="library" name="Maven: modulemon.build:CommonMonster:1.0-SNAPSHOT" level="project" />
     <orderEntry type="module" module-name="LibGDX" />
     <orderEntry type="library" name="Maven: com.badlogicgames.gdx:gdx:1.6.3" level="project" />
     <orderEntry type="library" name="Maven: com.badlogicgames.gdx:gdx-platform:1.6.3" level="project" />
@@ -38,7 +38,7 @@
     <orderEntry type="library" name="Maven: com.google.code.javaparser:javaparser:1.0.8" level="project" />
     <orderEntry type="library" name="Maven: com.diffplug.osgi:com.diffplug.osgi.extension.sun.misc:0.0.0" level="project" />
     <orderEntry type="library" name="Maven: com.diffplug.osgi:com.diffplug.osgi.extension.sun.reflect:0.0.0" level="project" />
-    <orderEntry type="module" module-name="Common" />
+    <orderEntry type="library" name="Maven: modulemon.build:Common:1.0-SNAPSHOT" level="project" />
     <orderEntry type="library" scope="TEST" name="Maven: org.junit.jupiter:junit-jupiter-api:5.8.2" level="project" />
     <orderEntry type="library" scope="TEST" name="Maven: org.opentest4j:opentest4j:1.2.0" level="project" />
     <orderEntry type="library" scope="TEST" name="Maven: org.junit.platform:junit-platform-commons:1.8.2" level="project" />
@@ -47,5 +47,6 @@
     <orderEntry type="library" scope="TEST" name="Maven: net.bytebuddy:byte-buddy:1.12.8" level="project" />
     <orderEntry type="library" scope="TEST" name="Maven: net.bytebuddy:byte-buddy-agent:1.12.8" level="project" />
     <orderEntry type="library" scope="TEST" name="Maven: org.objenesis:objenesis:3.2" level="project" />
+    <orderEntry type="library" name="Maven: org.json:json:20211205" level="project" />
   </component>
 </module>
