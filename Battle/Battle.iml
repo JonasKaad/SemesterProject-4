@@ -39,7 +39,6 @@
     <orderEntry type="library" name="Maven: com.diffplug.osgi:com.diffplug.osgi.extension.sun.reflect:0.0.0" level="project" />
     <orderEntry type="module" module-name="Common" />
     <orderEntry type="module" module-name="CommonBattle" />
-    <orderEntry type="module" module-name="CommonBattleParticipant" />
     <orderEntry type="module" module-name="CommonMonster" />
     <orderEntry type="library" scope="TEST" name="Maven: org.junit.jupiter:junit-jupiter-api:5.8.2" level="project" />
     <orderEntry type="library" scope="TEST" name="Maven: org.opentest4j:opentest4j:1.2.0" level="project" />

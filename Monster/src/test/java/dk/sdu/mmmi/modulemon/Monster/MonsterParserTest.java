@@ -7,9 +7,6 @@ import org.junit.jupiter.api.Test;
 
 import java.io.IOException;
 import java.net.URISyntaxException;
-import java.nio.file.Path;
-import java.nio.file.Paths;
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
@@ -45,8 +42,8 @@ public class MonsterParserTest {
 
         // Act
         List<IMonster> monsters = MonsterParser.parseMonsters(
-                    "json/monsters_test.json",
-                    "json/monsters_moves_test.json"
+                    "/json/monsters_test.json",
+                    "/json/monsters_moves_test.json"
             );
 
 
