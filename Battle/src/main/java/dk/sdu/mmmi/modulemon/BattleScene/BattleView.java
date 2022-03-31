@@ -22,6 +22,7 @@ import java.util.LinkedList;
 import java.util.Queue;
 
 public class BattleView implements IGameViewService{
+    private boolean _isInitialized;
     private IBattleSimulation _battleSimulation;
     private BattleScene _battleScene;
     private Music _battleMusic;
@@ -42,6 +43,7 @@ public class BattleView implements IGameViewService{
 
     public BattleView() {
         System.out.println("BATTLE VIEW BEING CONSTRUCTED!!!");
+        _isInitialized = false;
         blockingAnimations = new LinkedList<>();
         backgroundAnimations = new LinkedList<>();
         menuState = MenuState.DEFAULT;
@@ -78,8 +80,11 @@ public class BattleView implements IGameViewService{
     public void init() {
         spriteBatch = new SpriteBatch();
         _battleScene = new BattleScene();
+
+        _isInitialized = true;
         //Temp
-        init(BattleParticipantMocks.getPlayer(), BattleParticipantMocks.getOpponent());
+        if(_battleSimulation != null)
+            init(BattleParticipantMocks.getPlayer(), BattleParticipantMocks.getOpponent());
     }
 
     //OSGi dependency injection
@@ -98,6 +103,9 @@ public class BattleView implements IGameViewService{
     @Override
     public void update(GameData gameData, IGameStateManager gameStateManager) {
         //spriteBatch.setProjectionMatrix(Game.cam.combined);
+        if(!_isInitialized){
+            return;
+        }
         if (_battleSimulation == null) {
             spriteBatch.begin();
             TextUtils.getInstance().drawBigRoboto(spriteBatch, "Waiting for battle participants", Color.WHITE, 100, gameData.getDisplayHeight() / 2f);
@@ -202,7 +210,7 @@ public class BattleView implements IGameViewService{
 
     @Override
     public void handleInput(GameData gameData, IGameStateManager gameStateManager) {
-        if (!blockingAnimations.isEmpty()) {
+        if (!blockingAnimations.isEmpty() || !_isInitialized) {
             //If any blocking animations, don't allow any input.
             _battleScene.setActionBoxAlpha(0.5f);
             return;

@@ -33,6 +33,7 @@ public class BattleViewTest {
     public void BattleView_EmptyBattleSimulation_ShouldNotThrow() {
         // Arrange
         BattleView bw = new BattleView();
+        bw.init();
         GameData gameData = new GameData();
 
         // Act
@@ -50,6 +51,7 @@ public class BattleViewTest {
     public void BattleView_UnloadingBattleSimulationOnRuntime_ShouldNotThrow() {
         // Arrange
         BattleView battleView = new BattleView();
+        battleView.init();
         GameData gameData = new GameData();
         IBattleSimulation simulation = mock(IBattleSimulation.class);
         when(simulation.getPlayer()).thenReturn(BattleParticipantMocks.getPlayer());
@@ -78,6 +80,7 @@ public class BattleViewTest {
     public void BattleView_DrawWidthHeight_ShouldBeUpdatedByGameData() {
         // Arrange
         BattleView battleView = new BattleView();
+        battleView.init();
         GameData gameData = new GameData();
         gameData.setDisplayHeight(120);
         gameData.setDisplayWidth(100);
@@ -101,6 +104,7 @@ public class BattleViewTest {
     public void BattleView_Init_ShouldStartBattle() {
         // Arrange
         BattleView battleView = new BattleView();
+        battleView.init();
         IBattleParticipant participant1 = mock(IBattleParticipant.class);
         when(participant1.isPlayerControlled()).thenReturn(true);
         IBattleParticipant participant2 = mock(IBattleParticipant.class);
@@ -122,6 +126,7 @@ public class BattleViewTest {
     public void BattleView_TextEvent_ShouldWriteToScene(){
         // Arrange
         BattleView battleView = new BattleView();
+        battleView.init();
         GameData gameData = new GameData();
         BattleScene scene = new BattleScene();
 
