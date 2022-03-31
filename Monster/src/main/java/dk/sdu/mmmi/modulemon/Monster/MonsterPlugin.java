@@ -14,7 +14,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-public class MonsterPlugin extends Entity implements IGamePluginService {
+public class MonsterPlugin implements IGamePluginService {
     private Entity monster;
 
     MonsterMove moveOne = new MonsterMove("Air Burst", 15, MonsterType.AIR);
