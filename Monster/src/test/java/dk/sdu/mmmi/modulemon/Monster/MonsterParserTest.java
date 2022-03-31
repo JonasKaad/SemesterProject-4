@@ -27,8 +27,8 @@ public class MonsterParserTest {
 
         // Act
         List<IMonster> monsters = MonsterParser.parseMonsters(
-                    "json/monsters_test.json",
-                    "json/monsters_moves_test.json"
+                    "/json/monsters_test.json",
+                    "/json/monsters_moves_test.json"
             );
 
 
