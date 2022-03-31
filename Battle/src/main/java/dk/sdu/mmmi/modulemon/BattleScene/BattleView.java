@@ -42,8 +42,6 @@ public class BattleView implements IGameViewService{
 
     public BattleView() {
         System.out.println("BATTLE VIEW BEING CONSTRUCTED!!!");
-        spriteBatch = new SpriteBatch();
-        _battleScene = new BattleScene();
         blockingAnimations = new LinkedList<>();
         backgroundAnimations = new LinkedList<>();
         menuState = MenuState.DEFAULT;
@@ -78,6 +76,9 @@ public class BattleView implements IGameViewService{
      */
     @Override
     public void init() {
+        spriteBatch = new SpriteBatch();
+        _battleScene = new BattleScene();
+        //Temp
         init(BattleParticipantMocks.getPlayer(), BattleParticipantMocks.getOpponent());
     }
 
