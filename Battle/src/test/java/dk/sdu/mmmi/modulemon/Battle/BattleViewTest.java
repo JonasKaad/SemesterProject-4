@@ -90,6 +90,7 @@ public class BattleViewTest {
 
         // Act / Assert
         battleView.draw(gameData);
+        battleView.update(gameData, null);
         assertEquals(120, scene.getGameHeight());
         assertEquals(100, scene.getGameWidth());
 
