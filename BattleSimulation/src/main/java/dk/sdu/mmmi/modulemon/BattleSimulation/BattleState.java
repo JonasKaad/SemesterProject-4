@@ -1,0 +1,39 @@
+package dk.sdu.mmmi.modulemon.BattleSimulation;
+
+import dk.sdu.mmmi.modulemon.CommonBattle.IBattleParticipant;
+import dk.sdu.mmmi.modulemon.CommonBattle.IBattleState;
+
+public class BattleState implements IBattleState {
+
+    private IBattleParticipant player;
+    private IBattleParticipant enemy;
+    private IBattleParticipant activeParticipant;
+
+    public BattleState(IBattleParticipant player, IBattleParticipant enemy) {
+        this.player = player;
+        this.enemy = enemy;
+    }
+
+    @Override
+    public IBattleParticipant getPlayer() {
+        return player;
+    }
+
+    @Override
+    public IBattleParticipant getEnemy() {
+        return enemy;
+    }
+
+    @Override
+    public boolean isPlayersTurn() {
+        return activeParticipant==player;
+    }
+
+    public IBattleParticipant getActiveParticipant() {
+        return this.activeParticipant;
+    }
+
+    public void setActiveParticipant(IBattleParticipant participant) {
+        this.activeParticipant = participant;
+    }
+}

@@ -4,16 +4,14 @@ import dk.sdu.mmmi.modulemon.CommonBattle.BattleEvents.*;
 import dk.sdu.mmmi.modulemon.CommonBattle.IBattleMonsterProcessor;
 import dk.sdu.mmmi.modulemon.CommonBattle.IBattleSimulation;
 import dk.sdu.mmmi.modulemon.CommonBattle.IBattleParticipant;
+import dk.sdu.mmmi.modulemon.CommonBattle.IBattleState;
 import dk.sdu.mmmi.modulemon.CommonMonster.IMonster;
 import dk.sdu.mmmi.modulemon.CommonMonster.IMonsterMove;
 import java.util.Optional;
 
 public class BattleSimulation implements IBattleSimulation {
 
-    private IBattleParticipant player;
-    private IBattleParticipant enemy;
-
-    private IBattleParticipant activeParticipant;
+    private BattleState battleState;
 
     private IBattleEvent nextEvent;
     private Runnable onNextEvent;
@@ -24,8 +22,6 @@ public class BattleSimulation implements IBattleSimulation {
 
     @Override
     public void StartBattle(IBattleParticipant player, IBattleParticipant enemy) {
-        this.player = player;
-        this.enemy = enemy;
 
         if (player.getActiveMonster().getHitPoints()<=0 || enemy.getActiveMonster().getHitPoints()<=0){
             throw new RuntimeException("Active monsters should have at least 1 HP");
@@ -35,53 +31,45 @@ public class BattleSimulation implements IBattleSimulation {
         IMonster firstMonster = monsterProcessor.whichMonsterStarts(player.getActiveMonster(), enemy.getActiveMonster());
         IBattleParticipant firstToTakeTurn = firstMonster == player.getActiveMonster() ? player : enemy;
 
+        this.battleState = new BattleState(player, enemy);
+
         if (!firstToTakeTurn.isPlayerControlled()) {
             nextEvent = new InfoBattleEvent("enemy starts the battle");
             onNextEvent = () -> {
-                activeParticipant = firstToTakeTurn;
-                ecs.doAction(activeParticipant, this);
+                battleState.setActiveParticipant(firstToTakeTurn);
+                ecs.doAction(battleState.getActiveParticipant(), this);
             };
         } else {
             nextEvent = new InfoBattleEvent("player starts the battle");
             onNextEvent = () -> {
-                activeParticipant = firstToTakeTurn;
+                battleState.setActiveParticipant(firstToTakeTurn);
             };
         }
 
     }
 
     private void switchTurns() {
-        if (activeParticipant == player) {
-            activeParticipant = enemy;
-            ecs.doAction(enemy, this);
+        if (battleState.isPlayersTurn()) {
+            battleState.setActiveParticipant(battleState.getEnemy());
+            ecs.doAction(battleState.getEnemy(), this);
         } else {
-            activeParticipant = player;
+            battleState.setActiveParticipant(battleState.getPlayer());
         }
 
     }
 
     private String getActiveParticipantTitle() {
-        return activeParticipant.isPlayerControlled() ? "player" : "enemy";
+        return battleState.isPlayersTurn() ? "player" : "enemy";
     }
 
     @Override
-    public IBattleParticipant getPlayer() {
-        return this.player;
-    }
-
-    @Override
-    public IBattleParticipant getEnemy() {
-        return this.enemy;
-    }
-
-    @Override
-    public boolean isPlayersTurn() {
-        return activeParticipant==player;
+    public IBattleState getState() {
+        return this.battleState;
     }
 
     @Override
     public void doMove(IBattleParticipant battleParticipant, IMonsterMove move) {
-        if (battleParticipant!=activeParticipant) {
+        if (battleParticipant!=battleState.getActiveParticipant()) {
             throw new IllegalArgumentException("It is not that battle participants turn!");
         }
         if (!battleParticipant.getActiveMonster().getMoves().contains(move)) {
@@ -95,15 +83,15 @@ public class BattleSimulation implements IBattleSimulation {
         IBattleParticipant opposingParticipant;
 
         if (battleParticipant.isPlayerControlled()) {
-            target = enemy.getActiveMonster();
+            target = battleState.getEnemy().getActiveMonster();
             participantTitle = "player";
             opposingParticipantTitle = "enemy";
-            opposingParticipant = enemy;
+            opposingParticipant = battleState.getEnemy();
         } else {
-            target = player.getActiveMonster();
+            target = battleState.getPlayer().getActiveMonster();
             participantTitle = "enemy";
             opposingParticipantTitle = "player";
-            opposingParticipant = player;
+            opposingParticipant = battleState.getPlayer();
         }
 
         int damage = monsterProcessor.calculateDamage(source, move, target);
@@ -139,7 +127,7 @@ public class BattleSimulation implements IBattleSimulation {
 
     @Override
     public void switchMonster(IBattleParticipant battleParticipant, IMonster monster) {
-        if (activeParticipant!=battleParticipant) {
+        if (battleState.getActiveParticipant()!=battleParticipant) {
             throw new IllegalArgumentException("It is not that battle participants turn!");
         }
         if (battleParticipant.getMonsterTeam().contains(monster)) {
@@ -155,7 +143,7 @@ public class BattleSimulation implements IBattleSimulation {
 
     @Override
     public void runAway(IBattleParticipant battleParticipant) {
-        if (battleParticipant!=activeParticipant) {
+        if (battleParticipant!=battleState.getActiveParticipant()) {
             throw new IllegalArgumentException("It is not that battle participants turn!");
         }
 

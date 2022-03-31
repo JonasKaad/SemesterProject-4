@@ -92,7 +92,7 @@ public class BattleSimulationTest {
         initMonsterMocks();
         initBattleParticipantMocks();
         BattleSimulation battleSimulation = startBattle();
-        assertEquals(player, battleSimulation.getPlayer());
+        assertEquals(player, battleSimulation.getState().getPlayer());
     }
 
     @Test
@@ -100,7 +100,7 @@ public class BattleSimulationTest {
         initMonsterMocks();
         initBattleParticipantMocks();
         BattleSimulation battleSimulation = startBattle();
-        assertEquals(enemy, battleSimulation.getEnemy());
+        assertEquals(enemy, battleSimulation.getState().getEnemy());
     }
 
     @Test
@@ -139,7 +139,7 @@ public class BattleSimulationTest {
         initMonsterMocks();
         initBattleParticipantMocks();
         BattleSimulation battleSimulation = startBattle();
-        assertFalse(battleSimulation.isPlayersTurn());
+        assertFalse(battleSimulation.getState().isPlayersTurn());
     }
 
     @Test
@@ -148,7 +148,7 @@ public class BattleSimulationTest {
         initBattleParticipantMocks();
         BattleSimulation battleSimulation = startBattle();
         battleSimulation.getNextBattleEvent();
-        assertTrue(battleSimulation.isPlayersTurn());
+        assertTrue(battleSimulation.getState().isPlayersTurn());
     }
 
     @Test
@@ -156,7 +156,7 @@ public class BattleSimulationTest {
         initMonsterMocks();
         initBattleParticipantMocks();
         BattleSimulation battleSimulation = startBattle();
-        while (!battleSimulation.isPlayersTurn()) {
+        while (!battleSimulation.getState().isPlayersTurn()) {
             battleSimulation.getNextBattleEvent();
         }
         battleSimulation.doMove(player, player.getActiveMonster().getMoves().get(0));
@@ -170,7 +170,7 @@ public class BattleSimulationTest {
         initMonsterMocks();
         initBattleParticipantMocks();
         BattleSimulation battleSimulation = startBattle();
-        while (!battleSimulation.isPlayersTurn()) {
+        while (!battleSimulation.getState().isPlayersTurn()) {
             battleSimulation.getNextBattleEvent();
         }
         assertThrows(IllegalArgumentException.class, () ->
@@ -187,7 +187,7 @@ public class BattleSimulationTest {
         when(playerMonster.getDefence()).thenReturn(10);
         initBattleParticipantMocks();
         BattleSimulation battleSimulation = startBattle();
-        while (!battleSimulation.isPlayersTurn()) {
+        while (!battleSimulation.getState().isPlayersTurn()) {
             battleSimulation.getNextBattleEvent();
         }
         verify(playerMonster).setHitPoints(40);
@@ -203,7 +203,7 @@ public class BattleSimulationTest {
         when(enemyMonster.getDefence()).thenReturn(10);
         initBattleParticipantMocks();
         BattleSimulation battleSimulation = startBattle();
-        while (!battleSimulation.isPlayersTurn()) {
+        while (!battleSimulation.getState().isPlayersTurn()) {
             battleSimulation.getNextBattleEvent();
         }
         battleSimulation.doMove(player, player.getActiveMonster().getMoves().get(0));
@@ -267,10 +267,10 @@ public class BattleSimulationTest {
         when(player.getActiveMonster()).thenReturn(playerMonster);
         when(player.getMonsterTeam()).thenReturn(playerTeam);
         BattleSimulation battleSimulation = startBattle();
-        while (!battleSimulation.isPlayersTurn()) {
+        while (!battleSimulation.getState().isPlayersTurn()) {
             battleSimulation.getNextBattleEvent();
         }
-        assertEquals(playerMonster, battleSimulation.getPlayer().getActiveMonster());
+        assertEquals(playerMonster, battleSimulation.getState().getPlayer().getActiveMonster());
         battleSimulation.switchMonster(player, newMonster);
         IBattleEvent event = battleSimulation.getNextBattleEvent();
         assertInstanceOf(ChangeMonsterBattleEvent.class, event);
@@ -284,7 +284,7 @@ public class BattleSimulationTest {
         initMonsterMocks();
         initBattleParticipantMocks();
         BattleSimulation battleSimulation = startBattle();
-        while (!battleSimulation.isPlayersTurn()) {
+        while (!battleSimulation.getState().isPlayersTurn()) {
             battleSimulation.getNextBattleEvent();
         }
         battleSimulation.runAway(player);
@@ -299,7 +299,7 @@ public class BattleSimulationTest {
         initBattleParticipantMocks();
         BattleSimulation battleSimulation = startBattle();
         for (int i = 0; i<5; i++) {
-            while (!battleSimulation.isPlayersTurn()) {
+            while (!battleSimulation.getState().isPlayersTurn()) {
                 battleSimulation.getNextBattleEvent();
             }
             battleSimulation.doMove(player, playerMonster.getMoves().get(0));
@@ -317,7 +317,7 @@ public class BattleSimulationTest {
         when(playerMonster.getAttack()).thenReturn(20);
         initBattleParticipantMocks();
         BattleSimulation battleSimulation = startBattle();
-        while (!battleSimulation.isPlayersTurn()) {
+        while (!battleSimulation.getState().isPlayersTurn()) {
             battleSimulation.getNextBattleEvent();
         }
         battleSimulation.doMove(player, player.getActiveMonster().getMoves().get(0));
@@ -334,7 +334,7 @@ public class BattleSimulationTest {
         when(enemyMonster.getDefence()).thenReturn(20);
         initBattleParticipantMocks();
         BattleSimulation battleSimulation = startBattle();
-        while (!battleSimulation.isPlayersTurn()) {
+        while (!battleSimulation.getState().isPlayersTurn()) {
             battleSimulation.getNextBattleEvent();
         }
         battleSimulation.doMove(player, player.getActiveMonster().getMoves().get(0));
@@ -348,7 +348,7 @@ public class BattleSimulationTest {
         when(enemyMonster.getHitPoints()).thenReturn(10);
         initBattleParticipantMocks();
         BattleSimulation battleSimulation = startBattle();
-        while (!battleSimulation.isPlayersTurn()) {
+        while (!battleSimulation.getState().isPlayersTurn()) {
             battleSimulation.getNextBattleEvent();
         }
         battleSimulation.doMove(player, player.getActiveMonster().getMoves().get(0));

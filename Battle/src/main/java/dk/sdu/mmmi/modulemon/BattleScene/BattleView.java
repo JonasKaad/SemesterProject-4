@@ -166,12 +166,12 @@ public class BattleView implements IGameViewService{
         _battleScene.setGameWidth(gameData.getDisplayWidth());
 
         //Update information
-        IMonster playerActiveMonster = _battleSimulation.getPlayer().getActiveMonster();
+        IMonster playerActiveMonster = _battleSimulation.getState().getPlayer().getActiveMonster();
         _battleScene.setPlayerSprite(playerActiveMonster.getBackSprite());
         _battleScene.setPlayerMonsterName(playerActiveMonster.getName());
         _battleScene.setPlayerHP(Integer.toString(playerActiveMonster.getHitPoints()));
 
-        IMonster enemyActiveMonster = _battleSimulation.getEnemy().getActiveMonster();
+        IMonster enemyActiveMonster = _battleSimulation.getState().getEnemy().getActiveMonster();
         _battleScene.setEnemySprite(enemyActiveMonster.getFrontSprite());
         _battleScene.setEnemyMonsterName(enemyActiveMonster.getName());
         _battleScene.setEnemyHP(Integer.toString(enemyActiveMonster.getHitPoints()));
@@ -221,7 +221,7 @@ public class BattleView implements IGameViewService{
             }
         } else if (menuState == MenuState.FIGHT) {
             _battleScene.setActionTitle("Moves:");
-            IMonster playerMonster = _battleSimulation.getPlayer().getActiveMonster();
+            IMonster playerMonster = _battleSimulation.getState().getPlayer().getActiveMonster();
 
             Object[] monsterMoves = new Object[playerMonster.getMoves().size() + 1];
             monsterMoves[0] = "Cancel";
@@ -242,7 +242,7 @@ public class BattleView implements IGameViewService{
                 IMonsterMove move = ((IMonsterMove) selectedAction);
                 _battleScene.setTextToDisplay("Move: [" + move.getType() + "] " + move.getName() + ". Deals damage: " + move.getDamage());
                 if (keys.isPressed(GameKeys.ENTER)) {
-                    _battleSimulation.doMove(_battleSimulation.getPlayer(), move);
+                    _battleSimulation.doMove(_battleSimulation.getState().getPlayer(), move);
                     this.menuState = MenuState.DEFAULT;
                     this.selectedAction = 0;
                 }

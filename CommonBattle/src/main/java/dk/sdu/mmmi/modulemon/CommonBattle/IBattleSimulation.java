@@ -7,11 +7,7 @@ import dk.sdu.mmmi.modulemon.CommonMonster.IMonsterMove;
 public interface IBattleSimulation {
     void StartBattle(IBattleParticipant player, IBattleParticipant enemy);
 
-    IBattleParticipant getPlayer();
-
-    IBattleParticipant getEnemy();
-
-    boolean isPlayersTurn();
+    IBattleState getState();
 
     void doMove(IBattleParticipant battleParticipant, IMonsterMove move);
 
