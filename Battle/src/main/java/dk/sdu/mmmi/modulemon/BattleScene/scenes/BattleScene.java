@@ -65,8 +65,6 @@ public class BattleScene {
     public void draw() {
         //DRAW THE IMAGES
 
-        //System.out.println(String.format("According to BattleScene, the height/width is: (%dx%d)", this.gameHeight, this.gameWidth));
-
         int textBoxHeight = 100;
         int borderWidth = 2;
         spriteBatch.begin();
@@ -85,8 +83,7 @@ public class BattleScene {
             _enemyMonsterPosition.updatePosition(_enemyMonster);
         }
 
-//        _backdrop.setSize(this.gameWidth, this.gameHeight);
-        _backdrop.setSize(1280,720);
+        _backdrop.setSize(this.gameWidth, this.gameHeight);
 
         _backdrop.draw(spriteBatch, 1);
         _playerBase.draw(spriteBatch, 1);

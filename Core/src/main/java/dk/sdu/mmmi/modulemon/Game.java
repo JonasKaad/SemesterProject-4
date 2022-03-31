@@ -98,8 +98,6 @@ public class Game implements ApplicationListener {
         gsm.update(gameData);
         gsm.draw(gameData);
 
-        //System.out.println(String.format("According to Game, the height/width is: (%dx%d)", HEIGHT, WIDTH));
-
         gameData.getKeys().update();
 
         update();
