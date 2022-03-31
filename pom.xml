@@ -41,6 +41,7 @@
     <module>BattleSimulation</module>
     <module>BattleAI</module>
     <module>MonsterRegistry</module>
+    <module>BundleController</module>
   </modules>
 
   <build>

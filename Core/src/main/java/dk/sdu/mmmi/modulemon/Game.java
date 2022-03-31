@@ -8,11 +8,9 @@ import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Pixmap;
 import dk.sdu.mmmi.modulemon.common.data.GameData;
+import dk.sdu.mmmi.modulemon.common.data.GameKeys;
 import dk.sdu.mmmi.modulemon.common.data.World;
-import dk.sdu.mmmi.modulemon.common.services.IEntityProcessingService;
-import dk.sdu.mmmi.modulemon.common.services.IGamePluginService;
-import dk.sdu.mmmi.modulemon.common.services.IGameViewService;
-import dk.sdu.mmmi.modulemon.common.services.IPostEntityProcessingService;
+import dk.sdu.mmmi.modulemon.common.services.*;
 import dk.sdu.mmmi.modulemon.managers.GameInputManager;
 import dk.sdu.mmmi.modulemon.managers.GameStateManager;
 import org.lwjgl.opengl.Display;
@@ -35,6 +33,7 @@ public class Game implements ApplicationListener {
     private static List<IGamePluginService> gamePluginList = new CopyOnWriteArrayList<>();
     private static List<IPostEntityProcessingService> postEntityProcessorList = new CopyOnWriteArrayList<>();
     private static List<IGameViewService> gameViewServiceList = new CopyOnWriteArrayList<>();
+    private static IBundleControllerService bundleControllerService;
     private static Queue<Runnable> gdxThreadTasks = new LinkedList<>();
 
     public Game(){
@@ -105,6 +104,12 @@ public class Game implements ApplicationListener {
         for (IPostEntityProcessingService postEntityProcessorService : postEntityProcessorList) {
             postEntityProcessorService.process(gameData, world);
         }
+
+        if(gameData.getKeys().isDown(GameKeys.K)
+                && gameData.getKeys().isDown(GameKeys.LEFT_CTRL)
+                && bundleControllerService != null){
+            Game.bundleControllerService.openController();
+        }
     }
 
 
@@ -161,6 +166,15 @@ public class Game implements ApplicationListener {
 
     public static List<IGameViewService> getGameViewServiceList() {
         return gameViewServiceList;
+    }
+
+    public void addBundleController(IBundleControllerService bundleControllerService){
+        System.out.println("A bundle controller was injected.");
+        Game.bundleControllerService = bundleControllerService;
+    }
+
+    public void removeBundleController(IBundleControllerService bundleControllerService){
+        Game.bundleControllerService = null;
     }
 
     private ByteBuffer[] hackIcon(String resourceName){
