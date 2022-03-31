@@ -1,0 +1,2 @@
+Service-Component: META-INF/gameview.xml
+Bundle-ActivationPolicy: lazy

@@ -7,6 +7,8 @@ import com.badlogic.gdx.backends.lwjgl.LwjglApplicationConfiguration;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Pixmap;
+import com.badlogic.gdx.utils.viewport.FitViewport;
+import com.badlogic.gdx.utils.viewport.Viewport;
 import dk.sdu.mmmi.modulemon.common.data.GameData;
 import dk.sdu.mmmi.modulemon.common.data.World;
 import dk.sdu.mmmi.modulemon.common.services.IEntityProcessingService;
@@ -29,6 +31,7 @@ public class Game implements ApplicationListener {
     public static int HEIGHT;
     private static World world = new World();
     public static OrthographicCamera cam;
+    private static Viewport viewport;
     private final GameData gameData = new GameData();
     private static GameStateManager gsm;
     private static List<IEntityProcessingService> entityProcessorList = new CopyOnWriteArrayList<>();
@@ -67,6 +70,9 @@ public class Game implements ApplicationListener {
                 new GameInputManager(gameData)
         );
 
+        viewport = new FitViewport(WIDTH, HEIGHT, cam);
+        viewport.apply();
+
         gsm = new GameStateManager();
     }
 
@@ -78,8 +84,8 @@ public class Game implements ApplicationListener {
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 
         cam.update();
-        gameData.setDisplayWidth(Gdx.graphics.getWidth());
-        gameData.setDisplayHeight(Gdx.graphics.getHeight());
+        gameData.setDisplayWidth(WIDTH);
+        gameData.setDisplayHeight(HEIGHT);
         gameData.setDelta(Gdx.graphics.getDeltaTime());
 
         //Run tasks on the LibGDX thread for OSGi
@@ -109,7 +115,11 @@ public class Game implements ApplicationListener {
 
 
     @Override
-    public void resize(int width, int height) {}
+    public void resize(int width, int height) {
+        viewport.update(width, height);
+        WIDTH = width;
+        HEIGHT = height;
+    }
     @Override
     public void pause() {}
     @Override
