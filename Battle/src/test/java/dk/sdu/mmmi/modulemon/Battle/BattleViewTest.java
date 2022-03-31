@@ -113,7 +113,7 @@ public class BattleViewTest {
         battleView.setBattleSimulation(simulation);
 
         // Act
-        battleView.init(participant1, participant2);
+        battleView.startBattle(participant1, participant2, null);
         battleView.dispose();
 
         // Assert
