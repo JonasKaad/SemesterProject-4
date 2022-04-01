@@ -174,6 +174,7 @@ public class Game implements ApplicationListener {
     }
 
     public void removeBundleController(IBundleControllerService bundleControllerService){
+        bundleControllerService.closeController();
         Game.bundleControllerService = null;
     }
 

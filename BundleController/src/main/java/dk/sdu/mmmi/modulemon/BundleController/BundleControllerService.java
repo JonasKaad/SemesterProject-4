@@ -20,6 +20,13 @@ public class BundleControllerService implements IBundleControllerService {
         bundleControllerUI.requestFocus();
     }
 
+    @Override
+    public void closeController() {
+        if(bundleControllerUI != null)
+            bundleControllerUI.dispose();
+        setClosed();
+    }
+
     protected void setClosed(){
         bundleControllerUI = null;
         isOpen = false;
