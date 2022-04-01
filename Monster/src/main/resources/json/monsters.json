@@ -1,0 +1,31 @@
+[
+  {
+    "id" : 0,
+    "name" : "Alpaca",
+    "type" : "GRASS",
+    "hp" : 100,
+    "defence" : 25,
+    "attack" : 60,
+    "speed" : 60,
+    "moves" : [
+      "spit",
+      "trample"
+    ],
+    "front": "images/alpaca_1.png",
+    "back": "images/alpaca_2.png"
+  },
+  {
+    "id" : 1,
+    "name" : "Eel",
+    "type" : "WATER",
+    "hp" : 90,
+    "defence" : 20,
+    "attack" : 70,
+    "speed" : 70,
+    "moves" : [
+      "zap"
+    ],
+    "front": "images/eel_1.png",
+    "back": "images/eel_2.png"
+  }
+]

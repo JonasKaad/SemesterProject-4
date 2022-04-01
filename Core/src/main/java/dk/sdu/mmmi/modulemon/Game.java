@@ -61,7 +61,7 @@ public class Game implements ApplicationListener {
     @Override
     public void create() {
         //Line below doesn't work yet, but just let it be - Alexander
-        Display.setIcon(hackIcon("/icons/cat-icon.png"));
+        //Display.setIcon(hackIcon("/icons/cat-icon.png"));
 
         cam = new OrthographicCamera(WIDTH, HEIGHT);
         cam.setToOrtho(false, WIDTH, HEIGHT); // does the same as cam.translate()

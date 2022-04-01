@@ -104,7 +104,7 @@ public class Monster implements IMonster {
 
     @Override
     public IMonster clone() {
-        return new Monster(this.name, this.type, this.hitPoints, this.defence, this.attack, this.speed, this.moves);
+        return new Monster(this.name, this.type, this.hitPoints, this.defence, this.attack, this.speed, this.moves, this.frontSprite, this.backSprite, this.ID);
 
     }
 }
