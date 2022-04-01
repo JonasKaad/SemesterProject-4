@@ -29,7 +29,6 @@ import java.util.concurrent.CopyOnWriteArrayList;
 public class Game implements ApplicationListener {
     public static int WIDTH;
     public static int HEIGHT;
-    //private static World world = new World();
     public static OrthographicCamera cam;
     private static Viewport viewport;
     private final GameData gameData = new GameData();
@@ -47,9 +46,13 @@ public class Game implements ApplicationListener {
 
     public void init(){
         LwjglApplicationConfiguration cfg = new LwjglApplicationConfiguration();
+
+        WIDTH = 1280;
+        HEIGHT = 720;
+
         cfg.title = "Modulémon";
-        cfg.width = 1280;
-        cfg.height = 720;
+        cfg.width = WIDTH;
+        cfg.height = HEIGHT;
         cfg.useGL30 = false;
         cfg.resizable = true;
 
@@ -60,8 +63,6 @@ public class Game implements ApplicationListener {
     public void create() {
         //Line below doesn't work yet, but just let it be - Alexander
         Display.setIcon(hackIcon("/icons/cat-icon.png"));
-        WIDTH = Gdx.graphics.getWidth();
-        HEIGHT = Gdx.graphics.getHeight();
 
         cam = new OrthographicCamera(WIDTH, HEIGHT);
         cam.setToOrtho(false, WIDTH, HEIGHT); // does the same as cam.translate()
@@ -103,6 +104,7 @@ public class Game implements ApplicationListener {
 
     private void update() {
         // Update
+        // These don't process anything at the moment
         /*
         for (IEntityProcessingService entityProcessorService : entityProcessorList) {
             entityProcessorService.process(gameData, world);
@@ -119,8 +121,6 @@ public class Game implements ApplicationListener {
     @Override
     public void resize(int width, int height) {
         viewport.update(width, height);
-        WIDTH = width;
-        HEIGHT = height;
     }
     @Override
     public void pause() {}

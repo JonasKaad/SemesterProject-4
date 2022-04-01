@@ -1,6 +1,6 @@
 package dk.sdu.mmmi.modulemon.CommonBattle.BattleEvents;
 
-import dk.sdu.mmmi.modulemon.CommonBattleParticipant.IBattleParticipant;
+import dk.sdu.mmmi.modulemon.CommonBattle.IBattleParticipant;
 import dk.sdu.mmmi.modulemon.CommonMonster.IMonsterMove;
 
 public class MoveBattleEvent implements IBattleEvent {

@@ -4,4 +4,8 @@
     <service>
         <provide interface="dk.sdu.mmmi.modulemon.common.services.IGameViewService"/>
     </service>
+
+    <reference bind="setBattleSimulation" cardinality="0..1"
+               interface="dk.sdu.mmmi.modulemon.CommonBattle.IBattleSimulation"
+               name="BattleSimulation" policy="dynamic"/>
 </scr:component>
