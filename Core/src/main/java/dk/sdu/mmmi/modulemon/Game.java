@@ -29,7 +29,7 @@ import java.util.concurrent.CopyOnWriteArrayList;
 public class Game implements ApplicationListener {
     public static int WIDTH;
     public static int HEIGHT;
-    private static World world = new World();
+    //private static World world = new World();
     public static OrthographicCamera cam;
     private static Viewport viewport;
     private final GameData gameData = new GameData();
@@ -103,6 +103,7 @@ public class Game implements ApplicationListener {
 
     private void update() {
         // Update
+        /*
         for (IEntityProcessingService entityProcessorService : entityProcessorList) {
             entityProcessorService.process(gameData, world);
         }
@@ -111,6 +112,7 @@ public class Game implements ApplicationListener {
         for (IPostEntityProcessingService postEntityProcessorService : postEntityProcessorList) {
             postEntityProcessorService.process(gameData, world);
         }
+         */
     }
 
 
@@ -127,6 +129,7 @@ public class Game implements ApplicationListener {
     @Override
     public void dispose() {}
 
+/*
     public void addEntityProcessingService(IEntityProcessingService entityProcessingService) {
         entityProcessorList.add(entityProcessingService);
     }
@@ -147,7 +150,6 @@ public class Game implements ApplicationListener {
     public void addGamePluginService(IGamePluginService gamePluginService) {
         gamePluginList.add(gamePluginService);
         gamePluginService.start(gameData, world);
-
     }
 
     // Removes a game plugin service to the game (Calls the plugin's stop method)
@@ -155,6 +157,8 @@ public class Game implements ApplicationListener {
         gamePluginList.remove(gamePluginService);
         gamePluginService.stop(gameData, world);
     }
+
+    */
 
     public void addGameViewServiceList(IGameViewService gameViewService){
         System.out.println("WOOT, GAMEVIEWSERVICE LOADED: " + gameViewService.getClass().getName());

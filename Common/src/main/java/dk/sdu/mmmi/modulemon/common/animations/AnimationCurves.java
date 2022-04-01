@@ -1,4 +1,4 @@
-package dk.sdu.mmmi.modulemon.BattleScene.animations;
+package dk.sdu.mmmi.modulemon.common.animations;
 
 public class AnimationCurves {
 
