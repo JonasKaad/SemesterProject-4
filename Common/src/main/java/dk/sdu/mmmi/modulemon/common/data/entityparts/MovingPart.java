@@ -5,13 +5,17 @@
  */
 package dk.sdu.mmmi.modulemon.common.data.entityparts;
 
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.math.Vector2;
+import dk.sdu.mmmi.modulemon.common.animations.BaseAnimation;
 import dk.sdu.mmmi.modulemon.common.data.Entity;
 import dk.sdu.mmmi.modulemon.common.data.GameData;
 
+import java.util.ArrayList;
+
 import static java.lang.Math.*;
 
-public class MovingPart implements EntityPart {
+public class MovingPart extends BaseAnimation implements EntityPart {
 
     private boolean left, right, up, down;
     private float movingTimer = 0;
@@ -20,6 +24,9 @@ public class MovingPart implements EntityPart {
 
 
     public MovingPart() {
+        super();
+        Timeline = new int[]{0, 2000, 2500};
+        States = new ArrayList<>(Timeline.length);
     }
     public void setLeft(boolean left) {
         this.left = left;
@@ -37,6 +44,15 @@ public class MovingPart implements EntityPart {
         this.down = down;
     }
 
+    public Vector2 lerpT(Vector2 currentPos, Vector2 newPos, float alpha)
+    {
+        //return currentPos.scl(1f - alpha).add(newPos.scl(alpha));
+        float x = currentPos.x + alpha * (newPos.x - currentPos.x);
+        float y = currentPos.y + alpha * (newPos.y - currentPos.y);
+
+        return new Vector2(x, y);
+    }
+
     public void process(GameData gameData, Entity entity) {
         PositionPart positionPart = entity.getPart(PositionPart.class);
         float x = positionPart.getX();
@@ -48,73 +64,86 @@ public class MovingPart implements EntityPart {
         float pixels = 64;
         float movingTimerFactor = 0.2f;
 
+        Vector2 currentPosition = new Vector2(start_x,start_y);
+        Vector2 newPosition = new Vector2(x,y);
 
-        // turning
+        if(positionPart.getX() == 0.0f || positionPart.getY() == 0.0f){
+            System.out.println("woohooo booohooo");
+        }
         if(movingTimer <= 0) {
             if (left) {
+
                 x = x - pixels;
+
                 movingTimer = movingTimerFactor;
                 animationTimer = 0;
+
+                newPosition.set(x, y);
                 //x = x - (16 * scaleFactor);
             }
 
             if (right) {
                 x = x + pixels;
+
                 movingTimer = movingTimerFactor;
                 animationTimer = 0;
 
+                newPosition.set(x, y);
                 //x = x + (16 * scaleFactor);
             }
 
             if (up) {
                 y = y + pixels;
+
                 movingTimer = movingTimerFactor;
                 animationTimer = 0;
 
+                newPosition.set(x, y);
                 //y = y + (16 * scaleFactor);
             }
 
             if (down) {
                 y = y - pixels;
+
                 movingTimer = movingTimerFactor;
                 animationTimer = 0;
 
+                newPosition.set(x, y);
                 //y = y - (16 * scaleFactor);
             }
         }
-        if(animationTimer <= 0){
-            animationTimer += dt * 1;
+        if(animationTimer < 1){
+            animationTimer += dt * 200;
+            //System.out.println(animationTimer);
             animationTimer = Math.min(animationTimer, 1);
             //vector2.lerp(start_x, x, animationTimer);
-            positionPart.setX(x);
-            positionPart.setY(y);
+            //Vector2 pos = lerpT(currentPosition, newPosition, animationTimer);
+            Vector2 pos = currentPosition.cpy();
+            if(currentPosition.dst(newPosition) >= 64) {
+                pos = currentPosition.lerp(newPosition, dt);
+            }
+            //Vector2 pos = currentPosition.lerp(newPosition, animationTimer);
+
+
+            positionPart.setX(pos.x);
+            positionPart.setY(pos.y);
+
+            System.out.println("pos x is : " + pos.x + " --- " + "pos y is: " + pos.y);
+            //positionPart.setX(pos.x);
+            //positionPart.setY(pos.y);
         }
         else {
             movingTimer -= dt;
         }
 
-        // set position
-        /*
-        x += x * dt;
-        if (x > gameData.getDisplayWidth()) {
-            x = 0;
-        }
-        else if (x < 0) {
-            x = gameData.getDisplayWidth();
-        }
-
-        y += x * dt;
-        if (y > gameData.getDisplayHeight()) {
-            y = 0;
-        }
-        else if (y < 0) {
-            y = gameData.getDisplayHeight();
-        }
-         */
-
-        positionPart.setX(x);
-        positionPart.setY(y);
+        //positionPart.setX(x);
+        //positionPart.setY(y);
 
     }
 
+    @Override
+    public void update(GameData gameData) {
+        super.tick();
+        float[] states = getCurrentStates();
+    }
 }
