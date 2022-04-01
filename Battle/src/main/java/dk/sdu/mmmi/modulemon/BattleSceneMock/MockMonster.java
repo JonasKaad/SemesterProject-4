@@ -81,6 +81,11 @@ public class MockMonster implements IMonster {
     }
 
     @Override
+    public IMonster clone() {
+        return null;
+    }
+  
+    @Override
     public int getID() {
         return 0;
     }

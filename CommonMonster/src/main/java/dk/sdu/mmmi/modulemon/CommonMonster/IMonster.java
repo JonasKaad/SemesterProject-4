@@ -13,5 +13,6 @@ public interface IMonster {
     String getBackSprite();
     MonsterType getMonsterType();
     List<IMonsterMove> getMoves();
+    IMonster clone();
     int getID();
 }

@@ -54,8 +54,8 @@ public class BattleViewTest {
         battleView.init();
         GameData gameData = new GameData();
         IBattleSimulation simulation = mock(IBattleSimulation.class);
-        when(simulation.getPlayer()).thenReturn(BattleParticipantMocks.getPlayer());
-        when(simulation.getEnemy()).thenReturn(BattleParticipantMocks.getOpponent());
+        when(simulation.getState().getPlayer()).thenReturn(BattleParticipantMocks.getPlayer());
+        when(simulation.getState().getEnemy()).thenReturn(BattleParticipantMocks.getOpponent());
         battleView.setBattleSimulation(simulation);
 
         // Act
@@ -132,8 +132,8 @@ public class BattleViewTest {
         BattleScene scene = new BattleScene();
 
         IBattleSimulation simulation = mock(IBattleSimulation.class);
-        when(simulation.getPlayer()).thenReturn(BattleParticipantMocks.getPlayer());
-        when(simulation.getEnemy()).thenReturn(BattleParticipantMocks.getOpponent());
+        when(simulation.getState().getPlayer()).thenReturn(BattleParticipantMocks.getPlayer());
+        when(simulation.getState().getEnemy()).thenReturn(BattleParticipantMocks.getOpponent());
 
         when(simulation.getNextBattleEvent()).thenReturn(new InfoBattleEvent("Never gonna give you up!"));
         battleView.setBattleSimulation(simulation);

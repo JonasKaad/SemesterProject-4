@@ -3,6 +3,7 @@ package dk.sdu.mmmi.modulemon.Battle;
 import dk.sdu.mmmi.modulemon.CommonBattle.IBattleParticipant;
 import dk.sdu.mmmi.modulemon.CommonMonster.IMonster;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class BattleParticipant implements IBattleParticipant {
@@ -44,5 +45,20 @@ public class BattleParticipant implements IBattleParticipant {
     @Override
     public List<IMonster> getMonsterTeam() {
         return this.monsterTeam;
+    }
+
+    @Override
+    public IBattleParticipant clone() {
+        List<IMonster> cloneTeam = new ArrayList<>();
+        IMonster cloneActiveMonster = null;
+        for (IMonster monster : this.monsterTeam) {
+            IMonster cloneMonster = monster.clone();
+            cloneTeam.add(cloneMonster);
+            if (monster == this.activeMonster) {
+                cloneActiveMonster = cloneMonster;
+            }
+        }
+        return new BattleParticipant(cloneTeam, cloneActiveMonster, this.playerControlled);
+
     }
 }
