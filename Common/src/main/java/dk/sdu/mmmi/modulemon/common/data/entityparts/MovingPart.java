@@ -125,19 +125,17 @@ public class MovingPart extends BaseAnimation implements EntityPart {
             //Vector2 pos = currentPosition.lerp(newPosition, animationTimer);
 
 
-            positionPart.setX(pos.x);
-            positionPart.setY(pos.y);
+//            positionPart.setX(pos.x);
+//            positionPart.setY(pos.y);
 
             System.out.println("pos x is : " + pos.x + " --- " + "pos y is: " + pos.y);
-            //positionPart.setX(pos.x);
-            //positionPart.setY(pos.y);
         }
         else {
             movingTimer -= dt;
         }
 
-        //positionPart.setX(x);
-        //positionPart.setY(y);
+        positionPart.setX(x);
+        positionPart.setY(y);
 
     }
 
