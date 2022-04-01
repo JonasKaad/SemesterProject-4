@@ -204,12 +204,12 @@ public class BattleView implements IGameViewService{
         //Update information
         if(_battleSimulation != null) {
             IMonster playerActiveMonster = _battleSimulation.getState().getPlayer().getActiveMonster();
-            _battleScene.setPlayerSprite(playerActiveMonster.getBackSprite());
+            _battleScene.setPlayerSprite(new Texture(new OSGiFileHandle(playerActiveMonster.getBackSprite(), this.getClass())));
             _battleScene.setPlayerMonsterName(playerActiveMonster.getName());
             _battleScene.setPlayerHP(Integer.toString(playerActiveMonster.getHitPoints()));
 
             IMonster enemyActiveMonster = _battleSimulation.getState().getEnemy().getActiveMonster();
-            _battleScene.setEnemySprite(enemyActiveMonster.getFrontSprite());
+            _battleScene.setEnemySprite(new Texture(new OSGiFileHandle(enemyActiveMonster.getFrontSprite(), this.getClass())));
             _battleScene.setEnemyMonsterName(enemyActiveMonster.getName());
             _battleScene.setEnemyHP(Integer.toString(enemyActiveMonster.getHitPoints()));
          }
