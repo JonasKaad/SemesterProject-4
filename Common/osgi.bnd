@@ -1,1 +1,2 @@
+Bundle-SymbolicName: Common
 Export-Package: dk.sdu.mmmi.modulemon.common.*

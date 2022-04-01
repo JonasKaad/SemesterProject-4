@@ -3,11 +3,12 @@ package dk.sdu.mmmi.modulemon.BattleScene.animations;
 import com.badlogic.gdx.Gdx;
 import dk.sdu.mmmi.modulemon.BattleScene.Position;
 import dk.sdu.mmmi.modulemon.BattleScene.scenes.BattleScene;
+import dk.sdu.mmmi.modulemon.common.animations.BaseAnimation;
 import dk.sdu.mmmi.modulemon.common.data.GameData;
 
 import java.util.ArrayList;
 
-public class BattleSceneOpenAnimation extends BattleViewAnimation {
+public class BattleSceneOpenAnimation extends BaseAnimation {
 
     private BattleScene _battleScene;
 

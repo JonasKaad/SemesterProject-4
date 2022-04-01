@@ -1,5 +1,6 @@
 package dk.sdu.mmmi.modulemon.common.data;
 
+import com.badlogic.gdx.graphics.Texture;
 import dk.sdu.mmmi.modulemon.common.data.entityparts.EntityPart;
 
 import java.io.Serializable;
@@ -15,6 +16,10 @@ public class Entity implements Serializable {
     private float blueValue = 1;
     private float alphaValue = 1;
 
+    private float posX;
+    private float posY;
+
+    private Texture spriteTexture = null;
 
     private float[] shapeX = new float[4];
     private float[] shapeY = new float[4];
@@ -65,6 +70,29 @@ public class Entity implements Serializable {
         this.shapeY = shapeY;
     }
 
+    public float getPosX() {
+        return posX;
+    }
+
+    public void setPosX(float posX) {
+        this.posX = posX;
+    }
+
+    public float getPosY() {
+        return posY;
+    }
+
+    public void setPosY(float posY) {
+        this.posY = posY;
+    }
+
+    public Texture getSpriteTexture() {
+        return spriteTexture;
+    }
+
+    public void setSpriteTexture(Texture spriteTexture) {
+        this.spriteTexture = spriteTexture;
+    }
 
     public float getRedValue() {
         return redValue;

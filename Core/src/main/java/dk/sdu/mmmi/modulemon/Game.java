@@ -10,11 +10,9 @@ import com.badlogic.gdx.graphics.Pixmap;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
 import dk.sdu.mmmi.modulemon.common.data.GameData;
+import dk.sdu.mmmi.modulemon.common.data.GameKeys;
 import dk.sdu.mmmi.modulemon.common.data.World;
-import dk.sdu.mmmi.modulemon.common.services.IEntityProcessingService;
-import dk.sdu.mmmi.modulemon.common.services.IGamePluginService;
-import dk.sdu.mmmi.modulemon.common.services.IGameViewService;
-import dk.sdu.mmmi.modulemon.common.services.IPostEntityProcessingService;
+import dk.sdu.mmmi.modulemon.common.services.*;
 import dk.sdu.mmmi.modulemon.managers.GameInputManager;
 import dk.sdu.mmmi.modulemon.managers.GameStateManager;
 import org.lwjgl.opengl.Display;
@@ -29,15 +27,12 @@ import java.util.concurrent.CopyOnWriteArrayList;
 public class Game implements ApplicationListener {
     public static int WIDTH;
     public static int HEIGHT;
-    private static World world = new World();
     public static OrthographicCamera cam;
     private static Viewport viewport;
     private final GameData gameData = new GameData();
     private static GameStateManager gsm;
-    private static List<IEntityProcessingService> entityProcessorList = new CopyOnWriteArrayList<>();
-    private static List<IGamePluginService> gamePluginList = new CopyOnWriteArrayList<>();
-    private static List<IPostEntityProcessingService> postEntityProcessorList = new CopyOnWriteArrayList<>();
     private static List<IGameViewService> gameViewServiceList = new CopyOnWriteArrayList<>();
+    private static IBundleControllerService bundleControllerService;
     private static Queue<Runnable> gdxThreadTasks = new LinkedList<>();
 
     public Game(){
@@ -63,7 +58,7 @@ public class Game implements ApplicationListener {
     @Override
     public void create() {
         //Line below doesn't work yet, but just let it be - Alexander
-        Display.setIcon(hackIcon("/icons/cat-icon.png"));
+        //Display.setIcon(hackIcon("/icons/cat-icon.png"));
 
         cam = new OrthographicCamera(WIDTH, HEIGHT);
         cam.setToOrtho(false, WIDTH, HEIGHT); // does the same as cam.translate()
@@ -105,14 +100,12 @@ public class Game implements ApplicationListener {
 
     private void update() {
         // Update
-        for (IEntityProcessingService entityProcessorService : entityProcessorList) {
-            entityProcessorService.process(gameData, world);
+        if(gameData.getKeys().isDown(GameKeys.K)
+                && gameData.getKeys().isDown(GameKeys.LEFT_CTRL)
+                && bundleControllerService != null){
+            Game.bundleControllerService.openController();
         }
 
-        // Post Update
-        for (IPostEntityProcessingService postEntityProcessorService : postEntityProcessorList) {
-            postEntityProcessorService.process(gameData, world);
-        }
     }
 
 
@@ -125,36 +118,12 @@ public class Game implements ApplicationListener {
     @Override
     public void resume() {}
     @Override
-    public void dispose() {}
-
-    public void addEntityProcessingService(IEntityProcessingService entityProcessingService) {
-        entityProcessorList.add(entityProcessingService);
+    public void dispose() {
+        if(Game.bundleControllerService != null){
+            Game.bundleControllerService.closeController();
+        }
     }
 
-    public void removeEntityProcessingService(IEntityProcessingService entityProcessingService) {
-        entityProcessorList.remove(entityProcessingService);
-    }
-
-    public void addPostEntityProcessingService(IPostEntityProcessingService postEntityProcessingService) {
-        postEntityProcessorList.add(postEntityProcessingService);
-    }
-
-    public void removePostEntityProcessingService(IPostEntityProcessingService postEntityProcessingService) {
-        postEntityProcessorList.remove(postEntityProcessingService);
-    }
-
-    // Adds a game plugin service to the game (Calls the plugin's start method)
-    public void addGamePluginService(IGamePluginService gamePluginService) {
-        gamePluginList.add(gamePluginService);
-        gamePluginService.start(gameData, world);
-
-    }
-
-    // Removes a game plugin service to the game (Calls the plugin's stop method)
-    public void removeGamePluginService(IGamePluginService gamePluginService) {
-        gamePluginList.remove(gamePluginService);
-        gamePluginService.stop(gameData, world);
-    }
 
     public void addGameViewServiceList(IGameViewService gameViewService){
         System.out.println("WOOT, GAMEVIEWSERVICE LOADED: " + gameViewService.getClass().getName());
@@ -171,6 +140,16 @@ public class Game implements ApplicationListener {
 
     public static List<IGameViewService> getGameViewServiceList() {
         return gameViewServiceList;
+    }
+
+    public void addBundleController(IBundleControllerService bundleControllerService){
+        System.out.println("A bundle controller was injected.");
+        Game.bundleControllerService = bundleControllerService;
+    }
+
+    public void removeBundleController(IBundleControllerService bundleControllerService){
+        bundleControllerService.closeController();
+        Game.bundleControllerService = null;
     }
 
     private ByteBuffer[] hackIcon(String resourceName){

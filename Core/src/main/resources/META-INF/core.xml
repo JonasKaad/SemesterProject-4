@@ -2,20 +2,12 @@
 <scr:component xmlns:scr="http://www.osgi.org/xmlns/scr/v1.1.0" name="dk.sdu.mmmi.modulemon.Game">
     <implementation class="dk.sdu.mmmi.modulemon.Game"/>
 
-    <reference bind="addPostEntityProcessingService" cardinality="0..n"
-               interface="dk.sdu.mmmi.modulemon.common.services.IPostEntityProcessingService"
-               name="IPostEntityProcessingService" policy="dynamic" unbind="removePostEntityProcessingService"/>
-
-    <reference bind="addEntityProcessingService" cardinality="0..n"
-               interface="dk.sdu.mmmi.modulemon.common.services.IEntityProcessingService"
-               name="IEntityProcessingService" policy="dynamic" unbind="removeEntityProcessingService"/>
-
-    <reference bind="addGamePluginService" cardinality="0..n"
-               interface="dk.sdu.mmmi.modulemon.common.services.IGamePluginService"
-               name="IGamePluginService" policy="dynamic" unbind="removeGamePluginService"/>
-
     <reference bind="addGameViewServiceList" cardinality="0..n"
                interface="dk.sdu.mmmi.modulemon.common.services.IGameViewService"
                name="IGameViewService" policy="dynamic" unbind="removeGameViewServiceList"/>
+
+    <reference bind="addBundleController" cardinality="0..1"
+               interface="dk.sdu.mmmi.modulemon.common.services.IBundleControllerService"
+               name="IBundleControllerService" policy="dynamic" unbind="removeBundleController"/>
 
 </scr:component>

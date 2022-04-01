@@ -4,11 +4,12 @@ import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.Color;
 import dk.sdu.mmmi.modulemon.BattleScene.Position;
 import dk.sdu.mmmi.modulemon.BattleScene.scenes.BattleScene;
+import dk.sdu.mmmi.modulemon.common.animations.BaseAnimation;
 import dk.sdu.mmmi.modulemon.common.data.GameData;
 
 import java.util.ArrayList;
 
-public class EnemyBattleAttackAnimation extends BattleViewAnimation{
+public class EnemyBattleAttackAnimation extends BaseAnimation {
 
     private BattleScene _battleScene;
     private Sound _attackSound;
