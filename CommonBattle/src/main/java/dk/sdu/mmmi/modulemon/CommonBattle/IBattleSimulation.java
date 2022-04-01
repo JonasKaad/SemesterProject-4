@@ -7,11 +7,7 @@ import dk.sdu.mmmi.modulemon.CommonMonster.IMonsterMove;
 public interface IBattleSimulation {
     void StartBattle(IBattleParticipant player, IBattleParticipant enemy);
 
-    IBattleParticipant getPlayer();
-
-    IBattleParticipant getEnemy();
-
-    boolean isPlayersTurn();
+    IBattleState getState();
 
     void doMove(IBattleParticipant battleParticipant, IMonsterMove move);
 
@@ -19,6 +15,9 @@ public interface IBattleSimulation {
 
     void runAway(IBattleParticipant battleParticipant);
 
+    IBattleState simulateDoMove(IBattleParticipant participant, IMonsterMove move, IBattleState currentState);
+
+    IBattleState simulateSwitchMonster(IBattleParticipant participant, IMonster monster, IBattleState currentState);
     /**
      * @return The next battle event to be shown.
      * Returns `null` if there is no more battle events

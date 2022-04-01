@@ -9,4 +9,8 @@
                interface="dk.sdu.mmmi.modulemon.CommonBattle.IBattleMonsterProcessor"
                name="IBattleMonsterProcessor" policy="dynamic"/>
 
+    <reference bind="setAI" cardinality="0..1"
+               interface="dk.sdu.mmmi.modulemon.CommonBattle.IBattleAI"
+               name="IBattleAI" policy="dynamic"/>
+
 </scr:component>
