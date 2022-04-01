@@ -31,9 +31,6 @@ public class Game implements ApplicationListener {
     private static Viewport viewport;
     private final GameData gameData = new GameData();
     private static GameStateManager gsm;
-    private static List<IEntityProcessingService> entityProcessorList = new CopyOnWriteArrayList<>();
-    private static List<IGamePluginService> gamePluginList = new CopyOnWriteArrayList<>();
-    private static List<IPostEntityProcessingService> postEntityProcessorList = new CopyOnWriteArrayList<>();
     private static List<IGameViewService> gameViewServiceList = new CopyOnWriteArrayList<>();
     private static IBundleControllerService bundleControllerService;
     private static Queue<Runnable> gdxThreadTasks = new LinkedList<>();
@@ -103,18 +100,6 @@ public class Game implements ApplicationListener {
 
     private void update() {
         // Update
-        // These don't process anything at the moment
-        /*
-        for (IEntityProcessingService entityProcessorService : entityProcessorList) {
-            entityProcessorService.process(gameData, world);
-        }
-
-        // Post Update
-        for (IPostEntityProcessingService postEntityProcessorService : postEntityProcessorList) {
-            postEntityProcessorService.process(gameData, world);
-        }
-
-         */
         if(gameData.getKeys().isDown(GameKeys.K)
                 && gameData.getKeys().isDown(GameKeys.LEFT_CTRL)
                 && bundleControllerService != null){
@@ -139,36 +124,6 @@ public class Game implements ApplicationListener {
         }
     }
 
-/*
-    public void addEntityProcessingService(IEntityProcessingService entityProcessingService) {
-        entityProcessorList.add(entityProcessingService);
-    }
-
-    public void removeEntityProcessingService(IEntityProcessingService entityProcessingService) {
-        entityProcessorList.remove(entityProcessingService);
-    }
-
-    public void addPostEntityProcessingService(IPostEntityProcessingService postEntityProcessingService) {
-        postEntityProcessorList.add(postEntityProcessingService);
-    }
-
-    public void removePostEntityProcessingService(IPostEntityProcessingService postEntityProcessingService) {
-        postEntityProcessorList.remove(postEntityProcessingService);
-    }
-
-    // Adds a game plugin service to the game (Calls the plugin's start method)
-    public void addGamePluginService(IGamePluginService gamePluginService) {
-        gamePluginList.add(gamePluginService);
-        gamePluginService.start(gameData, world);
-    }
-
-    // Removes a game plugin service to the game (Calls the plugin's stop method)
-    public void removeGamePluginService(IGamePluginService gamePluginService) {
-        gamePluginList.remove(gamePluginService);
-        gamePluginService.stop(gameData, world);
-    }
-
-    */
 
     public void addGameViewServiceList(IGameViewService gameViewService){
         System.out.println("WOOT, GAMEVIEWSERVICE LOADED: " + gameViewService.getClass().getName());

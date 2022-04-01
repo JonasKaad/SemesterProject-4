@@ -1,5 +1,6 @@
 package dk.sdu.mmmi.modulemon.Player;
 
+import com.badlogic.gdx.graphics.Texture;
 import dk.sdu.mmmi.modulemon.common.data.Entity;
 import dk.sdu.mmmi.modulemon.common.data.GameData;
 import dk.sdu.mmmi.modulemon.common.data.World;
@@ -29,10 +30,11 @@ public class PlayerPlugin implements IGamePluginService {
         Entity player = new Player();
         player.add(new PositionPart(x, y));
         player.add(new MovingPart());
-        player.add(new SpritePart("/assets/main-char-up5.png",
-                "/assets/main-char-down5.png",
-                "/assets/main-char-left5.png",
-                "/assets/main-char-right5.png"));
+        Texture upSprite = new Texture(new OSGiFileHandle("/assets/main-char-up5.png"));
+        Texture downSprite = new Texture(new OSGiFileHandle("/assets/main-char-down5.png"));
+        Texture leftSprite = new Texture(new OSGiFileHandle("/assets/main-char-left5.png"));
+        Texture rightSprite = new Texture(new OSGiFileHandle("/assets/main-char-right5.png"));
+        player.add(new SpritePart(upSprite, downSprite, leftSprite, rightSprite));
         return player;
     }
 

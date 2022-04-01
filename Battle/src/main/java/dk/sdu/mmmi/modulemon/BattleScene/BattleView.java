@@ -70,7 +70,6 @@ public class BattleView implements IGameViewService {
         _battleScene.setActions(this.defaultActions);
 
         BaseAnimation openingAnimation = new BattleSceneOpenAnimation(_battleScene);
-        openingAnimation.start();
         blockingAnimations.add(openingAnimation);
     }
 

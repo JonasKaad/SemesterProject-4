@@ -1,5 +1,6 @@
 package dk.sdu.mmmi.modulemon.Player;
 
+import com.badlogic.gdx.graphics.Texture;
 import dk.sdu.mmmi.modulemon.common.data.Entity;
 import dk.sdu.mmmi.modulemon.common.data.GameData;
 import dk.sdu.mmmi.modulemon.common.data.World;
@@ -63,7 +64,7 @@ public class PlayerControlSystem implements IEntityProcessingService {
         SpritePart spritePart = entity.getPart(SpritePart.class);
 
 
-        String result = "";
+        Texture result = null;
         switch (current) {
             case "right":
                result = spritePart.getRightSprite();
@@ -80,7 +81,7 @@ public class PlayerControlSystem implements IEntityProcessingService {
             default: System.out.println(("Did not match any direction"));
         }
 
-        entity.setSpriteString(result);
+        entity.setSpriteTexture(result);
         entity.setPosX(x);
         entity.setPosY(y);
 
