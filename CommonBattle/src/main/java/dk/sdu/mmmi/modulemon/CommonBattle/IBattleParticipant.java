@@ -9,4 +9,5 @@ public interface IBattleParticipant {
     IMonster getActiveMonster();
     void setActiveMonster(IMonster monster);
     List<IMonster> getMonsterTeam();
+    IBattleParticipant clone();
 }

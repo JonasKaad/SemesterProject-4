@@ -4,7 +4,6 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.audio.Music;
 import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.Color;
-import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import dk.sdu.mmmi.modulemon.BattleScene.animations.*;
 import dk.sdu.mmmi.modulemon.BattleScene.scenes.BattleScene;
@@ -21,7 +20,9 @@ import dk.sdu.mmmi.modulemon.common.services.IGameViewService;
 import java.util.LinkedList;
 import java.util.Queue;
 
+
 public class BattleView implements IGameViewService, IBattleView {
+
     private boolean _isInitialized;
     private IBattleCallback _battleCallback;
     private IBattleSimulation _battleSimulation;
@@ -71,7 +72,6 @@ public class BattleView implements IGameViewService, IBattleView {
         _battleScene.setActions(this.defaultActions);
 
         BattleViewAnimation openingAnimation = new BattleSceneOpenAnimation(_battleScene);
-        openingAnimation.start();
         blockingAnimations.add(openingAnimation);
     }
 
@@ -82,12 +82,12 @@ public class BattleView implements IGameViewService, IBattleView {
 
     @Override
     public void forceBattleEnd() {
-        handleBattleEnd(new VictoryBattleEvent("The battle has ended prematurely", _battleSimulation.getPlayer()));
+        handleBattleEnd(new VictoryBattleEvent("The battle has ended prematurely", _battleSimulation.getState().getPlayer()));
     }
 
     public void handleBattleEnd(VictoryBattleEvent victoryBattleEvent){
         if(_battleCallback != null){
-            _battleCallback.onBattleEnd(new BattleResult(victoryBattleEvent.getWinner(), _battleSimulation.getPlayer(), _battleSimulation.getEnemy()));
+            _battleCallback.onBattleEnd(new BattleResult(victoryBattleEvent.getWinner(), _battleSimulation.getState().getPlayer(), _battleSimulation.getState().getEnemy()));
         }
     }
 
@@ -103,25 +103,26 @@ public class BattleView implements IGameViewService, IBattleView {
         //Temp
         if(_battleSimulation != null)
             startBattle(BattleParticipantMocks.getPlayer(), BattleParticipantMocks.getOpponent(), null);
+
     }
 
     //OSGi dependency injection
-    public void setBattleSimulation(IBattleSimulation battleSimulation){
+    public void setBattleSimulation(IBattleSimulation battleSimulation) {
         this._battleSimulation = battleSimulation;
     }
 
-    public void removeBattleSimulation(IBattleSimulation battleSimulation){
+    public void removeBattleSimulation(IBattleSimulation battleSimulation) {
         this._battleSimulation = null;
     }
 
-    public void setBattleScene(BattleScene battleScene){
+    public void setBattleScene(BattleScene battleScene) {
         this._battleScene = battleScene;
     }
 
     @Override
     public void update(GameData gameData, IGameStateManager gameStateManager) {
         //spriteBatch.setProjectionMatrix(Game.cam.combined);
-        if(!_isInitialized){
+        if (!_isInitialized) {
             return;
         }
         if (_battleSimulation == null) {
@@ -133,9 +134,19 @@ public class BattleView implements IGameViewService, IBattleView {
 
         //Is there any animations active?
         if (!blockingAnimations.isEmpty()) {
+            //Set in update() because some animations depend on it.
+            if (_battleScene != null) {
+                _battleScene.setGameHeight(gameData.getDisplayHeight());
+                _battleScene.setGameWidth(gameData.getDisplayWidth());
+            }
+
             BattleViewAnimation currentAnimation = blockingAnimations.peek();
+            if (!currentAnimation.isStarted()) {
+                currentAnimation.start();
+            }
+
             currentAnimation.update(gameData);
-            if (!currentAnimation.isRunning()) {
+            if (currentAnimation.isFinished()) {
                 //If the animation is done, then we remove the animation from the queue
                 currentAnimation.runEventDoneIfSet();
                 blockingAnimations.remove();
@@ -148,6 +159,7 @@ public class BattleView implements IGameViewService, IBattleView {
                 return; //Current animation still working, so just return
             }
         }
+
 
         //Check for events
         IBattleEvent battleEvent = _battleSimulation.getNextBattleEvent();
@@ -209,22 +221,21 @@ public class BattleView implements IGameViewService, IBattleView {
 
     @Override
     public void draw(GameData gameData) {
-        //Game data
         _battleScene.setGameHeight(gameData.getDisplayHeight());
         _battleScene.setGameWidth(gameData.getDisplayWidth());
 
         //Update information
         if(_battleSimulation != null) {
-            IMonster playerActiveMonster = _battleSimulation.getPlayer().getActiveMonster();
-            _battleScene.setPlayerSprite(new Texture(new OSGiFileHandle(playerActiveMonster.getBackSprite(), this.getClass())));
+            IMonster playerActiveMonster = _battleSimulation.getState().getPlayer().getActiveMonster();
+            _battleScene.setPlayerSprite(playerActiveMonster.getBackSprite(), playerActiveMonster.getClass());
             _battleScene.setPlayerMonsterName(playerActiveMonster.getName());
             _battleScene.setPlayerHP(Integer.toString(playerActiveMonster.getHitPoints()));
 
-            IMonster enemyActiveMonster = _battleSimulation.getEnemy().getActiveMonster();
-            _battleScene.setEnemySprite(new Texture(new OSGiFileHandle(enemyActiveMonster.getFrontSprite(), this.getClass())));
+            IMonster enemyActiveMonster = _battleSimulation.getState().getEnemy().getActiveMonster();
+            _battleScene.setEnemySprite(enemyActiveMonster.getFrontSprite(), enemyActiveMonster.getClass());
             _battleScene.setEnemyMonsterName(enemyActiveMonster.getName());
             _battleScene.setEnemyHP(Integer.toString(enemyActiveMonster.getHitPoints()));
-        }
+         }
 
         _battleScene.setSelectedActionIndex(selectedAction);
         _battleScene.draw();
@@ -271,10 +282,10 @@ public class BattleView implements IGameViewService, IBattleView {
             }
         } else if (menuState == MenuState.FIGHT) {
             _battleScene.setActionTitle("Moves:");
-            IMonster playerMonster = _battleSimulation.getPlayer().getActiveMonster();
+            IMonster playerMonster = _battleSimulation.getState().getPlayer().getActiveMonster();
 
             Object[] monsterMoves = new Object[playerMonster.getMoves().size() + 1];
-            monsterMoves[monsterMoves.length-1] = "Cancel";
+            monsterMoves[monsterMoves.length - 1] = "Cancel";
             for (int i = 0; i < playerMonster.getMoves().size(); i++) {
                 monsterMoves[i] = playerMonster.getMoves().get(i);
             }
@@ -293,7 +304,7 @@ public class BattleView implements IGameViewService, IBattleView {
                 IMonsterMove move = ((IMonsterMove) selectedAction);
                 _battleScene.setTextToDisplay("Move: [" + move.getType() + "] " + move.getName() + ". Deals damage: " + move.getDamage());
                 if (keys.isPressed(GameKeys.ENTER)) {
-                    _battleSimulation.doMove(_battleSimulation.getPlayer(), move);
+                    _battleSimulation.doMove(_battleSimulation.getState().getPlayer(), move);
                     this.menuState = MenuState.DEFAULT;
                     this.selectedAction = 0;
                 }
@@ -332,7 +343,7 @@ public class BattleView implements IGameViewService, IBattleView {
 
     private void addEmptyAnimation(int duration, boolean autoStart) {
         EmptyAnimation emptyAnimation = new EmptyAnimation(duration);
-        if(autoStart)
+        if (autoStart)
             emptyAnimation.start();
         blockingAnimations.add(emptyAnimation);
     }
