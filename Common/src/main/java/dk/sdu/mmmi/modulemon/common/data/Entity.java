@@ -15,6 +15,10 @@ public class Entity implements Serializable {
     private float blueValue = 1;
     private float alphaValue = 1;
 
+    private float posX;
+    private float posY;
+
+    private String spriteString = null;
 
     private float[] shapeX = new float[4];
     private float[] shapeY = new float[4];
@@ -65,6 +69,29 @@ public class Entity implements Serializable {
         this.shapeY = shapeY;
     }
 
+    public float getPosX() {
+        return posX;
+    }
+
+    public void setPosX(float posX) {
+        this.posX = posX;
+    }
+
+    public float getPosY() {
+        return posY;
+    }
+
+    public void setPosY(float posY) {
+        this.posY = posY;
+    }
+
+    public String getSpriteString() {
+        return spriteString;
+    }
+
+    public void setSpriteString(String spriteString) {
+        this.spriteString = spriteString;
+    }
 
     public float getRedValue() {
         return redValue;

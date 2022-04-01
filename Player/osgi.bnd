@@ -1,0 +1,3 @@
+Bundle-SymbolicName: Player
+Bundle-ActivationPolicy: lazy
+Service-Component: META-INF/entityprocessor.xml, META-INF/gameplugin.xml

@@ -13,12 +13,12 @@ public class MockMonster implements IMonster {
     private int attackStat;
     private int defenceStat;
     private int speedStat;
-    private Texture frontSprite;
-    private Texture backSprite;
+    private String frontSprite;
+    private String backSprite;
     private MonsterType type;
     private List<IMonsterMove> moves;
 
-    public MockMonster(String name, int hitpoints, int attackStat, int defenceStat, int speedStat, Texture frontSprite, Texture backSprite, MonsterType type, List<IMonsterMove> moves) {
+    public MockMonster(String name, int hitpoints, int attackStat, int defenceStat, int speedStat, String frontSprite, String backSprite, MonsterType type, List<IMonsterMove> moves) {
         this.name = name;
         this.hitpoints = hitpoints;
         this.attackStat = attackStat;
@@ -61,12 +61,12 @@ public class MockMonster implements IMonster {
     }
 
     @Override
-    public Texture getFrontSprite() {
+    public String getFrontSprite() {
         return this.frontSprite;
     }
 
     @Override
-    public Texture getBackSprite() {
+    public String getBackSprite() {
         return this.backSprite;
     }
 
@@ -78,5 +78,15 @@ public class MockMonster implements IMonster {
     @Override
     public List<IMonsterMove> getMoves() {
         return this.moves;
+    }
+
+    @Override
+    public IMonster clone() {
+        return null;
+    }
+  
+    @Override
+    public int getID() {
+        return 0;
     }
 }

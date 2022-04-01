@@ -7,6 +7,8 @@ import com.badlogic.gdx.backends.lwjgl.LwjglApplicationConfiguration;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Pixmap;
+import com.badlogic.gdx.utils.viewport.FitViewport;
+import com.badlogic.gdx.utils.viewport.Viewport;
 import dk.sdu.mmmi.modulemon.common.data.GameData;
 import dk.sdu.mmmi.modulemon.common.data.World;
 import dk.sdu.mmmi.modulemon.common.services.IEntityProcessingService;
@@ -27,8 +29,8 @@ import java.util.concurrent.CopyOnWriteArrayList;
 public class Game implements ApplicationListener {
     public static int WIDTH;
     public static int HEIGHT;
-    private static World world = new World();
     public static OrthographicCamera cam;
+    private static Viewport viewport;
     private final GameData gameData = new GameData();
     private static GameStateManager gsm;
     private static List<IEntityProcessingService> entityProcessorList = new CopyOnWriteArrayList<>();
@@ -44,9 +46,13 @@ public class Game implements ApplicationListener {
 
     public void init(){
         LwjglApplicationConfiguration cfg = new LwjglApplicationConfiguration();
+
+        WIDTH = 1280;
+        HEIGHT = 720;
+
         cfg.title = "Modulémon";
-        cfg.width = 1280;
-        cfg.height = 720;
+        cfg.width = WIDTH;
+        cfg.height = HEIGHT;
         cfg.useGL30 = false;
         cfg.resizable = true;
 
@@ -57,8 +63,6 @@ public class Game implements ApplicationListener {
     public void create() {
         //Line below doesn't work yet, but just let it be - Alexander
         Display.setIcon(hackIcon("/icons/cat-icon.png"));
-        WIDTH = Gdx.graphics.getWidth();
-        HEIGHT = Gdx.graphics.getHeight();
 
         cam = new OrthographicCamera(WIDTH, HEIGHT);
         cam.setToOrtho(false, WIDTH, HEIGHT); // does the same as cam.translate()
@@ -66,6 +70,9 @@ public class Game implements ApplicationListener {
         Gdx.input.setInputProcessor(
                 new GameInputManager(gameData)
         );
+
+        viewport = new FitViewport(WIDTH, HEIGHT, cam);
+        viewport.apply();
 
         gsm = new GameStateManager();
     }
@@ -78,8 +85,8 @@ public class Game implements ApplicationListener {
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 
         cam.update();
-        gameData.setDisplayWidth(Gdx.graphics.getWidth());
-        gameData.setDisplayHeight(Gdx.graphics.getHeight());
+        gameData.setDisplayWidth(WIDTH);
+        gameData.setDisplayHeight(HEIGHT);
         gameData.setDelta(Gdx.graphics.getDeltaTime());
 
         //Run tasks on the LibGDX thread for OSGi
@@ -97,6 +104,8 @@ public class Game implements ApplicationListener {
 
     private void update() {
         // Update
+        // These don't process anything at the moment
+        /*
         for (IEntityProcessingService entityProcessorService : entityProcessorList) {
             entityProcessorService.process(gameData, world);
         }
@@ -105,11 +114,14 @@ public class Game implements ApplicationListener {
         for (IPostEntityProcessingService postEntityProcessorService : postEntityProcessorList) {
             postEntityProcessorService.process(gameData, world);
         }
+         */
     }
 
 
     @Override
-    public void resize(int width, int height) {}
+    public void resize(int width, int height) {
+        viewport.update(width, height);
+    }
     @Override
     public void pause() {}
     @Override
@@ -117,6 +129,7 @@ public class Game implements ApplicationListener {
     @Override
     public void dispose() {}
 
+/*
     public void addEntityProcessingService(IEntityProcessingService entityProcessingService) {
         entityProcessorList.add(entityProcessingService);
     }
@@ -137,7 +150,6 @@ public class Game implements ApplicationListener {
     public void addGamePluginService(IGamePluginService gamePluginService) {
         gamePluginList.add(gamePluginService);
         gamePluginService.start(gameData, world);
-
     }
 
     // Removes a game plugin service to the game (Calls the plugin's stop method)
@@ -145,6 +157,8 @@ public class Game implements ApplicationListener {
         gamePluginList.remove(gamePluginService);
         gamePluginService.stop(gameData, world);
     }
+
+    */
 
     public void addGameViewServiceList(IGameViewService gameViewService){
         System.out.println("WOOT, GAMEVIEWSERVICE LOADED: " + gameViewService.getClass().getName());
