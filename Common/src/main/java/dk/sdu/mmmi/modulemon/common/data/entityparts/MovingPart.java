@@ -46,7 +46,6 @@ public class MovingPart extends BaseAnimation implements EntityPart {
 
     public Vector2 lerpT(Vector2 currentPos, Vector2 newPos, float alpha)
     {
-        //return currentPos.scl(1f - alpha).add(newPos.scl(alpha));
         float x = currentPos.x + alpha * (newPos.x - currentPos.x);
         float y = currentPos.y + alpha * (newPos.y - currentPos.y);
 
@@ -67,9 +66,6 @@ public class MovingPart extends BaseAnimation implements EntityPart {
         Vector2 currentPosition = new Vector2(start_x,start_y);
         Vector2 newPosition = new Vector2(x,y);
 
-        if(positionPart.getX() == 0.0f || positionPart.getY() == 0.0f){
-            System.out.println("woohooo booohooo");
-        }
         if(movingTimer <= 0) {
             if (left) {
 
@@ -79,7 +75,6 @@ public class MovingPart extends BaseAnimation implements EntityPart {
                 animationTimer = 0;
 
                 newPosition.set(x, y);
-                //x = x - (16 * scaleFactor);
             }
 
             if (right) {
@@ -89,7 +84,6 @@ public class MovingPart extends BaseAnimation implements EntityPart {
                 animationTimer = 0;
 
                 newPosition.set(x, y);
-                //x = x + (16 * scaleFactor);
             }
 
             if (up) {
@@ -99,7 +93,6 @@ public class MovingPart extends BaseAnimation implements EntityPart {
                 animationTimer = 0;
 
                 newPosition.set(x, y);
-                //y = y + (16 * scaleFactor);
             }
 
             if (down) {
@@ -109,12 +102,10 @@ public class MovingPart extends BaseAnimation implements EntityPart {
                 animationTimer = 0;
 
                 newPosition.set(x, y);
-                //y = y - (16 * scaleFactor);
             }
         }
         if(animationTimer < 1){
             animationTimer += dt * 200;
-            //System.out.println(animationTimer);
             animationTimer = Math.min(animationTimer, 1);
             //vector2.lerp(start_x, x, animationTimer);
             //Vector2 pos = lerpT(currentPosition, newPosition, animationTimer);
@@ -128,7 +119,7 @@ public class MovingPart extends BaseAnimation implements EntityPart {
 //            positionPart.setX(pos.x);
 //            positionPart.setY(pos.y);
 
-            System.out.println("pos x is : " + pos.x + " --- " + "pos y is: " + pos.y);
+            //System.out.println("pos x is : " + pos.x + " --- " + "pos y is: " + pos.y);
         }
         else {
             movingTimer -= dt;
