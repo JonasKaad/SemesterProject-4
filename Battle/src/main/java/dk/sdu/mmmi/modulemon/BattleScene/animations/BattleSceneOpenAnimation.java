@@ -13,18 +13,22 @@ public class BattleSceneOpenAnimation extends BattleViewAnimation {
 
     public BattleSceneOpenAnimation(BattleScene battleScene) {
         super();
+        this._battleScene = battleScene;
+    }
+
+    public void setInitialState(){
         Timeline = new int[]{0, 2000, 2500};
         States = new ArrayList<>(Timeline.length);
 
         States.add(new float[]{
-                Gdx.graphics.getWidth(), 0, //Backdrop
-                Gdx.graphics.getWidth() * 1.25f, 400, //Enemybase
-                0 - Gdx.graphics.getWidth() * 1.25f, 0, // Playerbase
+                _battleScene.getGameWidth(), 0, //Backdrop
+                _battleScene.getGameWidth() * 1.25f, 400, //Enemybase
+                0 - _battleScene.getGameWidth() * 1.25f, 0, // Playerbase
                 300, -500, //Player mon
-                850, Gdx.graphics.getHeight() + 500f, //Enemy mon,
+                850, _battleScene.getGameWidth() + 500f, //Enemy mon,
                 -500f, 550, //enemy health box,
                 -500f, 300, //player health box,
-               Gdx.graphics.getWidth() + 500, 135  // Action box position
+                _battleScene.getGameWidth() + 500, 135  // Action box position
         });
 
         States.add(new float[]{
@@ -32,10 +36,10 @@ public class BattleSceneOpenAnimation extends BattleViewAnimation {
                 800, 400,
                 145, 0,
                 300, -500,
-                850, Gdx.graphics.getHeight() + 500f,
+                850, _battleScene.getGameHeight() + 500f,
                 -500f, 550,
                 -500f, 300,
-                Gdx.graphics.getWidth() + 500, 135
+                _battleScene.getGameWidth() + 500, 135
         });
 
         States.add(new float[]{
@@ -46,18 +50,23 @@ public class BattleSceneOpenAnimation extends BattleViewAnimation {
                 850, 400,
                 480, 550,
                 100, 300,
-                Gdx.graphics.getWidth() - 300, 135
+                _battleScene.getGameWidth() - 300, 135
         });
 
-        battleScene.setBackdropPosition(new Position(Gdx.graphics.getWidth(), 0));
-        battleScene.setEnemyBasePosition(new Position(Gdx.graphics.getWidth() * 1.25f, 400));
-        battleScene.setPlayerBasePosition(new Position(0 - Gdx.graphics.getWidth() * 1.25f, 0));
-        battleScene.setPlayerMonsterPosition(new Position(300, -500));
-        battleScene.setEnemyMonsterPosition(new Position(850, Gdx.graphics.getHeight() + 500));
-        battleScene.setEnemyHealthBoxPosition(new Position(-500f, 550));
-        battleScene.setPlayerHealthBoxPosition(new Position(-500f, 300));
-        battleScene.setActionBoxPosition(new Position(Gdx.graphics.getWidth() + 500, 135));
-        this._battleScene = battleScene;
+        _battleScene.setBackdropPosition(new Position(_battleScene.getGameWidth(), 0));
+        _battleScene.setEnemyBasePosition(new Position(_battleScene.getGameWidth() * 1.25f, 400));
+        _battleScene.setPlayerBasePosition(new Position(0 - _battleScene.getGameWidth() * 1.25f, 0));
+        _battleScene.setPlayerMonsterPosition(new Position(300, -500));
+        _battleScene.setEnemyMonsterPosition(new Position(850, _battleScene.getGameHeight() + 500));
+        _battleScene.setEnemyHealthBoxPosition(new Position(-500f, 550));
+        _battleScene.setPlayerHealthBoxPosition(new Position(-500f, 300));
+        _battleScene.setActionBoxPosition(new Position(_battleScene.getGameWidth() + 500, 135));
+    }
+
+    @Override
+    public void start() {
+        setInitialState();
+        super.start();
     }
 
     @Override
