@@ -46,9 +46,9 @@ public class BundleControllerUI extends JFrame {
         contentPane.add(topPanel);
         topPanel.setLayout(new BoxLayout(topPanel, BoxLayout.X_AXIS));
 
-        JLabel lblHejsa = new JLabel("Bundles:");
-        topPanel.add(lblHejsa);
-        lblHejsa.setFont(new Font("SansSerif", Font.BOLD, 17));
+        JLabel lblBundles = new JLabel("Bundles:");
+        topPanel.add(lblBundles);
+        lblBundles.setFont(new Font("SansSerif", Font.BOLD, 17));
 
         Component horizontalGlue = Box.createHorizontalGlue();
         topPanel.add(horizontalGlue);
@@ -111,7 +111,7 @@ public class BundleControllerUI extends JFrame {
                 return;
             }
             File f = fileChooser.getSelectedFile();
-            String filePath = f.getAbsolutePath().replace('/', '/');
+            String filePath = f.getAbsolutePath();
             try {
                 context.installBundle("file:///" + filePath);
             } catch (BundleException ex) {
@@ -122,14 +122,14 @@ public class BundleControllerUI extends JFrame {
         };
     }
 
-    public JPanel getBundleEntry(Bundle bundle_) {
-        JPanel bundle = new JPanel();
-        bundle.setLayout(new BoxLayout(bundle, BoxLayout.X_AXIS));
+    public JPanel getBundleEntry(Bundle bundle) {
+        JPanel bundlePanel = new JPanel();
+        bundlePanel.setLayout(new BoxLayout(bundlePanel, BoxLayout.X_AXIS));
 
-        JCheckBox chckbxEnableBundle = new JCheckBox(String.format("%d - %s (%s)", bundle_.getBundleId(), bundle_.getSymbolicName(), getState(bundle_.getState())));
-        chckbxEnableBundle.setSelected(bundle_.getState() == Bundle.ACTIVE);
+        JCheckBox chckbxEnableBundle = new JCheckBox(String.format("%d - %s (%s)", bundle.getBundleId(), bundle.getSymbolicName(), getState(bundle.getState())));
+        chckbxEnableBundle.setSelected(bundle.getState() == Bundle.ACTIVE);
 
-        boolean shouldBeToggleable = this.dynamicallyLoadUnloadBundles.stream().anyMatch(x -> x.equalsIgnoreCase(bundle_.getSymbolicName()))
+        boolean shouldBeToggleable = this.dynamicallyLoadUnloadBundles.stream().anyMatch(x -> x.equalsIgnoreCase(bundle.getSymbolicName()))
                 || yoloMode;
 
         Component horizontalGlue_1 = Box.createHorizontalGlue();
@@ -139,7 +139,7 @@ public class BundleControllerUI extends JFrame {
             chckbxEnableBundle.setEnabled(false);
             chckbxEnableBundle.setToolTipText("This bundle can not be dynamically loaded/unloaded.");
             btnUninstall.setEnabled(false);
-            btnUninstall.setToolTipText("This is not yet implemented :(");
+            btnUninstall.setToolTipText("This bundle cannot be uninstalled.");
         }
 
         //Registering actions
@@ -148,12 +148,12 @@ public class BundleControllerUI extends JFrame {
         chckbxEnableBundle.addActionListener(e -> {
             try {
                 if (chckbxEnableBundle.isSelected()) {
-                    bundle_.start();
+                    bundle.start();
                 } else {
-                    bundle_.stop();
+                    bundle.stop();
                 }
             } catch (BundleException ex) {
-                JOptionPane.showMessageDialog(_self, "A BundleException has occoured!\nIt's probably all broken now..");
+                JOptionPane.showMessageDialog(_self, "A BundleException has occurred!\nIt's probably all broken now..");
                 ex.printStackTrace();
             } finally {
                 updateBundleList();
@@ -162,12 +162,12 @@ public class BundleControllerUI extends JFrame {
 
         //Uninstalling
         btnUninstall.addActionListener(e -> {
-            int dialogResult = JOptionPane.showConfirmDialog(_self, "Are you sure you want to uninstall: " + bundle_.getSymbolicName(), "Warning", JOptionPane.YES_NO_OPTION);
+            int dialogResult = JOptionPane.showConfirmDialog(_self, "Are you sure you want to uninstall: " + bundle.getSymbolicName(), "Warning", JOptionPane.YES_NO_OPTION);
             if (dialogResult == JOptionPane.YES_OPTION) {
                 try {
-                    bundle_.uninstall();
+                    bundle.uninstall();
                 } catch (BundleException ex) {
-                    JOptionPane.showMessageDialog(_self, "A BundleException has occoured!\nIt's probably all broken now..");
+                    JOptionPane.showMessageDialog(_self, "A BundleException has occurred!\nIt's probably all broken now..");
                     ex.printStackTrace();
                 } finally {
                     updateBundleList();
@@ -177,15 +177,14 @@ public class BundleControllerUI extends JFrame {
 
         //Get location
         btnLocation.addActionListener(e -> {
-            JOptionPane.showInputDialog(_self, String.format("Bundle Location for %s", bundle_.getSymbolicName()), bundle_.getLocation());
+            JOptionPane.showInputDialog(_self, String.format("Bundle Location for %s", bundle.getSymbolicName()), bundle.getLocation());
         });
 
-
-        bundle.add(chckbxEnableBundle);
-        bundle.add(horizontalGlue_1);
-        bundle.add(btnLocation);
-        bundle.add(btnUninstall);
-        return bundle;
+        bundlePanel.add(chckbxEnableBundle);
+        bundlePanel.add(horizontalGlue_1);
+        bundlePanel.add(btnLocation);
+        bundlePanel.add(btnUninstall);
+        return bundlePanel;
     }
 
     private String getState(int state) {
