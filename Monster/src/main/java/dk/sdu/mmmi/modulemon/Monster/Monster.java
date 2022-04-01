@@ -97,4 +97,10 @@ public class Monster extends Entity implements IMonster {
     public void setName(String name) {
         this.name = name;
     }
+
+    @Override
+    public IMonster clone() {
+        return new Monster(this.name, this.type, this.hitPoints, this.defence, this.attack, this.speed, this.moves);
+
+    }
 }

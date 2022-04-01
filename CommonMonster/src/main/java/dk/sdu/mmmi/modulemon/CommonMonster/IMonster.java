@@ -15,4 +15,5 @@ public interface IMonster {
     Texture getBackSprite();
     MonsterType getMonsterType();
     List<IMonsterMove> getMoves();
+    IMonster clone();
 }

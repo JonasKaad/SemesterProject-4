@@ -412,4 +412,14 @@ public class BattleSimulationTest {
 
         verify(player).setActiveMonster(playerMonster2);
     }
+
+    @Test
+    void simulateDoMoveWorks() {
+        //TODO: Come up with a good way of testing this
+    }
+
+    @Test
+    void simulateSwitchMonsterWorks() {
+        //TODO: Come up with a good way of testing this
+    }
 }

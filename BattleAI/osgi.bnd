@@ -1,0 +1,3 @@
+Bundle-SymbolicName: BattleAI
+Bundle-ActivationPolicy: lazy
+Service-Component: META-INF/battleai.xml

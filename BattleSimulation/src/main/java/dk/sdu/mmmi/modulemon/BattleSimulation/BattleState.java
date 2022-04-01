@@ -36,4 +36,14 @@ public class BattleState implements IBattleState {
     public void setActiveParticipant(IBattleParticipant participant) {
         this.activeParticipant = participant;
     }
+
+    @Override
+    public IBattleState clone() {
+        IBattleParticipant playerClone = player.clone();
+        IBattleParticipant enemyClone = enemy.clone();
+        IBattleParticipant activeParticipant = this.isPlayersTurn() ? playerClone : enemyClone;
+        BattleState clone = new BattleState(playerClone, enemyClone);
+        clone.setActiveParticipant(activeParticipant);
+        return clone;
+    }
 }

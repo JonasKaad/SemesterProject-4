@@ -1,10 +1,7 @@
 package dk.sdu.mmmi.modulemon.BattleSimulation;
 
+import dk.sdu.mmmi.modulemon.CommonBattle.*;
 import dk.sdu.mmmi.modulemon.CommonBattle.BattleEvents.*;
-import dk.sdu.mmmi.modulemon.CommonBattle.IBattleMonsterProcessor;
-import dk.sdu.mmmi.modulemon.CommonBattle.IBattleSimulation;
-import dk.sdu.mmmi.modulemon.CommonBattle.IBattleParticipant;
-import dk.sdu.mmmi.modulemon.CommonBattle.IBattleState;
 import dk.sdu.mmmi.modulemon.CommonMonster.IMonster;
 import dk.sdu.mmmi.modulemon.CommonMonster.IMonsterMove;
 import java.util.Optional;
@@ -17,7 +14,7 @@ public class BattleSimulation implements IBattleSimulation {
     private Runnable onNextEvent;
 
     //"Mocked" enemyControlSystem. Should be moved somewhere else and hidden behind an interface
-    private TempEnemyControlSystem ecs = new TempEnemyControlSystem();
+    private IBattleAI AI;
     private IBattleMonsterProcessor monsterProcessor;
 
     @Override
@@ -37,7 +34,7 @@ public class BattleSimulation implements IBattleSimulation {
             nextEvent = new InfoBattleEvent("enemy starts the battle");
             onNextEvent = () -> {
                 battleState.setActiveParticipant(firstToTakeTurn);
-                ecs.doAction(battleState.getActiveParticipant(), this);
+                AI.doAction(this);
             };
         } else {
             nextEvent = new InfoBattleEvent("player starts the battle");
@@ -51,7 +48,7 @@ public class BattleSimulation implements IBattleSimulation {
     private void switchTurns() {
         if (battleState.isPlayersTurn()) {
             battleState.setActiveParticipant(battleState.getEnemy());
-            ecs.doAction(battleState.getEnemy(), this);
+            AI.doAction(this);
         } else {
             battleState.setActiveParticipant(battleState.getPlayer());
         }
@@ -153,6 +150,37 @@ public class BattleSimulation implements IBattleSimulation {
     }
 
     @Override
+    public IBattleState simulateDoMove(IBattleParticipant battleParticipant, IMonsterMove move, IBattleState currentState) {
+
+        //Maybe add a check, that the battleParticipant is actually the active participant
+
+        BattleState newState = (BattleState) currentState.clone();
+
+        IMonster source = newState.getActiveParticipant().getActiveMonster();
+        IMonster target;
+        if (newState.isPlayersTurn()) {
+            target = newState.getEnemy().getActiveMonster();
+        } else {
+            target = newState.getPlayer().getActiveMonster();
+        }
+
+        int damage = monsterProcessor.calculateDamage(source, move, target);
+        target.setHitPoints(target.getHitPoints()-damage);
+
+        return newState;
+    }
+
+    @Override
+    public IBattleState simulateSwitchMonster(IBattleParticipant participant, IMonster monster, IBattleState currentState) {
+
+        BattleState newState = (BattleState) currentState.clone();
+
+        newState.getActiveParticipant().setActiveMonster(monster.clone());
+
+        return newState;
+    }
+
+    @Override
     public IBattleEvent getNextBattleEvent() {
         IBattleEvent event = nextEvent;
         if (event!=null && onNextEvent!=null) {
@@ -166,10 +194,8 @@ public class BattleSimulation implements IBattleSimulation {
         this.monsterProcessor = monsterProcessor;
     }
 
-    //Should be moved into another component at some point
-    private class TempEnemyControlSystem {
-        void doAction(IBattleParticipant enemy, IBattleSimulation simulation) {
-            simulation.doMove(enemy, enemy.getActiveMonster().getMoves().get(0));
-        }
+    public void setAI(IBattleAI AI) {
+        this.AI = AI;
     }
+
 }

@@ -15,6 +15,9 @@ public interface IBattleSimulation {
 
     void runAway(IBattleParticipant battleParticipant);
 
+    IBattleState simulateDoMove(IBattleParticipant participant, IMonsterMove move, IBattleState currentState);
+
+    IBattleState simulateSwitchMonster(IBattleParticipant participant, IMonster monster, IBattleState currentState);
     /**
      * @return The next battle event to be shown.
      * Returns `null` if there is no more battle events
