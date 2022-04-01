@@ -1,4 +1,2 @@
-#-----------------------------------------------------------------
-# Use this file to add customized Bnd instructions for the bundle
-#-----------------------------------------------------------------
+Bundle-SymbolicName: BundleController
 Service-Component: META-INF/bundlecontroller.xml

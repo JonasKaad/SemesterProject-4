@@ -133,7 +133,11 @@ public class Game implements ApplicationListener {
     @Override
     public void resume() {}
     @Override
-    public void dispose() {}
+    public void dispose() {
+        if(Game.bundleControllerService != null){
+            Game.bundleControllerService.closeController();
+        }
+    }
 
 /*
     public void addEntityProcessingService(IEntityProcessingService entityProcessingService) {
