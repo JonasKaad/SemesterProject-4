@@ -16,6 +16,8 @@ public class BattleScene {
     private Image _backdrop;
     private Image _playerBase;
     private Image _enemyBase;
+    private String _playerMonsterSpritePath = "";
+    private String _enemyMonsterSpritePath = "";
     private Image _playerMonster;
     private Image _enemyMonster;
 
@@ -225,8 +227,11 @@ public class BattleScene {
         return this.textToDisplay;
     }
 
-    public void setEnemySprite(Texture frontSprite) {
-        this._enemyMonster = new Image(frontSprite);
+    public void setEnemySprite(String spritePath, Class reference) {
+        if(!spritePath.equalsIgnoreCase(this._enemyMonsterSpritePath)) {
+            this._enemyMonster = new Image(new Texture(new OSGiFileHandle(spritePath, reference)));
+            this._enemyMonsterSpritePath = spritePath;
+        }
     }
 
     public void setEnemyMonsterName(String enemyMonsterName) {
@@ -237,8 +242,11 @@ public class BattleScene {
         this.enemyHP = enemyHP;
     }
 
-    public void setPlayerSprite(Texture frontSprite) {
-        this._playerMonster = new Image(frontSprite);
+    public void setPlayerSprite(String spritePath, Class reference) {
+        if(!spritePath.equalsIgnoreCase(this._playerMonsterSpritePath)) {
+            this._playerMonster = new Image(new Texture(new OSGiFileHandle(spritePath, reference)));
+            this._playerMonsterSpritePath = spritePath;
+        }
     }
 
     public void setPlayerMonsterName(String playerMonsterName) {
@@ -284,6 +292,7 @@ public class BattleScene {
     public void setGameHeight(int gameHeight) {
         this.gameHeight = gameHeight;
     }
+
     /* POSITION SHENANIGANS */
 
     public Position getBackdropPosition() {

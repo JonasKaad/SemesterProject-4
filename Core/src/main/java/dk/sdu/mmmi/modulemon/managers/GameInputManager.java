@@ -32,6 +32,12 @@ public class GameInputManager extends InputAdapter {
         if (k == Input.Keys.E) {
             gameData.getKeys().setKey(GameKeys.E, true);
         }
+        if (k == Input.Keys.K) {
+            gameData.getKeys().setKey(GameKeys.K, true);
+        }
+        if(k == Input.Keys.CONTROL_LEFT){
+            gameData.getKeys().setKey(GameKeys.LEFT_CTRL, true);
+        }
         return true;
     }
 
@@ -54,6 +60,12 @@ public class GameInputManager extends InputAdapter {
         }
         if (k == Input.Keys.E) {
             gameData.getKeys().setKey(GameKeys.E, false);
+        }
+        if (k == Input.Keys.K) {
+            gameData.getKeys().setKey(GameKeys.K, false);
+        }
+        if(k == Input.Keys.CONTROL_LEFT){
+            gameData.getKeys().setKey(GameKeys.LEFT_CTRL, false);
         }
         return true;
     }
