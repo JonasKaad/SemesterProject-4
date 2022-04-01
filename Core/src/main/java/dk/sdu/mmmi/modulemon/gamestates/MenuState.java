@@ -1,13 +1,13 @@
 package dk.sdu.mmmi.modulemon.gamestates;
 
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Texture;
-import dk.sdu.mmmi.modulemon.Game;
-import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.GlyphLayout;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGenerator;
+import dk.sdu.mmmi.modulemon.Game;
 import dk.sdu.mmmi.modulemon.OSGiFileHandle;
 import dk.sdu.mmmi.modulemon.common.data.GameData;
 import dk.sdu.mmmi.modulemon.common.data.GameKeys;
@@ -26,6 +26,7 @@ public class MenuState implements IGameViewService {
     private SpriteBatch spriteBatch;
     private BitmapFont titleFont;
     private BitmapFont menuOptionsFont;
+    private BitmapFont smallMenuFont;
 
     private Texture logo;
 
@@ -34,7 +35,7 @@ public class MenuState implements IGameViewService {
     private int currentOption;
     private MenuStates currentMenuState = MenuStates.DEFAULT;
     private String[] menuOptions;
-    private String[] defaultMenuOptions =new String[] {
+    private String[] defaultMenuOptions = new String[]{
             "Play",
             "Settings",
             "Quit"
@@ -74,6 +75,9 @@ public class MenuState implements IGameViewService {
         // Sets the @menuOptionsFont to use our custom font file with the chosen font size
         menuOptionsFont = fontGenerator.generateFont(parameter);
 
+        parameter.size = 20;
+        smallMenuFont = fontGenerator.generateFont(parameter);
+
         fontGenerator.dispose();
 
         logo = new Texture(new OSGiFileHandle("/icons/cat-logo.png"));
@@ -84,15 +88,15 @@ public class MenuState implements IGameViewService {
 
     @Override
     public void update(GameData gameData, IGameStateManager gameStateManager) {
-        if(currentMenuState == MenuStates.SELECTING_GAMESTATE){
+        if (currentMenuState == MenuStates.SELECTING_GAMESTATE) {
             title = "Select GaméstatE";
             List<IGameViewService> gameViews = Game.getGameViewServiceList();
-            menuOptions = new String[gameViews.size()+1];
+            menuOptions = new String[gameViews.size() + 1];
             menuOptions[0] = "GO BACK";
-            for(int i = 1; i <= gameViews.size(); i++){
-                menuOptions[i] = gameViews.get  (i-1).getClass().getName();
+            for (int i = 1; i <= gameViews.size(); i++) {
+                menuOptions[i] = gameViews.get(i - 1).getClass().getName();
             }
-        }else{
+        } else {
             //Default
             menuOptions = defaultMenuOptions;
             title = "ModulémoN";
@@ -129,9 +133,17 @@ public class MenuState implements IGameViewService {
                     spriteBatch,
                     menuOptions[i],
                     (Game.WIDTH - glyphLayout.width) / 2f,
-                    (Game.HEIGHT - 100 * i ) / 2f
+                    (Game.HEIGHT - 100 * i) / 2f
             );
         }
+
+        glyphLayout.setText(smallMenuFont, "Press CTRL+K to open the Bundle Controller (if loaded)");
+        smallMenuFont.draw(
+                spriteBatch,
+                "Press CTRL+K to open the Bundle Controller (if loaded)",
+                (Game.WIDTH - glyphLayout.width) / 2f,
+                40
+        );
 
         spriteBatch.end();
     }
@@ -139,25 +151,23 @@ public class MenuState implements IGameViewService {
     @Override
     public void handleInput(GameData gameData, IGameStateManager gameStateManager) {
         // Moves up in the menu
-        if(gameData.getKeys().isPressed(GameKeys.UP) || gameData.getKeys().isPressed(GameKeys.LEFT)){
-            if(currentOption > 0){
+        if (gameData.getKeys().isPressed(GameKeys.UP) || gameData.getKeys().isPressed(GameKeys.LEFT)) {
+            if (currentOption > 0) {
                 currentOption--;
-            }
-            else{
-                currentOption = menuOptions.length-1;
+            } else {
+                currentOption = menuOptions.length - 1;
             }
         }
         // Moves down in the menu
-        if(gameData.getKeys().isPressed(GameKeys.DOWN) || gameData.getKeys().isPressed(GameKeys.RIGHT)){
-            if(currentOption < menuOptions.length-1){
+        if (gameData.getKeys().isPressed(GameKeys.DOWN) || gameData.getKeys().isPressed(GameKeys.RIGHT)) {
+            if (currentOption < menuOptions.length - 1) {
                 currentOption++;
-            }
-            else{
+            } else {
                 currentOption = 0;
             }
         }
         // Selects the current option
-        if(gameData.getKeys().isPressed(GameKeys.ENTER) || gameData.getKeys().isPressed(GameKeys.E)){
+        if (gameData.getKeys().isPressed(GameKeys.ENTER) || gameData.getKeys().isPressed(GameKeys.E)) {
             selectOption(gameStateManager);
         }
     }
@@ -167,21 +177,21 @@ public class MenuState implements IGameViewService {
      * Based on what the currentOption is, it will execute the appertaining code.
      */
     private void selectOption(IGameStateManager gsm) {
-        if(currentMenuState == MenuStates.SELECTING_GAMESTATE) {
-            if(menuOptions[currentOption].equalsIgnoreCase("GO BACK")){
+        if (currentMenuState == MenuStates.SELECTING_GAMESTATE) {
+            if (menuOptions[currentOption].equalsIgnoreCase("GO BACK")) {
                 currentMenuState = MenuStates.DEFAULT;
                 currentOption = 0;
                 return;
             }
 
             List<IGameViewService> views = Game.getGameViewServiceList();
-            if(currentOption > views.size()){
+            if (currentOption > views.size()) {
                 System.out.println("ERROR: Tried to set invalid view");
                 currentOption = 0;
             }
-            IGameViewService selectedView = views.get(currentOption-1);
+            IGameViewService selectedView = views.get(currentOption - 1);
             gsm.setState(selectedView);
-        }else {
+        } else {
             if (Objects.equals(menuOptions[currentOption], "Play")) {
                 //gsm.setState(GameStateManager.PLAY);
                 currentMenuState = MenuStates.SELECTING_GAMESTATE;
@@ -201,7 +211,7 @@ public class MenuState implements IGameViewService {
 
     }
 
-    private enum MenuStates{
+    private enum MenuStates {
         DEFAULT,
         SELECTING_GAMESTATE,
         SETTINGS
