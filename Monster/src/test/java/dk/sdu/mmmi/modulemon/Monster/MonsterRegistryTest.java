@@ -12,6 +12,7 @@ import java.net.URISyntaxException;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotEquals;
@@ -108,7 +109,7 @@ public class MonsterRegistryTest {
         IMonsterRegistry registry = new MonsterRegistry(
                 "/json/monsters_test.json",
                 "/json/monsters_moves_test.json");
-        HashMap<Integer, IMonster> monstersToTest = registry.getAllMonsters();
+        Map<Integer, IMonster> monstersToTest = registry.getAllMonsters();
         IMonster monsterToTest1 = monstersToTest.get(0);
         IMonster monsterToTest2 = monstersToTest.get(1);
         List<IMonsterMove> movesToTest1 = monsterToTest1.getMoves();
