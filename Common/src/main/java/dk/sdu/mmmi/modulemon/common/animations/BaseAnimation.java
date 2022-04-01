@@ -1,4 +1,4 @@
-package dk.sdu.mmmi.modulemon.BattleScene.animations;
+package dk.sdu.mmmi.modulemon.common.animations;
 
 import com.badlogic.gdx.utils.TimeUtils;
 import dk.sdu.mmmi.modulemon.common.data.GameData;
@@ -6,8 +6,8 @@ import dk.sdu.mmmi.modulemon.common.data.GameData;
 import java.util.List;
 import java.util.logging.Logger;
 
-public abstract class BattleViewAnimation {
-    private static final Logger LOGGER = Logger.getLogger(BattleViewAnimation.class.getName());
+public abstract class BaseAnimation {
+    private static final Logger LOGGER = Logger.getLogger(BaseAnimation.class.getName());
     protected int[] Timeline;
     protected List<float[]> States;
     private int currentTimelineIndex;

@@ -1,10 +1,11 @@
 package dk.sdu.mmmi.modulemon.BattleScene.animations;
 
+import dk.sdu.mmmi.modulemon.common.animations.BaseAnimation;
 import dk.sdu.mmmi.modulemon.common.data.GameData;
 
 import java.util.ArrayList;
 
-public class EmptyAnimation extends BattleViewAnimation{
+public class EmptyAnimation extends BaseAnimation {
 
     public EmptyAnimation(int duration) {
         super();

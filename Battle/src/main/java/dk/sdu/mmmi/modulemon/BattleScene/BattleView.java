@@ -13,6 +13,7 @@ import dk.sdu.mmmi.modulemon.CommonBattle.IBattleParticipant;
 import dk.sdu.mmmi.modulemon.CommonBattle.IBattleSimulation;
 import dk.sdu.mmmi.modulemon.CommonMonster.IMonster;
 import dk.sdu.mmmi.modulemon.CommonMonster.IMonsterMove;
+import dk.sdu.mmmi.modulemon.common.animations.BaseAnimation;
 import dk.sdu.mmmi.modulemon.common.data.GameData;
 import dk.sdu.mmmi.modulemon.common.data.GameKeys;
 import dk.sdu.mmmi.modulemon.common.data.IGameStateManager;
@@ -29,8 +30,8 @@ public class BattleView implements IGameViewService {
     private Sound _attackSound;
     private Sound _winSound;
     private MenuState menuState = MenuState.DEFAULT;
-    private Queue<BattleViewAnimation> blockingAnimations;
-    private Queue<BattleViewAnimation> backgroundAnimations;
+    private Queue<BaseAnimation> blockingAnimations;
+    private Queue<BaseAnimation> backgroundAnimations;
 
     private String[] defaultActions;
     private int selectedAction = 0;
@@ -68,7 +69,7 @@ public class BattleView implements IGameViewService {
         _battleScene.setActionTitle("Your actions:");
         _battleScene.setActions(this.defaultActions);
 
-        BattleViewAnimation openingAnimation = new BattleSceneOpenAnimation(_battleScene);
+        BaseAnimation openingAnimation = new BattleSceneOpenAnimation(_battleScene);
         blockingAnimations.add(openingAnimation);
     }
 
@@ -120,8 +121,8 @@ public class BattleView implements IGameViewService {
                 _battleScene.setGameWidth(gameData.getDisplayWidth());
             }
 
-            BattleViewAnimation currentAnimation = blockingAnimations.peek();
-            if (!currentAnimation.isStarted()) {
+            BaseAnimation currentAnimation = blockingAnimations.peek();
+            if(!currentAnimation.isStarted()){
                 currentAnimation.start();
             }
 
@@ -130,7 +131,7 @@ public class BattleView implements IGameViewService {
                 //If the animation is done, then we remove the animation from the queue
                 currentAnimation.runEventDoneIfSet();
                 blockingAnimations.remove();
-                BattleViewAnimation nextAnimation = blockingAnimations.peek();
+                BaseAnimation nextAnimation = blockingAnimations.peek();
                 if (nextAnimation != null) {
                     nextAnimation.start();
                     return;
@@ -139,7 +140,6 @@ public class BattleView implements IGameViewService {
                 return; //Current animation still working, so just return
             }
         }
-
 
         //Check for events
         IBattleEvent battleEvent = _battleSimulation.getNextBattleEvent();
@@ -197,6 +197,7 @@ public class BattleView implements IGameViewService {
 
     @Override
     public void draw(GameData gameData) {
+        //Game data
         _battleScene.setGameHeight(gameData.getDisplayHeight());
         _battleScene.setGameWidth(gameData.getDisplayWidth());
 
@@ -246,7 +247,7 @@ public class BattleView implements IGameViewService {
                 _battleScene.setTextToDisplay("Show a fancy pancy battle-animation");
                 if (keys.isPressed(GameKeys.ENTER)) {
                     System.out.println("Switching monster isn't implemented yet");
-                    BattleViewAnimation openingAnimation = new BattleSceneOpenAnimation(_battleScene);
+                    BaseAnimation openingAnimation = new BattleSceneOpenAnimation(_battleScene);
                     openingAnimation.start();
                     blockingAnimations.add(openingAnimation);
                 }

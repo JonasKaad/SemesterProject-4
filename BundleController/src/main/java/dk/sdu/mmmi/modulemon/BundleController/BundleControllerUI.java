@@ -23,9 +23,11 @@ public class BundleControllerUI extends JFrame {
     private JFileChooser fileChooser;
 
     private java.util.List<String> dynamicallyLoadUnloadBundles = Arrays.asList(
-            "dk.sdu.mmmi.modulemon.Battle",
-            "dk.sdu.mmmi.modulemon.Map",
-            "dk.sdu.mmmi.modulemon.DemoComponent"
+            "Battle",
+            "Map",
+            "DemoComponent",
+            "Player",
+            "NPC"
     );
 
     public BundleControllerUI(BundleControllerService service) {
