@@ -6,6 +6,7 @@ package dk.sdu.mmmi.modulemon.NPC;
 
 import com.badlogic.gdx.graphics.Texture;
 import dk.sdu.mmmi.modulemon.common.data.Entity;
+import dk.sdu.mmmi.modulemon.common.data.entityparts.*;
 
 /**
  *
@@ -14,14 +15,26 @@ import dk.sdu.mmmi.modulemon.common.data.Entity;
 public class NPC extends Entity implements INPC {
     
     private String name;
-    private Texture sprite;
+    private SpritePart sprites; //4 sprites
+    private PositionPart position;
+    private MovingPart movement;
+    private InteractPart interact;
     private int facingDirection; //posible ints [0, 90, 180, 270]
-    //private PositionPart position;
+    private String dialog; 
 
-    public NPC(String name, Texture sprite, int facingDirection) {
+    
+    public NPC(String name, SpritePart sprites, PositionPart position, MovingPart movement, InteractPart interact, int facingDirection) {
         this.name = name;
-        this.sprite = sprite;
+        this.sprites = sprites;
+        this.position = position;
+        this.movement = movement;
+        this.interact = interact;
         this.facingDirection = facingDirection;
+        
+        this.add(sprites);
+        this.add(position);
+        this.add(movement);
+        this.add(interact);
     }
     
     @Override
@@ -42,6 +55,7 @@ public class NPC extends Entity implements INPC {
 
     @Override
     public void interact() {
+        
     }
     
 }

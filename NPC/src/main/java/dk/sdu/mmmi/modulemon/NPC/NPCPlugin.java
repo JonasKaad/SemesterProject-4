@@ -8,8 +8,8 @@ import com.badlogic.gdx.graphics.Texture;
 import dk.sdu.mmmi.modulemon.common.data.Entity;
 import dk.sdu.mmmi.modulemon.common.data.GameData;
 import dk.sdu.mmmi.modulemon.common.data.World;
+import dk.sdu.mmmi.modulemon.common.data.entityparts.*;
 import dk.sdu.mmmi.modulemon.common.services.IGamePluginService;
-import dk.sdu.mmmi.modulemon.BattleScene.OSGiFileHandle;
 import java.util.ArrayList;
 
 /**
@@ -18,19 +18,34 @@ import java.util.ArrayList;
  */
 public class NPCPlugin implements IGamePluginService{
     
-    ArrayList<INPC> npcs = new ArrayList<>();
+    ArrayList<Entity> npcs = new ArrayList<>();
 
     @Override
     public void start(GameData gameData, World world) {
         System.out.println("NPCPlugin start");
-        Entity npc = new NPC("John", new Texture(new OSGiFileHandle("/Sprites/npc.png")), 0);
-        world.addEntity(npc);
+        npcs.add(createNPC());
+        
+        for (Entity npc : npcs) {
+            world.addEntity(npc);
+        }
+    }
+    
+    private Entity createNPC() {
+        System.out.println("createPlayer()");
+        Entity npc = new NPC(
+                "John", 
+                new SpritePart("/assets/npc.png", "/assets/npc.png", "/assets/npc.png", "/assets/npc.png"),
+                new PositionPart(3000, 2000),
+                new MovingPart(),
+                new InteractPart(),
+                0);
+        return npc;
     }
 
     @Override
     public void stop(GameData gameData, World world) {
         System.out.println("NPCPlugin stop");
-        for (Entity npc : world.getEntities()){
+        for (Entity npc : npcs){
             if (npc.getClass() == NPC.class) {
                 world.removeEntity(npc);
             }

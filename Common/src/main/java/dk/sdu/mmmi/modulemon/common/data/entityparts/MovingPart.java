@@ -52,6 +52,7 @@ public class MovingPart extends BaseAnimation implements EntityPart {
         return new Vector2(x, y);
     }
 
+    @Override
     public void process(GameData gameData, Entity entity) {
         PositionPart positionPart = entity.getPart(PositionPart.class);
         float x = positionPart.getX();
