@@ -1,36 +1,35 @@
 package dk.sdu.mmmi.modulemon.Monster;
 
-import com.badlogic.gdx.graphics.Texture;
 import dk.sdu.mmmi.modulemon.CommonMonster.IMonster;
 import dk.sdu.mmmi.modulemon.CommonMonster.IMonsterMove;
 import dk.sdu.mmmi.modulemon.CommonMonster.MonsterType;
-import dk.sdu.mmmi.modulemon.common.data.Entity;
 
 import java.util.List;
 
-public class Monster extends Entity implements IMonster {
+public class Monster implements IMonster {
     String name;
     MonsterType type;
     int hitPoints;
     int defence;
     int attack;
     int speed;
-    Texture sprite;
+    String frontSprite;
+    String backSprite;
     List<IMonsterMove> moves;
+    int ID;
 
-    // For some reason using Libgdx gives a null pointer on the texture, uncommented for now
-    /*
-    public Monster(String name, MonsterType type, int hitPoints, int defence, int attack, int speed, Texture sprite, List<IMonsterMove> moves) {
+    public Monster(String name, MonsterType type, int hitPoints, int defence, int attack, int speed,  List<IMonsterMove> moves, String frontSprite, String backSprite, int ID) {
         this.name = name;
         this.type = type;
         this.hitPoints = hitPoints;
         this.defence = defence;
         this.attack = attack;
         this.speed = speed;
-        this.sprite = sprite;
         this.moves = moves;
-    }*/
-
+        this.frontSprite = frontSprite;
+        this.backSprite = backSprite;
+        this.ID = ID;
+    }
     public Monster(String name, MonsterType type, int hitPoints, int defence, int attack, int speed,  List<IMonsterMove> moves) {
         this.name = name;
         this.type = type;
@@ -40,6 +39,7 @@ public class Monster extends Entity implements IMonster {
         this.speed = speed;
         this.moves = moves;
     }
+
 
 
     @Override
@@ -78,13 +78,13 @@ public class Monster extends Entity implements IMonster {
     }
 
     @Override
-    public Texture getFrontSprite() {
-        return sprite;
+    public String getFrontSprite() {
+        return frontSprite;
     }
 
     @Override
-    public Texture getBackSprite() {
-        return sprite;
+    public String getBackSprite() {
+        return backSprite;
     }
 
     @Override
@@ -92,9 +92,19 @@ public class Monster extends Entity implements IMonster {
         return moves;
     }
 
+    @Override
+    public int getID() {
+        return ID;
+    }
 
     // Only for testing purposes
     public void setName(String name) {
         this.name = name;
+    }
+
+    @Override
+    public IMonster clone() {
+        return new Monster(this.name, this.type, this.hitPoints, this.defence, this.attack, this.speed, this.moves);
+
     }
 }

@@ -13,12 +13,13 @@ public abstract class BaseAnimation {
     private int currentTimelineIndex;
     private long animationStartMillis;
     private long millisecondCounter;
-    private boolean isRunning = false;
+    private boolean isFinished = false;
+    private boolean isStarted = false;
     protected IAnimationCurve animationCurve = AnimationCurves.Linear();
     protected Runnable onEventDone;
 
     protected void tick() {
-        if (isRunning)
+        if (!isFinished)
             millisecondCounter = TimeUtils.timeSinceMillis(animationStartMillis);
     }
 
@@ -57,15 +58,20 @@ public abstract class BaseAnimation {
         currentTimelineIndex = 0;
         millisecondCounter = 0;
         animationStartMillis = TimeUtils.millis();
-        isRunning = true;
+        isFinished = false;
+        isStarted = true;
     }
 
     public int getAnimationLength() {
         return Timeline[Timeline.length - 1];
     }
 
-    public boolean isRunning() {
-        return this.isRunning;
+    public boolean isStarted(){
+        return this.isStarted;
+    }
+
+    public boolean isFinished() {
+        return this.isFinished;
     }
 
     protected float[] getCurrentStates() {
@@ -74,7 +80,7 @@ public abstract class BaseAnimation {
         int startOfNextState = 0;
         do {
             if (millisecondCounter >= getAnimationLength()) {
-                isRunning = false;
+                isFinished = true;
                 return States.get(States.size() - 1);
             }
 
