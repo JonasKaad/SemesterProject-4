@@ -14,6 +14,7 @@ public class OSGiFileHandle extends FileHandle {
         this.resourceName = resourceName;
     }
 
+
     @Override
     public byte[] readBytes() {
         if(cachedBytes != null){
@@ -37,6 +38,8 @@ public class OSGiFileHandle extends FileHandle {
         cachedBytes = buffer.toByteArray();
         return cachedBytes;
     }
+
+
 
     @Override
     public InputStream read() {

@@ -33,7 +33,6 @@
     <module>CommonBattle</module>
     <module>CommonMonster</module>
     <module>Monster</module>
-    <module>DemoComponent</module>
     <module>Battle</module>
     <module>Player</module>
     <module>NPC</module>
