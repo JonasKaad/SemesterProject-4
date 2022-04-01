@@ -1,10 +1,8 @@
+package dk.sdu.mmmi.modulemon.Monster;
+
 import dk.sdu.mmmi.modulemon.CommonMonster.IMonster;
 import dk.sdu.mmmi.modulemon.CommonMonster.MonsterType;
-import dk.sdu.mmmi.modulemon.Monster.Monster;
-import dk.sdu.mmmi.modulemon.Monster.MonsterMove;
-import dk.sdu.mmmi.modulemon.Monster.MonsterParser;
 import org.junit.jupiter.api.Test;
-
 import java.io.IOException;
 import java.net.URISyntaxException;
 import java.util.Arrays;
