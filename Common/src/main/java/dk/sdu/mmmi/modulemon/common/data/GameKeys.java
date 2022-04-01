@@ -12,6 +12,8 @@ public class GameKeys {
     public static final int RIGHT = 3;
     public static final int ENTER = 4;
     public static final int E = 5;
+    public static final int K = 6;
+    public static final int LEFT_CTRL = 7;
 
     public GameKeys() {
         keys = new boolean[NUM_KEYS];
