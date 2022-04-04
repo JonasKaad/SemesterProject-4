@@ -50,7 +50,7 @@ public class BundleControllerUI extends JFrame {
 
         JLabel lblBundles = new JLabel("Bundles:");
         topPanel.add(lblBundles);
-        lblBundles.setFont(new Font("SansSerif", Font.BOLD, 17));
+        lblBundles.setFont(new Font("SansSerif", Font.BOLD, 20));
 
         Component horizontalGlue = Box.createHorizontalGlue();
         topPanel.add(horizontalGlue);
@@ -83,7 +83,7 @@ public class BundleControllerUI extends JFrame {
         JButton btnInstallNewBundle = new JButton("Install new bundle");
         btnInstallNewBundle.addActionListener(handleInstallBtnAction());
 
-        fileChooser = new JFileChooser();
+        fileChooser = new JFileChooser("C:\\");
         fileChooser.setDialogTitle("Select a bundle");
         fileChooser.setFileSelectionMode(JFileChooser.FILES_ONLY);
         fileChooser.setFileFilter(new FileNameExtensionFilter("OSGi bundles", "jar"));
@@ -108,6 +108,7 @@ public class BundleControllerUI extends JFrame {
     public ActionListener handleInstallBtnAction() {
         return e -> {
             int returnVal = fileChooser.showOpenDialog(_self);
+
 
             if (returnVal != JFileChooser.APPROVE_OPTION) {
                 return;
