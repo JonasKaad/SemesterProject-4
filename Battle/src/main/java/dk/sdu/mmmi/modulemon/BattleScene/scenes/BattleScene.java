@@ -7,9 +7,7 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
-import dk.sdu.mmmi.modulemon.BattleScene.OSGiFileHandle;
-import dk.sdu.mmmi.modulemon.BattleScene.Position;
-import dk.sdu.mmmi.modulemon.BattleScene.TextUtils;
+import dk.sdu.mmmi.modulemon.BattleScene.*;
 
 public class BattleScene {
 
@@ -34,6 +32,8 @@ public class BattleScene {
     private Color _healthIndicatorColor;
     private String _healthIndicatorText;
     private Position _actionBoxPosition;
+    private Position _textBoxPosition;
+    private PersonaRectangle _textBoxPersonaVersion;
     private float _actionBoxAlpha = 1;
 
     private String enemyMonsterName;
@@ -143,14 +143,15 @@ public class BattleScene {
         }
 
         //Text box
-        DrawingUtils.borderedRect(
-                shapeRenderer,
-                20,
-                20,
-                this.gameWidth - 40, textBoxHeight,
-                Color.BLACK, Color.WHITE,
-                borderWidth
-        );
+//        DrawingUtils.borderedRect(
+//                shapeRenderer,
+//                _textBoxPosition.getX(),
+//                _textBoxPosition.getY(),
+//                this.gameWidth - 40, textBoxHeight,
+//                Color.BLACK, Color.WHITE,
+//                borderWidth
+//        );
+        _textBoxPersonaVersion.draw(shapeRenderer, Gdx.graphics.getDeltaTime());
 
         shapeRenderer.end();
 
@@ -418,6 +419,8 @@ public class BattleScene {
         _playerHealthBoxPosition = new Position(100, 300);
         _actionBoxPosition = new Position(this.gameWidth - 300, 135);
         _healthIndicator = new Position(-100, -100);
+        _textBoxPosition = new Position(20,20);
+        _textBoxPersonaVersion =  new PersonaRectangle(20,20,  1280-40,100);
         _healthIndicatorColor = Color.RED;
         _enemyMonsterRotation = 0f;
         _playerMonsterRotation = 0f;
