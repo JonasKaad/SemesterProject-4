@@ -29,7 +29,7 @@ public class BattleSceneOpenAnimation extends BaseAnimation {
                 850, _battleScene.getGameWidth() + 500f, //Enemy mon,
                 -500f, 550, //enemy health box,
                 -500f, 300, //player health box,
-                _battleScene.getGameWidth() + 500, 135  // Action box position
+                _battleScene.getGameWidth() + 500, 155  // Action box position
         });
 
         States.add(new float[]{
@@ -40,7 +40,7 @@ public class BattleSceneOpenAnimation extends BaseAnimation {
                 850, _battleScene.getGameHeight() + 500f,
                 -500f, 550,
                 -500f, 300,
-                _battleScene.getGameWidth() + 500, 135
+                _battleScene.getGameWidth() + 500, 155
         });
 
         States.add(new float[]{
@@ -51,7 +51,7 @@ public class BattleSceneOpenAnimation extends BaseAnimation {
                 850, 400,
                 480, 550,
                 100, 300,
-                _battleScene.getGameWidth() - 300, 135
+                _battleScene.getGameWidth() - 300, 155
         });
 
         _battleScene.setBackdropPosition(new Position(_battleScene.getGameWidth(), 0));

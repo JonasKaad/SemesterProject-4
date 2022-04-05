@@ -34,6 +34,9 @@ public class BattleScene {
     private Position _actionBoxPosition;
     private Position _textBoxPosition;
     private PersonaRectangle _textBoxPersonaVersion;
+    private PersonaRectangle _actionBoxPersonaRect;
+    private PersonaRectangle _enemyHealthPersonaRect;
+    private PersonaRectangle _playerHealthPersonaRect;
     private float _actionBoxAlpha = 1;
 
     private String enemyMonsterName;
@@ -109,37 +112,45 @@ public class BattleScene {
         //HP Box
 
         //shapeRenderer.rect(
-        DrawingUtils.borderedRect(
-                shapeRenderer,
-                _enemyHealthBoxPosition.getX(),
-                _enemyHealthBoxPosition.getY(),
-                300, 100,
-                Color.BLACK, Color.WHITE,
-                borderWidth
-        );
+//        DrawingUtils.borderedRect(
+//                shapeRenderer,
+//                _enemyHealthBoxPosition.getX(),
+//                _enemyHealthBoxPosition.getY(),
+//                300, 100,
+//                Color.BLACK, Color.WHITE,
+//                borderWidth
+//        );
+        _enemyHealthPersonaRect.setBasePosition(_enemyHealthBoxPosition);
+        _enemyHealthPersonaRect.draw(shapeRenderer, Gdx.graphics.getDeltaTime());
 
-        DrawingUtils.borderedRect(
-                shapeRenderer,
-                _playerHealthBoxPosition.getX(),
-                _playerHealthBoxPosition.getY(),
-                350, 100,
-                Color.BLACK, Color.WHITE,
-                borderWidth
-        );
+//        DrawingUtils.borderedRect(
+//                shapeRenderer,
+//                _playerHealthBoxPosition.getX(),
+//                _playerHealthBoxPosition.getY(),
+//                350, 100,
+//                Color.BLACK, Color.WHITE,
+//                borderWidth
+//        );
+        _playerHealthPersonaRect.setBasePosition(_playerHealthBoxPosition);
+        _playerHealthPersonaRect.draw(shapeRenderer, Gdx.graphics.getDeltaTime());
 
         //Action box
         if (actions.length > 0) {
-            shapeRenderer.setColor(1, 1, 1, _actionBoxAlpha);
-            DrawingUtils.borderedRect(
-                    shapeRenderer,
-                    _actionBoxPosition.getX(),
-                    _actionBoxPosition.getY(),
-                    250, 200,
-                    new Color(0, 0, 0, _actionBoxAlpha),
-                    new Color(1, 1, 1, _actionBoxAlpha),
-                    borderWidth
-            );
-            shapeRenderer.setColor(Color.WHITE);
+//            shapeRenderer.setColor(1, 1, 1, _actionBoxAlpha);
+//            DrawingUtils.borderedRect(
+//                    shapeRenderer,
+//                    _actionBoxPosition.getX(),
+//                    _actionBoxPosition.getY(),
+//                    250, 200,
+//                    new Color(0, 0, 0, _actionBoxAlpha),
+//                    new Color(1, 1, 1, _actionBoxAlpha),
+//                    borderWidth
+//            );
+//            shapeRenderer.setColor(Color.WHITE);
+            _actionBoxPersonaRect.setBasePosition(_actionBoxPosition);
+            _actionBoxPersonaRect.setBorderColor(new Color(0, 0, 0, _actionBoxAlpha));
+            _actionBoxPersonaRect.setFillColor(new Color(1,1,1, _actionBoxAlpha));
+            _actionBoxPersonaRect.draw(shapeRenderer, Gdx.graphics.getDeltaTime());
         }
 
         //Text box
@@ -417,10 +428,13 @@ public class BattleScene {
         _playerMonsterPosition = new Position(300, 80);
         _enemyHealthBoxPosition = new Position(480, 550);
         _playerHealthBoxPosition = new Position(100, 300);
-        _actionBoxPosition = new Position(this.gameWidth - 300, 135);
+        _actionBoxPosition = new Position(this.gameWidth - 300, 155);
         _healthIndicator = new Position(-100, -100);
         _textBoxPosition = new Position(20,20);
         _textBoxPersonaVersion =  new PersonaRectangle(20,20,  1280-40,100);
+        _actionBoxPersonaRect = new PersonaRectangle(_actionBoxPosition.getX(), _actionBoxPosition.getY(), 250, 200);
+        _enemyHealthPersonaRect = new PersonaRectangle(_enemyHealthBoxPosition.getX(), _enemyHealthBoxPosition.getY(), 300, 100);
+        _playerHealthPersonaRect = new PersonaRectangle(_playerHealthBoxPosition.getX(), _playerHealthBoxPosition.getY(), 350, 100);
         _healthIndicatorColor = Color.RED;
         _enemyMonsterRotation = 0f;
         _playerMonsterRotation = 0f;

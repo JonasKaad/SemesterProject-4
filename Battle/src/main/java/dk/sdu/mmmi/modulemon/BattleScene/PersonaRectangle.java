@@ -46,6 +46,7 @@ public class PersonaRectangle {
                 randomFloat(r, -10, 10),
                 randomFloat(r, -10, 10)
         };
+        this.rectDriftOffset = new float[this.rectBaseCoordinates.length];
         updateDrift(1);
     }
 
@@ -102,7 +103,8 @@ public class PersonaRectangle {
     }
 
     public void setBaseX(float baseX) {
-        rebuildBaseCoordinates(baseX,this.rectBaseCoordinates[1]);
+        if(baseX != this.rectBaseCoordinates[0])
+            rebuildBaseCoordinates(baseX,this.rectBaseCoordinates[1]);
     }
 
     public float getBaseY() {
@@ -110,8 +112,57 @@ public class PersonaRectangle {
     }
 
     public void setBaseY(float baseY) {
-        rebuildBaseCoordinates(this.rectBaseCoordinates[0], baseY);
+        if(baseY != this.rectBaseCoordinates[1])
+            rebuildBaseCoordinates(this.rectBaseCoordinates[0], baseY);
     }
+
+    public void setBasePosition(Position pos){
+        if(pos.getX() != this.rectBaseCoordinates[0]
+            || pos.getY() != this.rectBaseCoordinates[1])
+        rebuildBaseCoordinates(pos.getX(), pos.getY());
+    }
+
+    public float getBorderWidth() {
+        return borderWidth;
+    }
+
+    public void setBorderWidth(float borderWidth) {
+        this.borderWidth = borderWidth;
+    }
+
+    public Color getBorderColor() {
+        return borderColor;
+    }
+
+    public void setBorderColor(Color borderColor) {
+        this.borderColor = borderColor;
+    }
+
+    public Color getFillColor() {
+        return fillColor;
+    }
+
+    public void setFillColor(Color fillColor) {
+        this.fillColor = fillColor;
+    }
+
+    public float getDriftLevel() {
+        return driftLevel;
+    }
+
+    public void setDriftLevel(float driftLevel) {
+        this.driftLevel = driftLevel;
+    }
+
+    public float getAnimationSpeed() {
+        return animationSpeed;
+    }
+
+    public void setAnimationSpeed(float animationSpeed) {
+        this.animationSpeed = animationSpeed;
+    }
+
+    /// PRIVATE METHODS
 
     private void updateDrift(float dt) {
         for (int i = 0; i < this.rectTimes.length; i++) {
@@ -127,7 +178,6 @@ public class PersonaRectangle {
                 baseX + width, baseY + height, //Top right corner
                 baseX, baseY + height //Top left corner
         };
-        this.rectDriftOffset = this.rectBaseCoordinates.clone();
     }
 
     private float getDriftLevel(float time){
