@@ -29,8 +29,8 @@ public class PersonaRectangle {
         borderWidth = 2;
         borderColor = Color.BLACK;
         fillColor = Color.WHITE;
-        driftLevel = 12;
-        animationSpeed = 0.2f;
+        driftLevel = 14;
+        animationSpeed = 0.8f;
 
         //Setup rect time and coordinates
         rebuildBaseCoordinates(x, y);
