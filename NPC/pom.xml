@@ -42,7 +42,11 @@
       <artifactId>Battle</artifactId>
       <version>${project.version}</version>
     </dependency>
-    
+    <dependency>
+      <groupId>dk.sdu.mmmi.cbse</groupId>
+      <artifactId>CommonNPC</artifactId>
+      <version>1.0-SNAPSHOT</version>
+    </dependency>
   </dependencies>
 
 </project>

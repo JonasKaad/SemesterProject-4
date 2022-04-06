@@ -23,33 +23,20 @@ public class NPCControlSystem implements IEntityProcessingService{
                 PositionPart positionPart = npc.getPart(PositionPart.class);
                 MovingPart movingPart = npc.getPart(MovingPart.class);
                 SpritePart spritePart = npc.getPart(SpritePart.class);
+                AIControlPart controlPart = npc.getPart(AIControlPart.class);
                 
-                //Implement moving for each npc, how?
                 
-                double randomDouble = Math.random();
-                boolean goLeft = false;
-                boolean goRight = false;
-                boolean goUp = false;
-                boolean goDown = false;
-                
-                if (randomDouble < 0.25) {
-                    goLeft = true;
-                } else if (randomDouble >= 0.25 && randomDouble < 0.5) {
-                    goRight = true;
-                } else if (randomDouble >= 0.5 && randomDouble < 0.75) {
-                    goUp = true;
-                } else {
-                    goDown = true;
-                }
-                
-                movingPart.setLeft(goLeft);
-                movingPart.setRight(goRight);
-                movingPart.setUp(goUp);
-                movingPart.setDown(goDown);
+                movingPart.setLeft(controlPart.goLeft());
+                movingPart.setRight(controlPart.goRight());
+                movingPart.setUp(controlPart.goUp());
+                movingPart.setDown(controlPart.goDown());
+                // else stand still
                 
                 movingPart.process(gameData, npc);
                 positionPart.process(gameData, npc);
                 spritePart.process(gameData, npc);
+                controlPart.process(gameData, npc);
+
 
                 updateShape(npc);
         }

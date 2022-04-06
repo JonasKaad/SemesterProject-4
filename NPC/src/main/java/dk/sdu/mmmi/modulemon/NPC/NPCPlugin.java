@@ -24,20 +24,21 @@ public class NPCPlugin implements IGamePluginService{
     public void start(GameData gameData, World world) {
         System.out.println("NPCPlugin start");
         npcs.add(createNPC());
-        
+                
         for (Entity npc : npcs) {
             world.addEntity(npc);
         }
     }
     
     private Entity createNPC() {
-        System.out.println("createPlayer()");
+        System.out.println("createNPC()");
         Entity npc = new NPC(
                 "John", 
                 new SpritePart("/assets/npc.png", "/assets/npc.png", "/assets/npc.png", "/assets/npc.png"),
                 new PositionPart(3000, 2000),
                 new MovingPart(),
                 new InteractPart(),
+                new AIControlPart(new Character[]{'R','L'}),
                 0);
         return npc;
     }
