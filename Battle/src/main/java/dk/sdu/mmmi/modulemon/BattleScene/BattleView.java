@@ -49,7 +49,7 @@ public class BattleView implements IGameViewService {
         backgroundAnimations = new LinkedList<>();
         menuState = MenuState.DEFAULT;
 
-        defaultActions = new String[]{"Fight", "Switch", "Animate", "Quit"};
+        defaultActions = new String[]{"Fight", "Switch", "Animate", "Style", "Quit"};
     }
 
     /**
@@ -250,6 +250,21 @@ public class BattleView implements IGameViewService {
                     BaseAnimation openingAnimation = new BattleSceneOpenAnimation(_battleScene);
                     openingAnimation.start();
                     blockingAnimations.add(openingAnimation);
+                }
+            }else if(selectedAction.equalsIgnoreCase("Style")){
+                _battleScene.setTextToDisplay("Change box-styles");
+                if(keys.isPressed(GameKeys.ENTER)){
+                    if(_battleScene.getPlayerBoxRect() instanceof PersonaRectangle) {
+                        _battleScene.setPlayerBoxRectStyle(Rectangle.class);
+                        _battleScene.setEnemyBoxRectStyle(Rectangle.class);
+                        _battleScene.setActionBoxRectStyle(Rectangle.class);
+                        _battleScene.setTextBoxRectStyle(Rectangle.class);
+                    }else {
+                        _battleScene.setPlayerBoxRectStyle(PersonaRectangle.class);
+                        _battleScene.setEnemyBoxRectStyle(PersonaRectangle.class);
+                        _battleScene.setActionBoxRectStyle(PersonaRectangle.class);
+                        _battleScene.setTextBoxRectStyle(PersonaRectangle.class);
+                    }
                 }
             } else if (selectedAction.equalsIgnoreCase("Quit")) {
                 _battleScene.setTextToDisplay("Ends the battle");

@@ -6,31 +6,20 @@ import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 
 import java.util.Random;
 
-public class PersonaRectangle {
-    private float width;
-    private float height;
-
+public class PersonaRectangle extends Rectangle{
     private float[] rectBaseCoordinates;
     private float[] rectDriftOffset;
     private float[] rectTimes;
-
-    private float borderWidth;
-    private Color borderColor;
-    private Color fillColor;
 
     private float driftLevel;
     private float animationSpeed;
 
     public PersonaRectangle(float x, float y, float width, float height) {
-        this.width = width;
-        this.height = height;
+        super(x,y,width,height);
 
         //Defaults
-        borderWidth = 2;
-        borderColor = Color.BLACK;
-        fillColor = Color.WHITE;
-        driftLevel = 14;
-        animationSpeed = 0.8f;
+        driftLevel = 5;
+        animationSpeed = 2.8f;
 
         //Setup rect time and coordinates
         rebuildBaseCoordinates(x, y);
@@ -50,6 +39,7 @@ public class PersonaRectangle {
         updateDrift(1);
     }
 
+    @Override
     public void draw(ShapeRenderer shapeRenderer, float dt) {
         updateDrift(dt);
         ImmediateModeRenderer renderer = shapeRenderer.getRenderer();
@@ -98,50 +88,61 @@ public class PersonaRectangle {
         renderer.vertex(x4, y4 , 0.0F);
     }
 
-    public float getBaseX() {
+    @Override
+    public float getX() {
         return this.rectBaseCoordinates[0];
     }
 
-    public void setBaseX(float baseX) {
+    @Override
+    public void setX(float baseX) {
         if(baseX != this.rectBaseCoordinates[0])
             rebuildBaseCoordinates(baseX,this.rectBaseCoordinates[1]);
     }
 
-    public float getBaseY() {
+    @Override
+    public float getY() {
         return this.rectBaseCoordinates[1];
     }
 
-    public void setBaseY(float baseY) {
+    @Override
+    public void setY(float baseY) {
         if(baseY != this.rectBaseCoordinates[1])
             rebuildBaseCoordinates(this.rectBaseCoordinates[0], baseY);
     }
 
-    public void setBasePosition(Position pos){
+    @Override
+    public void setPosition(Position pos){
         if(pos.getX() != this.rectBaseCoordinates[0]
             || pos.getY() != this.rectBaseCoordinates[1])
         rebuildBaseCoordinates(pos.getX(), pos.getY());
     }
 
+    @Override
     public float getBorderWidth() {
         return borderWidth;
     }
 
+    @Override
     public void setBorderWidth(float borderWidth) {
         this.borderWidth = borderWidth;
     }
 
+    @Override
     public Color getBorderColor() {
         return borderColor;
     }
 
+    @Override
     public void setBorderColor(Color borderColor) {
         this.borderColor = borderColor;
     }
 
+    @Override
     public Color getFillColor() {
         return fillColor;
     }
 
+    @Override
     public void setFillColor(Color fillColor) {
         this.fillColor = fillColor;
     }
@@ -160,6 +161,32 @@ public class PersonaRectangle {
 
     public void setAnimationSpeed(float animationSpeed) {
         this.animationSpeed = animationSpeed;
+    }
+
+    @Override
+    public float getWidth() {
+        return width;
+    }
+
+    @Override
+    public void setWidth(float width) {
+        if(this.width != width) {
+            this.width = width;
+            rebuildBaseCoordinates(this.rectBaseCoordinates[0], this.rectBaseCoordinates[1]);
+        }
+    }
+
+    @Override
+    public float getHeight() {
+        return height;
+    }
+
+    @Override
+    public void setHeight(float height) {
+        if(this.height != height) {
+            this.height = height;
+            rebuildBaseCoordinates(this.rectBaseCoordinates[0], this.rectBaseCoordinates[1]);
+        }
     }
 
     /// PRIVATE METHODS

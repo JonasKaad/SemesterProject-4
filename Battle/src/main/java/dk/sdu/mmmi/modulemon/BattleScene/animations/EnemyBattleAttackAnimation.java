@@ -22,7 +22,7 @@ public class EnemyBattleAttackAnimation extends BaseAnimation {
 
         //Initial state
         States.add(new float[]{
-                300, 80, // Player monster
+                300, 120, // Player monster
                 850, 400, // Enemy Monster,
                 330, 100, 0, // Attack indicator + opacity,
                 0 // Play sound queue
@@ -30,7 +30,7 @@ public class EnemyBattleAttackAnimation extends BaseAnimation {
 
         //Først flyv enemy monster ned til player for at attack
         States.add(new float[]{
-                300, 80, // Player monster
+                300, 120, // Player monster
                 300, 80, // Enemy Monster,
                 330, 100, 0, // Attack indicator + opacity
                 0 // Play sound queue
@@ -46,7 +46,7 @@ public class EnemyBattleAttackAnimation extends BaseAnimation {
 
         //Det hele resettes,
         States.add(new float[]{
-                300, 80, // Player monster
+                300, 120, // Player monster
                 850, 400, // Enemy Monster,
                 330, 200, 0, // Attack indicator + opacity,
                 0 // Play sound queue

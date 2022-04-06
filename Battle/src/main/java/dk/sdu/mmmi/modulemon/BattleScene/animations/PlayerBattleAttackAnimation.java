@@ -38,7 +38,7 @@ public class PlayerBattleAttackAnimation extends BaseAnimation {
 
         // Enemy falder tilbage
         States.add(new float[]{
-                300, 80, // Player monster
+                300, 120, // Player monster
                 900, 430, // Enemy Monster,
                 900, 550, 1, // Attack indicator + opacity,
                 1 // Play sound queue
@@ -46,7 +46,7 @@ public class PlayerBattleAttackAnimation extends BaseAnimation {
 
         //Det hele resettes,
         States.add(new float[]{
-                300, 80, // Player monster
+                300, 120, // Player monster
                 850, 400, // Enemy Monster,
                 900, 600, 0, // Attack indicator + opacity,
                 0 // Play sound queue
