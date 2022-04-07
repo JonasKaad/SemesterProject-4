@@ -32,17 +32,16 @@ public class MonsterParser {
      * @param movesURL A path to the relevant resource
      * @return Returns a list of monsters
      */
-    public static List<IMonster> parseMonsters(String monstersURL, String movesURL) throws IOException, URISyntaxException {
-        Path monstersPath = monstersPath = Paths.get(MonsterParser.class.getResource(monstersURL).toURI());
-        Path movesPath = movesPath = Paths.get(MonsterParser.class.getResource(movesURL).toURI());
+    public static IMonster[] parseMonsters(String monstersURL, String movesURL) throws IOException, URISyntaxException {
+        Path monstersPath = Paths.get(MonsterParser.class.getResource(monstersURL).toURI());
+        Path movesPath = Paths.get(MonsterParser.class.getResource(movesURL).toURI());
 
         JSONArray JSONmonsters = loadJSONArray(monstersPath);
         JSONArray JSONmoves = loadJSONArray(movesPath);
 
         HashMap<String, IMonsterMove> monsterMoveHashMap = instantiateMoves(JSONmoves);
-        List<IMonster> monsters = instantiateMonsters(JSONmonsters, monsterMoveHashMap);
 
-        return monsters;
+        return instantiateMonsters(JSONmonsters, monsterMoveHashMap);
     }
 
     private static JSONArray loadJSONArray(Path path) throws IOException {
@@ -62,8 +61,8 @@ public class MonsterParser {
         return moves;
     }
 
-    private static List<IMonster> instantiateMonsters(JSONArray JSONMonsters, HashMap<String, IMonsterMove> movesHash) {
-        List<IMonster> monsters = new ArrayList<>();
+    private static IMonster[] instantiateMonsters(JSONArray JSONMonsters, HashMap<String, IMonsterMove> movesHash) {
+        IMonster[] monsters = new IMonster[JSONMonsters.length()];
         for (int i = 0; i < JSONMonsters.length(); i++) {
             JSONObject JSONMonster = JSONMonsters.getJSONObject(i);
             List<IMonsterMove> currentMonsterMoves = new ArrayList<>();
@@ -81,7 +80,7 @@ public class MonsterParser {
                     JSONMonster.getString("back"),
                     JSONMonster.getInt("id")
             );
-            monsters.add(monster);
+            monsters[monster.getID()] = monster;
         }
         return monsters;
     }

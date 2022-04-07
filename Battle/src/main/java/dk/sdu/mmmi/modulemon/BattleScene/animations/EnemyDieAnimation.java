@@ -1,9 +1,8 @@
 package dk.sdu.mmmi.modulemon.BattleScene.animations;
 
-import com.badlogic.gdx.audio.Sound;
-import com.badlogic.gdx.graphics.Color;
-import dk.sdu.mmmi.modulemon.BattleScene.Position;
+import dk.sdu.mmmi.modulemon.common.drawing.Position;
 import dk.sdu.mmmi.modulemon.BattleScene.scenes.BattleScene;
+import dk.sdu.mmmi.modulemon.BattleScene.scenes.BattleSceneDefaults;
 import dk.sdu.mmmi.modulemon.common.animations.BaseAnimation;
 import dk.sdu.mmmi.modulemon.common.data.GameData;
 
@@ -20,8 +19,8 @@ public class EnemyDieAnimation extends BaseAnimation {
 
         //Initial state
         States.add(new float[]{
-                850, 400, // Enemy Monster,
-                0f //rotation
+                BattleSceneDefaults.enemyMonsterPosition().getX(),BattleSceneDefaults.enemyMonsterPosition().getY(), // Enemy Monster,
+                BattleSceneDefaults.enemyMonsterRotation() //rotation
         });
 
         States.add(new float[]{

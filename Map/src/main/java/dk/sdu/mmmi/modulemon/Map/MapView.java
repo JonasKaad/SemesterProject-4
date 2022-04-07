@@ -1,5 +1,7 @@
 package dk.sdu.mmmi.modulemon.Map;
 
+import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.audio.Music;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
@@ -28,6 +30,7 @@ public class MapView implements IGameViewService, IMapView {
     private TiledMapRenderer tiledMapRenderer;
     private OrthographicCamera cam;
     private ShapeRenderer shapeRenderer;
+    private Music mapMusic;
     private boolean isPaused;
     private float mapLeft;
     private float mapRight;
@@ -46,10 +49,15 @@ public class MapView implements IGameViewService, IMapView {
 
     @Override
     public void init() {
+        mapMusic = Gdx.audio.newMusic(new OSGiFileHandle("/music/village_theme.ogg"));
         cam = Game.cam;
         tiledMap = new OSGiTmxLoader().load("/maps/SeasonalOverworld.tmx");
         int scale = 4;
         tiledMapRenderer = new OrthogonalTiledMapRenderer(tiledMap, scale);
+        mapMusic.play();
+        mapMusic.setVolume(0.1f);
+        mapMusic.setLooping(true);
+
 
         // Setting bounds for map
         MapProperties properties = tiledMap.getProperties();
@@ -164,6 +172,7 @@ public class MapView implements IGameViewService, IMapView {
     @Override
     public void dispose() {
         cam.position.set(cam.viewportWidth/2,cam.viewportHeight/2, 0);
+        mapMusic.stop();
     }
 
     public void addEntityProcessingService (IEntityProcessingService eps){

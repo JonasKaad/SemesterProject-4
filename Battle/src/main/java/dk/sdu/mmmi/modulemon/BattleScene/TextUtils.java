@@ -5,6 +5,7 @@ import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.GlyphLayout;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGenerator;
+import dk.sdu.mmmi.modulemon.common.drawing.OSGiFileHandle;
 
 public class TextUtils {
     private static final Object _instanceLock = new Object();
