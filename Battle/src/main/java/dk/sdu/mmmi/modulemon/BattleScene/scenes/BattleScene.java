@@ -75,9 +75,6 @@ public class BattleScene {
 
     public void draw(float dt) {
         //DRAW THE IMAGES
-
-        int textBoxHeight = 100;
-        int borderWidth = 2;
         spriteBatch.begin();
 
         _backdropPosition.updatePosition(_backdrop);
@@ -133,7 +130,7 @@ public class BattleScene {
         //Text box
         _textBoxRect.setPosition(_textBoxPosition);
         _textBoxRect.setWidth(this.gameWidth-40);
-        _textBoxRect.setHeight(textBoxHeight);
+        _textBoxRect.setHeight(BattleSceneDefaults.textBoxHeight());
         _textBoxRect.draw(shapeRenderer, dt);
 
         shapeRenderer.end();
@@ -165,7 +162,7 @@ public class BattleScene {
 
         // Text box
         if (!textToDisplay.isEmpty())
-            textUtils.drawNormalRoboto(spriteBatch, textToDisplay, Color.BLACK, 30, textBoxHeight);
+            textUtils.drawNormalRoboto(spriteBatch, textToDisplay, Color.BLACK, 30, BattleSceneDefaults.textBoxHeight());
 
         spriteBatch.end();
 
@@ -177,14 +174,12 @@ public class BattleScene {
             shapeRenderer.begin(ShapeRenderer.ShapeType.Filled);
             shapeRenderer.setColor(0, 0, 0, _actionBoxAlpha);
 
-            //int renderHeight = (topActionTextOffset - ((selectedActionIndex + 1) * 25));
             int triangleHeight = 20;
             int smallTextHeight = 15;
             int normalTextHeight = 24;
             int actionTopTextHeight = 186;
             int offsetFromActionHeadToFirstAction = 8;
-
-
+            
             int renderHeight = actionTopTextHeight - triangleHeight - normalTextHeight - offsetFromActionHeadToFirstAction;
             renderHeight = renderHeight + selectedActionIndex * -smallTextHeight * 2;
 

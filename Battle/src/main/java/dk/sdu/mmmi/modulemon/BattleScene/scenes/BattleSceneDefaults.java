@@ -22,6 +22,7 @@ public class BattleSceneDefaults {
     public static float actionBoxHeight(){return 200f;}
     public static Position healthIndicatorPosition() { return new Position(-100, -100); };
     public static Position textBoxPosition(){ return new Position(20,20); };
+    public static float textBoxHeight(){return 100f;}
     public static Color healthIndicatorColor() {return Color.RED;};
     public static float enemyMonsterRotation() { return 0f;}
     public static float playerMonsterRotation(){ return 0f;}
