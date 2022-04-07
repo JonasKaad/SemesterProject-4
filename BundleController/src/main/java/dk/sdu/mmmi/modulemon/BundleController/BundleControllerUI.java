@@ -50,7 +50,7 @@ public class BundleControllerUI extends JFrame {
 
         JLabel lblBundles = new JLabel("Bundles:");
         topPanel.add(lblBundles);
-        lblBundles.setFont(new Font("SansSerif", Font.BOLD, 17));
+        lblBundles.setFont(new Font("SansSerif", Font.BOLD, 20));
 
         Component horizontalGlue = Box.createHorizontalGlue();
         topPanel.add(horizontalGlue);
@@ -108,6 +108,7 @@ public class BundleControllerUI extends JFrame {
     public ActionListener handleInstallBtnAction() {
         return e -> {
             int returnVal = fileChooser.showOpenDialog(_self);
+
 
             if (returnVal != JFileChooser.APPROVE_OPTION) {
                 return;
