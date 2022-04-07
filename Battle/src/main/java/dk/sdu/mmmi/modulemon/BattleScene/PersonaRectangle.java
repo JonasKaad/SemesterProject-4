@@ -18,7 +18,7 @@ public class PersonaRectangle extends Rectangle{
         super(x,y,width,height);
 
         //Defaults
-        driftLevel = 5;
+        driftLevel = 6;
         animationSpeed = 2.8f;
 
         //Setup rect time and coordinates
