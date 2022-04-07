@@ -2,8 +2,9 @@ package dk.sdu.mmmi.modulemon.BattleScene.animations;
 
 import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.Color;
-import dk.sdu.mmmi.modulemon.BattleScene.Position;
+import dk.sdu.mmmi.modulemon.common.drawing.Position;
 import dk.sdu.mmmi.modulemon.BattleScene.scenes.BattleScene;
+import dk.sdu.mmmi.modulemon.BattleScene.scenes.BattleSceneDefaults;
 import dk.sdu.mmmi.modulemon.common.animations.BaseAnimation;
 import dk.sdu.mmmi.modulemon.common.data.GameData;
 
@@ -22,8 +23,8 @@ public class PlayerBattleAttackAnimation extends BaseAnimation {
 
         //Initial state
         States.add(new float[]{
-                300, 80, // Player monster
-                850, 400, // Enemy Monster,
+                BattleSceneDefaults.playerMonsterPosition().getX(),BattleSceneDefaults.playerMonsterPosition().getY(),  // Player monster
+                BattleSceneDefaults.enemyMonsterPosition().getX(),BattleSceneDefaults.enemyMonsterPosition().getY(), // Enemy Monster,
                 900, 500, 0, // Attack indicator + opacity,
                 0 // Play sound queue
         });
@@ -38,7 +39,7 @@ public class PlayerBattleAttackAnimation extends BaseAnimation {
 
         // Enemy falder tilbage
         States.add(new float[]{
-                300, 80, // Player monster
+                300, 120, // Player monster
                 900, 430, // Enemy Monster,
                 900, 550, 1, // Attack indicator + opacity,
                 1 // Play sound queue
@@ -46,8 +47,8 @@ public class PlayerBattleAttackAnimation extends BaseAnimation {
 
         //Det hele resettes,
         States.add(new float[]{
-                300, 80, // Player monster
-                850, 400, // Enemy Monster,
+                BattleSceneDefaults.playerMonsterPosition().getX(),BattleSceneDefaults.playerMonsterPosition().getY(),  // Player monster
+                BattleSceneDefaults.enemyMonsterPosition().getX(),BattleSceneDefaults.enemyMonsterPosition().getY(), // Enemy Monster,
                 900, 600, 0, // Attack indicator + opacity,
                 0 // Play sound queue
         });

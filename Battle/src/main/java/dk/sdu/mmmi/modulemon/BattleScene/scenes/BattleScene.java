@@ -7,9 +7,10 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
-import dk.sdu.mmmi.modulemon.BattleScene.OSGiFileHandle;
-import dk.sdu.mmmi.modulemon.BattleScene.Position;
-import dk.sdu.mmmi.modulemon.BattleScene.TextUtils;
+import dk.sdu.mmmi.modulemon.BattleScene.*;
+import dk.sdu.mmmi.modulemon.common.drawing.OSGiFileHandle;
+import dk.sdu.mmmi.modulemon.common.drawing.Position;
+import dk.sdu.mmmi.modulemon.common.drawing.Rectangle;
 
 public class BattleScene {
 
@@ -30,10 +31,15 @@ public class BattleScene {
     private float _enemyMonsterRotation;
     private Position _enemyHealthBoxPosition;
     private Position _playerHealthBoxPosition;
-    private Position _healthIndicator;
+    private Position _healthIndicatorPosition;
     private Color _healthIndicatorColor;
     private String _healthIndicatorText;
     private Position _actionBoxPosition;
+    private Position _textBoxPosition;
+    private Rectangle _textBoxRect;
+    private Rectangle _actionBoxRect;
+    private Rectangle _enemyHealthRect;
+    private Rectangle _playerHealthRect;
     private float _actionBoxAlpha = 1;
 
     private String enemyMonsterName;
@@ -58,17 +64,17 @@ public class BattleScene {
         _backdrop = new Image(new Texture(new OSGiFileHandle("/battleart/backdrop1.png", this.getClass())));
         _playerBase = new Image(new Texture(new OSGiFileHandle("/battleart/playerbase1.png", this.getClass())));
         _enemyBase = new Image(new Texture(new OSGiFileHandle("/battleart/enemybase1.png", this.getClass())));
+        _textBoxRect =  new Rectangle(-100,-100,  0,0); // All these values are dynamically calculated anyway
+        _actionBoxRect = new Rectangle(-100,-100, BattleSceneDefaults.actionBoxWidth(), BattleSceneDefaults.actionBoxHeight());
+        _enemyHealthRect = new Rectangle(-100,-100, BattleSceneDefaults.enemyHealthBoxWidth(), BattleSceneDefaults.enemyHealthBoxHeight());
+        _playerHealthRect = new Rectangle(-100,-100, BattleSceneDefaults.playerHealthBoxWidth(), BattleSceneDefaults.playerHealthBoxHeight());
         spriteBatch = new SpriteBatch();
-//        spriteBatch.setProjectionMatrix(Game.cam.combined);
         shapeRenderer = new ShapeRenderer();
         resetPositions();
     }
 
-    public void draw() {
+    public void draw(float dt) {
         //DRAW THE IMAGES
-
-        int textBoxHeight = 100;
-        int borderWidth = 2;
         spriteBatch.begin();
 
         _backdropPosition.updatePosition(_backdrop);
@@ -107,50 +113,25 @@ public class BattleScene {
         shapeRenderer.begin(ShapeRenderer.ShapeType.Filled);
 
         //HP Box
+        _enemyHealthRect.setPosition(_enemyHealthBoxPosition);
+        _enemyHealthRect.draw(shapeRenderer, dt);
 
-        //shapeRenderer.rect(
-        DrawingUtils.borderedRect(
-                shapeRenderer,
-                _enemyHealthBoxPosition.getX(),
-                _enemyHealthBoxPosition.getY(),
-                300, 100,
-                Color.BLACK, Color.WHITE,
-                borderWidth
-        );
-
-        DrawingUtils.borderedRect(
-                shapeRenderer,
-                _playerHealthBoxPosition.getX(),
-                _playerHealthBoxPosition.getY(),
-                350, 100,
-                Color.BLACK, Color.WHITE,
-                borderWidth
-        );
+        _playerHealthRect.setPosition(_playerHealthBoxPosition);
+        _playerHealthRect.draw(shapeRenderer, dt);
 
         //Action box
         if (actions.length > 0) {
-            shapeRenderer.setColor(1, 1, 1, _actionBoxAlpha);
-            DrawingUtils.borderedRect(
-                    shapeRenderer,
-                    _actionBoxPosition.getX(),
-                    _actionBoxPosition.getY(),
-                    250, 200,
-                    new Color(0, 0, 0, _actionBoxAlpha),
-                    new Color(1, 1, 1, _actionBoxAlpha),
-                    borderWidth
-            );
-            shapeRenderer.setColor(Color.WHITE);
+            _actionBoxRect.setPosition(_actionBoxPosition);
+            _actionBoxRect.setBorderColor(new Color(0, 0, 0, _actionBoxAlpha));
+            _actionBoxRect.setFillColor(new Color(1,1,1, _actionBoxAlpha));
+            _actionBoxRect.draw(shapeRenderer, dt);
         }
 
         //Text box
-        DrawingUtils.borderedRect(
-                shapeRenderer,
-                20,
-                20,
-                this.gameWidth - 40, textBoxHeight,
-                Color.BLACK, Color.WHITE,
-                borderWidth
-        );
+        _textBoxRect.setPosition(_textBoxPosition);
+        _textBoxRect.setWidth(this.gameWidth-40);
+        _textBoxRect.setHeight(BattleSceneDefaults.textBoxHeight());
+        _textBoxRect.draw(shapeRenderer, dt);
 
         shapeRenderer.end();
 
@@ -166,7 +147,7 @@ public class BattleScene {
 
         //Draw health indicator
         if (_healthIndicatorText != null && !_healthIndicatorText.isEmpty())
-            textUtils.drawNormalRoboto(spriteBatch, _healthIndicatorText, _healthIndicatorColor, _healthIndicator.getX(), _healthIndicator.getY());
+            textUtils.drawNormalRoboto(spriteBatch, _healthIndicatorText, _healthIndicatorColor, _healthIndicatorPosition.getX(), _healthIndicatorPosition.getY());
 
         //Action box
         int topActionTextOffset = 150;
@@ -181,7 +162,7 @@ public class BattleScene {
 
         // Text box
         if (!textToDisplay.isEmpty())
-            textUtils.drawNormalRoboto(spriteBatch, textToDisplay, Color.BLACK, 30, textBoxHeight);
+            textUtils.drawNormalRoboto(spriteBatch, textToDisplay, Color.BLACK, 30, BattleSceneDefaults.textBoxHeight());
 
         spriteBatch.end();
 
@@ -193,14 +174,12 @@ public class BattleScene {
             shapeRenderer.begin(ShapeRenderer.ShapeType.Filled);
             shapeRenderer.setColor(0, 0, 0, _actionBoxAlpha);
 
-            //int renderHeight = (topActionTextOffset - ((selectedActionIndex + 1) * 25));
             int triangleHeight = 20;
             int smallTextHeight = 15;
             int normalTextHeight = 24;
             int actionTopTextHeight = 186;
             int offsetFromActionHeadToFirstAction = 8;
-
-
+            
             int renderHeight = actionTopTextHeight - triangleHeight - normalTextHeight - offsetFromActionHeadToFirstAction;
             renderHeight = renderHeight + selectedActionIndex * -smallTextHeight * 2;
 
@@ -210,7 +189,6 @@ public class BattleScene {
                     _actionBoxPosition.getX() + 30, _actionBoxPosition.getY() + triangleHeight + renderHeight
             );
             shapeRenderer.end();
-
         }
         //Cleanup for opacity
         Gdx.gl.glBlendFunc(GL20.GL_SRC_ALPHA, GL20.GL_ONE_MINUS_SRC_ALPHA);
@@ -359,6 +337,18 @@ public class BattleScene {
         this._enemyHealthBoxPosition = _enemyHealthBoxPosition;
     }
 
+    public Rectangle getEnemyBoxRect(){
+        return this._enemyHealthRect;
+    }
+
+    public void setEnemyBoxRectStyle(Class<? extends Rectangle> clazz){
+        try {
+            _enemyHealthRect = (Rectangle) clazz.getDeclaredConstructors()[0].newInstance(100,-100, BattleSceneDefaults.enemyHealthBoxWidth(), BattleSceneDefaults.enemyHealthBoxHeight());
+        } catch (Exception _) {
+            System.out.println("[WARNING] Failed to change rectangles.");
+        }
+    }
+
     public Position getPlayerHealthBoxPosition() {
         return _playerHealthBoxPosition;
     }
@@ -367,6 +357,17 @@ public class BattleScene {
         this._playerHealthBoxPosition = _playerHealthBoxPosition;
     }
 
+    public Rectangle getPlayerBoxRect(){
+        return this._playerHealthRect;
+    }
+
+    public void setPlayerBoxRectStyle(Class<? extends Rectangle> clazz){
+        try {
+            _playerHealthRect = (Rectangle) clazz.getDeclaredConstructors()[0].newInstance(100,-100, BattleSceneDefaults.playerHealthBoxWidth(), BattleSceneDefaults.playerHealthBoxHeight());
+        } catch (Exception _) {
+            System.out.println("[WARNING] Failed to change rectangles.");
+        }
+    }
 
     public Position getActionBoxPosition() {
         return _actionBoxPosition;
@@ -384,12 +385,24 @@ public class BattleScene {
         this._actionBoxAlpha = _actionBoxOpacity;
     }
 
+    public Rectangle getActionBoxRect(){
+        return this._actionBoxRect;
+    }
+
+    public void setActionBoxRectStyle(Class<? extends Rectangle> clazz){
+        try {
+            _actionBoxRect = (Rectangle) clazz.getDeclaredConstructors()[0].newInstance(100,-100, BattleSceneDefaults.actionBoxWidth(), BattleSceneDefaults.actionBoxHeight());
+        } catch (Exception _) {
+            System.out.println("[WARNING] Failed to change rectangles.");
+        }
+    }
+
     public Position getHealthIndicator() {
-        return _healthIndicator;
+        return _healthIndicatorPosition;
     }
 
     public void setHealthIndicatorPosition(Position _healthIndicator) {
-        this._healthIndicator = _healthIndicator;
+        this._healthIndicatorPosition = _healthIndicator;
     }
 
     public Color getHealthIndicatorColor() {
@@ -408,18 +421,32 @@ public class BattleScene {
         return this._healthIndicatorText;
     }
 
+    public Rectangle getTextBoxRect(){
+        return this._textBoxRect;
+    }
+
+    public void setTextBoxRectStyle(Class<? extends Rectangle> clazz){
+        try {
+            // Arguments for this one, does not matter as it is calculated on the fly in draw()
+            _textBoxRect = (Rectangle) clazz.getDeclaredConstructors()[0].newInstance(100,-100, 0, 0);
+        } catch (Exception _) {
+            System.out.println("[WARNING] Failed to change rectangles.");
+        }
+    }
+
     public void resetPositions() {
-        _backdropPosition = new Position(0, 0);
-        _playerBasePosition = new Position(145, -8);
-        _enemyBasePosition = new Position(800, 400);
-        _enemyMonsterPosition = new Position(850, 400);
-        _playerMonsterPosition = new Position(300, 80);
-        _enemyHealthBoxPosition = new Position(480, 550);
-        _playerHealthBoxPosition = new Position(100, 300);
-        _actionBoxPosition = new Position(this.gameWidth - 300, 135);
-        _healthIndicator = new Position(-100, -100);
-        _healthIndicatorColor = Color.RED;
-        _enemyMonsterRotation = 0f;
-        _playerMonsterRotation = 0f;
+        _backdropPosition = BattleSceneDefaults.backdropPosition();
+        _playerBasePosition = BattleSceneDefaults.playerBasePosition();
+        _enemyBasePosition = BattleSceneDefaults.enemyBasePosition();
+        _enemyMonsterPosition = BattleSceneDefaults.enemyMonsterPosition();
+        _playerMonsterPosition =BattleSceneDefaults.playerMonsterPosition();
+        _enemyHealthBoxPosition = BattleSceneDefaults.enemyHealthBoxPosition();
+        _playerHealthBoxPosition = BattleSceneDefaults.playerHealthBoxPosition();
+        _actionBoxPosition = BattleSceneDefaults.actionBoxPosition(this.gameWidth);
+        _healthIndicatorPosition = BattleSceneDefaults.healthIndicatorPosition();
+        _textBoxPosition = BattleSceneDefaults.textBoxPosition();
+        _healthIndicatorColor = BattleSceneDefaults.healthIndicatorColor();
+        _enemyMonsterRotation = BattleSceneDefaults.enemyMonsterRotation();
+        _playerMonsterRotation = BattleSceneDefaults.playerMonsterRotation();
     }
 }

@@ -12,6 +12,7 @@ import com.badlogic.gdx.utils.viewport.Viewport;
 import dk.sdu.mmmi.modulemon.common.data.GameData;
 import dk.sdu.mmmi.modulemon.common.data.GameKeys;
 import dk.sdu.mmmi.modulemon.common.data.World;
+import dk.sdu.mmmi.modulemon.common.drawing.OSGiFileHandle;
 import dk.sdu.mmmi.modulemon.common.services.*;
 import dk.sdu.mmmi.modulemon.managers.GameInputManager;
 import dk.sdu.mmmi.modulemon.managers.GameStateManager;
@@ -51,6 +52,7 @@ public class Game implements ApplicationListener {
         cfg.height = HEIGHT;
         cfg.useGL30 = false;
         cfg.resizable = true;
+        cfg.samples = 8; //Anti aliasing
 
         new LwjglApplication(this, cfg);
     }
@@ -154,7 +156,7 @@ public class Game implements ApplicationListener {
 
     private ByteBuffer[] hackIcon(String resourceName){
         ByteBuffer[] byteBuffer = new ByteBuffer[1];
-        Pixmap pixmap = new Pixmap(new OSGiFileHandle(resourceName));
+        Pixmap pixmap = new Pixmap(new OSGiFileHandleByteReader(resourceName, this.getClass()));
         if (pixmap.getFormat() != Pixmap.Format.RGBA8888) {
             Pixmap rgba = new Pixmap(pixmap.getWidth(), pixmap.getHeight(), Pixmap.Format.RGBA8888);
             rgba.drawPixmap(pixmap, 0, 0);

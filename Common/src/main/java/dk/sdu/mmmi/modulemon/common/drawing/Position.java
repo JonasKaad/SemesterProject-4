@@ -1,4 +1,4 @@
-package dk.sdu.mmmi.modulemon.BattleScene;
+package dk.sdu.mmmi.modulemon.common.drawing;
 
 import com.badlogic.gdx.scenes.scene2d.Actor;
 

@@ -16,6 +16,9 @@ import dk.sdu.mmmi.modulemon.common.animations.BaseAnimation;
 import dk.sdu.mmmi.modulemon.common.data.GameData;
 import dk.sdu.mmmi.modulemon.common.data.GameKeys;
 import dk.sdu.mmmi.modulemon.common.data.IGameStateManager;
+import dk.sdu.mmmi.modulemon.common.drawing.OSGiFileHandle;
+import dk.sdu.mmmi.modulemon.common.drawing.PersonaRectangle;
+import dk.sdu.mmmi.modulemon.common.drawing.Rectangle;
 import dk.sdu.mmmi.modulemon.common.services.IGameViewService;
 
 import java.util.LinkedList;
@@ -51,7 +54,7 @@ public class BattleView implements IGameViewService, IBattleView {
         backgroundAnimations = new LinkedList<>();
         menuState = MenuState.DEFAULT;
 
-        defaultActions = new String[]{"Fight", "Switch", "Animate", "Quit"};
+        defaultActions = new String[]{"Fight", "Switch", "Animate", "Style", "Quit"};
     }
 
     /**
@@ -239,7 +242,7 @@ public class BattleView implements IGameViewService, IBattleView {
          }
 
         _battleScene.setSelectedActionIndex(selectedAction);
-        _battleScene.draw();
+        _battleScene.draw(gameData.getDelta());
     }
 
     @Override
@@ -274,6 +277,21 @@ public class BattleView implements IGameViewService, IBattleView {
                     BaseAnimation openingAnimation = new BattleSceneOpenAnimation(_battleScene);
                     openingAnimation.start();
                     blockingAnimations.add(openingAnimation);
+                }
+            }else if(selectedAction.equalsIgnoreCase("Style")){
+                _battleScene.setTextToDisplay("Change box-styles");
+                if(keys.isPressed(GameKeys.ENTER)){
+                    if(_battleScene.getPlayerBoxRect() instanceof PersonaRectangle) {
+                        _battleScene.setPlayerBoxRectStyle(Rectangle.class);
+                        _battleScene.setEnemyBoxRectStyle(Rectangle.class);
+                        _battleScene.setActionBoxRectStyle(Rectangle.class);
+                        _battleScene.setTextBoxRectStyle(Rectangle.class);
+                    }else {
+                        _battleScene.setPlayerBoxRectStyle(PersonaRectangle.class);
+                        _battleScene.setEnemyBoxRectStyle(PersonaRectangle.class);
+                        _battleScene.setActionBoxRectStyle(PersonaRectangle.class);
+                        _battleScene.setTextBoxRectStyle(PersonaRectangle.class);
+                    }
                 }
             } else if (selectedAction.equalsIgnoreCase("Quit")) {
                 _battleScene.setTextToDisplay("Ends the battle");

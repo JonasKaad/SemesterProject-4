@@ -1,17 +1,17 @@
 package dk.sdu.mmmi.modulemon;
 
 import com.badlogic.gdx.files.FileHandle;
+import dk.sdu.mmmi.modulemon.common.drawing.OSGiFileHandle;
 
 import java.io.ByteArrayOutputStream;
 import java.io.InputStream;
 
-public class OSGiFileHandle extends FileHandle {
+public class OSGiFileHandleByteReader extends OSGiFileHandle {
 
-    private String resourceName;
     private byte[] cachedBytes;
-    public OSGiFileHandle(String resourceName){
-        super(String.valueOf(OSGiFileHandle.class.getResource(resourceName)));
-        this.resourceName = resourceName;
+
+    public OSGiFileHandleByteReader(String resourceName, Class classToPullFrom) {
+        super(resourceName, classToPullFrom);
     }
 
     @Override
@@ -31,15 +31,10 @@ public class OSGiFileHandle extends FileHandle {
                 buffer.write(data, 0, nRead);
             }
         }catch(Exception _){
-            System.out.println("Loading bytes failed for: " + this.resourceName);
+            System.out.println("Loading bytes failed for: " + super.resourceName);
         }
 
         cachedBytes = buffer.toByteArray();
         return cachedBytes;
-    }
-
-    @Override
-    public InputStream read() {
-        return OSGiFileHandle.class.getResourceAsStream(this.resourceName);
     }
 }

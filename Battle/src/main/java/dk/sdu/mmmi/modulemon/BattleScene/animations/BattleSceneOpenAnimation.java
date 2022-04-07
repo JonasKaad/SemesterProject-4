@@ -1,8 +1,8 @@
 package dk.sdu.mmmi.modulemon.BattleScene.animations;
 
-import com.badlogic.gdx.Gdx;
-import dk.sdu.mmmi.modulemon.BattleScene.Position;
+import dk.sdu.mmmi.modulemon.common.drawing.Position;
 import dk.sdu.mmmi.modulemon.BattleScene.scenes.BattleScene;
+import dk.sdu.mmmi.modulemon.BattleScene.scenes.BattleSceneDefaults;
 import dk.sdu.mmmi.modulemon.common.animations.BaseAnimation;
 import dk.sdu.mmmi.modulemon.common.data.GameData;
 
@@ -29,7 +29,7 @@ public class BattleSceneOpenAnimation extends BaseAnimation {
                 850, _battleScene.getGameWidth() + 500f, //Enemy mon,
                 -500f, 550, //enemy health box,
                 -500f, 300, //player health box,
-                _battleScene.getGameWidth() + 500, 135  // Action box position
+                _battleScene.getGameWidth() + 500, 155  // Action box position
         });
 
         States.add(new float[]{
@@ -40,18 +40,18 @@ public class BattleSceneOpenAnimation extends BaseAnimation {
                 850, _battleScene.getGameHeight() + 500f,
                 -500f, 550,
                 -500f, 300,
-                _battleScene.getGameWidth() + 500, 135
+                _battleScene.getGameWidth() + 500, 155
         });
 
         States.add(new float[]{
-                0, 0,
-                800, 400,
-                145, -8,
-                300, 120,
-                850, 400,
-                480, 550,
-                100, 300,
-                _battleScene.getGameWidth() - 300, 135
+                BattleSceneDefaults.backdropPosition().getX(), BattleSceneDefaults.backdropPosition().getY(),
+                BattleSceneDefaults.enemyBasePosition().getX(), BattleSceneDefaults.enemyBasePosition().getY(),
+                BattleSceneDefaults.playerBasePosition().getX(), BattleSceneDefaults.playerBasePosition().getY(),
+                BattleSceneDefaults.playerMonsterPosition().getX(), BattleSceneDefaults.playerMonsterPosition().getY(),
+                BattleSceneDefaults.enemyMonsterPosition().getX(), BattleSceneDefaults.enemyMonsterPosition().getY(),
+                BattleSceneDefaults.enemyHealthBoxPosition().getX(), BattleSceneDefaults.enemyHealthBoxPosition().getY(),
+                BattleSceneDefaults.playerHealthBoxPosition().getX(), BattleSceneDefaults.playerHealthBoxPosition().getY(),
+                BattleSceneDefaults.actionBoxPosition(_battleScene.getGameWidth()).getX(), BattleSceneDefaults.actionBoxPosition(_battleScene.getGameWidth()).getY()
         });
 
         _battleScene.setBackdropPosition(new Position(_battleScene.getGameWidth(), 0));
