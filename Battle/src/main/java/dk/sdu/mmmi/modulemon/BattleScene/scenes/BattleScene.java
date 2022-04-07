@@ -73,7 +73,7 @@ public class BattleScene {
         resetPositions();
     }
 
-    public void draw() {
+    public void draw(float dt) {
         //DRAW THE IMAGES
 
         int textBoxHeight = 100;
@@ -117,24 +117,24 @@ public class BattleScene {
 
         //HP Box
         _enemyHealthRect.setPosition(_enemyHealthBoxPosition);
-        _enemyHealthRect.draw(shapeRenderer, Gdx.graphics.getDeltaTime());
+        _enemyHealthRect.draw(shapeRenderer, dt);
 
         _playerHealthRect.setPosition(_playerHealthBoxPosition);
-        _playerHealthRect.draw(shapeRenderer, Gdx.graphics.getDeltaTime());
+        _playerHealthRect.draw(shapeRenderer, dt);
 
         //Action box
         if (actions.length > 0) {
             _actionBoxRect.setPosition(_actionBoxPosition);
             _actionBoxRect.setBorderColor(new Color(0, 0, 0, _actionBoxAlpha));
             _actionBoxRect.setFillColor(new Color(1,1,1, _actionBoxAlpha));
-            _actionBoxRect.draw(shapeRenderer, Gdx.graphics.getDeltaTime());
+            _actionBoxRect.draw(shapeRenderer, dt);
         }
 
         //Text box
         _textBoxRect.setPosition(_textBoxPosition);
         _textBoxRect.setWidth(this.gameWidth-40);
         _textBoxRect.setHeight(textBoxHeight);
-        _textBoxRect.draw(shapeRenderer, Gdx.graphics.getDeltaTime());
+        _textBoxRect.draw(shapeRenderer, dt);
 
         shapeRenderer.end();
 
@@ -432,6 +432,7 @@ public class BattleScene {
 
     public void setTextBoxRectStyle(Class<? extends Rectangle> clazz){
         try {
+            // Arguments for this one, does not matter as it is calculated on the fly in draw()
             _textBoxRect = (Rectangle) clazz.getDeclaredConstructors()[0].newInstance(100,-100, 0, 0);
         } catch (Exception _) {
             System.out.println("[WARNING] Failed to change rectangles.");
