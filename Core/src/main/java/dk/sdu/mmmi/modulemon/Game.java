@@ -50,8 +50,6 @@ public class Game implements ApplicationListener {
         cfg.width = WIDTH;
         cfg.height = HEIGHT;
         cfg.useGL30 = false;
-        cfg.vSyncEnabled = false;
-        cfg.foregroundFPS = 10000;
         cfg.resizable = true;
 
         new LwjglApplication(this, cfg);

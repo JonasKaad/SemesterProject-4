@@ -83,7 +83,7 @@ public class BundleControllerUI extends JFrame {
         JButton btnInstallNewBundle = new JButton("Install new bundle");
         btnInstallNewBundle.addActionListener(handleInstallBtnAction());
 
-        fileChooser = new JFileChooser("C:\\");
+        fileChooser = new JFileChooser();
         fileChooser.setDialogTitle("Select a bundle");
         fileChooser.setFileSelectionMode(JFileChooser.FILES_ONLY);
         fileChooser.setFileFilter(new FileNameExtensionFilter("OSGi bundles", "jar"));
