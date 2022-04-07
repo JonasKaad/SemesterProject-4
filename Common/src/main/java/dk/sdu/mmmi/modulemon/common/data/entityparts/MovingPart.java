@@ -5,22 +5,21 @@
  */
 package dk.sdu.mmmi.modulemon.common.data.entityparts;
 
-import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.math.Vector2;
+import dk.sdu.mmmi.modulemon.CommonMap.IMapView;
 import dk.sdu.mmmi.modulemon.common.animations.BaseAnimation;
 import dk.sdu.mmmi.modulemon.common.data.Entity;
 import dk.sdu.mmmi.modulemon.common.data.GameData;
 
 import java.util.ArrayList;
 
-import static java.lang.Math.*;
-
 public class MovingPart extends BaseAnimation implements EntityPart {
 
     private boolean left, right, up, down;
     private float movingTimer = 0;
     private float animationTimer;
-    Vector2 vector2 = new Vector2();
+    private Vector2 newPosition = new Vector2(3016,1984);
+    private static IMapView mapView;
 
 
     public MovingPart() {
@@ -44,15 +43,8 @@ public class MovingPart extends BaseAnimation implements EntityPart {
         this.down = down;
     }
 
-    public Vector2 lerpT(Vector2 currentPos, Vector2 newPos, float alpha)
-    {
-        float x = currentPos.x + alpha * (newPos.x - currentPos.x);
-        float y = currentPos.y + alpha * (newPos.y - currentPos.y);
-
-        return new Vector2(x, y);
-    }
-
     public void process(GameData gameData, Entity entity) {
+        if(mapView.isPaused()) return;
         PositionPart positionPart = entity.getPart(PositionPart.class);
         float x = positionPart.getX();
         float start_x = positionPart.getX();
@@ -61,10 +53,10 @@ public class MovingPart extends BaseAnimation implements EntityPart {
         float dt = gameData.getDelta();
         float scaleFactor = 0.4f;
         float pixels = 64;
-        float movingTimerFactor = 0.2f;
+        float movingTimerFactor = 0.001f;
 
         Vector2 currentPosition = new Vector2(start_x,start_y);
-        Vector2 newPosition = new Vector2(x,y);
+
 
         if(movingTimer <= 0) {
             if (left) {
@@ -75,64 +67,76 @@ public class MovingPart extends BaseAnimation implements EntityPart {
                 animationTimer = 0;
 
                 newPosition.set(x, y);
+                if(newPosition.x < mapView.getMapLeft() || mapView.isCellBlocked(newPosition.x, newPosition.y)){
+                    newPosition.x = currentPosition.x;
+                }
             }
-
-            if (right) {
+            else if (right) {
                 x = x + pixels;
 
                 movingTimer = movingTimerFactor;
                 animationTimer = 0;
 
                 newPosition.set(x, y);
+                if(newPosition.x > mapView.getMapRight() - 64 + 8 || mapView.isCellBlocked(newPosition.x, newPosition.y)){
+                    newPosition.x = currentPosition.x;
+                }
             }
-
-            if (up) {
+            else if (up) {
                 y = y + pixels;
 
                 movingTimer = movingTimerFactor;
                 animationTimer = 0;
 
                 newPosition.set(x, y);
+                if(newPosition.y > mapView.getMapTop() - 64 || mapView.isCellBlocked(newPosition.x, newPosition.y)){
+                    newPosition.y = currentPosition.y;
+                }
             }
-
-            if (down) {
+            else if (down) {
                 y = y - pixels;
 
                 movingTimer = movingTimerFactor;
                 animationTimer = 0;
 
                 newPosition.set(x, y);
+                if(newPosition.y < mapView.getMapBottom() || mapView.isCellBlocked(newPosition.x, newPosition.y)){
+                    newPosition.y = currentPosition.y;
+                }
             }
         }
-        if(animationTimer < 1){
-            animationTimer += dt * 200;
+        if(animationTimer < 0.5){
+            animationTimer += dt * 1.5;
             animationTimer = Math.min(animationTimer, 1);
-            //vector2.lerp(start_x, x, animationTimer);
-            //Vector2 pos = lerpT(currentPosition, newPosition, animationTimer);
-            Vector2 pos = currentPosition.cpy();
-            if(currentPosition.dst(newPosition) >= 64) {
-                pos = currentPosition.lerp(newPosition, dt);
-            }
-            //Vector2 pos = currentPosition.lerp(newPosition, animationTimer);
+            Vector2 pos = currentPosition.lerp(newPosition, animationTimer);
 
 
-//            positionPart.setX(pos.x);
-//            positionPart.setY(pos.y);
-
-            //System.out.println("pos x is : " + pos.x + " --- " + "pos y is: " + pos.y);
+            positionPart.setX(pos.x);
+            positionPart.setY(pos.y);
         }
         else {
             movingTimer -= dt;
         }
-
-        positionPart.setX(x);
-        positionPart.setY(y);
-
     }
 
     @Override
     public void update(GameData gameData) {
         super.tick();
         float[] states = getCurrentStates();
+    }
+
+    public void setMapView(IMapView mapView){
+        while(MovingPart.mapView == null){
+            MovingPart.mapView = mapView;
+            try {
+                Thread.sleep(10);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+        }
+    }
+
+    public void removeMapView(IMapView mapView){
+        MovingPart.mapView = null;
     }
 }
