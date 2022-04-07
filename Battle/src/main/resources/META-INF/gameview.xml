@@ -7,5 +7,5 @@
 
     <reference bind="setBattleSimulation" cardinality="0..1"
                interface="dk.sdu.mmmi.modulemon.CommonBattle.IBattleSimulation"
-               name="BattleSimulation" policy="dynamic"/>
+               name="BattleSimulation" policy="dynamic" unbind="removeBattleSimulation" />
 </scr:component>

@@ -8,9 +8,8 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import dk.sdu.mmmi.modulemon.BattleScene.animations.*;
 import dk.sdu.mmmi.modulemon.BattleScene.scenes.BattleScene;
 import dk.sdu.mmmi.modulemon.BattleSceneMock.BattleParticipantMocks;
+import dk.sdu.mmmi.modulemon.CommonBattle.*;
 import dk.sdu.mmmi.modulemon.CommonBattle.BattleEvents.*;
-import dk.sdu.mmmi.modulemon.CommonBattle.IBattleParticipant;
-import dk.sdu.mmmi.modulemon.CommonBattle.IBattleSimulation;
 import dk.sdu.mmmi.modulemon.CommonMonster.IMonster;
 import dk.sdu.mmmi.modulemon.CommonMonster.IMonsterMove;
 import dk.sdu.mmmi.modulemon.common.animations.BaseAnimation;
@@ -22,8 +21,11 @@ import dk.sdu.mmmi.modulemon.common.services.IGameViewService;
 import java.util.LinkedList;
 import java.util.Queue;
 
-public class BattleView implements IGameViewService {
+
+public class BattleView implements IGameViewService, IBattleView {
+
     private boolean _isInitialized;
+    private IBattleCallback _battleCallback;
     private IBattleSimulation _battleSimulation;
     private BattleScene _battleScene;
     private Music _battleMusic;
@@ -55,11 +57,12 @@ public class BattleView implements IGameViewService {
     /**
      * Initialize for IBattleView
      */
-    public void init(IBattleParticipant player, IBattleParticipant enemy) {
+    public void startBattle(IBattleParticipant player, IBattleParticipant enemy, IBattleCallback callback) {
         _battleMusic = Gdx.audio.newMusic(new OSGiFileHandle("/music/battle_music.ogg", this.getClass()));
         _attackSound = Gdx.audio.newSound(new OSGiFileHandle("/sounds/slam.ogg", this.getClass()));
         _winSound = Gdx.audio.newSound(new OSGiFileHandle("/sounds/you_won.ogg", this.getClass()));
         _battleSimulation.StartBattle(player, enemy);
+        _battleCallback = callback;
         blockingAnimations = new LinkedList<>();
         backgroundAnimations = new LinkedList<>();
         _battleMusic.play();
@@ -73,6 +76,22 @@ public class BattleView implements IGameViewService {
         blockingAnimations.add(openingAnimation);
     }
 
+    @Override
+    public IGameViewService getGameView() {
+        return this;
+    }
+
+    @Override
+    public void forceBattleEnd() {
+        handleBattleEnd(new VictoryBattleEvent("The battle has ended prematurely", _battleSimulation.getState().getPlayer()));
+    }
+
+    public void handleBattleEnd(VictoryBattleEvent victoryBattleEvent){
+        if(_battleCallback != null){
+            _battleCallback.onBattleEnd(new BattleResult(victoryBattleEvent.getWinner(), _battleSimulation.getState().getPlayer(), _battleSimulation.getState().getEnemy()));
+        }
+    }
+
     /**
      * Initialize for GameState
      */
@@ -83,8 +102,9 @@ public class BattleView implements IGameViewService {
 
         _isInitialized = true;
         //Temp
-        if (_battleSimulation != null)
-            init(BattleParticipantMocks.getPlayer(), BattleParticipantMocks.getOpponent());
+        if(_battleSimulation != null)
+            startBattle(BattleParticipantMocks.getPlayer(), BattleParticipantMocks.getOpponent(), null);
+
     }
 
     //OSGi dependency injection
@@ -186,7 +206,11 @@ public class BattleView implements IGameViewService {
                 }
             } else if (battleEvent instanceof VictoryBattleEvent) {
                 EnemyDieAnimation enemyDieAnimation = new EnemyDieAnimation(_battleScene);
-                enemyDieAnimation.setOnEventDone(() -> gameStateManager.setDefaultState());
+                enemyDieAnimation.setOnEventDone(() -> {
+                    handleBattleEnd((VictoryBattleEvent) battleEvent);
+                    //Should be removed later:
+                    gameStateManager.setDefaultState();
+                });
                 enemyDieAnimation.start();
                 blockingAnimations.add(enemyDieAnimation);
                 this._winSound.play();
