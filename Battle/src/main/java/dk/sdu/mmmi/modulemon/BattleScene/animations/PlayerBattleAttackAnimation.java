@@ -32,7 +32,7 @@ public class PlayerBattleAttackAnimation extends BaseAnimation {
         //Først flyv player monster op til enemy for at attack
         States.add(new float[]{
                 850, 400, // Player monster
-                850, 400, // Enemy Monster,
+                BattleSceneDefaults.enemyMonsterPosition().getX(),BattleSceneDefaults.enemyMonsterPosition().getY(), // Enemy Monster,
                 900, 500, 0, // Attack indicator + opacity
                 0 // Play sound queue
         });
@@ -40,7 +40,7 @@ public class PlayerBattleAttackAnimation extends BaseAnimation {
         // Enemy falder tilbage
         States.add(new float[]{
                 300, 120, // Player monster
-                900, 430, // Enemy Monster,
+                900, 500, // Enemy Monster,
                 900, 550, 1, // Attack indicator + opacity,
                 1 // Play sound queue
         });

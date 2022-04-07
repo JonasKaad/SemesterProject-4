@@ -31,7 +31,7 @@ public class EnemyBattleAttackAnimation extends BaseAnimation {
 
         //Først flyv enemy monster ned til player for at attack
         States.add(new float[]{
-                300, 120, // Player monster
+                BattleSceneDefaults.playerMonsterPosition().getX(),BattleSceneDefaults.playerMonsterPosition().getY(), // Player monster
                 300, 80, // Enemy Monster,
                 330, 100, 0, // Attack indicator + opacity
                 0 // Play sound queue
