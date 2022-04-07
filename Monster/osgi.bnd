@@ -1,1 +1,2 @@
-Service-Component: META-INF/monsterbattleprocessor.xml
+Bundle-SymbolicName: Monster
+Service-Component: META-INF/monsterbattleprocessor.xml, META-INF/monsterregistry.xml

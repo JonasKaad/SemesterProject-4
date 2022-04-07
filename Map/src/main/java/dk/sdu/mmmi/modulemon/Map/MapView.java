@@ -10,17 +10,20 @@ import com.badlogic.gdx.maps.tiled.TiledMap;
 import com.badlogic.gdx.maps.tiled.TiledMapRenderer;
 import com.badlogic.gdx.maps.tiled.renderers.OrthogonalTiledMapRenderer;
 import com.badlogic.gdx.math.Vector3;
+import dk.sdu.mmmi.modulemon.CommonMap.IMapView;
 import dk.sdu.mmmi.modulemon.Game;
 import dk.sdu.mmmi.modulemon.common.data.*;
 import dk.sdu.mmmi.modulemon.common.services.IEntityProcessingService;
 import dk.sdu.mmmi.modulemon.common.services.IGamePluginService;
 import dk.sdu.mmmi.modulemon.common.services.IGameViewService;
 
+import java.util.LinkedList;
 import java.util.List;
+import java.util.Queue;
 import java.util.concurrent.CopyOnWriteArrayList;
 
 
-public class MapView implements IGameViewService {
+public class MapView implements IGameViewService, IMapView {
     private TiledMap tiledMap;
     private TiledMapRenderer tiledMapRenderer;
     private OrthographicCamera cam;
@@ -30,6 +33,7 @@ public class MapView implements IGameViewService {
     private float mapRight;
     private float mapBottom;
     private float mapTop;
+    private int tilePixelSize;
 
     float playerPosX;
     float playerPosY;
@@ -38,6 +42,7 @@ public class MapView implements IGameViewService {
     private final GameData gameData = new GameData();
     private static final List<IEntityProcessingService> entityProcessorList = new CopyOnWriteArrayList<>();
     private static final List<IGamePluginService> gamePluginList = new CopyOnWriteArrayList<>();
+    private static Queue<Runnable> gdxThreadTasks = new LinkedList<>();
 
     @Override
     public void init() {
@@ -50,12 +55,11 @@ public class MapView implements IGameViewService {
         MapProperties properties = tiledMap.getProperties();
         int mapWidth = properties.get("width", Integer.class);
         int mapHeight = properties.get("height", Integer.class);
-        int tilePixelWidth = 16 * scale;
-        int tilePixelHeight = 16 * scale;
+        tilePixelSize = 16 * scale;
         mapLeft = (cam.viewportWidth / 2f);
-        mapRight = mapWidth * tilePixelWidth - (cam.viewportWidth / 2f);
+        mapRight = mapWidth * tilePixelSize - (cam.viewportWidth / 2f);
         mapBottom = 360;
-        mapTop = mapBottom + mapHeight * tilePixelHeight - (cam.viewportWidth / 2f) - 80;
+        mapTop = mapBottom + mapHeight * tilePixelSize - (cam.viewportWidth / 2f) - 80;
         cam.position.set(mapRight /2f, mapTop / 2f, 0);
       
         // Sprites
@@ -69,23 +73,22 @@ public class MapView implements IGameViewService {
 
     @Override
     public void update(GameData gameData, IGameStateManager gameStateManager) {
+        while(!gdxThreadTasks.isEmpty()){
+            gdxThreadTasks.poll().run();
+        }
         for (IEntityProcessingService entityProcessorService : entityProcessorList) {
             entityProcessorService.process(gameData, world);
         }
     }
 
-    private Texture getSpriteTexture(String spriteString) {
-        return new Texture(new OSGiFileHandle(spriteString));
-
-    }
 
     @Override
     public void draw(GameData gameData) {
         tiledMapRenderer.setView(Game.cam);
         tiledMapRenderer.render();
         for (Entity entity : world.getEntities()) {
-            if (entity.getSpriteString() != null) {
-                Texture sprite = getSpriteTexture(entity.getSpriteString());
+            if (entity.getSpriteTexture() != null) {
+                Texture sprite = entity.getSpriteTexture();
                 //System.out.println("My sprite is" + sprite);
                 //spriteBatch.setProjectionMatrix(Game.cam.combined);
                 //System.out.println("before drawing:" + entity.getPosX() + "  -  " + entity.getPosY());
@@ -120,8 +123,9 @@ public class MapView implements IGameViewService {
             shapeRenderer.setColor(Color.WHITE);
 
             shapeRenderer.begin(ShapeRenderer.ShapeType.Filled);
-            Vector3 camCoordinates = cam.unproject(new Vector3(500, 500, 0));
-            shapeRenderer.rect(camCoordinates.x, camCoordinates.y, 100, 100);
+            int menuWidth = 150;
+            Vector3 camCoordinates = cam.project(new Vector3(cam.position.x + 100, cam.position.y, 0));
+            shapeRenderer.rect(camCoordinates.x, camCoordinates.y, menuWidth, 100);
             shapeRenderer.end();
         }
     }
@@ -172,11 +176,46 @@ public class MapView implements IGameViewService {
 
     public void addGamePluginService (IGamePluginService plugin){
         this.gamePluginList.add(plugin);
-        plugin.start(gameData, world);
+        gdxThreadTasks.add(() -> plugin.start(gameData, world));
     }
 
     public void removeGamePluginService (IGamePluginService plugin){
         this.gamePluginList.remove(plugin);
-        plugin.stop(gameData, world);
+        gdxThreadTasks.add(() -> plugin.stop(gameData, world));
+    }
+
+    @Override
+    public float getMapLeft() {
+        return mapLeft;
+    }
+
+    @Override
+    public float getMapRight() {
+        return mapRight;
+    }
+
+    @Override
+    public float getMapBottom() {
+        return mapBottom;
+    }
+
+    @Override
+    public float getMapTop() {
+        return mapTop;
+    }
+
+    @Override
+    public int getTileSize() {
+        return tilePixelSize;
+    }
+
+    @Override
+    public boolean isCellBlocked(float x, float y) {
+        return false;
+    }
+
+    @Override
+    public boolean isPaused() {
+        return isPaused;
     }
 }

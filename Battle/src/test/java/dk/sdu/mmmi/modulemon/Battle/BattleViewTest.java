@@ -6,6 +6,7 @@ import dk.sdu.mmmi.modulemon.BattleSceneMock.BattleParticipantMocks;
 import dk.sdu.mmmi.modulemon.CommonBattle.BattleEvents.InfoBattleEvent;
 import dk.sdu.mmmi.modulemon.CommonBattle.IBattleParticipant;
 import dk.sdu.mmmi.modulemon.CommonBattle.IBattleSimulation;
+import dk.sdu.mmmi.modulemon.CommonBattle.IBattleState;
 import dk.sdu.mmmi.modulemon.common.data.GameData;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -54,8 +55,10 @@ public class BattleViewTest {
         battleView.init();
         GameData gameData = new GameData();
         IBattleSimulation simulation = mock(IBattleSimulation.class);
-        when(simulation.getState().getPlayer()).thenReturn(BattleParticipantMocks.getPlayer());
-        when(simulation.getState().getEnemy()).thenReturn(BattleParticipantMocks.getOpponent());
+        IBattleState battleState = mock(IBattleState.class);
+        when(battleState.getPlayer()).thenReturn(BattleParticipantMocks.getPlayer());
+        when(battleState.getEnemy()).thenReturn(BattleParticipantMocks.getOpponent());
+        when(simulation.getState()).thenReturn(battleState);
         battleView.setBattleSimulation(simulation);
 
         // Act
@@ -114,7 +117,7 @@ public class BattleViewTest {
         battleView.setBattleSimulation(simulation);
 
         // Act
-        battleView.init(participant1, participant2);
+        battleView.startBattle(participant1, participant2, null);
         battleView.dispose();
 
         // Assert
@@ -132,9 +135,10 @@ public class BattleViewTest {
         BattleScene scene = new BattleScene();
 
         IBattleSimulation simulation = mock(IBattleSimulation.class);
-        when(simulation.getState().getPlayer()).thenReturn(BattleParticipantMocks.getPlayer());
-        when(simulation.getState().getEnemy()).thenReturn(BattleParticipantMocks.getOpponent());
-
+        IBattleState battleState = mock(IBattleState.class);
+        when(battleState.getPlayer()).thenReturn(BattleParticipantMocks.getPlayer());
+        when(battleState.getEnemy()).thenReturn(BattleParticipantMocks.getOpponent());
+        when(simulation.getState()).thenReturn(battleState);
         when(simulation.getNextBattleEvent()).thenReturn(new InfoBattleEvent("Never gonna give you up!"));
         battleView.setBattleSimulation(simulation);
         battleView.setBattleScene(scene);

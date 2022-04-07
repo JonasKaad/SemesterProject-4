@@ -6,4 +6,8 @@
                interface="dk.sdu.mmmi.modulemon.common.services.IGameViewService"
                name="IGameViewService" policy="dynamic" unbind="removeGameViewServiceList"/>
 
+    <reference bind="addBundleController" cardinality="0..1"
+               interface="dk.sdu.mmmi.modulemon.common.services.IBundleControllerService"
+               name="IBundleControllerService" policy="dynamic" unbind="removeBundleController"/>
+
 </scr:component>

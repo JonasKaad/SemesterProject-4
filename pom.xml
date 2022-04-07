@@ -34,7 +34,6 @@
     <module>CommonMonster</module>
     <module>CommonNPC</module>
     <module>Monster</module>
-    <module>DemoComponent</module>
     <module>Battle</module>
     <module>Player</module>
     <module>NPC</module>
@@ -42,6 +41,8 @@
     <module>BattleSimulation</module>
     <module>BattleAI</module>
     <module>MonsterRegistry</module>
+    <module>BundleController</module>
+    <module>CommonMap</module>
   </modules>
 
   <build>
