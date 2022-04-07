@@ -1,7 +1,6 @@
 package dk.sdu.mmmi.modulemon.BattleScene.animations;
 
-import com.badlogic.gdx.Gdx;
-import dk.sdu.mmmi.modulemon.BattleScene.Position;
+import dk.sdu.mmmi.modulemon.common.drawing.Position;
 import dk.sdu.mmmi.modulemon.BattleScene.scenes.BattleScene;
 import dk.sdu.mmmi.modulemon.BattleScene.scenes.BattleSceneDefaults;
 import dk.sdu.mmmi.modulemon.common.animations.BaseAnimation;

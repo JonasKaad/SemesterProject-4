@@ -1,8 +1,7 @@
-package dk.sdu.mmmi.modulemon.BattleScene;
+package dk.sdu.mmmi.modulemon.common.drawing;
 
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
-import dk.sdu.mmmi.modulemon.BattleScene.scenes.DrawingUtils;
 
 public class Rectangle {
     protected float width;

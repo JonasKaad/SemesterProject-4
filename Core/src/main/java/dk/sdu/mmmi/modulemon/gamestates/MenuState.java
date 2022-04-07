@@ -8,10 +8,10 @@ import com.badlogic.gdx.graphics.g2d.GlyphLayout;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGenerator;
 import dk.sdu.mmmi.modulemon.Game;
-import dk.sdu.mmmi.modulemon.OSGiFileHandle;
 import dk.sdu.mmmi.modulemon.common.data.GameData;
 import dk.sdu.mmmi.modulemon.common.data.GameKeys;
 import dk.sdu.mmmi.modulemon.common.data.IGameStateManager;
+import dk.sdu.mmmi.modulemon.common.drawing.OSGiFileHandle;
 import dk.sdu.mmmi.modulemon.common.services.IGameViewService;
 
 import java.util.List;
@@ -57,7 +57,7 @@ public class MenuState implements IGameViewService {
           Sets up FontGenerator to enable us to use our own fonts.
          */
         FreeTypeFontGenerator fontGenerator = new FreeTypeFontGenerator(
-                new OSGiFileHandle("/fonts/Modulemon-Solid.ttf")
+                new OSGiFileHandle("/fonts/Modulemon-Solid.ttf", this.getClass())
         );
         FreeTypeFontGenerator.FreeTypeFontParameter parameter = new FreeTypeFontGenerator.FreeTypeFontParameter();
         // Font size
@@ -68,7 +68,7 @@ public class MenuState implements IGameViewService {
 
 
         fontGenerator = new FreeTypeFontGenerator(
-                new OSGiFileHandle("/fonts/Roboto-Medium.ttf"));
+                new OSGiFileHandle("/fonts/Roboto-Medium.ttf", this.getClass()));
         // Font size
         parameter.size = 34;
 
@@ -80,7 +80,7 @@ public class MenuState implements IGameViewService {
 
         fontGenerator.dispose();
 
-        logo = new Texture(new OSGiFileHandle("/icons/cat-logo.png"));
+        logo = new Texture(new OSGiFileHandle("/icons/cat-logo.png", this.getClass()));
 
         // Sets the options for the menu
         menuOptions = defaultMenuOptions;

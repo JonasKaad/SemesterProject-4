@@ -1,7 +1,7 @@
 package dk.sdu.mmmi.modulemon.BattleScene.scenes;
 
 import com.badlogic.gdx.graphics.Color;
-import dk.sdu.mmmi.modulemon.BattleScene.Position;
+import dk.sdu.mmmi.modulemon.common.drawing.Position;
 
 public class BattleSceneDefaults {
 

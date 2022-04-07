@@ -8,6 +8,9 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import dk.sdu.mmmi.modulemon.BattleScene.*;
+import dk.sdu.mmmi.modulemon.common.drawing.OSGiFileHandle;
+import dk.sdu.mmmi.modulemon.common.drawing.Position;
+import dk.sdu.mmmi.modulemon.common.drawing.Rectangle;
 
 public class BattleScene {
 
