@@ -19,6 +19,7 @@ import dk.sdu.mmmi.modulemon.common.data.IGameStateManager;
 import dk.sdu.mmmi.modulemon.common.drawing.OSGiFileHandle;
 import dk.sdu.mmmi.modulemon.common.drawing.PersonaRectangle;
 import dk.sdu.mmmi.modulemon.common.drawing.Rectangle;
+import dk.sdu.mmmi.modulemon.common.drawing.TextUtils;
 import dk.sdu.mmmi.modulemon.common.services.IGameViewService;
 
 import java.util.LinkedList;
@@ -242,7 +243,7 @@ public class BattleView implements IGameViewService, IBattleView {
          }
 
         _battleScene.setSelectedActionIndex(selectedAction);
-        _battleScene.draw(gameData.getDelta());
+        _battleScene.draw(gameData.getDelta(), gameData.getCamera());
     }
 
     @Override

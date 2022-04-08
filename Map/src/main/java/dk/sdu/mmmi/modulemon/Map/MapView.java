@@ -13,7 +13,6 @@ import com.badlogic.gdx.maps.tiled.TiledMapRenderer;
 import com.badlogic.gdx.maps.tiled.renderers.OrthogonalTiledMapRenderer;
 import com.badlogic.gdx.math.Vector3;
 import dk.sdu.mmmi.modulemon.CommonMap.IMapView;
-import dk.sdu.mmmi.modulemon.Game;
 import dk.sdu.mmmi.modulemon.common.data.*;
 import dk.sdu.mmmi.modulemon.common.services.IEntityProcessingService;
 import dk.sdu.mmmi.modulemon.common.services.IGamePluginService;
@@ -50,7 +49,6 @@ public class MapView implements IGameViewService, IMapView {
     @Override
     public void init() {
         mapMusic = Gdx.audio.newMusic(new OSGiFileHandle("/music/village_theme.ogg"));
-        cam = Game.cam;
         tiledMap = new OSGiTmxLoader().load("/maps/SeasonalOverworld.tmx");
         int scale = 4;
         tiledMapRenderer = new OrthogonalTiledMapRenderer(tiledMap, scale);
@@ -58,24 +56,29 @@ public class MapView implements IGameViewService, IMapView {
         mapMusic.setVolume(0.1f);
         mapMusic.setLooping(true);
 
-
-        // Setting bounds for map
-        MapProperties properties = tiledMap.getProperties();
-        int mapWidth = properties.get("width", Integer.class);
-        int mapHeight = properties.get("height", Integer.class);
+        // Pixel size
         tilePixelSize = 16 * scale;
-        mapLeft = (cam.viewportWidth / 2f);
-        mapRight = mapWidth * tilePixelSize - (cam.viewportWidth / 2f);
-        mapBottom = 360;
-        mapTop = mapBottom + mapHeight * tilePixelSize - (cam.viewportWidth / 2f) - 80;
-        cam.position.set(mapRight /2f, mapTop / 2f, 0);
-      
+
         // Sprites
         spriteBatch = new SpriteBatch();
       
         // Pausing
         isPaused = false;
         shapeRenderer = new ShapeRenderer();
+    }
+
+    private void initializeCameraDrawing(GameData gameData){
+        cam = gameData.getCamera();
+
+        // Setting bounds for map
+        MapProperties properties = tiledMap.getProperties();
+        int mapWidth = properties.get("width", Integer.class);
+        int mapHeight = properties.get("height", Integer.class);
+        mapLeft = (cam.viewportWidth / 2f);
+        mapRight = mapWidth * tilePixelSize - (cam.viewportWidth / 2f);
+        mapBottom = 360;
+        mapTop = mapBottom + mapHeight * tilePixelSize - (cam.viewportWidth / 2f) - 80;
+        cam.position.set(mapRight /2f, mapTop / 2f, 0);
 
     }
 
@@ -92,7 +95,9 @@ public class MapView implements IGameViewService, IMapView {
 
     @Override
     public void draw(GameData gameData) {
-        tiledMapRenderer.setView(Game.cam);
+        if(cam == null)
+            initializeCameraDrawing(gameData);
+        tiledMapRenderer.setView(cam);
         tiledMapRenderer.render();
         for (Entity entity : world.getEntities()) {
             if (entity.getSpriteTexture() != null) {
@@ -164,14 +169,16 @@ public class MapView implements IGameViewService, IMapView {
             isPaused = true;
         }
         if (gameData.getKeys().isPressed(GameKeys.ENTER)){
-            cam.position.set(gameData.getDisplayWidth()/2,gameData.getDisplayHeight()/2, 0);
+            if(cam != null)
+                cam.position.set(gameData.getDisplayWidth()/2,gameData.getDisplayHeight()/2, 0);
             gameStateManager.setDefaultState();
         }
     }
 
     @Override
     public void dispose() {
-        cam.position.set(cam.viewportWidth/2,cam.viewportHeight/2, 0);
+        if(cam != null)
+            cam.position.set(cam.viewportWidth/2,cam.viewportHeight/2, 0);
         mapMusic.stop();
     }
 

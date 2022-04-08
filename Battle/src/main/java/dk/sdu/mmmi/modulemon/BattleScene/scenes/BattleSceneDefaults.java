@@ -9,8 +9,8 @@ public class BattleSceneDefaults {
     public static Position backdropPosition(){return new Position(0, 0);}
     public static Position playerBasePosition(){ return new Position(145, -8);}
     public static Position enemyBasePosition(){ return new Position(800, 400);}
-    public static Position enemyMonsterPosition(){return new Position(850, 400);}
-    public static Position playerMonsterPosition () {return new Position(300, 120);}
+    public static Position enemyMonsterPosition(){return new Position(850, 450);}
+    public static Position playerMonsterPosition () {return new Position(320, 100);}
     public static Position enemyHealthBoxPosition(){ return new Position(480, 550);}
     public static float enemyHealthBoxWidth(){return 300f;}
     public static float enemyHealthBoxHeight(){return 100f;}
