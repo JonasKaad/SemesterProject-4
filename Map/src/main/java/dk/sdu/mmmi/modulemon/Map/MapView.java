@@ -15,6 +15,7 @@ import com.badlogic.gdx.maps.tiled.TiledMapTileLayer;
 import com.badlogic.gdx.maps.tiled.renderers.OrthogonalTiledMapRenderer;
 import dk.sdu.mmmi.modulemon.CommonMap.IMapView;
 import dk.sdu.mmmi.modulemon.common.data.*;
+import dk.sdu.mmmi.modulemon.common.drawing.OSGiFileHandle;
 import dk.sdu.mmmi.modulemon.common.drawing.PersonaRectangle;
 import dk.sdu.mmmi.modulemon.common.drawing.Rectangle;
 import dk.sdu.mmmi.modulemon.common.drawing.TextUtils;
@@ -57,7 +58,7 @@ public class MapView implements IGameViewService, IMapView {
 
     @Override
     public void init() {
-        mapMusic = Gdx.audio.newMusic(new OSGiFileHandle("/music/village_theme.ogg"));
+        mapMusic = Gdx.audio.newMusic(new OSGiFileHandle("/music/village_theme.ogg", MapView.class));
         tiledMap = new OSGiTmxLoader().load("/maps/SeasonalOverworld.tmx");
         int scale = 4;
         tiledMapRenderer = new OrthogonalTiledMapRenderer(tiledMap, scale);
@@ -170,7 +171,7 @@ public class MapView implements IGameViewService, IMapView {
 
             Gdx.gl.glEnable(GL20.GL_BLEND); //Allows for opacity
             shapeRenderer.begin(ShapeRenderer.ShapeType.Filled);
-            shapeRenderer.setColor(Color.PURPLE);
+            shapeRenderer.setColor(Color.BLACK);
 
             int triangleHeight = 20;
             int heightBetweenOptions = 20;
