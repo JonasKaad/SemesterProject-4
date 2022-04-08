@@ -9,6 +9,7 @@ import dk.sdu.mmmi.modulemon.common.data.Entity;
 import dk.sdu.mmmi.modulemon.common.data.GameData;
 import dk.sdu.mmmi.modulemon.common.data.World;
 import dk.sdu.mmmi.modulemon.common.data.entityparts.*;
+import dk.sdu.mmmi.modulemon.common.drawing.OSGiFileHandle;
 import dk.sdu.mmmi.modulemon.common.services.IGamePluginService;
 import java.util.ArrayList;
 
@@ -34,7 +35,11 @@ public class NPCPlugin implements IGamePluginService{
         System.out.println("createNPC()");
         Entity npc = new NPC(
                 "John", 
-                new SpritePart("/assets/npc.png", "/assets/npc.png", "/assets/npc.png", "/assets/npc.png"),
+                new SpritePart(
+                        new Texture(new OSGiFileHandle("/assets/npc.png", NPCPlugin.class)), //upSprite 
+                        new Texture(new OSGiFileHandle("/assets/npc.png", NPCPlugin.class)), //downSprite
+                        new Texture(new OSGiFileHandle("/assets/npc.png", NPCPlugin.class)), //leftSprite
+                        new Texture(new OSGiFileHandle("/assets/npc.png", NPCPlugin.class))),//rightSprite
                 new PositionPart(3000, 2000),
                 new MovingPart(),
                 new InteractPart(),

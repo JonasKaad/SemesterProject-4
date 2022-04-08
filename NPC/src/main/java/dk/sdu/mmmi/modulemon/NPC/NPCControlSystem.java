@@ -4,6 +4,7 @@
  */
 package dk.sdu.mmmi.modulemon.NPC;
 
+import com.badlogic.gdx.graphics.Texture;
 import dk.sdu.mmmi.modulemon.common.data.Entity;
 import dk.sdu.mmmi.modulemon.common.data.GameData;
 import dk.sdu.mmmi.modulemon.common.data.World;
@@ -53,7 +54,8 @@ public class NPCControlSystem implements IEntityProcessingService{
 
         
 
-        entity.setSpriteString("/assets/npc.png");
+        Texture result = spritePart.getRightSprite();
+        entity.setSpriteTexture(result);
         entity.setPosX(x);
         entity.setPosY(y);
 
