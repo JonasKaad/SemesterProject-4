@@ -10,6 +10,8 @@ import com.badlogic.gdx.maps.MapProperties;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.maps.tiled.TiledMap;
 import com.badlogic.gdx.maps.tiled.TiledMapRenderer;
+import com.badlogic.gdx.maps.tiled.TiledMapTile;
+import com.badlogic.gdx.maps.tiled.TiledMapTileLayer;
 import com.badlogic.gdx.maps.tiled.renderers.OrthogonalTiledMapRenderer;
 import com.badlogic.gdx.math.Vector3;
 import dk.sdu.mmmi.modulemon.CommonMap.IMapView;
@@ -202,22 +204,22 @@ public class MapView implements IGameViewService, IMapView {
 
     @Override
     public float getMapLeft() {
-        return mapLeft;
+        return mapLeft - (cam.viewportWidth/2f);
     }
 
     @Override
     public float getMapRight() {
-        return mapRight;
+        return mapRight + (cam.viewportWidth/2f);
     }
 
     @Override
     public float getMapBottom() {
-        return mapBottom;
+        return mapBottom - (cam.viewportHeight/2f);
     }
 
     @Override
     public float getMapTop() {
-        return mapTop;
+        return mapTop + (cam.viewportHeight/2f);
     }
 
     @Override
@@ -227,7 +229,9 @@ public class MapView implements IGameViewService, IMapView {
 
     @Override
     public boolean isCellBlocked(float x, float y) {
-        return false;
+        TiledMapTileLayer collsionLayer = (TiledMapTileLayer)tiledMap.getLayers().get(0);
+        TiledMapTileLayer.Cell cell = collsionLayer.getCell((int)Math.floor(x/tilePixelSize), (int) Math.floor(y/tilePixelSize));
+        return cell.getTile().getProperties().containsKey("blocked");
     }
 
     @Override

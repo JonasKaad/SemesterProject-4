@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<scr:component xmlns:scr="http://www.osgi.org/xmlns/scr/v1.1.0" name="dk.sdu.mmmi.modulemon.common.data.entityparts.Movingpart">
+    <implementation class="dk.sdu.mmmi.modulemon.common.data.entityparts.MovingPart"/>
+
+    <reference bind="setMapView" cardinality="0..1"
+               interface="dk.sdu.mmmi.modulemon.CommonMap.IMapView"
+               name="IMapView" policy="dynamic"/>
+
+
+</scr:component>
