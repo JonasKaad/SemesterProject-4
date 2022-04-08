@@ -155,12 +155,12 @@ public class MapView implements IGameViewService, IMapView {
                     spriteBatch,
                     pauseMenuTitle,
                     Color.BLACK,
-                    pauseMenu.getX() + pauseMenu.getWidth()/8f,
+                    pauseMenu.getX() + 19,
                     pauseMenu.getY() + pauseMenu.getHeight() - 10);
 
             //Drawing options
             for (int i = 0; i < pauseActions.length; i++){
-                textUtils.drawSmallRoboto(spriteBatch, pauseActions[i], Color.BLACK, pauseMenu.getX() + 20, pauseMenu.getY() + (pauseMenu.getHeight()*2/3f) - (i * 40));
+                textUtils.drawSmallRoboto(spriteBatch, pauseActions[i], Color.BLACK, pauseMenu.getX() + 42, pauseMenu.getY() + (pauseMenu.getHeight()*2/3f) - (i * 40));
             }
 
             spriteBatch.end();
@@ -185,9 +185,9 @@ public class MapView implements IGameViewService, IMapView {
             renderHeight = renderHeight + selectedOptionIndex * -heightBetweenOptions * 2;
 
             shapeRenderer.triangle(
-                    pauseMenu.getX() + 2, pauseMenu.getY() + renderHeight,
-                    pauseMenu.getX() + 17, pauseMenu.getY() + triangleHeight / 2f + renderHeight,
-                    pauseMenu.getX() + 2, pauseMenu.getY() + triangleHeight + renderHeight
+                    pauseMenu.getX() + 15, pauseMenu.getY() + renderHeight,
+                    pauseMenu.getX() + 30, pauseMenu.getY() + triangleHeight / 2f + renderHeight,
+                    pauseMenu.getX() + 15, pauseMenu.getY() + triangleHeight + renderHeight
             );
             shapeRenderer.end();
         }
@@ -208,7 +208,7 @@ public class MapView implements IGameViewService, IMapView {
                 else
                     selectedOptionIndex--;
             }
-            if(gameData.getKeys().isPressed(GameKeys.E)){
+            if(gameData.getKeys().isPressed(GameKeys.ESC)){
                 isPaused = false;
                 gameData.setPaused(isPaused);
             }
@@ -227,14 +227,9 @@ public class MapView implements IGameViewService, IMapView {
             }
             return;
         }
-        if(gameData.getKeys().isPressed(GameKeys.E)){
+        if(gameData.getKeys().isPressed(GameKeys.ESC)){
             isPaused = true;
             gameData.setPaused(isPaused);
-        }
-        if (gameData.getKeys().isPressed(GameKeys.ENTER)){
-            if(cam != null)
-                cam.position.set(gameData.getDisplayWidth()/2,gameData.getDisplayHeight()/2, 0);
-            gameStateManager.setDefaultState();
         }
     }
 
