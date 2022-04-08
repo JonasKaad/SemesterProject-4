@@ -7,6 +7,7 @@ import dk.sdu.mmmi.modulemon.CommonBattle.BattleEvents.InfoBattleEvent;
 import dk.sdu.mmmi.modulemon.CommonBattle.IBattleParticipant;
 import dk.sdu.mmmi.modulemon.CommonBattle.IBattleSimulation;
 import dk.sdu.mmmi.modulemon.CommonBattle.IBattleState;
+import dk.sdu.mmmi.modulemon.CommonTest.GdxTestIntercepter;
 import dk.sdu.mmmi.modulemon.common.data.GameData;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;

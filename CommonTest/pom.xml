@@ -9,44 +9,41 @@
   </parent>
 
   <properties>
-    <bundle.symbolicName>dk.sdu.mmmi.modulemon.Player</bundle.symbolicName>
+    <bundle.symbolicName>dk.sdu.mmmi.modulemon.CommonTest</bundle.symbolicName>
     <bundle.namespace>dk.sdu.mmmi.modulemon</bundle.namespace>
+    <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+    <maven.compiler.target>1.8</maven.compiler.target>
+    <maven.compiler.source>1.8</maven.compiler.source>
   </properties>
 
   <modelVersion>4.0.0</modelVersion>
-  <artifactId>Player</artifactId>
+  <artifactId>CommonTest</artifactId>
   <version>1.0-SNAPSHOT</version>
-  <name>Player</name>
+  <name>CommonTest</name>
   <packaging>bundle</packaging>
 
   <dependencies>
-  <dependency>
-    <groupId>org.osgi</groupId>
-    <artifactId>org.osgi.core</artifactId>
-    <version>4.3.0</version>
-    <scope>provided</scope>
+    <dependency>
+      <groupId>org.osgi</groupId>
+      <artifactId>org.osgi.core</artifactId>
+      <version>4.3.0</version>
+      <scope>provided</scope>
     </dependency>
     <dependency>
       <groupId>${project.groupId}</groupId>
-      <artifactId>Common</artifactId>
+      <artifactId>LibGDX</artifactId>
       <version>${project.version}</version>
     </dependency>
     <dependency>
-        <groupId>org.junit.jupiter</groupId>
-        <artifactId>junit-jupiter-api</artifactId>
-        <version>5.8.2</version>
-        <scope>test</scope>
-    </dependency>
-    <dependency>
-      <groupId>org.mockito</groupId>
-      <artifactId>mockito-core</artifactId>
-      <version>4.4.0</version>
-      <scope>test</scope>
-    </dependency>
-    <dependency>
       <groupId>modulemon.build</groupId>
-      <artifactId>CommonTest</artifactId>
+      <artifactId>Common</artifactId>
       <version>1.0-SNAPSHOT</version>
+      <scope>compile</scope>
+    </dependency>
+    <dependency>
+      <groupId>org.junit.jupiter</groupId>
+      <artifactId>junit-jupiter-api</artifactId>
+      <version>5.8.2</version>
       <scope>compile</scope>
     </dependency>
   </dependencies>
