@@ -4,7 +4,10 @@ import dk.sdu.mmmi.modulemon.CommonMonster.IMonster;
 import dk.sdu.mmmi.modulemon.CommonMonster.IMonsterMove;
 import dk.sdu.mmmi.modulemon.CommonMonster.MonsterType;
 
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class Monster implements IMonster {
     String name;
@@ -63,16 +66,22 @@ public class Monster implements IMonster {
     }
 
     @Override
+    public List<String> getStats() {
+        List<String> statList = new ArrayList<>();
+        statList.add("Defence: " + this.getDefence());
+        statList.add("Attack: " + this.getAttack());
+        statList.add("Speed: " + this.getSpeed());
+        return statList;
+    }
+
     public int getDefence() {
         return defence;
     }
 
-    @Override
     public int getAttack() {
         return attack;
     }
 
-    @Override
     public int getSpeed() {
         return speed;
     }
