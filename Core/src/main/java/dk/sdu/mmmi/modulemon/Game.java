@@ -11,15 +11,11 @@ import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
 import dk.sdu.mmmi.modulemon.common.data.GameData;
 import dk.sdu.mmmi.modulemon.common.data.GameKeys;
-import dk.sdu.mmmi.modulemon.common.data.World;
-import dk.sdu.mmmi.modulemon.common.drawing.OSGiFileHandle;
 import dk.sdu.mmmi.modulemon.common.services.*;
 import dk.sdu.mmmi.modulemon.managers.GameInputManager;
 import dk.sdu.mmmi.modulemon.managers.GameStateManager;
-import org.lwjgl.opengl.Display;
 
 import java.nio.ByteBuffer;
-import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Queue;
@@ -72,6 +68,7 @@ public class Game implements ApplicationListener {
         viewport = new FitViewport(WIDTH, HEIGHT, cam);
         viewport.apply();
 
+        gameData.setCamera(cam);
         gsm = new GameStateManager();
     }
 

@@ -1,11 +1,10 @@
-package dk.sdu.mmmi.modulemon.BattleScene;
+package dk.sdu.mmmi.modulemon.common.drawing;
 
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.GlyphLayout;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGenerator;
-import dk.sdu.mmmi.modulemon.common.drawing.OSGiFileHandle;
 
 public class TextUtils {
     private static final Object _instanceLock = new Object();
@@ -22,7 +21,6 @@ public class TextUtils {
         // Font size
         FreeTypeFontGenerator.FreeTypeFontParameter parameter = new FreeTypeFontGenerator.FreeTypeFontParameter();
         parameter.size = 34;
-
         bigRobotoFont = fontGenerator.generateFont(parameter);
 
         parameter.size = 24;
