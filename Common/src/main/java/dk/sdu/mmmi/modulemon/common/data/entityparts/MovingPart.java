@@ -110,9 +110,12 @@ public class MovingPart extends BaseAnimation implements EntityPart {
             animationTimer = Math.min(animationTimer, 1);
             Vector2 pos = currentPosition.lerp(newPosition, animationTimer);
 
-
             positionPart.setX(pos.x);
             positionPart.setY(pos.y);
+            if(pos.dst(newPosition) < 0.5){
+                positionPart.setX(newPosition.x);
+                positionPart.setY(newPosition.y);
+            }
         }
         else {
             movingTimer -= dt;

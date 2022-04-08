@@ -223,7 +223,7 @@ public class MapView implements IGameViewService, IMapView {
     @Override
     public boolean isCellBlocked(float x, float y) {
         TiledMapTileLayer collsionLayer = (TiledMapTileLayer)tiledMap.getLayers().get(0);
-        TiledMapTileLayer.Cell cell = collsionLayer.getCell((int)Math.floor(x/tilePixelSize), (int) Math.floor(y/tilePixelSize)+1);
+        TiledMapTileLayer.Cell cell = collsionLayer.getCell((int)Math.floor(x/tilePixelSize), (int) Math.floor(y/tilePixelSize));
         return cell.getTile().getProperties().containsKey("blocked");
     }
 
