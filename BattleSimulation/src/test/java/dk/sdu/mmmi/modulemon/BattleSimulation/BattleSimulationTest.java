@@ -45,13 +45,10 @@ public class BattleSimulationTest {
 
         when(playerMonster.getMoves()).thenReturn(moveList);
         when(enemyMonster.getMoves()).thenReturn(moveList);
-        /*
         when(playerMonster.getAttack()).thenReturn(10);
         when(enemyMonster.getAttack()).thenReturn(10);
         when(playerMonster.getDefence()).thenReturn(10);
         when(enemyMonster.getDefence()).thenReturn(10);
-
-         */
         when(playerMonster.getHitPoints()).thenReturn(50);
         when(enemyMonster.getHitPoints()).thenReturn(50);
 
