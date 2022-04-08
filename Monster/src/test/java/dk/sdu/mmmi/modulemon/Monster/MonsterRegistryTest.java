@@ -17,8 +17,8 @@ import static org.junit.jupiter.api.Assertions.assertNotEquals;
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 public class MonsterRegistryTest {
     static IMonster[] monsters;
-    static IMonster monster0;
-    static IMonster monster1;
+    static Monster monster0;
+    static Monster monster1;
     static IMonsterRegistry registry;
 
     @BeforeAll
@@ -46,8 +46,8 @@ public class MonsterRegistryTest {
                 "images/eel_1.png",
                 "images/eel_2.png",
                 1);
-        monster0 = monsters[0];
-        monster1 = monsters[1];
+        monster0 = (Monster) monsters[0];
+        monster1 = (Monster) monsters[1];
 
         registry = new MonsterRegistry(
                 "/json/monsters_test.json",
@@ -63,8 +63,8 @@ public class MonsterRegistryTest {
     @Test
     @Order(2)
     void monsterRegistry_getByID_isAccurate() {
-        IMonster monsterToTest1 = registry.getMonster(0);
-        IMonster monsterToTest2 = registry.getMonster(1);
+        Monster monsterToTest1 = (Monster) registry.getMonster(0);
+        Monster monsterToTest2 = (Monster) registry.getMonster(1);
         List<IMonsterMove> movesToTest1 = monsterToTest1.getMoves();
         List<IMonsterMove> movesToTest2 = monsterToTest2.getMoves();
 
@@ -118,8 +118,8 @@ public class MonsterRegistryTest {
     @Order(4)
     void monsterRegistry_getArray_isAccurate() {
         IMonster[] monstersToTest = registry.getAllMonsters();
-        IMonster monsterToTest0 = monstersToTest[0];
-        IMonster monsterToTest1 = monstersToTest[1];
+        Monster monsterToTest0 = (Monster) monstersToTest[0];
+        Monster monsterToTest1 = (Monster) monstersToTest[1];
         List<IMonsterMove> movesToTest1 = monsterToTest0.getMoves();
         List<IMonsterMove> movesToTest2 = monsterToTest1.getMoves();
 
