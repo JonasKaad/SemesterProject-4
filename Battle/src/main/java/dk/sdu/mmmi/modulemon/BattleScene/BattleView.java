@@ -243,7 +243,7 @@ public class BattleView implements IGameViewService, IBattleView {
          }
 
         _battleScene.setSelectedActionIndex(selectedAction);
-        _battleScene.draw(gameData.getDelta(), gameData);
+        _battleScene.draw(gameData.getDelta(), gameData.getCamera());
     }
 
     @Override
