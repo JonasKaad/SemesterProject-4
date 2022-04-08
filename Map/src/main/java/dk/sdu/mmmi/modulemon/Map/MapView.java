@@ -3,6 +3,7 @@ package dk.sdu.mmmi.modulemon.Map;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.audio.Music;
 import com.badlogic.gdx.graphics.Color;
+import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
@@ -10,12 +11,13 @@ import com.badlogic.gdx.maps.MapProperties;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.maps.tiled.TiledMap;
 import com.badlogic.gdx.maps.tiled.TiledMapRenderer;
-import com.badlogic.gdx.maps.tiled.TiledMapTile;
 import com.badlogic.gdx.maps.tiled.TiledMapTileLayer;
 import com.badlogic.gdx.maps.tiled.renderers.OrthogonalTiledMapRenderer;
-import com.badlogic.gdx.math.Vector3;
 import dk.sdu.mmmi.modulemon.CommonMap.IMapView;
 import dk.sdu.mmmi.modulemon.common.data.*;
+import dk.sdu.mmmi.modulemon.common.drawing.PersonaRectangle;
+import dk.sdu.mmmi.modulemon.common.drawing.Rectangle;
+import dk.sdu.mmmi.modulemon.common.drawing.TextUtils;
 import dk.sdu.mmmi.modulemon.common.services.IEntityProcessingService;
 import dk.sdu.mmmi.modulemon.common.services.IGamePluginService;
 import dk.sdu.mmmi.modulemon.common.services.IGameViewService;
@@ -33,6 +35,11 @@ public class MapView implements IGameViewService, IMapView {
     private ShapeRenderer shapeRenderer;
     private Music mapMusic;
     private boolean isPaused;
+    private TextUtils textUtils;
+    private Rectangle pauseMenu;
+    private String pauseMenuTitle = "GAME PAUSED";
+    private String[] pauseActions = new String[]{"Resume", "Inventory", "Team", "Quit"};
+    private int selectedOptionIndex = 0;
     private float mapLeft;
     private float mapRight;
     private float mapBottom;
@@ -66,7 +73,9 @@ public class MapView implements IGameViewService, IMapView {
       
         // Pausing
         isPaused = false;
+        pauseMenu = new Rectangle(mapRight/2f + 100, mapTop/2f + 100, 200, 250);
         shapeRenderer = new ShapeRenderer();
+        gdxThreadTasks.add(() -> textUtils = TextUtils.getInstance());
     }
 
     private void initializeCameraDrawing(GameData gameData){
@@ -104,43 +113,81 @@ public class MapView implements IGameViewService, IMapView {
         for (Entity entity : world.getEntities()) {
             if (entity.getSpriteTexture() != null) {
                 Texture sprite = entity.getSpriteTexture();
-                //System.out.println("My sprite is" + sprite);
-                //spriteBatch.setProjectionMatrix(Game.cam.combined);
-                //System.out.println("before drawing:" + entity.getPosX() + "  -  " + entity.getPosY());
 
                 spriteBatch.setProjectionMatrix(cam.combined);
                 spriteBatch.begin();
                 spriteBatch.draw(sprite, entity.getPosX(), entity.getPosY());
                 spriteBatch.end();
 
-                //System.out.println(entity.getClass());
                 if (entity.getClass() == dk.sdu.mmmi.modulemon.Player.Player.class) {
-                    playerPosX = entity.getPosX() * 1;
-                    playerPosY = entity.getPosY() * 1;
+                    playerPosX = entity.getPosX();
+                    playerPosY = entity.getPosY();
                     if(playerPosY > mapBottom && playerPosY < mapTop){
                         cam.position.set(cam.position.x, playerPosY, 0);
 
-                        //cam.position.set(playerPosX + cam.viewportWidth / 2f, playerPosY + cam.viewportHeight / 2f, 0);
                         cam.update();
                     }
                     if (playerPosX > mapLeft && playerPosX < mapRight) {
                         cam.position.set(playerPosX, cam.position.y, 0);
                         cam.update();
                     }
-                    //System.out.println("following cam: " + playerPosX + "  -  " + playerPosY);
                 }
-            } else {
-                //System.out.println("spritestring is:" + entity.getSpriteString());
             }
         }
         if(isPaused){
+            //Drawing pause menu box
             shapeRenderer.setAutoShapeType(true);
+            shapeRenderer.setProjectionMatrix(cam.combined);
             shapeRenderer.setColor(Color.WHITE);
 
             shapeRenderer.begin(ShapeRenderer.ShapeType.Filled);
-            int menuWidth = 150;
-            Vector3 camCoordinates = cam.project(new Vector3(cam.position.x + 100, cam.position.y, 0));
-            shapeRenderer.rect(camCoordinates.x, camCoordinates.y, menuWidth, 100);
+            pauseMenu.setX(cam.position.x + cam.viewportWidth/3f);
+            pauseMenu.setY(cam.position.y - cam.viewportHeight/8f);
+            pauseMenu.draw(shapeRenderer, gameData.getDelta());
+            shapeRenderer.end();
+
+            //Drawing pause menu text
+            spriteBatch.setProjectionMatrix(cam.combined);
+            spriteBatch.begin();
+
+            textUtils.drawNormalRoboto(
+                    spriteBatch,
+                    pauseMenuTitle,
+                    Color.BLACK,
+                    pauseMenu.getX() + pauseMenu.getWidth()/8f,
+                    pauseMenu.getY() + pauseMenu.getHeight() - 10);
+
+            //Drawing options
+            for (int i = 0; i < pauseActions.length; i++){
+                textUtils.drawSmallRoboto(spriteBatch, pauseActions[i], Color.BLACK, pauseMenu.getX() + 20, pauseMenu.getY() + (pauseMenu.getHeight()*2/3f) - (i * 40));
+            }
+
+            spriteBatch.end();
+
+
+            // Drawing selection triangle
+            // Yoinked from BattleScene
+
+            Gdx.gl.glEnable(GL20.GL_BLEND); //Allows for opacity
+            shapeRenderer.begin(ShapeRenderer.ShapeType.Filled);
+            shapeRenderer.setColor(Color.PURPLE);
+
+            int triangleHeight = 20;
+            int heightBetweenOptions = 20;
+            int normalTextHeight = 24;
+            int actionTopTextHeight = (int)(pauseMenu.getHeight() * 2/3f) + 40;
+            int offsetFromActionHeadToFirstAction = 10;
+
+            selectedOptionIndex = selectedOptionIndex % pauseActions.length;
+
+            int renderHeight = actionTopTextHeight - triangleHeight - normalTextHeight - offsetFromActionHeadToFirstAction;
+            renderHeight = renderHeight + selectedOptionIndex * -heightBetweenOptions * 2;
+
+            shapeRenderer.triangle(
+                    pauseMenu.getX() + 2, pauseMenu.getY() + renderHeight,
+                    pauseMenu.getX() + 17, pauseMenu.getY() + triangleHeight / 2f + renderHeight,
+                    pauseMenu.getX() + 2, pauseMenu.getY() + triangleHeight + renderHeight
+            );
             shapeRenderer.end();
         }
     }
@@ -148,27 +195,40 @@ public class MapView implements IGameViewService, IMapView {
     @Override
     public void handleInput(GameData gameData, IGameStateManager gameStateManager) {
         if(isPaused){
+            if(gameData.getKeys().isPressed(GameKeys.DOWN)) {
+                if(selectedOptionIndex < pauseActions.length)
+                    selectedOptionIndex++;
+                else
+                    selectedOptionIndex = 0;
+            }
+            if(gameData.getKeys().isPressed(GameKeys.UP)){
+                if(selectedOptionIndex <= 0)
+                    selectedOptionIndex = pauseActions.length-1;
+                else
+                    selectedOptionIndex--;
+            }
             if(gameData.getKeys().isPressed(GameKeys.E)){
                 isPaused = false;
+                gameData.setPaused(isPaused);
+            }
+            if(gameData.getKeys().isPressed(GameKeys.ENTER)){
+                if(pauseActions[selectedOptionIndex].equals("Resume"))
+                    isPaused = false;
+                if(pauseActions[selectedOptionIndex].equals("Inventory"))
+                    System.out.println("Not implemented yet!");
+                if(pauseActions[selectedOptionIndex].equals("Team"))
+                    System.out.println("You have no team");
+                if(pauseActions[selectedOptionIndex].equals("Quit")){
+                    if(cam != null)
+                        cam.position.set(gameData.getDisplayWidth()/2,gameData.getDisplayHeight()/2, 0);
+                    gameStateManager.setDefaultState();
+                }
             }
             return;
         }
-      /*
-        if (gameData.getKeys().isDown(GameKeys.DOWN) && cam.position.y > mapBottom) {
-            Game.cam.translate(0, -16);
-        }
-        if (gameData.getKeys().isDown(GameKeys.UP) && cam.position.y < mapTop) {
-            Game.cam.translate(0, 16);
-        }
-        if (gameData.getKeys().isDown(GameKeys.LEFT) && cam.position.x > mapLeft){
-            Game.cam.translate(-16, 0);
-        }
-        if (gameData.getKeys().isDown(GameKeys.RIGHT) && cam.position.x < mapRight){
-            Game.cam.translate(16, 0);
-        }
-        */
         if(gameData.getKeys().isPressed(GameKeys.E)){
             isPaused = true;
+            gameData.setPaused(isPaused);
         }
         if (gameData.getKeys().isPressed(GameKeys.ENTER)){
             if(cam != null)

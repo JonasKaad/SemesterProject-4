@@ -44,7 +44,7 @@ public class MovingPart extends BaseAnimation implements EntityPart {
     }
 
     public void process(GameData gameData, Entity entity) {
-        if(mapView.isPaused()) return;
+        if(gameData.isPaused()) return;
         PositionPart positionPart = entity.getPart(PositionPart.class);
         float x = positionPart.getX();
         float start_x = positionPart.getX();

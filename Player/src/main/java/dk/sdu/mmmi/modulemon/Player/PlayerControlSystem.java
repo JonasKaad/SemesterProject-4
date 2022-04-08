@@ -21,9 +21,8 @@ public class PlayerControlSystem implements IEntityProcessingService {
 
     @Override
     public void process(GameData gameData, World world) {
-
-
-
+        if(gameData.isPaused())
+            return;
         for (Entity player : world.getEntities(Player.class)) {
             PositionPart positionPart = player.getPart(PositionPart.class);
             MovingPart movingPart = player.getPart(MovingPart.class);
