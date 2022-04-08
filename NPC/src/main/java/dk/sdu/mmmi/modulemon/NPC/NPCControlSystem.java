@@ -16,6 +16,8 @@ import dk.sdu.mmmi.modulemon.common.services.IEntityProcessingService;
  * @author Gorm Krings
  */
 public class NPCControlSystem implements IEntityProcessingService{
+    
+    private String current = "";
 
     @Override
     public void process(GameData gameData, World world) {
@@ -26,12 +28,24 @@ public class NPCControlSystem implements IEntityProcessingService{
                 SpritePart spritePart = npc.getPart(SpritePart.class);
                 AIControlPart controlPart = npc.getPart(AIControlPart.class);
                 
-                
                 movingPart.setLeft(controlPart.goLeft());
                 movingPart.setRight(controlPart.goRight());
                 movingPart.setUp(controlPart.goUp());
                 movingPart.setDown(controlPart.goDown());
                 // else stand still
+                
+                if(controlPart.goLeft()){
+                    current = "left";
+                }
+                if(controlPart.goRight()){
+                    current = "right";
+                }
+                if(controlPart.goUp()){
+                    current = "up";
+                }
+                if(controlPart.goDown()){
+                    current = "down";
+                }
                 
                 movingPart.process(gameData, npc);
                 positionPart.process(gameData, npc);
@@ -51,10 +65,24 @@ public class NPCControlSystem implements IEntityProcessingService{
 
         SpritePart spritePart = entity.getPart(SpritePart.class);
 
-
+        Texture result = null;
+        switch (current) {
+            case "right":
+               result = spritePart.getRightSprite();
+               break;
+            case "left":
+                result = spritePart.getLeftSprite();
+                break;
+            case "up":
+                result = spritePart.getUpSprite();
+                break;
+            case "down":
+                result = spritePart.getDownSprite();
+                break;
+            default: System.out.println(("Did not match any direction"));
+        }
         
 
-        Texture result = spritePart.getRightSprite();
         entity.setSpriteTexture(result);
         entity.setPosX(x);
         entity.setPosY(y);

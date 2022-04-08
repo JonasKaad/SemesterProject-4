@@ -16,6 +16,7 @@ public class AIControlPart implements EntityPart{
     private Character[] movementArray;
     private int index;
     private Character current;
+    private float movingTimer = 0;
     
     public AIControlPart(Character[] movementArray) {
         this.movementArray = movementArray;
@@ -25,7 +26,15 @@ public class AIControlPart implements EntityPart{
 
     @Override
     public void process(GameData gameData, Entity entity) {
-        updateMovement();
+        float dt = gameData.getDelta(); // Time in seconds between frames
+        
+        if (movingTimer > 0) {
+            current = 'S';
+            movingTimer -= dt;
+        } else {
+            updateMovement();
+            movingTimer = 1.5f + (float) Math.random();
+        }
     }
     
     private void updateMovement() {

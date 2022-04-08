@@ -36,14 +36,14 @@ public class NPCPlugin implements IGamePluginService{
         Entity npc = new NPC(
                 "John", 
                 new SpritePart(
-                        new Texture(new OSGiFileHandle("/assets/npc.png", NPCPlugin.class)), //upSprite 
-                        new Texture(new OSGiFileHandle("/assets/npc.png", NPCPlugin.class)), //downSprite
-                        new Texture(new OSGiFileHandle("/assets/npc.png", NPCPlugin.class)), //leftSprite
-                        new Texture(new OSGiFileHandle("/assets/npc.png", NPCPlugin.class))),//rightSprite
-                new PositionPart(3000, 2000),
+                        new Texture(new OSGiFileHandle("/assets/npc-char-up.png", NPCPlugin.class)), //upSprite 
+                        new Texture(new OSGiFileHandle("/assets/npc-char-down.png", NPCPlugin.class)), //downSprite
+                        new Texture(new OSGiFileHandle("/assets/npc-char-left.png", NPCPlugin.class)), //leftSprite
+                        new Texture(new OSGiFileHandle("/assets/npc-char-right.png", NPCPlugin.class))),//rightSprite
+                new PositionPart(3008, 2048),
                 new MovingPart(),
                 new InteractPart(),
-                new AIControlPart(new Character[]{'R','L'}),
+                new AIControlPart(new Character[]{'R','R','L','L','L','L','R','R','U','U','D','D','D','D','U','U'}), //?(??_?)??
                 0);
         return npc;
     }
