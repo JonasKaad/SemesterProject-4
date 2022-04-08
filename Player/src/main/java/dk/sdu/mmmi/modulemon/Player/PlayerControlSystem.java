@@ -11,10 +11,6 @@ import dk.sdu.mmmi.modulemon.common.services.IEntityProcessingService;
 
 import static dk.sdu.mmmi.modulemon.common.data.GameKeys.*;
 
-/**
- *
- * @author jcs
- */
 public class PlayerControlSystem implements IEntityProcessingService {
 
     String current = "up";
