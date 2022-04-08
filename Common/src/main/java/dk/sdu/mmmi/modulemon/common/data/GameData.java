@@ -1,5 +1,6 @@
 package dk.sdu.mmmi.modulemon.common.data;
 
+import com.badlogic.gdx.graphics.OrthographicCamera;
 import dk.sdu.mmmi.modulemon.common.event.Event;
 
 import java.util.ArrayList;
@@ -13,6 +14,7 @@ public class GameData {
     private int displayHeight;
     private final GameKeys keys = new GameKeys();
     private List<Event> events = new CopyOnWriteArrayList<Event>();
+    private OrthographicCamera cam;
 
     public void addEvent(Event e) {
         events.add(e);
@@ -52,6 +54,18 @@ public class GameData {
 
     public int getDisplayHeight() {
         return displayHeight;
+    }
+
+    public void setEvents(List<Event> events) {
+        this.events = events;
+    }
+
+    public OrthographicCamera getCamera() {
+        return cam;
+    }
+
+    public void setCamera(OrthographicCamera cam) {
+        this.cam = cam;
     }
 
     public <E extends Event> List<Event> getEvents(Class<E> type, String sourceID) {
