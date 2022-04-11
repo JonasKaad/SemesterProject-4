@@ -213,8 +213,10 @@ public class MapView implements IGameViewService, IMapView {
                 gameData.setPaused(isPaused);
             }
             if(gameData.getKeys().isPressed(GameKeys.ENTER)){
-                if(pauseActions[selectedOptionIndex].equals("Resume"))
+                if(pauseActions[selectedOptionIndex].equals("Resume")) {
                     isPaused = false;
+                    gameData.setPaused(isPaused);
+                }
                 if(pauseActions[selectedOptionIndex].equals("Inventory"))
                     System.out.println("Not implemented yet!");
                 if(pauseActions[selectedOptionIndex].equals("Team"))
