@@ -12,6 +12,7 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.maps.tiled.TiledMap;
 import com.badlogic.gdx.maps.tiled.TiledMapRenderer;
 import com.badlogic.gdx.maps.tiled.TiledMapTileLayer;
+import com.badlogic.gdx.maps.tiled.renderers.BatchTiledMapRenderer;
 import com.badlogic.gdx.maps.tiled.renderers.OrthogonalTiledMapRenderer;
 import dk.sdu.mmmi.modulemon.CommonMap.IMapView;
 import dk.sdu.mmmi.modulemon.common.data.*;
@@ -31,7 +32,8 @@ import java.util.concurrent.CopyOnWriteArrayList;
 
 public class MapView implements IGameViewService, IMapView {
     private TiledMap tiledMap;
-    private TiledMapRenderer tiledMapRenderer;
+    private TiledMapTileLayer overhangLayer;
+    private BatchTiledMapRenderer tiledMapRenderer;
     private OrthographicCamera cam;
     private ShapeRenderer shapeRenderer;
     private Music mapMusic;
@@ -60,6 +62,7 @@ public class MapView implements IGameViewService, IMapView {
     public void init() {
         mapMusic = Gdx.audio.newMusic(new OSGiFileHandle("/music/village_theme.ogg", MapView.class));
         tiledMap = new OSGiTmxLoader().load("/maps/SeasonalOverworld.tmx");
+        overhangLayer = (TiledMapTileLayer) tiledMap.getLayers().get("Top");
         int scale = 4;
         tiledMapRenderer = new OrthogonalTiledMapRenderer(tiledMap, scale);
         mapMusic.play();
@@ -191,6 +194,9 @@ public class MapView implements IGameViewService, IMapView {
             );
             shapeRenderer.end();
         }
+        tiledMapRenderer.getBatch().begin();
+        tiledMapRenderer.renderTileLayer(overhangLayer);
+        tiledMapRenderer.getBatch().end();
     }
 
     @Override
@@ -222,6 +228,8 @@ public class MapView implements IGameViewService, IMapView {
                 if(pauseActions[selectedOptionIndex].equals("Team"))
                     System.out.println("You have no team");
                 if(pauseActions[selectedOptionIndex].equals("Quit")){
+                    isPaused = false;
+                    gameData.setPaused(isPaused);
                     if(cam != null)
                         cam.position.set(gameData.getDisplayWidth()/2,gameData.getDisplayHeight()/2, 0);
                     gameStateManager.setDefaultState();
