@@ -77,7 +77,7 @@ public class MapView implements IGameViewService, IMapView {
       
         // Pausing
         isPaused = false;
-        pauseMenu = new Rectangle(mapRight/2f + 100, mapTop/2f + 100, 200, 250);
+        pauseMenu = new Rectangle(100, 100, 200, 250);
         shapeRenderer = new ShapeRenderer();
         gdxThreadTasks.add(() -> textUtils = TextUtils.getInstance());
     }
