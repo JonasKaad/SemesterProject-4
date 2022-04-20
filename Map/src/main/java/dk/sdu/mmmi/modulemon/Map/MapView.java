@@ -138,15 +138,18 @@ public class MapView implements IGameViewService, IMapView {
                 }
             }
         }
-        if(isPaused){
+        tiledMapRenderer.getBatch().begin();
+        tiledMapRenderer.renderTileLayer(overhangLayer);
+        tiledMapRenderer.getBatch().end();
+        if(isPaused) {
             //Drawing pause menu box
             shapeRenderer.setAutoShapeType(true);
             shapeRenderer.setProjectionMatrix(cam.combined);
             shapeRenderer.setColor(Color.WHITE);
 
             shapeRenderer.begin(ShapeRenderer.ShapeType.Filled);
-            pauseMenu.setX(cam.position.x + cam.viewportWidth/3f);
-            pauseMenu.setY(cam.position.y - cam.viewportHeight/8f);
+            pauseMenu.setX(cam.position.x + cam.viewportWidth / 3f);
+            pauseMenu.setY(cam.position.y - cam.viewportHeight / 8f);
             pauseMenu.draw(shapeRenderer, gameData.getDelta());
             shapeRenderer.end();
 
@@ -162,8 +165,8 @@ public class MapView implements IGameViewService, IMapView {
                     pauseMenu.getY() + pauseMenu.getHeight() - 10);
 
             //Drawing options
-            for (int i = 0; i < pauseActions.length; i++){
-                textUtils.drawSmallRoboto(spriteBatch, pauseActions[i], Color.BLACK, pauseMenu.getX() + 42, pauseMenu.getY() + (pauseMenu.getHeight()*2/3f) - (i * 40));
+            for (int i = 0; i < pauseActions.length; i++) {
+                textUtils.drawSmallRoboto(spriteBatch, pauseActions[i], Color.BLACK, pauseMenu.getX() + 42, pauseMenu.getY() + (pauseMenu.getHeight() * 2 / 3f) - (i * 40));
             }
 
             spriteBatch.end();
@@ -179,7 +182,7 @@ public class MapView implements IGameViewService, IMapView {
             int triangleHeight = 20;
             int heightBetweenOptions = 20;
             int normalTextHeight = 24;
-            int actionTopTextHeight = (int)(pauseMenu.getHeight() * 2/3f) + 40;
+            int actionTopTextHeight = (int) (pauseMenu.getHeight() * 2 / 3f) + 40;
             int offsetFromActionHeadToFirstAction = 10;
 
             selectedOptionIndex = selectedOptionIndex % pauseActions.length;
@@ -194,9 +197,6 @@ public class MapView implements IGameViewService, IMapView {
             );
             shapeRenderer.end();
         }
-        tiledMapRenderer.getBatch().begin();
-        tiledMapRenderer.renderTileLayer(overhangLayer);
-        tiledMapRenderer.getBatch().end();
     }
 
     @Override
