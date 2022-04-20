@@ -1,6 +1,8 @@
 package dk.sdu.mmmi.modulemon.BattleSceneMock;
 
 import dk.sdu.mmmi.modulemon.Battle.BattleParticipant;
+import dk.sdu.mmmi.modulemon.Monster.Monster;
+import dk.sdu.mmmi.modulemon.Monster.MonsterMove;
 import dk.sdu.mmmi.modulemon.CommonBattle.IBattleParticipant;
 import dk.sdu.mmmi.modulemon.CommonMonster.IMonster;
 import dk.sdu.mmmi.modulemon.CommonMonster.IMonsterMove;
@@ -21,37 +23,39 @@ public class BattleParticipantMocks {
         List<IMonsterMove> bulbasaurMoves = new ArrayList<>();
         List<IMonsterMove> charmanderMoves = new ArrayList<>();
 
-        eelMoves.add(new MockMonsterMove("Tackle", MonsterType.AIR, 5));
-        eelMoves.add(new MockMonsterMove("Zap", MonsterType.LIGHTNING, 10));
-        eelMoves.add(new MockMonsterMove("Egg Bomb", MonsterType.GRASS, 20));
-        eelMoves.add(new MockMonsterMove("Water Blast", MonsterType.WATER, 30));
-        monsters.add(new MockMonster(
+        eelMoves.add(new MonsterMove("Tackle", 5, MonsterType.AIR));
+        eelMoves.add(new MonsterMove("Zap", 10, MonsterType.LIGHTNING));
+        eelMoves.add(new MonsterMove("Egg Bomb", 20, MonsterType.GRASS));
+        eelMoves.add(new MonsterMove("Water Blast", 30, MonsterType.WATER));
+        monsters.add(new Monster(
                 "Eel",
-                30,
+                MonsterType.WATER,
+                100,
                 10,
                 20,
                 5,
+                eelMoves,
                 "/monsters/eelF.png",
                 "/monsters/eelB.png",
-                MonsterType.WATER,
-                eelMoves
+                1
         ));
 
 
-        alpacaMoves.add(new MockMonsterMove("Spit", MonsterType.WATER, 10));
-        alpacaMoves.add(new MockMonsterMove("Trample", MonsterType.EARTH, 15));
-        alpacaMoves.add(new MockMonsterMove("Horn Blast", MonsterType.EARTH, 25));
-        alpacaMoves.add(new MockMonsterMove("Fire Breath", MonsterType.FIRE, 50));
-        monsters.add(new MockMonster(
+        alpacaMoves.add(new MonsterMove("Spit", 10, MonsterType.WATER));
+        alpacaMoves.add(new MonsterMove("Trample", 15, MonsterType.EARTH));
+        alpacaMoves.add(new MonsterMove("Horn Blast", 25, MonsterType.EARTH));
+        alpacaMoves.add(new MonsterMove("Fire Breath", 50, MonsterType.FIRE));
+        monsters.add(new Monster(
                 "Alpaca",
-                40,
+                MonsterType.EARTH,
+                100,
                 10,
                 20,
                 5,
+                alpacaMoves,
                 "/monsters/alpacaF.png",
                 "/monsters/alpacaB.png",
-                MonsterType.EARTH,
-                alpacaMoves
+                2
         ));
         /*
         bulbasaurMoves.add(new MockMonsterMove("Tackle", MonsterType.AIR, 5));
@@ -91,44 +95,47 @@ public class BattleParticipantMocks {
 
     public static IBattleParticipant getOpponent() {
         List<IMonster> monsters = new ArrayList<>();
-        List<IMonsterMove> slowpokeMoves = new ArrayList<>();
-        List<IMonsterMove> squrtleMoves = new ArrayList<>();
         List<IMonsterMove> eelMoves = new ArrayList<>();
         List<IMonsterMove> alpacaMoves = new ArrayList<>();
+        List<IMonsterMove> bulbasaurMoves = new ArrayList<>();
+        List<IMonsterMove> charmanderMoves = new ArrayList<>();
 
-
-
-
-        alpacaMoves.add(new MockMonsterMove("Spit", MonsterType.WATER, 10));
-        alpacaMoves.add(new MockMonsterMove("Trample", MonsterType.EARTH, 15));
-        alpacaMoves.add(new MockMonsterMove("Horn Blast", MonsterType.EARTH, 25));
-        alpacaMoves.add(new MockMonsterMove("Fire Breath", MonsterType.FIRE, 50));
-        monsters.add(new MockMonster(
+        alpacaMoves.add(new MonsterMove("Spit", 10, MonsterType.WATER));
+        alpacaMoves.add(new MonsterMove("Trample", 15, MonsterType.EARTH));
+        alpacaMoves.add(new MonsterMove("Horn Blast", 25, MonsterType.EARTH));
+        alpacaMoves.add(new MonsterMove("Fire Breath", 50, MonsterType.FIRE));
+        monsters.add(new Monster(
                 "Alpaca",
-                40,
+                MonsterType.EARTH,
+                100,
                 10,
                 20,
                 5,
+                alpacaMoves,
                 "/monsters/alpacaF.png",
                 "/monsters/alpacaB.png",
-                MonsterType.EARTH,
-                alpacaMoves
+                2
         ));
 
-        eelMoves.add(new MockMonsterMove("Tackle", MonsterType.AIR, 5));
-        eelMoves.add(new MockMonsterMove("Zap", MonsterType.LIGHTNING, 10));
-        eelMoves.add(new MockMonsterMove("Water Blast", MonsterType.WATER, 30));
-        monsters.add(new MockMonster(
+        eelMoves.add(new MonsterMove("Tackle", 5, MonsterType.AIR));
+        eelMoves.add(new MonsterMove("Zap", 10, MonsterType.LIGHTNING));
+        eelMoves.add(new MonsterMove("Egg Bomb", 20, MonsterType.GRASS));
+        eelMoves.add(new MonsterMove("Water Blast", 30, MonsterType.WATER));
+        monsters.add(new Monster(
                 "Eel",
-                10,
+                MonsterType.WATER,
+                100,
                 10,
                 20,
                 5,
+                eelMoves,
                 "/monsters/eelF.png",
                 "/monsters/eelB.png",
-                MonsterType.WATER,
-                eelMoves
+                1
         ));
+
+
+
 
         /*
         slowpokeMoves.add(new MockMonsterMove("Water gun", MonsterType.WATER, 15));

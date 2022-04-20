@@ -29,4 +29,9 @@ public class MonsterMove implements IMonsterMove {
     public MonsterType getType() {
         return type;
     }
+
+    @Override
+    public String toString() {
+        return this.getName();
+    }
 }

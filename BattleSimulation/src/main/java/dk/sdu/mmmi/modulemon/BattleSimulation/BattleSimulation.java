@@ -13,8 +13,8 @@ public class BattleSimulation implements IBattleSimulation {
     private IBattleEvent nextEvent;
     private Runnable onNextEvent;
 
-    //"Mocked" enemyControlSystem. Should be moved somewhere else and hidden behind an interface
     private IBattleAI AI;
+    private IBattleAIFactory AIFactory;
     private IBattleMonsterProcessor monsterProcessor;
 
     @Override
@@ -29,6 +29,8 @@ public class BattleSimulation implements IBattleSimulation {
         IBattleParticipant firstToTakeTurn = firstMonster == player.getActiveMonster() ? player : enemy;
 
         this.battleState = new BattleState(player, enemy);
+
+        this.AI = this.AIFactory.getBattleAI(this, enemy);
 
         if (!firstToTakeTurn.isPlayerControlled()) {
             nextEvent = new InfoBattleEvent("enemy starts the battle");
@@ -78,6 +80,10 @@ public class BattleSimulation implements IBattleSimulation {
         String participantTitle;
         String opposingParticipantTitle;
         IBattleParticipant opposingParticipant;
+
+        if (battleParticipant.equals(battleState.getPlayer())) {
+            AI.opposingMonsterUsedMove(source, move);
+        }
 
         if (battleParticipant.isPlayerControlled()) {
             target = battleState.getEnemy().getActiveMonster();
@@ -194,8 +200,8 @@ public class BattleSimulation implements IBattleSimulation {
         this.monsterProcessor = monsterProcessor;
     }
 
-    public void setAI(IBattleAI AI) {
-        this.AI = AI;
+    public void setAIFactory(IBattleAIFactory factory) {
+        this.AIFactory = factory;
     }
 
 }

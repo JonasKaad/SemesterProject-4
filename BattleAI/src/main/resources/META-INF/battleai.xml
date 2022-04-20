@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<scr:component xmlns:scr="http://www.osgi.org/xmlns/scr/v1.1.0" name="dk.sdu.mmmi.modulemon.BattleAI.BattleAI">
-    <implementation class="dk.sdu.mmmi.modulemon.BattleAI.BattleAI"/>
+<scr:component xmlns:scr="http://www.osgi.org/xmlns/scr/v1.1.0" name="dk.sdu.mmmi.modulemon.BattleAI.BattleAIFactory">
+    <implementation class="dk.sdu.mmmi.modulemon.BattleAI.BattleAIFactory"/>
     <service>
-        <provide interface="dk.sdu.mmmi.modulemon.CommonBattle.IBattleAI"/>
+        <provide interface="dk.sdu.mmmi.modulemon.CommonBattle.IBattleAIFactory"/>
     </service>
 
 </scr:component>

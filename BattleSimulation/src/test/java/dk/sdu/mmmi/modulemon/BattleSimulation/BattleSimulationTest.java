@@ -1,10 +1,7 @@
 package dk.sdu.mmmi.modulemon.BattleSimulation;
 
+import dk.sdu.mmmi.modulemon.CommonBattle.*;
 import dk.sdu.mmmi.modulemon.CommonBattle.BattleEvents.*;
-import dk.sdu.mmmi.modulemon.CommonBattle.IBattleAI;
-import dk.sdu.mmmi.modulemon.CommonBattle.IBattleMonsterProcessor;
-import dk.sdu.mmmi.modulemon.CommonBattle.IBattleParticipant;
-import dk.sdu.mmmi.modulemon.CommonBattle.IBattleSimulation;
 import dk.sdu.mmmi.modulemon.CommonMonster.IMonster;
 import dk.sdu.mmmi.modulemon.CommonMonster.IMonsterMove;
 import org.junit.jupiter.api.BeforeEach;
@@ -86,14 +83,24 @@ public class BattleSimulationTest {
             }
         });
 
-        sim.setAI(new IBattleAI() {
+        sim.setAIFactory(new IBattleAIFactory() {
             @Override
-            public void doAction(IBattleSimulation battleSimulation) {
-                IBattleParticipant activeParticipant =
-                        battleSimulation.getState().isPlayersTurn()
-                                ? battleSimulation.getState().getPlayer()
-                                : battleSimulation.getState().getEnemy();
-                battleSimulation.doMove(activeParticipant, activeParticipant.getActiveMonster().getMoves().get(0));
+            public IBattleAI getBattleAI(IBattleSimulation battleSimulation, IBattleParticipant participantToControl) {
+                return new IBattleAI() {
+                    @Override
+                    public void doAction(IBattleSimulation battleSimulation) {
+                        IBattleParticipant activeParticipant =
+                                battleSimulation.getState().isPlayersTurn()
+                                        ? battleSimulation.getState().getPlayer()
+                                        : battleSimulation.getState().getEnemy();
+                        battleSimulation.doMove(activeParticipant, activeParticipant.getActiveMonster().getMoves().get(0));
+                    }
+
+                    @Override
+                    public void opposingMonsterUsedMove(IMonster monster, IMonsterMove move) {
+
+                    }
+                };
             }
         });
 
