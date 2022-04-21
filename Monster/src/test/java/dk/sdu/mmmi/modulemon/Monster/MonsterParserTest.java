@@ -15,8 +15,8 @@ import static org.junit.jupiter.api.Assertions.*;
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 public class MonsterParserTest {
     static IMonster[] monsters;
-    static IMonster monster0;
-    static IMonster monster1;
+    static Monster monster0;
+    static Monster monster1;
     static IMonster[] monstersToTest;
 
     @BeforeAll
@@ -46,8 +46,8 @@ public class MonsterParserTest {
                 "/images/eel_2.png",
                 1);
 
-        monster0 = monsters[0];
-        monster1 = monsters[1];
+        monster0 = (Monster) monsters[0];
+        monster1 = (Monster) monsters[1];
 
         monstersToTest = MonsterParser.parseMonsters(
                 "/json/monsters_test.json",
@@ -65,8 +65,8 @@ public class MonsterParserTest {
     @Test
     @Order(2)
     void monsterParser_parseMonster_isAccurate() {
-        IMonster monsterToTest0 = monstersToTest[0];
-        IMonster monsterToTest1 = monstersToTest[1];
+        Monster monsterToTest0 = (Monster) monstersToTest[0];
+        Monster monsterToTest1 = (Monster) monstersToTest[1];
 
         // Monster 0
         assertEquals(monster0.getName(), monsterToTest0.getName());
