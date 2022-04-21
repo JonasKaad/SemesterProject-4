@@ -3,6 +3,7 @@ package dk.sdu.mmmi.modulemon.Monster;
 import dk.sdu.mmmi.modulemon.CommonMonster.IMonster;
 import dk.sdu.mmmi.modulemon.CommonMonster.IMonsterMove;
 import dk.sdu.mmmi.modulemon.CommonMonster.MonsterType;
+import dk.sdu.mmmi.modulemon.common.OSGiFileHandleByteReader;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
@@ -33,19 +34,16 @@ public class MonsterParser {
      * @return Returns a list of monsters
      */
     public static IMonster[] parseMonsters(String monstersURL, String movesURL) throws IOException, URISyntaxException {
-        Path monstersPath = Paths.get(MonsterParser.class.getResource(monstersURL).toURI());
-        Path movesPath = Paths.get(MonsterParser.class.getResource(movesURL).toURI());
-
-        JSONArray JSONmonsters = loadJSONArray(monstersPath);
-        JSONArray JSONmoves = loadJSONArray(movesPath);
+        JSONArray JSONmonsters = loadJSONArray(monstersURL);
+        JSONArray JSONmoves = loadJSONArray(movesURL);
 
         HashMap<String, IMonsterMove> monsterMoveHashMap = instantiateMoves(JSONmoves);
 
         return instantiateMonsters(JSONmonsters, monsterMoveHashMap);
     }
 
-    private static JSONArray loadJSONArray(Path path) throws IOException {
-        String jsonString = new String(Files.readAllBytes(path), StandardCharsets.UTF_8);
+    private static JSONArray loadJSONArray(String path) throws IOException {
+        String jsonString = new String(new OSGiFileHandleByteReader(path, MonsterParser.class).readBytes(), StandardCharsets.UTF_8);
         return new JSONArray(jsonString);
     }
 

@@ -10,14 +10,14 @@ import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.maps.MapProperties;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.maps.tiled.TiledMap;
-import com.badlogic.gdx.maps.tiled.TiledMapRenderer;
 import com.badlogic.gdx.maps.tiled.TiledMapTileLayer;
 import com.badlogic.gdx.maps.tiled.renderers.BatchTiledMapRenderer;
 import com.badlogic.gdx.maps.tiled.renderers.OrthogonalTiledMapRenderer;
+import dk.sdu.mmmi.modulemon.CommonBattle.MonsterTeamPart;
 import dk.sdu.mmmi.modulemon.CommonMap.IMapView;
+import dk.sdu.mmmi.modulemon.Player.PlayerPlugin;
 import dk.sdu.mmmi.modulemon.common.data.*;
-import dk.sdu.mmmi.modulemon.common.drawing.OSGiFileHandle;
-import dk.sdu.mmmi.modulemon.common.drawing.PersonaRectangle;
+import dk.sdu.mmmi.modulemon.common.OSGiFileHandle;
 import dk.sdu.mmmi.modulemon.common.drawing.Rectangle;
 import dk.sdu.mmmi.modulemon.common.drawing.TextUtils;
 import dk.sdu.mmmi.modulemon.common.services.IEntityProcessingService;
@@ -218,15 +218,24 @@ public class MapView implements IGameViewService, IMapView {
                 isPaused = false;
                 gameData.setPaused(isPaused);
             }
-            if(gameData.getKeys().isPressed(GameKeys.ENTER)){
-                if(pauseActions[selectedOptionIndex].equals("Resume")) {
+            if(gameData.getKeys().isPressed(GameKeys.ENTER)) {
+                if (pauseActions[selectedOptionIndex].equals("Resume")) {
                     isPaused = false;
                     gameData.setPaused(isPaused);
                 }
-                if(pauseActions[selectedOptionIndex].equals("Inventory"))
+                if (pauseActions[selectedOptionIndex].equals("Inventory"))
                     System.out.println("Not implemented yet!");
-                if(pauseActions[selectedOptionIndex].equals("Team"))
-                    System.out.println("You have no team");
+                if (pauseActions[selectedOptionIndex].equals("Team")) {
+
+                    for (Entity entity : world.getEntities()) {
+                        if (entity.getClass() == dk.sdu.mmmi.modulemon.Player.Player.class) {
+                            MonsterTeamPart mtp = entity.getPart(MonsterTeamPart.class);
+                            mtp.printMonsterTeamNames();
+                        }
+                    }
+                }
+                //System.out.println("You have no team");
+
                 if(pauseActions[selectedOptionIndex].equals("Quit")){
                     isPaused = false;
                     gameData.setPaused(isPaused);

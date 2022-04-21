@@ -2,15 +2,15 @@
 <scr:component xmlns:scr="http://www.osgi.org/xmlns/scr/v1.1.0" name="dk.sdu.mmmi.modulemon.BattleSimulation">
     <implementation class="dk.sdu.mmmi.modulemon.BattleSimulation.BattleSimulation"/>
     <service>
-        <provide interface="dk.sdu.mmmi.modulemon.CommonBattle.IBattleSimulation"/>
+        <provide interface="dk.sdu.mmmi.modulemon.CommonBattleSimulation.IBattleSimulation"/>
     </service>
 
     <reference bind="setMonsterProcessor" cardinality="0..1"
-               interface="dk.sdu.mmmi.modulemon.CommonBattle.IBattleMonsterProcessor"
+               interface="dk.sdu.mmmi.modulemon.CommonBattleSimulation.IBattleMonsterProcessor"
                name="IBattleMonsterProcessor" policy="dynamic"/>
 
     <reference bind="setAI" cardinality="0..1"
-               interface="dk.sdu.mmmi.modulemon.CommonBattle.IBattleAI"
+               interface="dk.sdu.mmmi.modulemon.CommonBattleSimulation.IBattleAI"
                name="IBattleAI" policy="dynamic"/>
 
 </scr:component>
