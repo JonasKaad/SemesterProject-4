@@ -53,9 +53,17 @@ public class MonsterParser {
         HashMap<String, IMonsterMove> moves = new HashMap<>();
         for (int i = 0; i < jsonMoves.length(); i++) {
             JSONObject JSONMove = jsonMoves.getJSONObject(i);
+            String soundPath;
+            if (JSONMove.has("sound")) {
+                soundPath = JSONMove.getString("sound");
+            }
+            else {
+                soundPath = "sounds/Tackle.ogg";
+            }
             IMonsterMove move = new MonsterMove(JSONMove.getString("name"),
                     JSONMove.getInt("damage"),
-                    monsterTypeHashMap.get(JSONMove.getString("type").toLowerCase()));
+                    monsterTypeHashMap.get(JSONMove.getString("type").toLowerCase()),
+                    soundPath);
             moves.put(JSONMove.getString("id"), move);
         }
         return moves;

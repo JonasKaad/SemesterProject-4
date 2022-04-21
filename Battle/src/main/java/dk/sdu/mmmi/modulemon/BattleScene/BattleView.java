@@ -33,7 +33,6 @@ public class BattleView implements IGameViewService, IBattleView {
     private IBattleSimulation _battleSimulation;
     private BattleScene _battleScene;
     private Music _battleMusic;
-    private Sound _attackSound;
     private Sound _winSound;
     private MenuState menuState = MenuState.DEFAULT;
     private Queue<BaseAnimation> blockingAnimations;
@@ -47,6 +46,14 @@ public class BattleView implements IGameViewService, IBattleView {
      * Creates the necessary variables used for custom fonts.
      */
     private SpriteBatch spriteBatch;
+
+    public Sound getAttackSound(IMonsterMove monsterMove){
+        Sound returnSound;
+
+        returnSound = Gdx.audio.newSound(new OSGiFileHandle(monsterMove.getSoundPath(), monsterMove.getClass()));
+
+        return returnSound;
+    }
 
     public BattleView() {
         System.out.println("BATTLE VIEW BEING CONSTRUCTED!!!");
@@ -63,7 +70,6 @@ public class BattleView implements IGameViewService, IBattleView {
      */
     public void startBattle(IBattleParticipant player, IBattleParticipant enemy, IBattleCallback callback) {
         _battleMusic = Gdx.audio.newMusic(new OSGiFileHandle("/music/battle_music.ogg", this.getClass()));
-        _attackSound = Gdx.audio.newSound(new OSGiFileHandle("/sounds/slam.ogg", this.getClass()));
         _winSound = Gdx.audio.newSound(new OSGiFileHandle("/sounds/you_won.ogg", this.getClass()));
         _battleSimulation.StartBattle(player, enemy);
         _battleCallback = callback;
@@ -126,7 +132,6 @@ public class BattleView implements IGameViewService, IBattleView {
 
     @Override
     public void update(GameData gameData, IGameStateManager gameStateManager) {
-        //spriteBatch.setProjectionMatrix(Game.cam.combined);
         if (!_isInitialized) {
             return;
         }
@@ -172,7 +177,7 @@ public class BattleView implements IGameViewService, IBattleView {
                 MoveBattleEvent event = (MoveBattleEvent) battleEvent;
                 if (event.getUsingParticipant().isPlayerControlled()) {
                     //Player attacked
-                    PlayerBattleAttackAnimation battleAnimation = new PlayerBattleAttackAnimation(_battleScene, _attackSound);
+                    PlayerBattleAttackAnimation battleAnimation = new PlayerBattleAttackAnimation(_battleScene, getAttackSound(event.getMove()));
                     battleAnimation.setOnEventDone(() -> {
                         addEmptyAnimation(1000, true);
                         _battleScene.setTextToDisplay("...");
@@ -182,7 +187,7 @@ public class BattleView implements IGameViewService, IBattleView {
                     _battleScene.setHealthIndicatorText(String.format("-%d HP", event.getDamage()));
                 } else {
                     //Enemy attacked
-                    EnemyBattleAttackAnimation battleAnimation = new EnemyBattleAttackAnimation(_battleScene, _attackSound);
+                    EnemyBattleAttackAnimation battleAnimation = new EnemyBattleAttackAnimation(_battleScene, getAttackSound(event.getMove()));
                     battleAnimation.start();
                     blockingAnimations.add(battleAnimation);
                     _battleScene.setHealthIndicatorText(String.format("-%d HP", event.getDamage()));

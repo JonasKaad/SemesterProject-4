@@ -4,4 +4,5 @@ public interface IMonsterMove {
     String getName();
     int getDamage();
     MonsterType getType();
+    String getSoundPath();
 }
