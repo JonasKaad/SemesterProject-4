@@ -55,7 +55,7 @@ public class BattleView implements IGameViewService, IBattleView {
         backgroundAnimations = new LinkedList<>();
         menuState = MenuState.DEFAULT;
 
-        defaultActions = new String[]{"Fight", "Switch", "Animate", "Style", "Quit"};
+        defaultActions = new String[]{"Fight", "Monsters", "Animate", "Style", "Quit"};
     }
 
     /**
@@ -267,7 +267,7 @@ public class BattleView implements IGameViewService, IBattleView {
                     this.selectedAction = 0;
                     this.menuState = MenuState.FIGHT;
                 }
-            } else if (selectedAction.equalsIgnoreCase("Switch")) {
+            } else if (selectedAction.equalsIgnoreCase("Monsters")) {
                 _battleScene.setTextToDisplay("Change your active monster");
                 if (keys.isPressed(GameKeys.ENTER)) {
                     this.selectedAction = 0;
@@ -364,7 +364,7 @@ public class BattleView implements IGameViewService, IBattleView {
                         _battleScene.setTextToDisplay("This monster is dead. It cannot battle");
                     }
                 }else{
-                    _battleScene.setTextToDisplay("This monster is already active.");
+                    _battleScene.setTextToDisplay("This monster is already in battle.");
                 }
             }
         }
