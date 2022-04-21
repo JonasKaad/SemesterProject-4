@@ -21,9 +21,10 @@ public class BattleMonsterProcessor implements IBattleMonsterProcessor {
 
     @Override
     public IMonster whichMonsterStarts(IMonster iMonster1, IMonster iMonster2) {
-        Monster monster1 = (Monster) iMonster1;
-        Monster monster2 = (Monster) iMonster2;
-        return monster1.getSpeed() >= monster2.getSpeed() ? monster1 : monster2;
+//        Monster monster1 = (Monster) iMonster1;
+//        Monster monster2 = (Monster) iMonster2;
+//        return monster1.getSpeed() >= monster2.getSpeed() ? monster1 : monster2;
+        return iMonster1; //Temp while we figure things out.
     }
 
     @Override
