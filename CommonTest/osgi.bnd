@@ -1,0 +1,2 @@
+Bundle-SymbolicName: CommonTest
+Export-Package: dk.sdu.mmmi.modulemon.CommonTest
