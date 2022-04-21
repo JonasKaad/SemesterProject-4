@@ -33,8 +33,8 @@ public class MonsterRegistryTest {
                 Arrays.asList(
                         new MonsterMove("Spit", 10, MonsterType.WATER),
                         new MonsterMove("Trample", 25, MonsterType.GRASS)),
-                "images/alpaca_1.png",
-                "images/alpaca_2.png",
+                "/images/alpaca_1.png",
+                "/images/alpaca_2.png",
                 0);
         monsters[1] = new Monster("Eel",
                 MonsterType.WATER,
@@ -42,9 +42,9 @@ public class MonsterRegistryTest {
                 20,
                 70,
                 70,
-                Arrays.asList(new MonsterMove("Zap", 20, MonsterType.LIGHTNING)),
-                "images/eel_1.png",
-                "images/eel_2.png",
+                Arrays.asList(new MonsterMove("Zap", 20, MonsterType.LIGHTNING, "/sounds/Zap.ogg")),
+                "/images/eel_1.png",
+                "/images/eel_2.png",
                 1);
         monster0 = monsters[0];
         monster1 = monsters[1];
@@ -100,6 +100,7 @@ public class MonsterRegistryTest {
         assertEquals(monster1.getMoves().get(0).getName(), movesToTest2.get(0).getName());
         assertEquals(monster1.getMoves().get(0).getDamage(), movesToTest2.get(0).getDamage());
         assertEquals(monster1.getMoves().get(0).getType(), movesToTest2.get(0).getType());
+        assertEquals(monster1.getMoves().get(0).getSoundPath(), movesToTest2.get(0).getSoundPath());
 
         // Monsters get cloned and are not the same
         assertNotEquals(registry.getMonster(0), registry.getMonster(0));
@@ -155,5 +156,6 @@ public class MonsterRegistryTest {
         assertEquals(monster1.getMoves().get(0).getName(), movesToTest2.get(0).getName());
         assertEquals(monster1.getMoves().get(0).getDamage(), movesToTest2.get(0).getDamage());
         assertEquals(monster1.getMoves().get(0).getType(), movesToTest2.get(0).getType());
+        assertEquals(monster1.getMoves().get(0).getSoundPath(), movesToTest2.get(0).getSoundPath());
     }
 }

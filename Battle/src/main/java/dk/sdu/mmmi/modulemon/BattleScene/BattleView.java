@@ -56,13 +56,8 @@ public class BattleView implements IGameViewService, IBattleView {
         Sound returnSound;
         System.out.println(monsterMove.getClass());
 
-        try {
-            String soundFile = "/sounds/" + monsterMove.getName() + ".ogg";
-            returnSound = Gdx.audio.newSound(new OSGiFileHandle(soundFile, monsterMove.getClass()));
-        } catch (GdxRuntimeException ex){
-            //ex.printStackTrace();
-            returnSound =  Gdx.audio.newSound(new OSGiFileHandle("/sounds/Tackle.ogg", this.getClass()));
-        }
+        returnSound = Gdx.audio.newSound(new OSGiFileHandle(monsterMove.getSoundPath(), monsterMove.getClass()));
+
         return returnSound;
     }
 
