@@ -1,7 +1,6 @@
-package dk.sdu.mmmi.modulemon.Battle;
+package dk.sdu.mmmi.modulemon.CommonTest;
 
 import com.badlogic.gdx.ApplicationListener;
-import com.badlogic.gdx.Graphics;
 import com.badlogic.gdx.backends.lwjgl.LwjglApplication;
 import com.badlogic.gdx.backends.lwjgl.LwjglApplicationConfiguration;
 import org.junit.jupiter.api.extension.ExtensionContext;

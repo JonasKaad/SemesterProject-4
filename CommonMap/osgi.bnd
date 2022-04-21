@@ -1,0 +1,2 @@
+Bundle-SymbolicName: CommonMap
+Export-Package: dk.sdu.mmmi.modulemon.CommonMap.*

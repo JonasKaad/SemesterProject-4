@@ -11,19 +11,14 @@ import dk.sdu.mmmi.modulemon.common.services.IEntityProcessingService;
 
 import static dk.sdu.mmmi.modulemon.common.data.GameKeys.*;
 
-/**
- *
- * @author jcs
- */
 public class PlayerControlSystem implements IEntityProcessingService {
 
     String current = "up";
 
     @Override
     public void process(GameData gameData, World world) {
-
-
-
+        if(gameData.isPaused())
+            return;
         for (Entity player : world.getEntities(Player.class)) {
             PositionPart positionPart = player.getPart(PositionPart.class);
             MovingPart movingPart = player.getPart(MovingPart.class);

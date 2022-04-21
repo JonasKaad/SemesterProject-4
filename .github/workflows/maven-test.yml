@@ -23,7 +23,7 @@ jobs:
           distribution: 'temurin'
           cache: maven
       - name: Build and Test with Maven
-        run: mvn --batch-mode --update-snapshots -Dtest=\!BattleViewTest -Dsurefire.failIfNoSpecifiedTests=false verify
+        run: mvn --batch-mode --update-snapshots -Dtest=\!BattleViewTest,\!PlayerTest -Dsurefire.failIfNoSpecifiedTests=false verify
       - name: Publish Test Report
         if: ${{ always() }}
         with:

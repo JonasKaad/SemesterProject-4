@@ -42,6 +42,7 @@
     <module>MonsterRegistry</module>
     <module>BundleController</module>
     <module>CommonMap</module>
+    <module>CommonTest</module>
   </modules>
 
   <build>

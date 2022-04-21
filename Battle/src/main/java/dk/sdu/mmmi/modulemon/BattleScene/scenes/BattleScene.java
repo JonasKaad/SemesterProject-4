@@ -77,7 +77,8 @@ public class BattleScene {
 
     public void draw(float dt, OrthographicCamera camera) {
         //DRAW THE IMAGES
-        spriteBatch.setProjectionMatrix(camera.combined);
+        if(camera != null)
+            spriteBatch.setProjectionMatrix(camera.combined);
         spriteBatch.begin();
 
         _backdropPosition.updatePosition(_backdrop);
@@ -113,7 +114,8 @@ public class BattleScene {
         shapeRenderer.setColor(Color.WHITE);
 
         Gdx.gl.glEnable(GL20.GL_BLEND); //Alows for opacity
-        shapeRenderer.setProjectionMatrix(camera.combined);
+        if(camera != null)
+            shapeRenderer.setProjectionMatrix(camera.combined);
         shapeRenderer.begin(ShapeRenderer.ShapeType.Filled);
 
         //HP Box

@@ -3,6 +3,19 @@ package dk.sdu.mmmi.modulemon.Monster;
 import dk.sdu.mmmi.modulemon.CommonBattle.IBattleMonsterProcessor;
 import dk.sdu.mmmi.modulemon.CommonMonster.IMonster;
 import dk.sdu.mmmi.modulemon.CommonMonster.IMonsterMove;
+import dk.sdu.mmmi.modulemon.CommonMonster.MonsterType;
+
+import java.util.HashMap;
+import java.util.Map;
+
+/*
+    FIRE,
+    WATER,
+    GRASS,
+    AIR,
+    EARTH,
+    LIGHTNING
+ */
 
 public class BattleMonsterProcessor implements IBattleMonsterProcessor {
 
@@ -21,9 +34,61 @@ public class BattleMonsterProcessor implements IBattleMonsterProcessor {
         float sourceAttack = (float) source.getAttack();
         float targetDefence = (float) target.getDefence();
 
-        int damage = Math.round(moveDamage*(sourceAttack/targetDefence));
+        int damage = Math.round(moveDamage*(sourceAttack/targetDefence)*calculateTypeAdvantage(move.getType(), target.getMonsterType()));
 
         return damage;
+    }
+
+    public float calculateTypeAdvantage(MonsterType source, MonsterType target) {
+        switch (source) {
+            case FIRE:
+                switch (target) {
+                    case FIRE: return 0.5f;
+                    case WATER: return 0.5f;
+                    case GRASS: return 2;
+                    default: return 1;
+                }
+            case AIR:
+                switch (target) {
+                    case GRASS: return 2;
+                    case LIGHTNING: return 0.5f;
+                    default: return 1;
+                }
+            case EARTH:
+                switch (target) {
+                    case AIR: return 0;
+                    case FIRE: return 2;
+                    case GRASS: return 0.5f;
+                    case LIGHTNING: return 2;
+                    default: return 1;
+                }
+            case GRASS:
+                switch (target) {
+                    case AIR: return 0.5f;
+                    case EARTH: return 2;
+                    case FIRE: return 0.5f;
+                    case GRASS: return 0.5f;
+                    default: return 1;
+                }
+            case WATER:
+                switch (target) {
+                    case EARTH: return 2;
+                    case FIRE: return 2;
+                    case WATER: return 0.5f;
+                    case GRASS: return 0.5f;
+                    default: return 1;
+                }
+            case LIGHTNING:
+                switch (target) {
+                    case AIR: return 2;
+                    case EARTH: return 0;
+                    case WATER: return 2;
+                    case GRASS: return 0.5f;
+                    case LIGHTNING: return 0.5f;
+                    default: return 1;
+                }
+            default: return 1;
+        }
     }
 
 }
