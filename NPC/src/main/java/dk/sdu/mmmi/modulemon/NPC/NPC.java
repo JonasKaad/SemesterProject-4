@@ -59,7 +59,7 @@ public class NPC extends Entity implements INPC {
 
     @Override
     public void interact() {
-        
+        System.out.println("Interact");
     }
     
 }

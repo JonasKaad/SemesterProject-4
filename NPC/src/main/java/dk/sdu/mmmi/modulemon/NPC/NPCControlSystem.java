@@ -27,6 +27,7 @@ public class NPCControlSystem implements IEntityProcessingService{
                 MovingPart movingPart = npc.getPart(MovingPart.class);
                 SpritePart spritePart = npc.getPart(SpritePart.class);
                 AIControlPart controlPart = npc.getPart(AIControlPart.class);
+                InteractPart interactPart = npc.getPart(InteractPart.class);
                 
                 movingPart.setLeft(controlPart.goLeft());
                 movingPart.setRight(controlPart.goRight());
@@ -51,7 +52,11 @@ public class NPCControlSystem implements IEntityProcessingService{
                 positionPart.process(gameData, npc);
                 spritePart.process(gameData, npc);
                 controlPart.process(gameData, npc);
-
+                interactPart.process(gameData, npc);
+                
+                if (interactPart.isInteract()) {
+                    System.out.println("Interacted when it should");
+                } 
 
                 updateShape(npc);
         }
