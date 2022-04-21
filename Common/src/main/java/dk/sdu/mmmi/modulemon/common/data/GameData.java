@@ -15,6 +15,7 @@ public class GameData {
     private final GameKeys keys = new GameKeys();
     private List<Event> events = new CopyOnWriteArrayList<Event>();
     private OrthographicCamera cam;
+    private boolean isPaused;
 
     public void addEvent(Event e) {
         events.add(e);
@@ -77,5 +78,13 @@ public class GameData {
         }
 
         return r;
+    }
+
+    public boolean isPaused() {
+        return isPaused;
+    }
+
+    public void setPaused(boolean paused) {
+        isPaused = paused;
     }
 }

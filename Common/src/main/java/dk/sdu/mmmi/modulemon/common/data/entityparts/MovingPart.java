@@ -18,7 +18,7 @@ public class MovingPart extends BaseAnimation implements EntityPart {
     private boolean left, right, up, down;
     private float movingTimer = 0;
     private float animationTimer;
-    private Vector2 newPosition = new Vector2(3016,1984);
+    private Vector2 newPosition = new Vector2();
     private static IMapView mapView;
 
 
@@ -44,7 +44,7 @@ public class MovingPart extends BaseAnimation implements EntityPart {
     }
 
     public void process(GameData gameData, Entity entity) {
-        if(mapView.isPaused()) return;
+        if(gameData.isPaused()) return;
         PositionPart positionPart = entity.getPart(PositionPart.class);
         float x = positionPart.getX();
         float start_x = positionPart.getX();
@@ -59,6 +59,7 @@ public class MovingPart extends BaseAnimation implements EntityPart {
 
 
         if(movingTimer <= 0) {
+            newPosition.set(x,y);
             if (left) {
 
                 x = x - pixels;

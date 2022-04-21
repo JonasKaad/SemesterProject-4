@@ -25,7 +25,7 @@ public class PlayerPlugin implements IGamePluginService {
 
     private Entity createPlayer(GameData gameData) {
 
-        float x =  3016;
+        float x =  3014;
         float y =  1984;
 
         Entity player = new Player();
