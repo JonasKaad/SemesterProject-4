@@ -62,7 +62,7 @@ public class BattleView implements IGameViewService, IBattleView {
         backgroundAnimations = new LinkedList<>();
         menuState = MenuState.DEFAULT;
 
-        defaultActions = new String[]{"Fight", "Switch", "Animate", "Style", "Quit"};
+        defaultActions = new String[]{"Fight", "Monsters", "Animate", "Style", "Quit"};
     }
 
     /**
@@ -96,8 +96,8 @@ public class BattleView implements IGameViewService, IBattleView {
         handleBattleEnd(new VictoryBattleEvent("The battle has ended prematurely", _battleSimulation.getState().getPlayer()));
     }
 
-    public void handleBattleEnd(VictoryBattleEvent victoryBattleEvent){
-        if(_battleCallback != null){
+    public void handleBattleEnd(VictoryBattleEvent victoryBattleEvent) {
+        if (_battleCallback != null) {
             _battleCallback.onBattleEnd(new BattleResult(victoryBattleEvent.getWinner(), _battleSimulation.getState().getPlayer(), _battleSimulation.getState().getEnemy()));
         }
     }
@@ -112,7 +112,7 @@ public class BattleView implements IGameViewService, IBattleView {
 
         _isInitialized = true;
         //Temp
-        if(_battleSimulation != null)
+        if (_battleSimulation != null)
             startBattle(BattleParticipantMocks.getPlayer(), BattleParticipantMocks.getOpponent(), null);
 
     }
@@ -151,7 +151,7 @@ public class BattleView implements IGameViewService, IBattleView {
             }
 
             BaseAnimation currentAnimation = blockingAnimations.peek();
-            if(!currentAnimation.isStarted()){
+            if (!currentAnimation.isStarted()) {
                 currentAnimation.start();
             }
 
@@ -235,7 +235,7 @@ public class BattleView implements IGameViewService, IBattleView {
         _battleScene.setGameWidth(gameData.getDisplayWidth());
 
         //Update information
-        if(_battleSimulation != null) {
+        if (_battleSimulation != null) {
             IMonster playerActiveMonster = _battleSimulation.getState().getPlayer().getActiveMonster();
             _battleScene.setPlayerSprite(playerActiveMonster.getBackSprite(), playerActiveMonster.getClass());
             _battleScene.setPlayerMonsterName(playerActiveMonster.getName());
@@ -245,7 +245,7 @@ public class BattleView implements IGameViewService, IBattleView {
             _battleScene.setEnemySprite(enemyActiveMonster.getFrontSprite(), enemyActiveMonster.getClass());
             _battleScene.setEnemyMonsterName(enemyActiveMonster.getName());
             _battleScene.setEnemyHP(Integer.toString(enemyActiveMonster.getHitPoints()));
-         }
+        }
 
         _battleScene.setSelectedActionIndex(selectedAction);
         _battleScene.draw(gameData.getDelta(), gameData.getCamera());
@@ -269,30 +269,31 @@ public class BattleView implements IGameViewService, IBattleView {
             if (selectedAction.equalsIgnoreCase("Fight")) {
                 _battleScene.setTextToDisplay("Choose a move to damage your opponent");
                 if (keys.isPressed(GameKeys.ENTER)) {
+                    this.selectedAction = 0;
                     this.menuState = MenuState.FIGHT;
                 }
-            } else if (selectedAction.equalsIgnoreCase("Switch")) {
-                _battleScene.setTextToDisplay("[Not implemented] Change your active monster");
+            } else if (selectedAction.equalsIgnoreCase("Monsters")) {
+                _battleScene.setTextToDisplay("Change your active monster");
                 if (keys.isPressed(GameKeys.ENTER)) {
-                    System.out.println("Switching monster isn't implemented yet");
+                    this.selectedAction = 0;
+                    this.menuState = MenuState.SWITCH;
                 }
             } else if (selectedAction.equalsIgnoreCase("Animate")) {
                 _battleScene.setTextToDisplay("Show a fancy pancy battle-animation");
                 if (keys.isPressed(GameKeys.ENTER)) {
-                    System.out.println("Switching monster isn't implemented yet");
                     BaseAnimation openingAnimation = new BattleSceneOpenAnimation(_battleScene);
                     openingAnimation.start();
                     blockingAnimations.add(openingAnimation);
                 }
-            }else if(selectedAction.equalsIgnoreCase("Style")){
+            } else if (selectedAction.equalsIgnoreCase("Style")) {
                 _battleScene.setTextToDisplay("Change box-styles");
-                if(keys.isPressed(GameKeys.ENTER)){
-                    if(_battleScene.getPlayerBoxRect() instanceof PersonaRectangle) {
+                if (keys.isPressed(GameKeys.ENTER)) {
+                    if (_battleScene.getPlayerBoxRect() instanceof PersonaRectangle) {
                         _battleScene.setPlayerBoxRectStyle(Rectangle.class);
                         _battleScene.setEnemyBoxRectStyle(Rectangle.class);
                         _battleScene.setActionBoxRectStyle(Rectangle.class);
                         _battleScene.setTextBoxRectStyle(Rectangle.class);
-                    }else {
+                    } else {
                         _battleScene.setPlayerBoxRectStyle(PersonaRectangle.class);
                         _battleScene.setEnemyBoxRectStyle(PersonaRectangle.class);
                         _battleScene.setActionBoxRectStyle(PersonaRectangle.class);
@@ -332,6 +333,43 @@ public class BattleView implements IGameViewService, IBattleView {
                     _battleSimulation.doMove(_battleSimulation.getState().getPlayer(), move);
                     this.menuState = MenuState.DEFAULT;
                     this.selectedAction = 0;
+                }
+            }
+        } else if (this.menuState == MenuState.SWITCH) {
+            _battleScene.setActionTitle("Your monsters:");
+            IBattleParticipant player = _battleSimulation.getState().getPlayer();
+            Object[] monsters = new Object[player.getMonsterTeam().size() + 1];
+            monsters[monsters.length - 1] = "Cancel";
+
+            for(int i = 0; i < player.getMonsterTeam().size(); i++){
+                monsters[i] = player.getMonsterTeam().get(i);
+            }
+            _battleScene.setActions(monsters);
+
+            //Get selected monster
+            Object selectedAction = monsters[this.selectedAction % monsters.length];
+            if (selectedAction instanceof String) {
+                _battleScene.setTextToDisplay("Go back");
+                if (keys.isPressed(GameKeys.ENTER)) {
+                    this.menuState = MenuState.DEFAULT;
+                    this.selectedAction = 0;
+                }
+            } else if (selectedAction instanceof IMonster) {
+                IMonster monster = ((IMonster) selectedAction);
+                if(!monster.equals(player.getActiveMonster())) {
+                    if(monster.getHitPoints() > 0) {
+                        _battleScene.setTextToDisplay(String.format("Switch to '%s'? ", monster.getName()));
+
+                        if (keys.isPressed(GameKeys.ENTER)) {
+                            _battleSimulation.switchMonster(player, monster);
+                            this.menuState = MenuState.DEFAULT;
+                            this.selectedAction = 0;
+                        }
+                    }else{
+                        _battleScene.setTextToDisplay("This monster is dead. It cannot battle");
+                    }
+                }else{
+                    _battleScene.setTextToDisplay("This monster is already in battle.");
                 }
             }
         }
