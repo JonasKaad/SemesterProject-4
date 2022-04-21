@@ -22,9 +22,9 @@ public class BattleParticipantMocks {
         List<IMonsterMove> charmanderMoves = new ArrayList<>();
 
         eelMoves.add(new MockMonsterMove("Tackle", MonsterType.AIR, 5));
-        eelMoves.add(new MockMonsterMove("Zap", MonsterType.LIGHTNING, 10));
-        eelMoves.add(new MockMonsterMove("Egg Bomb", MonsterType.GRASS, 20));
-        eelMoves.add(new MockMonsterMove("Water Blast", MonsterType.WATER, 30));
+        eelMoves.add(new MockMonsterMove("Zap", MonsterType.LIGHTNING, 10, "/sounds/Zap.ogg"));
+        eelMoves.add(new MockMonsterMove("Egg Bomb", MonsterType.GRASS, 20, "/sounds/Egg Bomb.ogg"));
+        eelMoves.add(new MockMonsterMove("Water Blast", MonsterType.WATER, 30, "/sounds/Water Blast.ogg"));
         monsters.add(new MockMonster(
                 "Eel",
                 30,
@@ -38,10 +38,10 @@ public class BattleParticipantMocks {
         ));
 
 
-        alpacaMoves.add(new MockMonsterMove("Spit", MonsterType.WATER, 10));
-        alpacaMoves.add(new MockMonsterMove("Trample", MonsterType.EARTH, 15));
-        alpacaMoves.add(new MockMonsterMove("Horn Blast", MonsterType.EARTH, 25));
-        alpacaMoves.add(new MockMonsterMove("Fire Breath", MonsterType.FIRE, 50));
+        alpacaMoves.add(new MockMonsterMove("Spit", MonsterType.WATER, 10, "/sounds/Spit.ogg"));
+        alpacaMoves.add(new MockMonsterMove("Trample", MonsterType.EARTH, 15, "/sounds/Trample.ogg"));
+        alpacaMoves.add(new MockMonsterMove("Horn Blast", MonsterType.EARTH, 25, "/sounds/Horn Blast.ogg"));
+        alpacaMoves.add(new MockMonsterMove("Fire Breath", MonsterType.FIRE, 50, "/sounds/Fire Breath.ogg"));
         monsters.add(new MockMonster(
                 "Alpaca",
                 40,
@@ -99,10 +99,10 @@ public class BattleParticipantMocks {
 
 
 
-        alpacaMoves.add(new MockMonsterMove("Spit", MonsterType.WATER, 10));
-        alpacaMoves.add(new MockMonsterMove("Trample", MonsterType.EARTH, 15));
-        alpacaMoves.add(new MockMonsterMove("Horn Blast", MonsterType.EARTH, 25));
-        alpacaMoves.add(new MockMonsterMove("Fire Breath", MonsterType.FIRE, 50));
+        alpacaMoves.add(new MockMonsterMove("Spit", MonsterType.WATER, 10, "/sounds/Spit.ogg"));
+        alpacaMoves.add(new MockMonsterMove("Trample", MonsterType.EARTH, 15, "/sounds/Trample.ogg"));
+        alpacaMoves.add(new MockMonsterMove("Horn Blast", MonsterType.EARTH, 25, "/sounds/Horn Blast.ogg"));
+        alpacaMoves.add(new MockMonsterMove("Fire Breath", MonsterType.FIRE, 50, "/sounds/Fire Breath.ogg"));
         monsters.add(new MockMonster(
                 "Alpaca",
                 40,
@@ -116,8 +116,8 @@ public class BattleParticipantMocks {
         ));
 
         eelMoves.add(new MockMonsterMove("Tackle", MonsterType.AIR, 5));
-        eelMoves.add(new MockMonsterMove("Zap", MonsterType.LIGHTNING, 10));
-        eelMoves.add(new MockMonsterMove("Water Blast", MonsterType.WATER, 30));
+        eelMoves.add(new MockMonsterMove("Zap", MonsterType.LIGHTNING, 10, "/sounds/Zap.ogg"));
+        eelMoves.add(new MockMonsterMove("Water Blast", MonsterType.WATER, 30, "/sounds/Water Blast.ogg"));
         monsters.add(new MockMonster(
                 "Eel",
                 10,

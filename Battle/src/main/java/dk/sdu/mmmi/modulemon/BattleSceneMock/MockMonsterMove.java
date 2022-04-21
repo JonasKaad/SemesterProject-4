@@ -8,11 +8,20 @@ public class MockMonsterMove implements IMonsterMove {
     private String _name;
     private MonsterType _type;
     private int _damage;
+    private String soundPath;
+
+    public MockMonsterMove(String _name, MonsterType _type, int _damage, String _soundPath) {
+        this._name = _name;
+        this._type = _type;
+        this._damage = _damage;
+        this.soundPath = _soundPath;
+    }
 
     public MockMonsterMove(String _name, MonsterType _type, int _damage) {
         this._name = _name;
         this._type = _type;
         this._damage = _damage;
+        this.soundPath = "/sounds/Tackle.ogg";
     }
 
     @Override
@@ -38,5 +47,10 @@ public class MockMonsterMove implements IMonsterMove {
     @Override
     public MonsterType getType() {
         return _type;
+    }
+
+    @Override
+    public String getSoundPath() {
+        return soundPath;
     }
 }

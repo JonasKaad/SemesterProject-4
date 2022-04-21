@@ -27,7 +27,7 @@ class PlayerTest {
     void setUp() {
         gameData = new GameData();
         world = new World();
-        gameData.setDelta(1);
+        gameData.setDelta(10);
         gameData.setDisplayHeight(100);
         gameData.setDisplayWidth(100);
     }
@@ -44,7 +44,6 @@ class PlayerTest {
     @Test
     void playerShouldMove() {
         PlayerPlugin playerPlugin = new PlayerPlugin();
-
         playerPlugin.start(gameData, world);
         Entity player = world.getEntities(Player.class).get(0); //There's only one entity
         MovingPart movPart = player.getPart(MovingPart.class);
@@ -56,6 +55,7 @@ class PlayerTest {
         when(map.getMapRight()).thenReturn(50000f);
         when(map.getMapBottom()).thenReturn(50000f);
         movPart.setMapView(map);
+      
         float beforeMoving = posPart.getY();
 
 
