@@ -114,6 +114,7 @@ public class BattleSimulation implements IBattleSimulation {
                     };
                 } else {
                     nextEvent = new VictoryBattleEvent(opposingParticipantTitle + "s monster fainted... " + participantTitle + " won the battle.", battleParticipant);
+                    onNextEvent = () -> {};
                 }
             }
         };
