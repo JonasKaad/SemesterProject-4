@@ -89,4 +89,9 @@ public class MockMonster implements IMonster {
     public int getID() {
         return 0;
     }
+
+    @Override
+    public String toString() {
+        return this.getName();
+    }
 }
