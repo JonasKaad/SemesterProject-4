@@ -5,7 +5,6 @@ import com.badlogic.gdx.audio.Music;
 import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
-import com.badlogic.gdx.utils.GdxRuntimeException;
 import dk.sdu.mmmi.modulemon.BattleScene.animations.*;
 import dk.sdu.mmmi.modulemon.BattleScene.scenes.BattleScene;
 import dk.sdu.mmmi.modulemon.BattleSceneMock.BattleParticipantMocks;
@@ -23,7 +22,6 @@ import dk.sdu.mmmi.modulemon.common.drawing.Rectangle;
 import dk.sdu.mmmi.modulemon.common.drawing.TextUtils;
 import dk.sdu.mmmi.modulemon.common.services.IGameViewService;
 
-import java.io.FileNotFoundException;
 import java.util.LinkedList;
 import java.util.Queue;
 
@@ -35,8 +33,6 @@ public class BattleView implements IGameViewService, IBattleView {
     private IBattleSimulation _battleSimulation;
     private BattleScene _battleScene;
     private Music _battleMusic;
-    private Sound _attackSound;
-    private Sound _enemy_attackSound;
     private Sound _winSound;
     private MenuState menuState = MenuState.DEFAULT;
     private Queue<BaseAnimation> blockingAnimations;
@@ -51,10 +47,8 @@ public class BattleView implements IGameViewService, IBattleView {
      */
     private SpriteBatch spriteBatch;
 
-    public Sound get_attackSound(IMonsterMove monsterMove){
-        //return Gdx.audio.newSound(new OSGiFileHandle("/sounds/Zap.ogg", this.getClass()));
+    public Sound getAttackSound(IMonsterMove monsterMove){
         Sound returnSound;
-        System.out.println(monsterMove.getClass());
 
         returnSound = Gdx.audio.newSound(new OSGiFileHandle(monsterMove.getSoundPath(), monsterMove.getClass()));
 
@@ -76,10 +70,6 @@ public class BattleView implements IGameViewService, IBattleView {
      */
     public void startBattle(IBattleParticipant player, IBattleParticipant enemy, IBattleCallback callback) {
         _battleMusic = Gdx.audio.newMusic(new OSGiFileHandle("/music/battle_music.ogg", this.getClass()));
-        //_attackSound = Gdx.audio.newSound(new OSGiFileHandle("/sounds/Tackle.ogg", this.getClass()));
-        //_attackSound = Gdx.audio.newSound(new OSGiFileHandle("/sounds/Zap.ogg", this.getClass()));
-        //_attackSound = get_attackSound("ye");
-        _enemy_attackSound = Gdx.audio.newSound(new OSGiFileHandle("/sounds/Tackle.ogg", this.getClass()));
         _winSound = Gdx.audio.newSound(new OSGiFileHandle("/sounds/you_won.ogg", this.getClass()));
         _battleSimulation.StartBattle(player, enemy);
         _battleCallback = callback;
@@ -142,7 +132,6 @@ public class BattleView implements IGameViewService, IBattleView {
 
     @Override
     public void update(GameData gameData, IGameStateManager gameStateManager) {
-        //spriteBatch.setProjectionMatrix(Game.cam.combined);
         if (!_isInitialized) {
             return;
         }
@@ -188,19 +177,17 @@ public class BattleView implements IGameViewService, IBattleView {
                 MoveBattleEvent event = (MoveBattleEvent) battleEvent;
                 if (event.getUsingParticipant().isPlayerControlled()) {
                     //Player attacked
-                    //PlayerBattleAttackAnimation battleAnimation = new PlayerBattleAttackAnimation(_battleScene, _attackSound);
-                    PlayerBattleAttackAnimation battleAnimation = new PlayerBattleAttackAnimation(_battleScene, get_attackSound(event.getMove()));
+                    PlayerBattleAttackAnimation battleAnimation = new PlayerBattleAttackAnimation(_battleScene, getAttackSound(event.getMove()));
                     battleAnimation.setOnEventDone(() -> {
                         addEmptyAnimation(1000, true);
                         _battleScene.setTextToDisplay("...");
                     });
-                    System.out.println(event.getMove().getName());
                     battleAnimation.start();
                     blockingAnimations.add(battleAnimation);
                     _battleScene.setHealthIndicatorText(String.format("-%d HP", event.getDamage()));
                 } else {
                     //Enemy attacked
-                    EnemyBattleAttackAnimation battleAnimation = new EnemyBattleAttackAnimation(_battleScene, get_attackSound(event.getMove()));
+                    EnemyBattleAttackAnimation battleAnimation = new EnemyBattleAttackAnimation(_battleScene, getAttackSound(event.getMove()));
                     battleAnimation.start();
                     blockingAnimations.add(battleAnimation);
                     _battleScene.setHealthIndicatorText(String.format("-%d HP", event.getDamage()));
