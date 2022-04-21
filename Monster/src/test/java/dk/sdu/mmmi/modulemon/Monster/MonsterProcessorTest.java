@@ -4,6 +4,7 @@ import dk.sdu.mmmi.modulemon.CommonMonster.IMonster;
 import dk.sdu.mmmi.modulemon.CommonMonster.MonsterType;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.Disabled;
 import static org.junit.jupiter.api.Assertions.*;
 
 import java.util.Arrays;
@@ -16,7 +17,7 @@ public class MonsterProcessorTest {
 
     }
 
-
+    @Disabled("This test needs to be updated for the new stats-system as the Speed stat no longer exists.")
     @Test
     void fasterMonsterShouldStart() {
         BattleMonsterProcessor processor = new BattleMonsterProcessor();
