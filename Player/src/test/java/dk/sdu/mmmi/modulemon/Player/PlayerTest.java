@@ -2,6 +2,7 @@ package dk.sdu.mmmi.modulemon.Player;
 
 import com.badlogic.gdx.graphics.Pixmap;
 import com.badlogic.gdx.graphics.g2d.Gdx2DPixmap;
+import dk.sdu.mmmi.modulemon.CommonMap.IMapView;
 import dk.sdu.mmmi.modulemon.CommonTest.GdxTestIntercepter;
 import dk.sdu.mmmi.modulemon.common.data.Entity;
 import dk.sdu.mmmi.modulemon.common.data.GameData;
@@ -48,7 +49,13 @@ class PlayerTest {
         Entity player = world.getEntities(Player.class).get(0); //There's only one entity
         MovingPart movPart = player.getPart(MovingPart.class);
         PositionPart posPart = player.getPart(PositionPart.class);
-
+        IMapView map = mock(IMapView.class);
+        when(map.isCellBlocked(anyFloat(), anyFloat())).thenReturn(false);
+        when(map.getMapTop()).thenReturn(50000f);
+        when(map.getMapLeft()).thenReturn(50000f);
+        when(map.getMapRight()).thenReturn(50000f);
+        when(map.getMapBottom()).thenReturn(50000f);
+        movPart.setMapView(map);
         float beforeMoving = posPart.getY();
 
 
