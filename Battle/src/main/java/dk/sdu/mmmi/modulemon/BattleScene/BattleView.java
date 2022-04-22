@@ -25,6 +25,8 @@ import dk.sdu.mmmi.modulemon.common.drawing.Rectangle;
 import dk.sdu.mmmi.modulemon.common.drawing.TextUtils;
 import dk.sdu.mmmi.modulemon.common.services.IGameViewService;
 
+import java.io.IOException;
+import java.net.URISyntaxException;
 import java.util.LinkedList;
 import java.util.Queue;
 
@@ -115,8 +117,15 @@ public class BattleView implements IGameViewService, IBattleView {
 
         _isInitialized = true;
         //Temp
-        if (_battleSimulation != null)
-            startBattle(BattleParticipantMocks.getPlayer(), BattleParticipantMocks.getOpponent(), null);
+        if (_battleSimulation != null) {
+            try {
+                startBattle(BattleParticipantMocks.getPlayer(), BattleParticipantMocks.getOpponent(), null);
+            } catch (IOException e) {
+                e.printStackTrace();
+            } catch (URISyntaxException e) {
+                e.printStackTrace();
+            }
+        }
 
     }
 
