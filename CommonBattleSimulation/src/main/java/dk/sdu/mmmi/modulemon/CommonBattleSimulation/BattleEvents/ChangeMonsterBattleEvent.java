@@ -1,4 +1,4 @@
-package dk.sdu.mmmi.modulemon.CommonBattle.BattleEvents;
+package dk.sdu.mmmi.modulemon.CommonBattleSimulation.BattleEvents;
 
 import dk.sdu.mmmi.modulemon.CommonBattle.IBattleParticipant;
 import dk.sdu.mmmi.modulemon.CommonMonster.IMonster;

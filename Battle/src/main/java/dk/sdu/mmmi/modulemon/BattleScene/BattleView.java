@@ -9,14 +9,17 @@ import dk.sdu.mmmi.modulemon.BattleScene.animations.*;
 import dk.sdu.mmmi.modulemon.BattleScene.scenes.BattleScene;
 import dk.sdu.mmmi.modulemon.BattleSceneMock.BattleParticipantMocks;
 import dk.sdu.mmmi.modulemon.CommonBattle.*;
-import dk.sdu.mmmi.modulemon.CommonBattle.BattleEvents.*;
+import dk.sdu.mmmi.modulemon.CommonBattleClient.IBattleCallback;
+import dk.sdu.mmmi.modulemon.CommonBattleClient.IBattleView;
+import dk.sdu.mmmi.modulemon.CommonBattleSimulation.*;
+import dk.sdu.mmmi.modulemon.CommonBattleSimulation.BattleEvents.*;
 import dk.sdu.mmmi.modulemon.CommonMonster.IMonster;
 import dk.sdu.mmmi.modulemon.CommonMonster.IMonsterMove;
 import dk.sdu.mmmi.modulemon.common.animations.BaseAnimation;
 import dk.sdu.mmmi.modulemon.common.data.GameData;
 import dk.sdu.mmmi.modulemon.common.data.GameKeys;
 import dk.sdu.mmmi.modulemon.common.data.IGameStateManager;
-import dk.sdu.mmmi.modulemon.common.drawing.OSGiFileHandle;
+import dk.sdu.mmmi.modulemon.common.OSGiFileHandle;
 import dk.sdu.mmmi.modulemon.common.drawing.PersonaRectangle;
 import dk.sdu.mmmi.modulemon.common.drawing.Rectangle;
 import dk.sdu.mmmi.modulemon.common.drawing.TextUtils;
@@ -119,6 +122,7 @@ public class BattleView implements IGameViewService, IBattleView {
 
     //OSGi dependency injection
     public void setBattleSimulation(IBattleSimulation battleSimulation) {
+        System.out.println("BattleSimulation set in BattleView");
         this._battleSimulation = battleSimulation;
     }
 

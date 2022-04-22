@@ -1,7 +1,7 @@
 package dk.sdu.mmmi.modulemon.BattleScene;
 
 import dk.sdu.mmmi.modulemon.CommonBattle.IBattleParticipant;
-import dk.sdu.mmmi.modulemon.CommonBattle.IBattleResult;
+import dk.sdu.mmmi.modulemon.CommonBattleClient.IBattleResult;
 
 public class BattleResult implements IBattleResult {
     private IBattleParticipant winner;

@@ -1,7 +1,7 @@
 package dk.sdu.mmmi.modulemon.BattleSimulation;
 
 import dk.sdu.mmmi.modulemon.CommonBattle.IBattleParticipant;
-import dk.sdu.mmmi.modulemon.CommonBattle.IBattleState;
+import dk.sdu.mmmi.modulemon.CommonBattleSimulation.IBattleState;
 
 public class BattleState implements IBattleState {
 

@@ -1,7 +1,4 @@
-package dk.sdu.mmmi.modulemon;
-
-import com.badlogic.gdx.files.FileHandle;
-import dk.sdu.mmmi.modulemon.common.drawing.OSGiFileHandle;
+package dk.sdu.mmmi.modulemon.common;
 
 import java.io.ByteArrayOutputStream;
 import java.io.InputStream;
