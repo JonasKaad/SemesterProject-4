@@ -45,10 +45,6 @@ public class BattleSimulationTest {
 
         when(playerMonster.getMoves()).thenReturn(moveList);
         when(enemyMonster.getMoves()).thenReturn(moveList);
-        when(playerMonster.getAttack()).thenReturn(10);
-        when(enemyMonster.getAttack()).thenReturn(10);
-        when(playerMonster.getDefence()).thenReturn(10);
-        when(enemyMonster.getDefence()).thenReturn(10);
         when(playerMonster.getHitPoints()).thenReturn(50);
         when(enemyMonster.getHitPoints()).thenReturn(50);
 
@@ -60,7 +56,6 @@ public class BattleSimulationTest {
         enemy = mock(IBattleParticipant.class);
         when(player.isPlayerControlled()).thenReturn(true);
         when(enemy.isPlayerControlled()).thenReturn(false);
-
         when(player.getActiveMonster()).thenReturn(playerMonster);
         when(enemy.getActiveMonster()).thenReturn(enemyMonster);
     }
@@ -71,18 +66,12 @@ public class BattleSimulationTest {
         sim.setMonsterProcessor(new IBattleMonsterProcessor() {
             @Override
             public IMonster whichMonsterStarts(IMonster monster1, IMonster monster2) {
-                return monster1.getSpeed() >= monster2.getSpeed() ? monster1 : monster2;
+                return monster2;
             }
 
             @Override
             public int calculateDamage(IMonster source, IMonsterMove move, IMonster target) {
-                float moveDamage = (float) move.getDamage();
-                float sourceAttack = (float) source.getAttack();
-                float targetDefence = (float) target.getDefence();
-
-                int damage = Math.round(moveDamage*(sourceAttack/targetDefence));
-
-                return damage;
+                return move.getDamage();
             }
         });
 
@@ -118,28 +107,8 @@ public class BattleSimulationTest {
     }
 
     @Test
-    void playerShouldStartWhenSpeedsAreEqual() {
-        initMonsterMocks();
-        initBattleParticipantMocks();
-        BattleSimulation battleSimulation = startBattle();
-        IBattleEvent event = battleSimulation.getNextBattleEvent();
-        assertEquals("player starts the battle", event.getText());
-    }
-
-    @Test
-    void enemyShouldStartWhenHigherSpeed() {
-        initMonsterMocks();
-        when(enemyMonster.getSpeed()).thenReturn(60);
-        initBattleParticipantMocks();
-        BattleSimulation battleSimulation = startBattle();
-        IBattleEvent event = battleSimulation.getNextBattleEvent();
-        assertEquals("enemy starts the battle", event.getText());
-    }
-
-    @Test
     void firstTwoEventsShouldBeInfoAndMove() {
         initMonsterMocks();
-        when(enemyMonster.getSpeed()).thenReturn(60);
         initBattleParticipantMocks();
         BattleSimulation battleSimulation = startBattle();
         IBattleEvent event = battleSimulation.getNextBattleEvent();
@@ -154,15 +123,6 @@ public class BattleSimulationTest {
         initBattleParticipantMocks();
         BattleSimulation battleSimulation = startBattle();
         assertFalse(battleSimulation.getState().isPlayersTurn());
-    }
-
-    @Test
-    void shouldBePlayersTurn() {
-        initMonsterMocks();
-        initBattleParticipantMocks();
-        BattleSimulation battleSimulation = startBattle();
-        battleSimulation.getNextBattleEvent();
-        assertTrue(battleSimulation.getState().isPlayersTurn());
     }
 
     @Test
@@ -196,9 +156,7 @@ public class BattleSimulationTest {
     void playerMonsterShouldTakeDamage() {
         initMonsterMocks();
         playerMonster = spy(playerMonster);
-        when(enemyMonster.getSpeed()).thenReturn(60);
         when(playerMonster.getHitPoints()).thenReturn(50);
-        when(playerMonster.getDefence()).thenReturn(10);
         initBattleParticipantMocks();
         BattleSimulation battleSimulation = startBattle();
         while (!battleSimulation.getState().isPlayersTurn()) {
@@ -214,7 +172,6 @@ public class BattleSimulationTest {
         enemyMonster = spy(enemyMonster);
         when(enemyMonster.getMoves()).thenReturn(moveList);
         when(enemyMonster.getHitPoints()).thenReturn(50);
-        when(enemyMonster.getDefence()).thenReturn(10);
         initBattleParticipantMocks();
         BattleSimulation battleSimulation = startBattle();
         while (!battleSimulation.getState().isPlayersTurn()) {
@@ -228,7 +185,6 @@ public class BattleSimulationTest {
     @Test
     void shouldNotBeAbleToDoMoveWhenNotTheirTurn() {
         initMonsterMocks();
-        when(enemyMonster.getSpeed()).thenReturn(60);
         initBattleParticipantMocks();
         BattleSimulation battleSimulation = startBattle();
         assertThrows(IllegalArgumentException.class,
@@ -259,7 +215,6 @@ public class BattleSimulationTest {
     @Test
     void shouldNotBeAbleToRunAwayWhenNotTheirTurn() {
         initMonsterMocks();
-        when(enemyMonster.getSpeed()).thenReturn(60);
         initBattleParticipantMocks();
         BattleSimulation battleSimulation = startBattle();
         assertThrows(IllegalArgumentException.class,
@@ -322,41 +277,6 @@ public class BattleSimulationTest {
     }
 
     @Test
-    void doubleAttackShouldDoubleDamage() {
-        initMonsterMocks();
-        enemyMonster = spy(enemyMonster);
-        when(enemyMonster.getMoves()).thenReturn(moveList);
-        when(enemyMonster.getHitPoints()).thenReturn(50);
-        when(enemyMonster.getDefence()).thenReturn(10);
-        when(playerMonster.getAttack()).thenReturn(20);
-        initBattleParticipantMocks();
-        BattleSimulation battleSimulation = startBattle();
-        while (!battleSimulation.getState().isPlayersTurn()) {
-            battleSimulation.getNextBattleEvent();
-        }
-        battleSimulation.doMove(player, player.getActiveMonster().getMoves().get(0));
-        battleSimulation.getNextBattleEvent();
-        verify(enemyMonster).setHitPoints(30);
-    }
-
-    @Test
-    void doubleDefenceShouldHalfDamage() {
-        initMonsterMocks();
-        enemyMonster = spy(enemyMonster);
-        when(enemyMonster.getMoves()).thenReturn(moveList);
-        when(enemyMonster.getHitPoints()).thenReturn(50);
-        when(enemyMonster.getDefence()).thenReturn(20);
-        initBattleParticipantMocks();
-        BattleSimulation battleSimulation = startBattle();
-        while (!battleSimulation.getState().isPlayersTurn()) {
-            battleSimulation.getNextBattleEvent();
-        }
-        battleSimulation.doMove(player, player.getActiveMonster().getMoves().get(0));
-        battleSimulation.getNextBattleEvent();
-        verify(enemyMonster).setHitPoints(45);
-    }
-
-    @Test
     void playerShouldWin() {
         initMonsterMocks();
         when(enemyMonster.getHitPoints()).thenReturn(10);
@@ -377,8 +297,6 @@ public class BattleSimulationTest {
     void enemyShouldWin() {
         initMonsterMocks();
         when(playerMonster.getHitPoints()).thenReturn(10);
-        when(playerMonster.getSpeed()).thenReturn(10);
-        when(enemyMonster.getSpeed()).thenReturn(15);
         initBattleParticipantMocks();
         BattleSimulation battleSimulation = startBattle();
 
@@ -397,8 +315,6 @@ public class BattleSimulationTest {
     void ChangesMonsterOnFaint() {
         initMonsterMocks();
         when(playerMonster.getHitPoints()).thenReturn(10);
-        when(playerMonster.getSpeed()).thenReturn(10);
-        when(enemyMonster.getSpeed()).thenReturn(15);
         initBattleParticipantMocks();
         player = spy(player);
 

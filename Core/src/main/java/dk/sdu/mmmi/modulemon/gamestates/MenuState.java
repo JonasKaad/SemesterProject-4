@@ -1,6 +1,7 @@
 package dk.sdu.mmmi.modulemon.gamestates;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.audio.Music;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
@@ -27,6 +28,7 @@ public class MenuState implements IGameViewService {
     private BitmapFont titleFont;
     private BitmapFont menuOptionsFont;
     private BitmapFont smallMenuFont;
+    private Music menuMusic;
 
     private Texture logo;
 
@@ -49,9 +51,13 @@ public class MenuState implements IGameViewService {
 
     @Override
     public void init(IGameStateManager gameStateManager) {
+        menuMusic = Gdx.audio.newMusic(new OSGiFileHandle("/music/menu.ogg", MenuState.class));
         // Instantiates the variables
         spriteBatch = new SpriteBatch();
         glyphLayout = new GlyphLayout();
+        menuMusic.play();
+        menuMusic.setVolume(0.8f);
+        menuMusic.setLooping(true);
 
         /*
           Sets up FontGenerator to enable us to use our own fonts.
@@ -208,7 +214,7 @@ public class MenuState implements IGameViewService {
 
     @Override
     public void dispose() {
-
+        menuMusic.stop();
     }
 
     private enum MenuStates {

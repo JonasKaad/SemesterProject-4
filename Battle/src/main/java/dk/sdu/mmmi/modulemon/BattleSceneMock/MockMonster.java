@@ -5,6 +5,7 @@ import dk.sdu.mmmi.modulemon.CommonMonster.IMonster;
 import dk.sdu.mmmi.modulemon.CommonMonster.IMonsterMove;
 import dk.sdu.mmmi.modulemon.CommonMonster.MonsterType;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class MockMonster implements IMonster {
@@ -45,17 +46,14 @@ public class MockMonster implements IMonster {
         this.hitpoints = hitPoint;
     }
 
-    @Override
     public int getAttack() {
         return this.attackStat;
     }
 
-    @Override
     public int getDefence() {
         return this.defenceStat;
     }
 
-    @Override
     public int getSpeed() {
         return this.speedStat;
     }
@@ -81,6 +79,15 @@ public class MockMonster implements IMonster {
     }
 
     @Override
+    public List<String> getStats() {
+        List<String> statList = new ArrayList<>();
+        statList.add("Defence: " + this.getDefence());
+        statList.add("Attack: " + this.getAttack());
+        statList.add("Speed: " + this.getSpeed());
+        return statList;
+    }
+
+    @Override
     public IMonster clone() {
         return null;
     }
@@ -88,5 +95,10 @@ public class MockMonster implements IMonster {
     @Override
     public int getID() {
         return 0;
+    }
+
+    @Override
+    public String toString() {
+        return this.getName();
     }
 }

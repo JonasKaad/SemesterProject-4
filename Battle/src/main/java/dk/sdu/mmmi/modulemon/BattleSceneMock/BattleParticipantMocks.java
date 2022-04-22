@@ -4,8 +4,12 @@ import dk.sdu.mmmi.modulemon.Battle.BattleParticipant;
 import dk.sdu.mmmi.modulemon.CommonBattle.IBattleParticipant;
 import dk.sdu.mmmi.modulemon.CommonMonster.IMonster;
 import dk.sdu.mmmi.modulemon.CommonMonster.IMonsterMove;
+import dk.sdu.mmmi.modulemon.CommonMonster.IMonsterRegistry;
 import dk.sdu.mmmi.modulemon.CommonMonster.MonsterType;
+import dk.sdu.mmmi.modulemon.Monster.MonsterRegistry;
 
+import java.io.IOException;
+import java.net.URISyntaxException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -14,7 +18,13 @@ import java.util.List;
  */
 public class BattleParticipantMocks {
 
-    public static IBattleParticipant getPlayer() {
+    public static IBattleParticipant getPlayer() throws IOException, URISyntaxException {
+        IMonsterRegistry monsterRegistry = new MonsterRegistry();
+        List<IMonster> monsters = new ArrayList<>();
+        monsters.add(monsterRegistry.getMonster(0));
+        monsters.add(monsterRegistry.getMonster(1));
+
+        /*
         List<IMonster> monsters = new ArrayList<>();
         List<IMonsterMove> eelMoves = new ArrayList<>();
         List<IMonsterMove> alpacaMoves = new ArrayList<>();
@@ -22,9 +32,9 @@ public class BattleParticipantMocks {
         List<IMonsterMove> charmanderMoves = new ArrayList<>();
 
         eelMoves.add(new MockMonsterMove("Tackle", MonsterType.AIR, 5));
-        eelMoves.add(new MockMonsterMove("Zap", MonsterType.LIGHTNING, 10));
-        eelMoves.add(new MockMonsterMove("Egg Bomb", MonsterType.GRASS, 20));
-        eelMoves.add(new MockMonsterMove("Water Blast", MonsterType.WATER, 30));
+        eelMoves.add(new MockMonsterMove("Zap", MonsterType.LIGHTNING, 10, "/sounds/Zap.ogg"));
+        eelMoves.add(new MockMonsterMove("Egg Bomb", MonsterType.GRASS, 20, "/sounds/Egg Bomb.ogg"));
+        eelMoves.add(new MockMonsterMove("Water Blast", MonsterType.WATER, 30, "/sounds/Water Blast.ogg"));
         monsters.add(new MockMonster(
                 "Eel",
                 30,
@@ -38,10 +48,10 @@ public class BattleParticipantMocks {
         ));
 
 
-        alpacaMoves.add(new MockMonsterMove("Spit", MonsterType.WATER, 10));
-        alpacaMoves.add(new MockMonsterMove("Trample", MonsterType.EARTH, 15));
-        alpacaMoves.add(new MockMonsterMove("Horn Blast", MonsterType.EARTH, 25));
-        alpacaMoves.add(new MockMonsterMove("Fire Breath", MonsterType.FIRE, 50));
+        alpacaMoves.add(new MockMonsterMove("Spit", MonsterType.WATER, 10, "/sounds/Spit.ogg"));
+        alpacaMoves.add(new MockMonsterMove("Trample", MonsterType.EARTH, 15, "/sounds/Trample.ogg"));
+        alpacaMoves.add(new MockMonsterMove("Horn Blast", MonsterType.EARTH, 25, "/sounds/Horn Blast.ogg"));
+        alpacaMoves.add(new MockMonsterMove("Fire Breath", MonsterType.FIRE, 50, "/sounds/Fire Breath.ogg"));
         monsters.add(new MockMonster(
                 "Alpaca",
                 40,
@@ -53,7 +63,7 @@ public class BattleParticipantMocks {
                 MonsterType.EARTH,
                 alpacaMoves
         ));
-        /*
+
         bulbasaurMoves.add(new MockMonsterMove("Tackle", MonsterType.AIR, 5));
         bulbasaurMoves.add(new MockMonsterMove("Vine Whip", MonsterType.GRASS, 10));
         bulbasaurMoves.add(new MockMonsterMove("Razor Leaf", MonsterType.GRASS, 30));
@@ -89,7 +99,13 @@ public class BattleParticipantMocks {
         return player;
     }
 
-    public static IBattleParticipant getOpponent() {
+    public static IBattleParticipant getOpponent() throws IOException, URISyntaxException {
+        IMonsterRegistry monsterRegistry = new MonsterRegistry();
+        List<IMonster> monsters = new ArrayList<>();
+        monsters.add(monsterRegistry.getMonster(2));
+        monsters.add(monsterRegistry.getMonster(3));
+
+        /*
         List<IMonster> monsters = new ArrayList<>();
         List<IMonsterMove> slowpokeMoves = new ArrayList<>();
         List<IMonsterMove> squrtleMoves = new ArrayList<>();
@@ -99,10 +115,10 @@ public class BattleParticipantMocks {
 
 
 
-        alpacaMoves.add(new MockMonsterMove("Spit", MonsterType.WATER, 10));
-        alpacaMoves.add(new MockMonsterMove("Trample", MonsterType.EARTH, 15));
-        alpacaMoves.add(new MockMonsterMove("Horn Blast", MonsterType.EARTH, 25));
-        alpacaMoves.add(new MockMonsterMove("Fire Breath", MonsterType.FIRE, 50));
+        alpacaMoves.add(new MockMonsterMove("Spit", MonsterType.WATER, 10, "/sounds/Spit.ogg"));
+        alpacaMoves.add(new MockMonsterMove("Trample", MonsterType.EARTH, 15, "/sounds/Trample.ogg"));
+        alpacaMoves.add(new MockMonsterMove("Horn Blast", MonsterType.EARTH, 25, "/sounds/Horn Blast.ogg"));
+        alpacaMoves.add(new MockMonsterMove("Fire Breath", MonsterType.FIRE, 50, "/sounds/Fire Breath.ogg"));
         monsters.add(new MockMonster(
                 "Alpaca",
                 40,
@@ -116,8 +132,8 @@ public class BattleParticipantMocks {
         ));
 
         eelMoves.add(new MockMonsterMove("Tackle", MonsterType.AIR, 5));
-        eelMoves.add(new MockMonsterMove("Zap", MonsterType.LIGHTNING, 10));
-        eelMoves.add(new MockMonsterMove("Water Blast", MonsterType.WATER, 30));
+        eelMoves.add(new MockMonsterMove("Zap", MonsterType.LIGHTNING, 10, "/sounds/Zap.ogg"));
+        eelMoves.add(new MockMonsterMove("Water Blast", MonsterType.WATER, 30, "/sounds/Water Blast.ogg"));
         monsters.add(new MockMonster(
                 "Eel",
                 10,
@@ -130,7 +146,7 @@ public class BattleParticipantMocks {
                 eelMoves
         ));
 
-        /*
+
         slowpokeMoves.add(new MockMonsterMove("Water gun", MonsterType.WATER, 15));
         slowpokeMoves.add(new MockMonsterMove("Confusion", MonsterType.LIGHTNING, 30));
         monsters.add(new MockMonster(

@@ -11,8 +11,8 @@
       "spit",
       "trample"
     ],
-    "front": "images/alpaca_1.png",
-    "back": "images/alpaca_2.png"
+    "front": "/images/alpaca_1.png",
+    "back": "/images/alpaca_2.png"
   },
   {
     "id" : 1,
@@ -25,7 +25,7 @@
     "moves" : [
       "zap"
     ],
-    "front": "images/eel_1.png",
-    "back": "images/eel_2.png"
+    "front": "/images/eel_1.png",
+    "back": "/images/eel_2.png"
   }
 ]
