@@ -137,19 +137,6 @@ public class BattleView implements IGameViewService, IBattleView {
 
         _isInitialized = true;
         this.gameStateManager = gameStateManager;
-        //Temp
-        /*
-        if (_battleSimulation != null) {
-            try {
-                startBattle(BattleParticipantMocks.getPlayer(), BattleParticipantMocks.getOpponent(), null);
-            } catch (IOException e) {
-                e.printStackTrace();
-            } catch (URISyntaxException e) {
-                e.printStackTrace();
-            }
-        }
-         */
-
     }
 
     //OSGi dependency injection
@@ -250,16 +237,18 @@ public class BattleView implements IGameViewService, IBattleView {
                     _battleScene.setTextToDisplay(battleEvent.getText());
                 }
             } else if (battleEvent instanceof VictoryBattleEvent) {
-                EnemyDieAnimation enemyDieAnimation = new EnemyDieAnimation(_battleScene);
-                enemyDieAnimation.setOnEventDone(() -> {
+                if(((VictoryBattleEvent) battleEvent).getWinner().equals(_battleSimulation.getState().getPlayer())){
+                    EnemyDieAnimation enemyDieAnimation = new EnemyDieAnimation(_battleScene);
+                    enemyDieAnimation.setOnEventDone(() -> {
+                        handleBattleEnd((VictoryBattleEvent) battleEvent);
+                    });
+                    enemyDieAnimation.start();
+                    blockingAnimations.add(enemyDieAnimation);
+                    this._winSound.play();
+                    this._battleScene.setTextToDisplay(battleEvent.getText());
+                } else {
                     handleBattleEnd((VictoryBattleEvent) battleEvent);
-                    //Should be removed later:
-                    //gameStateManager.setDefaultState();
-                });
-                enemyDieAnimation.start();
-                blockingAnimations.add(enemyDieAnimation);
-                this._winSound.play();
-                this._battleScene.setTextToDisplay(battleEvent.getText());
+                }
             }
         }
     }

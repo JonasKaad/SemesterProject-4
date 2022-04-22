@@ -11,8 +11,7 @@ import java.net.URISyntaxException;
 import java.util.Arrays;
 import java.util.List;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNotEquals;
+import static org.junit.jupiter.api.Assertions.*;
 
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 public class MonsterRegistryTest {
@@ -103,16 +102,16 @@ public class MonsterRegistryTest {
         assertEquals(monster1.getMoves().get(0).getSoundPath(), movesToTest2.get(0).getSoundPath());
 
         // Monsters get cloned and are not the same
-        assertNotEquals(registry.getMonster(0), registry.getMonster(0));
-        assertNotEquals(registry.getMonster(1), registry.getMonster(1));
+        assertNotSame(registry.getMonster(0), registry.getMonster(0));
+        assertNotSame(registry.getMonster(1), registry.getMonster(1));
     }
 
     @Test
     @Order(3)
     void monsterRegistry_ClonedNotCopied_isTrue() {
         // Monsters get cloned and are not the same
-        assertNotEquals(registry.getMonster(0), registry.getMonster(0));
-        assertNotEquals(registry.getMonster(1), registry.getMonster(1));
+        assertNotSame(registry.getMonster(0), registry.getMonster(0));
+        assertNotSame(registry.getMonster(1), registry.getMonster(1));
     }
 
     @Test

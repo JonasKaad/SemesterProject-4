@@ -1,6 +1,8 @@
 package dk.sdu.mmmi.modulemon.BattleSceneMock;
 
 import dk.sdu.mmmi.modulemon.Battle.BattleParticipant;
+import dk.sdu.mmmi.modulemon.Monster.Monster;
+import dk.sdu.mmmi.modulemon.Monster.MonsterMove;
 import dk.sdu.mmmi.modulemon.CommonBattle.IBattleParticipant;
 import dk.sdu.mmmi.modulemon.CommonMonster.IMonster;
 import dk.sdu.mmmi.modulemon.CommonMonster.IMonsterRegistry;
@@ -21,7 +23,6 @@ public class BattleParticipantMocks {
         List<IMonster> monsters = new ArrayList<>();
         monsters.add(monsterRegistry.getMonster(0));
         monsters.add(monsterRegistry.getMonster(1));
-
         IBattleParticipant player = new BattleParticipant(monsters, true);
         return player;
     }
@@ -31,7 +32,6 @@ public class BattleParticipantMocks {
         List<IMonster> monsters = new ArrayList<>();
         monsters.add(monsterRegistry.getMonster(2));
         monsters.add(monsterRegistry.getMonster(3));
-
         IBattleParticipant enemy = new BattleParticipant(monsters, false);
         return enemy;
     }
