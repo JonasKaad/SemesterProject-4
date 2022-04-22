@@ -209,16 +209,22 @@ public class BattleView implements IGameViewService, IBattleView {
                     _battleScene.setTextToDisplay(battleEvent.getText());
                 }
             } else if (battleEvent instanceof VictoryBattleEvent) {
-                EnemyDieAnimation enemyDieAnimation = new EnemyDieAnimation(_battleScene);
-                enemyDieAnimation.setOnEventDone(() -> {
+                if(((VictoryBattleEvent) battleEvent).getWinner().equals(_battleSimulation.getState().getPlayer())){
+                    EnemyDieAnimation enemyDieAnimation = new EnemyDieAnimation(_battleScene);
+                    enemyDieAnimation.setOnEventDone(() -> {
+                        handleBattleEnd((VictoryBattleEvent) battleEvent);
+                        //Should be removed later:
+                        gameStateManager.setDefaultState();
+                    });
+                    enemyDieAnimation.start();
+                    blockingAnimations.add(enemyDieAnimation);
+                    this._winSound.play();
+                    this._battleScene.setTextToDisplay(battleEvent.getText());
+                } else {
                     handleBattleEnd((VictoryBattleEvent) battleEvent);
-                    //Should be removed later:
+                    // Should be removed when we start battle from map
                     gameStateManager.setDefaultState();
-                });
-                enemyDieAnimation.start();
-                blockingAnimations.add(enemyDieAnimation);
-                this._winSound.play();
-                this._battleScene.setTextToDisplay(battleEvent.getText());
+                }
             }
         }
     }
