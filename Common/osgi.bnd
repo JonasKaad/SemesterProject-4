@@ -1,2 +1,3 @@
 Bundle-SymbolicName: Common
+Service-Component: META-INF/movingpart.xml
 Export-Package: dk.sdu.mmmi.modulemon.common.*

@@ -49,6 +49,18 @@
         </dependency>
         <dependency>
             <groupId>modulemon.build</groupId>
+            <artifactId>CommonBattleSimulation</artifactId>
+            <version>1.0-SNAPSHOT</version>
+            <scope>compile</scope>
+        </dependency>
+        <dependency>
+            <groupId>modulemon.build</groupId>
+            <artifactId>CommonBattleClient</artifactId>
+            <version>1.0-SNAPSHOT</version>
+            <scope>compile</scope>
+        </dependency>
+        <dependency>
+            <groupId>modulemon.build</groupId>
             <artifactId>CommonMonster</artifactId>
             <version>1.0-SNAPSHOT</version>
             <scope>compile</scope>
@@ -63,6 +75,12 @@
             <groupId>org.mockito</groupId>
             <artifactId>mockito-core</artifactId>
             <version>4.4.0</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>modulemon.build</groupId>
+            <artifactId>CommonTest</artifactId>
+            <version>1.0-SNAPSHOT</version>
             <scope>test</scope>
         </dependency>
         <dependency>

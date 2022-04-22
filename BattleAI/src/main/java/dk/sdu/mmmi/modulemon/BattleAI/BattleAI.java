@@ -1,9 +1,9 @@
 package dk.sdu.mmmi.modulemon.BattleAI;
 
-import dk.sdu.mmmi.modulemon.CommonBattle.IBattleAI;
+import dk.sdu.mmmi.modulemon.CommonBattleSimulation.IBattleAI;
 import dk.sdu.mmmi.modulemon.CommonBattle.IBattleParticipant;
-import dk.sdu.mmmi.modulemon.CommonBattle.IBattleSimulation;
-import dk.sdu.mmmi.modulemon.CommonBattle.IBattleState;
+import dk.sdu.mmmi.modulemon.CommonBattleSimulation.IBattleSimulation;
+import dk.sdu.mmmi.modulemon.CommonBattleSimulation.IBattleState;
 import dk.sdu.mmmi.modulemon.CommonMonster.IMonster;
 import dk.sdu.mmmi.modulemon.CommonMonster.IMonsterMove;
 
@@ -11,6 +11,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import dk.sdu.mmmi.modulemon.CommonBattleSimulation.IBattleSimulation;
 
 public class BattleAI implements IBattleAI {
 

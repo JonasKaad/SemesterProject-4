@@ -3,6 +3,7 @@ package dk.sdu.mmmi.modulemon.Monster;
 import dk.sdu.mmmi.modulemon.CommonMonster.IMonster;
 import dk.sdu.mmmi.modulemon.CommonMonster.IMonsterMove;
 import dk.sdu.mmmi.modulemon.CommonMonster.MonsterType;
+import org.json.JSONException;
 import org.junit.jupiter.api.*;
 
 import java.io.IOException;
@@ -15,8 +16,8 @@ import static org.junit.jupiter.api.Assertions.*;
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 public class MonsterParserTest {
     static IMonster[] monsters;
-    static IMonster monster0;
-    static IMonster monster1;
+    static Monster monster0;
+    static Monster monster1;
     static IMonster[] monstersToTest;
 
     @BeforeAll
@@ -32,8 +33,8 @@ public class MonsterParserTest {
                 Arrays.asList(
                         new MonsterMove("Spit", 10, MonsterType.WATER),
                         new MonsterMove("Trample", 25, MonsterType.GRASS)),
-                "images/alpaca_1.png",
-                "images/alpaca_2.png",
+                "/images/alpaca_1.png",
+                "/images/alpaca_2.png",
                 0);
         monsters[1] = new Monster("Eel",
                 MonsterType.WATER,
@@ -41,13 +42,13 @@ public class MonsterParserTest {
                 20,
                 70,
                 70,
-                Arrays.asList(new MonsterMove("Zap", 20, MonsterType.LIGHTNING)),
-                "images/eel_1.png",
-                "images/eel_2.png",
+                Arrays.asList(new MonsterMove("Zap", 20, MonsterType.LIGHTNING, "/sounds/zap.ogg")),
+                "/images/eel_1.png",
+                "/images/eel_2.png",
                 1);
 
-        monster0 = monsters[0];
-        monster1 = monsters[1];
+        monster0 = (Monster) monsters[0];
+        monster1 = (Monster) monsters[1];
 
         monstersToTest = MonsterParser.parseMonsters(
                 "/json/monsters_test.json",
@@ -65,10 +66,10 @@ public class MonsterParserTest {
     @Test
     @Order(2)
     void monsterParser_parseMonster_isAccurate() {
-        IMonster monsterToTest0 = monstersToTest[0];
-        IMonster monsterToTest1 = monstersToTest[1];
+        Monster monsterToTest0 = (Monster) monstersToTest[0];
+        Monster monsterToTest1 = (Monster) monstersToTest[1];
 
-        // Monster 1
+        // Monster 0
         assertEquals(monster0.getName(), monsterToTest0.getName());
         assertEquals(monster0.getMonsterType(), monsterToTest0.getMonsterType());
         assertEquals(monster0.getDefence(), monsterToTest0.getDefence());
@@ -78,7 +79,7 @@ public class MonsterParserTest {
         assertEquals(monster0.getBackSprite(), monsterToTest0.getBackSprite());
         assertEquals(monster0.getID(), monsterToTest0.getID());
 
-        // Monster 2
+        // Monster 1
         assertEquals(monster1.getName(), monsterToTest1.getName());
         assertEquals(monster1.getMonsterType(), monsterToTest1.getMonsterType());
         assertEquals(monster1.getDefence(), monsterToTest1.getDefence());
@@ -96,7 +97,7 @@ public class MonsterParserTest {
         List<IMonsterMove> movesToTest0 = monstersToTest[0].getMoves();
         List<IMonsterMove> movesToTest1 = monstersToTest[1].getMoves();
 
-        // Monster 1 moves
+        // Monster 0 moves
         assertEquals(monster0.getMoves().get(0).getName(), movesToTest0.get(0).getName());
         assertEquals(monster0.getMoves().get(0).getDamage(), movesToTest0.get(0).getDamage());
         assertEquals(monster0.getMoves().get(0).getType(), movesToTest0.get(0).getType());
@@ -104,16 +105,17 @@ public class MonsterParserTest {
         assertEquals(monster0.getMoves().get(1).getDamage(), movesToTest0.get(1).getDamage());
         assertEquals(monster0.getMoves().get(1).getType(), movesToTest0.get(1).getType());
 
-        // Monster 2 moves
+        // Monster 1 moves
         assertEquals(monster1.getMoves().get(0).getName(), movesToTest1.get(0).getName());
         assertEquals(monster1.getMoves().get(0).getDamage(), movesToTest1.get(0).getDamage());
         assertEquals(monster1.getMoves().get(0).getType(), movesToTest1.get(0).getType());
+        assertEquals(monster1.getMoves().get(0).getSoundPath(), movesToTest1.get(0).getSoundPath());
     }
 
     @Test
     @Order(4)
     void monsterParser_validButWrongURL_failsCorrectly() {
-        assertThrows(IOException.class, () -> MonsterParser.parseMonsters(
+        assertThrows(JSONException.class, () -> MonsterParser.parseMonsters(
                 "/json",
                 "/json"
         ));
@@ -122,7 +124,7 @@ public class MonsterParserTest {
     @Test
     @Order(5)
     void monsterParser_invalidURL_failsCorrectly() {
-        assertThrows(NullPointerException.class, () -> MonsterParser.parseMonsters(
+        assertThrows(JSONException.class, () -> MonsterParser.parseMonsters(
                 "/json/wrong.json",
                 "/json/wrong.json"
         ));

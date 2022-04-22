@@ -1,7 +1,8 @@
 package dk.sdu.mmmi.modulemon.BattleSimulation;
 
 import dk.sdu.mmmi.modulemon.CommonBattle.*;
-import dk.sdu.mmmi.modulemon.CommonBattle.BattleEvents.*;
+import dk.sdu.mmmi.modulemon.CommonBattleSimulation.*;
+import dk.sdu.mmmi.modulemon.CommonBattleSimulation.BattleEvents.*;
 import dk.sdu.mmmi.modulemon.CommonMonster.IMonster;
 import dk.sdu.mmmi.modulemon.CommonMonster.IMonsterMove;
 import java.util.Optional;
@@ -120,6 +121,7 @@ public class BattleSimulation implements IBattleSimulation {
                     };
                 } else {
                     nextEvent = new VictoryBattleEvent(opposingParticipantTitle + "s monster fainted... " + participantTitle + " won the battle.", battleParticipant);
+                    onNextEvent = () -> {};
                 }
             }
         };

@@ -8,8 +8,7 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
-import dk.sdu.mmmi.modulemon.common.data.GameData;
-import dk.sdu.mmmi.modulemon.common.drawing.OSGiFileHandle;
+import dk.sdu.mmmi.modulemon.common.OSGiFileHandle;
 import dk.sdu.mmmi.modulemon.common.drawing.Position;
 import dk.sdu.mmmi.modulemon.common.drawing.Rectangle;
 import dk.sdu.mmmi.modulemon.common.drawing.TextUtils;
@@ -77,7 +76,8 @@ public class BattleScene {
 
     public void draw(float dt, OrthographicCamera camera) {
         //DRAW THE IMAGES
-        spriteBatch.setProjectionMatrix(camera.combined);
+        if(camera != null)
+            spriteBatch.setProjectionMatrix(camera.combined);
         spriteBatch.begin();
 
         _backdropPosition.updatePosition(_backdrop);
@@ -113,7 +113,8 @@ public class BattleScene {
         shapeRenderer.setColor(Color.WHITE);
 
         Gdx.gl.glEnable(GL20.GL_BLEND); //Alows for opacity
-        shapeRenderer.setProjectionMatrix(camera.combined);
+        if(camera != null)
+            shapeRenderer.setProjectionMatrix(camera.combined);
         shapeRenderer.begin(ShapeRenderer.ShapeType.Filled);
 
         //HP Box

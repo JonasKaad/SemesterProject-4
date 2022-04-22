@@ -3,18 +3,74 @@
     "id" : "spit",
     "name" : "Spit",
     "damage" : 10,
-    "type" : "WATER"
+    "type" : "WATER",
+    "sound": "/sounds/spit.ogg"
+  },
+  {
+    "id": "tackle",
+    "name": "Tackle",
+    "damage": 5,
+    "type": "AIR",
+    "sound": "/sounds/tackle.ogg"
   },
   {
     "id" : "trample",
     "name" : "Trample",
     "damage" : 25,
-    "type" : "GRASS"
+    "type" : "GRASS",
+    "sound": "/sounds/trample.ogg"
+  },
+  {
+    "id" : "dig",
+    "name" : "Dig",
+    "damage" : 40,
+    "type" : "EARTH"
+  },
+  {
+    "id" : "earthquake",
+    "name" : "Earthquake",
+    "damage" : 50,
+    "type" : "EARTH"
+  },
+  {
+    "id" : "mudBlast",
+    "name" : "Mud Blast",
+    "damage" : 40,
+    "type" : "WATER"
+  },
+  {
+    "id": "eggBomb",
+    "name": "Egg Bomb",
+    "damage": 20,
+    "type": "EARTH",
+    "sound": "/sounds/egg_bomb.ogg"
+  },
+  {
+    "id": "hornBlast",
+    "name": "Horn Blast",
+    "damage": 25,
+    "type": "EARTH",
+    "sound": "/sounds/horn_blast.ogg"
+  },
+  {
+    "id": "fireBreath",
+    "name": "Fire Breath",
+    "damage": 50,
+    "type": "FIRE",
+    "sound": "/sounds/fire_breath.ogg"
+  },
+  {
+    "id": "waterBlast",
+    "name": "Water Blast",
+    "damage": 30,
+    "type": "WATER",
+    "sound": "/sounds/water_blast.ogg"
   },
   {
     "id" : "zap",
     "name" : "Zap",
     "damage" : 20,
-    "type" : "LIGHTNING"
+    "type" : "LIGHTNING",
+    "sound": "/sounds/zap.ogg"
   }
 ]

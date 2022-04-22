@@ -2,6 +2,6 @@
 <scr:component xmlns:scr="http://www.osgi.org/xmlns/scr/v1.1.0" name="dk.sdu.mmmi.modulemon.Monster.BattleMonsterProcessor">
     <implementation class="dk.sdu.mmmi.modulemon.Monster.BattleMonsterProcessor"/>
     <service>
-        <provide interface="dk.sdu.mmmi.modulemon.CommonBattle.IBattleMonsterProcessor"/>
+        <provide interface="dk.sdu.mmmi.modulemon.CommonBattleSimulation.IBattleMonsterProcessor"/>
     </service>
 </scr:component>
