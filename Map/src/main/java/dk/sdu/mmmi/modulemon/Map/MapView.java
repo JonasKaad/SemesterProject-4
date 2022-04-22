@@ -15,7 +15,7 @@ import com.badlogic.gdx.maps.tiled.renderers.BatchTiledMapRenderer;
 import com.badlogic.gdx.maps.tiled.renderers.OrthogonalTiledMapRenderer;
 import dk.sdu.mmmi.modulemon.CommonBattle.MonsterTeamPart;
 import dk.sdu.mmmi.modulemon.CommonMap.IMapView;
-import dk.sdu.mmmi.modulemon.Player.PlayerPlugin;
+import dk.sdu.mmmi.modulemon.CommonMonster.IMonster;
 import dk.sdu.mmmi.modulemon.common.data.*;
 import dk.sdu.mmmi.modulemon.common.OSGiFileHandle;
 import dk.sdu.mmmi.modulemon.common.drawing.Rectangle;
@@ -24,6 +24,7 @@ import dk.sdu.mmmi.modulemon.common.services.IEntityProcessingService;
 import dk.sdu.mmmi.modulemon.common.services.IGamePluginService;
 import dk.sdu.mmmi.modulemon.common.services.IGameViewService;
 
+import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Queue;
@@ -38,17 +39,24 @@ public class MapView implements IGameViewService, IMapView {
     private ShapeRenderer shapeRenderer;
     private Music mapMusic;
     private boolean isPaused;
+    private boolean showMonsterTeam;
     private TextUtils textUtils;
+    private TextUtils textUtilsMonster;
     private Rectangle pauseMenu;
+    private Rectangle monsterTeamMenu;
     private String pauseMenuTitle = "GAME PAUSED";
     private String[] pauseActions = new String[]{"Resume", "Inventory", "Team", "Quit"};
+    private List<String> monsterTeamNames = new ArrayList<>();
+    private List<IMonster> monsterTeam = new ArrayList<>();
     private int selectedOptionIndex = 0;
+    private int selectedOptionIndexMonsterTeam = 0;
     private float mapLeft;
     private float mapRight;
     private float mapBottom;
     private float mapTop;
     private int tilePixelSize;
 
+    private MonsterTeamPart mtp;
     float playerPosX;
     float playerPosY;
     SpriteBatch spriteBatch;
@@ -77,9 +85,13 @@ public class MapView implements IGameViewService, IMapView {
       
         // Pausing
         isPaused = false;
+        showMonsterTeam = false;
         pauseMenu = new Rectangle(100, 100, 200, 250);
+        monsterTeamMenu = new Rectangle(gameData.getDisplayWidth() / 2f, gameData.getDisplayHeight() / 2f, 200, 250);
         shapeRenderer = new ShapeRenderer();
         gdxThreadTasks.add(() -> textUtils = TextUtils.getInstance());
+        gdxThreadTasks.add(() -> textUtilsMonster = TextUtils.getInstance());
+
     }
 
     private void initializeCameraDrawing(GameData gameData){
@@ -141,6 +153,59 @@ public class MapView implements IGameViewService, IMapView {
         tiledMapRenderer.getBatch().begin();
         tiledMapRenderer.renderTileLayer(overhangLayer);
         tiledMapRenderer.getBatch().end();
+
+        if(showMonsterTeam) {
+            for (Entity entity : world.getEntities()) {
+                if (entity.getClass() == dk.sdu.mmmi.modulemon.Player.Player.class) {
+                    mtp = entity.getPart(MonsterTeamPart.class);
+                    //mtp.printMonsterTeamNames();
+                    //mtp.getMonsterTeam();
+
+                    //String[] monsterNames = mtp.getMonsterTeamNames();
+                    //monsterTeamNames = mtp.getMonsterTeamNames();
+                    monsterTeam = mtp.getMonsterTeam();
+                    /*for (IMonster mons: monsterTeam) {
+                        monsterTeamNames.add(mons.getName());
+                    }
+                    for (int i = 0; i < monsterTeam.size(); i++) {
+                        monsterTeamNames.set(i, monsterTeam.get(i).getName());
+                    }*/
+                    //String[] monsterNames = {"Alpaca", "Eel"};
+
+                    //Drawing monster menu box
+                    shapeRenderer.setAutoShapeType(true);
+                    shapeRenderer.setProjectionMatrix(cam.combined);
+                    shapeRenderer.setColor(Color.WHITE);
+
+                    shapeRenderer.begin(ShapeRenderer.ShapeType.Filled);
+                    monsterTeamMenu.setX(cam.position.x);
+                    monsterTeamMenu.setY(cam.position.y);
+                    monsterTeamMenu.draw(shapeRenderer, gameData.getDelta());
+                    shapeRenderer.end();
+
+
+                    //Drawing monster menu text
+                    spriteBatch.setProjectionMatrix(cam.combined);
+                    spriteBatch.begin();
+
+                    textUtilsMonster.drawNormalRoboto(
+                            spriteBatch,
+                            "Your Team",
+                            Color.BLACK,
+                            monsterTeamMenu.getX() + 19,
+                            monsterTeamMenu.getY() + monsterTeamMenu.getHeight() - 10);
+
+                    //Drawing options
+                    for (int i = 0; i < monsterTeam.size(); i++) {
+                        textUtilsMonster.drawSmallRoboto(spriteBatch, mtp.getMonsterTeam().get(i).getName(), Color.BLACK, monsterTeamMenu.getX() + 42, monsterTeamMenu.getY() + (monsterTeamMenu.getHeight() * 2 / 3f) - (i * 40));
+                    }
+
+                    spriteBatch.end();
+                }
+            }
+        }
+
+
         if(isPaused) {
             //Drawing pause menu box
             shapeRenderer.setAutoShapeType(true);
@@ -175,73 +240,147 @@ public class MapView implements IGameViewService, IMapView {
             // Drawing selection triangle
             // Yoinked from BattleScene
 
-            Gdx.gl.glEnable(GL20.GL_BLEND); //Allows for opacity
-            shapeRenderer.begin(ShapeRenderer.ShapeType.Filled);
-            shapeRenderer.setColor(Color.BLACK);
+            if(showMonsterTeam){
+                Gdx.gl.glEnable(GL20.GL_BLEND); //Allows for opacity
+                shapeRenderer.begin(ShapeRenderer.ShapeType.Filled);
+                shapeRenderer.setColor(Color.BLACK);
 
-            int triangleHeight = 20;
-            int heightBetweenOptions = 20;
-            int normalTextHeight = 24;
-            int actionTopTextHeight = (int) (pauseMenu.getHeight() * 2 / 3f) + 40;
-            int offsetFromActionHeadToFirstAction = 10;
+                int triangleHeight = 20;
+                int heightBetweenOptions = 20;
+                int normalTextHeight = 24;
+                int actionTopTextHeight = (int) (monsterTeamMenu.getHeight() * 2 / 3f) + 40;
+                int offsetFromActionHeadToFirstAction = 10;
 
-            selectedOptionIndex = selectedOptionIndex % pauseActions.length;
+                selectedOptionIndexMonsterTeam = selectedOptionIndexMonsterTeam % monsterTeam.size();
 
-            int renderHeight = actionTopTextHeight - triangleHeight - normalTextHeight - offsetFromActionHeadToFirstAction;
-            renderHeight = renderHeight + selectedOptionIndex * -heightBetweenOptions * 2;
+                int renderHeight = actionTopTextHeight - triangleHeight - normalTextHeight - offsetFromActionHeadToFirstAction;
+                renderHeight = renderHeight + selectedOptionIndexMonsterTeam * -heightBetweenOptions * 2;
 
-            shapeRenderer.triangle(
-                    pauseMenu.getX() + 15, pauseMenu.getY() + renderHeight,
-                    pauseMenu.getX() + 30, pauseMenu.getY() + triangleHeight / 2f + renderHeight,
-                    pauseMenu.getX() + 15, pauseMenu.getY() + triangleHeight + renderHeight
-            );
-            shapeRenderer.end();
+                shapeRenderer.triangle(
+                        monsterTeamMenu.getX() + 15, monsterTeamMenu.getY() + renderHeight,
+                        monsterTeamMenu.getX() + 30, monsterTeamMenu.getY() + triangleHeight / 2f + renderHeight,
+                        monsterTeamMenu.getX() + 15, monsterTeamMenu.getY() + triangleHeight + renderHeight
+                );
+                shapeRenderer.end();
+            }
+            else {
+                Gdx.gl.glEnable(GL20.GL_BLEND); //Allows for opacity
+                shapeRenderer.begin(ShapeRenderer.ShapeType.Filled);
+                shapeRenderer.setColor(Color.BLACK);
+
+                int triangleHeight = 20;
+                int heightBetweenOptions = 20;
+                int normalTextHeight = 24;
+                int actionTopTextHeight = (int) (pauseMenu.getHeight() * 2 / 3f) + 40;
+                int offsetFromActionHeadToFirstAction = 10;
+
+                selectedOptionIndex = selectedOptionIndex % pauseActions.length;
+
+                int renderHeight = actionTopTextHeight - triangleHeight - normalTextHeight - offsetFromActionHeadToFirstAction;
+                renderHeight = renderHeight + selectedOptionIndex * -heightBetweenOptions * 2;
+
+                shapeRenderer.triangle(
+                        pauseMenu.getX() + 15, pauseMenu.getY() + renderHeight,
+                        pauseMenu.getX() + 30, pauseMenu.getY() + triangleHeight / 2f + renderHeight,
+                        pauseMenu.getX() + 15, pauseMenu.getY() + triangleHeight + renderHeight
+                );
+                shapeRenderer.end();
+            }
         }
     }
+
+    int firstSelected = -1;
+    int secondSelected = -1;
 
     @Override
     public void handleInput(GameData gameData, IGameStateManager gameStateManager) {
         if(isPaused){
             if(gameData.getKeys().isPressed(GameKeys.DOWN)) {
-                if(selectedOptionIndex < pauseActions.length)
-                    selectedOptionIndex++;
-                else
-                    selectedOptionIndex = 0;
+                if(showMonsterTeam){
+                    if(selectedOptionIndexMonsterTeam < monsterTeam.size())
+                        selectedOptionIndexMonsterTeam++;
+                    else
+                        selectedOptionIndexMonsterTeam = 0;
+                }
+                else {
+                    if (selectedOptionIndex < pauseActions.length)
+                        selectedOptionIndex++;
+                    else
+                        selectedOptionIndex = 0;
+                }
             }
             if(gameData.getKeys().isPressed(GameKeys.UP)){
-                if(selectedOptionIndex <= 0)
-                    selectedOptionIndex = pauseActions.length-1;
-                else
-                    selectedOptionIndex--;
+                if(showMonsterTeam){
+                    if(selectedOptionIndexMonsterTeam <= 0)
+                        selectedOptionIndexMonsterTeam = pauseActions.length-1;
+                    else
+                        selectedOptionIndexMonsterTeam--;
+                }
+                else {
+                    if (selectedOptionIndex <= 0)
+                        selectedOptionIndex = pauseActions.length - 1;
+                    else
+                        selectedOptionIndex--;
+                }
             }
             if(gameData.getKeys().isPressed(GameKeys.ESC)){
-                isPaused = false;
-                gameData.setPaused(isPaused);
+                if(showMonsterTeam){
+                    showMonsterTeam = false;
+                    selectedOptionIndexMonsterTeam = 0;
+                    firstSelected = -1;
+                    secondSelected = -1;
+                }
+                else {
+                    isPaused = false;
+                    gameData.setPaused(isPaused);
+                }
             }
             if(gameData.getKeys().isPressed(GameKeys.ENTER)) {
-                if (pauseActions[selectedOptionIndex].equals("Resume")) {
-                    isPaused = false;
-                    gameData.setPaused(isPaused);
-                }
-                if (pauseActions[selectedOptionIndex].equals("Inventory"))
-                    System.out.println("Not implemented yet!");
-                if (pauseActions[selectedOptionIndex].equals("Team")) {
+                if (showMonsterTeam) {
+                    if (firstSelected == -1) {
+                        firstSelected = selectedOptionIndexMonsterTeam;
+                        System.out.println("Selected the first");
+                        return;
+                    } else if (secondSelected == -1) {
+                        secondSelected = selectedOptionIndexMonsterTeam;
+                        System.out.println("Selected the second");
+                    }
+                    if (firstSelected != -1 && secondSelected != -1) {
+                        IMonster newFirstMonster = monsterTeam.get(secondSelected);
+                        IMonster newSecondMonster = monsterTeam.get(firstSelected);
+                        System.out.println("Updated team");
+                        monsterTeam.set(firstSelected, newFirstMonster);
+                        monsterTeam.set(secondSelected, newSecondMonster);
+                        mtp.setMonsterTeam(monsterTeam);
+                        firstSelected = -1;
+                        secondSelected = -1;
+                                /*mtp.setMonsterTeam();
+                                monsterTeamNames.set(firstSelected, newFirstMonster);
+                                monsterTeamNames.set(secondSelected, newSecondMonster);
 
-                    for (Entity entity : world.getEntities()) {
-                        if (entity.getClass() == dk.sdu.mmmi.modulemon.Player.Player.class) {
-                            MonsterTeamPart mtp = entity.getPart(MonsterTeamPart.class);
-                            mtp.printMonsterTeamNames();
-                        }
+                                 */
                     }
                 }
-                //System.out.println("You have no team");
+                if(!showMonsterTeam) {
+                    if (pauseActions[selectedOptionIndex].equals("Resume")) {
+                        showMonsterTeam = false;
+                        isPaused = false;
+                        gameData.setPaused(isPaused);
+                    }
+                    if (pauseActions[selectedOptionIndex].equals("Inventory"))
+                        System.out.println("Not implemented yet!");
+                    if (pauseActions[selectedOptionIndex].equals("Team")) {
+                        showMonsterTeam = true;
+                    }
+                    //System.out.println("You have no team");
 
-                if(pauseActions[selectedOptionIndex].equals("Quit")){
-                    isPaused = false;
-                    gameData.setPaused(isPaused);
-                    if(cam != null)
-                        cam.position.set(gameData.getDisplayWidth()/2,gameData.getDisplayHeight()/2, 0);
-                    gameStateManager.setDefaultState();
+                    if (pauseActions[selectedOptionIndex].equals("Quit")) {
+                        isPaused = false;
+                        gameData.setPaused(isPaused);
+                        if (cam != null)
+                            cam.position.set(gameData.getDisplayWidth() / 2, gameData.getDisplayHeight() / 2, 0);
+                        gameStateManager.setDefaultState();
+                    }
                 }
             }
             return;

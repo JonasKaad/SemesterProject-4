@@ -30,6 +30,13 @@ public class MonsterTeamPart implements EntityPart {
             System.out.println(monster.getName());
         }
     }
+    public List<String> getMonsterTeamNames(){
+        List<String> monsterTeam = new ArrayList<>();
+        for(IMonster monster : getMonsterTeam()){
+            monsterTeam.add(monster.getName());
+        }
+        return monsterTeam;
+    }
 
     public IBattleParticipant toBattleParticipant(boolean playerControlled){
         IBattleParticipant battleParticipant = new BattleParticipant(getMonsterTeam(), playerControlled);

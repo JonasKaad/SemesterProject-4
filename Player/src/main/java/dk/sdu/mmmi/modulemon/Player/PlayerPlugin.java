@@ -49,6 +49,7 @@ public class PlayerPlugin implements IGamePluginService {
         List<IMonster> monsterList = new ArrayList<>();
         monsterList.add(monsterArray[0]);
         monsterList.add(monsterArray[1]);
+        monsterList.add(monsterArray[1]);
         player.add(new MonsterTeamPart(monsterList));
 
         return player;
