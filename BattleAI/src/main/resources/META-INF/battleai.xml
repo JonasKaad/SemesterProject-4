@@ -2,7 +2,7 @@
 <scr:component xmlns:scr="http://www.osgi.org/xmlns/scr/v1.1.0" name="dk.sdu.mmmi.modulemon.BattleAI.BattleAI">
     <implementation class="dk.sdu.mmmi.modulemon.BattleAI.BattleAI"/>
     <service>
-        <provide interface="dk.sdu.mmmi.modulemon.CommonBattle.IBattleAI"/>
+        <provide interface="dk.sdu.mmmi.modulemon.CommonBattleSimulation.IBattleAI"/>
     </service>
 
 </scr:component>

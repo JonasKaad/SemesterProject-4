@@ -1,8 +1,8 @@
 package dk.sdu.mmmi.modulemon.BattleAI;
 
-import dk.sdu.mmmi.modulemon.CommonBattle.IBattleAI;
+import dk.sdu.mmmi.modulemon.CommonBattleSimulation.IBattleAI;
 import dk.sdu.mmmi.modulemon.CommonBattle.IBattleParticipant;
-import dk.sdu.mmmi.modulemon.CommonBattle.IBattleSimulation;
+import dk.sdu.mmmi.modulemon.CommonBattleSimulation.IBattleSimulation;
 
 public class BattleAI implements IBattleAI {
 

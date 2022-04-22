@@ -1,4 +1,4 @@
-package dk.sdu.mmmi.modulemon.CommonBattle.BattleEvents;
+package dk.sdu.mmmi.modulemon.CommonBattleSimulation.BattleEvents;
 
 public class InfoBattleEvent implements IBattleEvent {
 

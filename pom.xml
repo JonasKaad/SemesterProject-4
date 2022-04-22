@@ -39,10 +39,11 @@
     <module>Map</module>
     <module>BattleSimulation</module>
     <module>BattleAI</module>
-    <module>MonsterRegistry</module>
     <module>BundleController</module>
     <module>CommonMap</module>
     <module>CommonTest</module>
+    <module>CommonBattleSimulation</module>
+    <module>CommonBattleClient</module>
   </modules>
 
   <build>

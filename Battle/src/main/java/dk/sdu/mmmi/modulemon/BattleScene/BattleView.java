@@ -5,23 +5,29 @@ import com.badlogic.gdx.audio.Music;
 import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.utils.GdxRuntimeException;
 import dk.sdu.mmmi.modulemon.BattleScene.animations.*;
 import dk.sdu.mmmi.modulemon.BattleScene.scenes.BattleScene;
 import dk.sdu.mmmi.modulemon.BattleSceneMock.BattleParticipantMocks;
 import dk.sdu.mmmi.modulemon.CommonBattle.*;
-import dk.sdu.mmmi.modulemon.CommonBattle.BattleEvents.*;
+import dk.sdu.mmmi.modulemon.CommonBattleClient.IBattleCallback;
+import dk.sdu.mmmi.modulemon.CommonBattleClient.IBattleView;
+import dk.sdu.mmmi.modulemon.CommonBattleSimulation.*;
+import dk.sdu.mmmi.modulemon.CommonBattleSimulation.BattleEvents.*;
 import dk.sdu.mmmi.modulemon.CommonMonster.IMonster;
 import dk.sdu.mmmi.modulemon.CommonMonster.IMonsterMove;
 import dk.sdu.mmmi.modulemon.common.animations.BaseAnimation;
 import dk.sdu.mmmi.modulemon.common.data.GameData;
 import dk.sdu.mmmi.modulemon.common.data.GameKeys;
 import dk.sdu.mmmi.modulemon.common.data.IGameStateManager;
-import dk.sdu.mmmi.modulemon.common.drawing.OSGiFileHandle;
+import dk.sdu.mmmi.modulemon.common.OSGiFileHandle;
 import dk.sdu.mmmi.modulemon.common.drawing.PersonaRectangle;
 import dk.sdu.mmmi.modulemon.common.drawing.Rectangle;
 import dk.sdu.mmmi.modulemon.common.drawing.TextUtils;
 import dk.sdu.mmmi.modulemon.common.services.IGameViewService;
 
+import java.io.IOException;
+import java.net.URISyntaxException;
 import java.util.LinkedList;
 import java.util.Queue;
 
@@ -48,9 +54,13 @@ public class BattleView implements IGameViewService, IBattleView {
     private SpriteBatch spriteBatch;
 
     public Sound getAttackSound(IMonsterMove monsterMove){
-        Sound returnSound;
+        Sound returnSound = null;
 
-        returnSound = Gdx.audio.newSound(new OSGiFileHandle(monsterMove.getSoundPath(), monsterMove.getClass()));
+        try {
+            returnSound = Gdx.audio.newSound(new OSGiFileHandle(monsterMove.getSoundPath(), monsterMove.getClass()));
+        }catch(GdxRuntimeException ex){
+            System.out.println("[Warning] Failed to loadd attack sound for monster-move: " + monsterMove.getName());
+        }
 
         return returnSound;
     }
@@ -112,13 +122,21 @@ public class BattleView implements IGameViewService, IBattleView {
 
         _isInitialized = true;
         //Temp
-        if (_battleSimulation != null)
-            startBattle(BattleParticipantMocks.getPlayer(), BattleParticipantMocks.getOpponent(), null);
+        if (_battleSimulation != null) {
+            try {
+                startBattle(BattleParticipantMocks.getPlayer(), BattleParticipantMocks.getOpponent(), null);
+            } catch (IOException e) {
+                e.printStackTrace();
+            } catch (URISyntaxException e) {
+                e.printStackTrace();
+            }
+        }
 
     }
 
     //OSGi dependency injection
     public void setBattleSimulation(IBattleSimulation battleSimulation) {
+        System.out.println("BattleSimulation set in BattleView");
         this._battleSimulation = battleSimulation;
     }
 

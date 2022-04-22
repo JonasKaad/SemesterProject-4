@@ -1,5 +1,6 @@
-package dk.sdu.mmmi.modulemon.CommonBattle;
+package dk.sdu.mmmi.modulemon.CommonBattleClient;
 
+import dk.sdu.mmmi.modulemon.CommonBattle.IBattleParticipant;
 import dk.sdu.mmmi.modulemon.common.services.IGameViewService;
 
 public interface IBattleView {

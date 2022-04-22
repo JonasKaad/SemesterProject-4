@@ -16,6 +16,6 @@
     "name" : "Zap",
     "damage" : 20,
     "type" : "LIGHTNING",
-    "sound": "/sounds/Zap.ogg"
+    "sound": "/sounds/zap.ogg"
   }
 ]

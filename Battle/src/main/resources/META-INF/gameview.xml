@@ -3,10 +3,10 @@
     <implementation class="dk.sdu.mmmi.modulemon.BattleScene.BattleView"/>
     <service>
         <provide interface="dk.sdu.mmmi.modulemon.common.services.IGameViewService"/>
-        <provide interface="dk.sdu.mmmi.modulemon.CommonBattle.IBattleView"/>
+        <provide interface="dk.sdu.mmmi.modulemon.CommonBattleClient.IBattleView"/>
     </service>
 
     <reference bind="setBattleSimulation" cardinality="0..1"
-               interface="dk.sdu.mmmi.modulemon.CommonBattle.IBattleSimulation"
+               interface="dk.sdu.mmmi.modulemon.CommonBattleSimulation.IBattleSimulation"
                name="BattleSimulation" policy="dynamic" unbind="removeBattleSimulation" />
 </scr:component>

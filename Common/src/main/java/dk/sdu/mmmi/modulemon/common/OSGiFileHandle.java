@@ -1,4 +1,4 @@
-package dk.sdu.mmmi.modulemon.common.drawing;
+package dk.sdu.mmmi.modulemon.common;
 
 import com.badlogic.gdx.files.FileHandle;
 
