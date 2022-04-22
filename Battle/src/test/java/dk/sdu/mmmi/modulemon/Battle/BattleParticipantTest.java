@@ -21,7 +21,7 @@ public class BattleParticipantTest {
         boolean ipc = true;
         BattleParticipant participant = new BattleParticipant(team, monster1, ipc);
         BattleParticipant clone = (BattleParticipant) participant.clone();
-        assertNotEquals(participant, clone);
+        assertNotSame(participant, clone);
     }
 
     @Test

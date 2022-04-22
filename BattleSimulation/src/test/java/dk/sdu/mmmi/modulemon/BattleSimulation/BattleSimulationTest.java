@@ -239,6 +239,7 @@ public class BattleSimulationTest {
     void playerCanChangeMonster() {
         initMonsterMocks();
         IMonster newMonster = mock(IMonster.class);
+        when(newMonster.getHitPoints()).thenReturn(1);
         List<IMonster> playerTeam = new ArrayList<>();
         playerTeam.add(playerMonster);
         playerTeam.add(newMonster);

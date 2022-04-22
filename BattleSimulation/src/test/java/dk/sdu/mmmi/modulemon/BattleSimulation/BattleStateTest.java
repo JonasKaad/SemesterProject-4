@@ -12,6 +12,7 @@ public class BattleStateTest {
         IBattleParticipant player = spy(mock(IBattleParticipant.class));
         IBattleParticipant enemy = spy(mock(IBattleParticipant.class));
         BattleState battleState = new BattleState(player, enemy);
+        battleState.setActiveParticipant(player);
         BattleState clone = (BattleState) battleState.clone();
         assertNotEquals(battleState, clone);
         verify(player).clone();

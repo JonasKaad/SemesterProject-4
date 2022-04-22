@@ -30,6 +30,7 @@ public class BattleSimulation implements IBattleSimulation {
         IBattleParticipant firstToTakeTurn = firstMonster == player.getActiveMonster() ? player : enemy;
 
         this.battleState = new BattleState(player, enemy);
+        this.battleState.setActiveParticipant(firstToTakeTurn);
 
         this.AI = this.AIFactory.getBattleAI(this, enemy);
 
