@@ -10,6 +10,7 @@ import java.util.List;
 
 public class MockMonster implements IMonster {
     private String name;
+    private int maxHitpoints;
     private int hitpoints;
     private int attackStat;
     private int defenceStat;
@@ -21,6 +22,7 @@ public class MockMonster implements IMonster {
 
     public MockMonster(String name, int hitpoints, int attackStat, int defenceStat, int speedStat, String frontSprite, String backSprite, MonsterType type, List<IMonsterMove> moves) {
         this.name = name;
+        this.maxHitpoints = hitpoints;
         this.hitpoints = hitpoints;
         this.attackStat = attackStat;
         this.defenceStat = defenceStat;
@@ -34,6 +36,11 @@ public class MockMonster implements IMonster {
     @Override
     public String getName() {
         return this.name;
+    }
+
+    @Override
+    public int getMaxHitPoints() {
+        return this.maxHitpoints;
     }
 
     @Override
