@@ -58,20 +58,24 @@ public class PositionPart implements EntityPart {
         this.direction = direction;
     }
     
-    public boolean isFacing(Character c) {
+    public boolean isFacing(Character c) { //Poorly implemented, fix.
         boolean result = false;
         switch (c) {
             case 'R': //Right
                result = this.direction%360 == 0;
+                System.out.println("Right");
                break;
             case 'U': //Up
                 result = this.direction%360 == 90;
+                System.out.println("Up");
                 break;
             case 'L': //Left
                 result = this.direction%360 == 180;
+                System.out.println("Left");
                 break;
             case 'D': //Down
                 result = this.direction%360 == 270;
+                System.out.println("Down");
                 break;
             default: System.out.println(("Did not match any direction"));
         }
@@ -83,10 +87,9 @@ public class PositionPart implements EntityPart {
         this.y = newY;
     }
 
+    @Override
     public void process(GameData gameData, Entity entity) {
+        
     }
-    
-    
-    
     
 }

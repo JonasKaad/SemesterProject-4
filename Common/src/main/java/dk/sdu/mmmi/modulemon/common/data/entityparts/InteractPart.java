@@ -4,7 +4,6 @@
  */
 package dk.sdu.mmmi.modulemon.common.data.entityparts;
 
-import dk.sdu.mmmi.modulemon.CommonMap.IMapView;
 import dk.sdu.mmmi.modulemon.common.data.Entity;
 import dk.sdu.mmmi.modulemon.common.data.GameData;
 import java.util.LinkedList;
@@ -17,84 +16,81 @@ import java.util.List;
 public class InteractPart implements EntityPart{
     private boolean interact;
     private PositionPart positionPart;
+    private int tileSize = 64;
+    private int range;
     private static final List<InteractPart> InteractPartList = new LinkedList();
-    private static IMapView mapView;
-    private int tileSize = mapView.getTileSize();
-    private final int Range;
 
 
-    public InteractPart(PositionPart positionPart, int Range) {
+
+    public InteractPart(PositionPart positionPart, int range) {
         this.interact = false;
         this.positionPart = positionPart;
-        this.Range = Range;
+        this.range = range;
         
         InteractPartList.add(this);
     }
 
-    @Override
-    public void process(GameData gameData, Entity entity) {
-        for (InteractPart interactPart : InteractPartList) {
-            if (this != interactPart) {
-                this.shouldInteract(interactPart);
-            }
-        }
+    public void setPositionPart(PositionPart positionPart) {
+        this.positionPart = positionPart;
+    }
+
+    public void setRange(int range) {
+        this.range = range;
     }
     
-    //Check line of sight for player in 5 tiles.
-    private boolean shouldInteract(InteractPart interactPart) {
-        boolean shouldInteract = false;
-        if (isInRange(interactPart.positionPart.getX(), interactPart.positionPart.getY())) {
-            shouldInteract = true;
-        } 
-        return shouldInteract;
+    public boolean isInteract() {
+        return interact;
+    }
+
+    @Override
+    public void process(GameData gameData, Entity entity) {
+        if (InteractPartList.size() < 2) return; 
+        for (InteractPart interactPart : InteractPartList) {
+            if (this == interactPart) {
+                return;
+            }
+            interact = this.isInRange(interactPart.positionPart.getX(), interactPart.positionPart.getY());            
+        }
     }
     
     private boolean isInRange(float x, float y) {
         boolean isInRange = false;
         
         if (this.positionPart.getX()*tileSize < x*tileSize 
-        && this.positionPart.getX()*tileSize + this.Range*tileSize > x*tileSize
-        && this.positionPart.getY()*tileSize == y*tileSize
-        && positionPart.isFacing('R')){
+        && this.positionPart.getX()*tileSize + this.range*tileSize >= x*tileSize
+        && this.positionPart.getY()*tileSize > y*tileSize-32
+        && this.positionPart.getY()*tileSize < y*tileSize+32
+        //&& this.positionPart.isFacing('R')
+                ){
             isInRange = true;
         } 
-        else if (this.positionPart.getX()*tileSize < x*tileSize 
-        && this.positionPart.getX()*tileSize + this.Range*tileSize > x*tileSize
-        && this.positionPart.getY()*tileSize == y*tileSize
-        && positionPart.isFacing('L')){
+        else if (this.positionPart.getX()*tileSize > x*tileSize 
+        && this.positionPart.getX()*tileSize - this.range*tileSize <= x*tileSize
+        && this.positionPart.getY()*tileSize > y*tileSize-32
+        && this.positionPart.getY()*tileSize < y*tileSize+32
+        //&& this.positionPart.isFacing('L')
+                ){
             isInRange = true;
         } 
         else if (this.positionPart.getY()*tileSize < y*tileSize 
-        && this.positionPart.getY()*tileSize + this.Range*tileSize > y*tileSize
-        && this.positionPart.getX()*tileSize == x*tileSize
-        && positionPart.isFacing('U')) {
+        && this.positionPart.getY()*tileSize + this.range*tileSize >= y*tileSize
+        && this.positionPart.getX()*tileSize > x*tileSize-32
+        && this.positionPart.getX()*tileSize < x*tileSize+32
+        //&& this.positionPart.isFacing('U')
+                ){
             isInRange = true;   
         }
-        else if (this.positionPart.getY()*tileSize < y*tileSize 
-        && this.positionPart.getY()*tileSize + this.Range*tileSize > y*tileSize
-        && this.positionPart.getX()*tileSize == x*tileSize
-        && positionPart.isFacing('D')) {
+        else if (this.positionPart.getY()*tileSize > y*tileSize 
+        && this.positionPart.getY()*tileSize - this.range*tileSize <= y*tileSize
+        && this.positionPart.getX()*tileSize > x*tileSize-32
+        && this.positionPart.getX()*tileSize < x*tileSize+32   
+        //&& this.positionPart.isFacing('D')
+                ){
             isInRange = true;            
         }
-        return isInRange;
-    }
-
-    public boolean isInteract() {
-        return interact;
-    }
-    
-    public void setMapView(IMapView mapView){
-        while(InteractPart.mapView == null){
-            InteractPart.mapView = mapView;
-            try {
-                Thread.sleep(10);
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            }
+        if (isInRange) {
+            System.out.println("isInRange: " + isInRange);
         }
-    }
-
-    public void removeMapView(IMapView mapView){
-        InteractPart.mapView = null;
+        return isInRange;
     }
 }   

@@ -33,7 +33,7 @@ public class NPCPlugin implements IGamePluginService{
     
     private Entity createNPC() {
         System.out.println("createNPC()");
-        PositionPart positionPart = new PositionPart(3008, 2048);
+        PositionPart positionPart = new PositionPart(3014, 1984);
         Entity npc = new NPC(
                 "John", 
                 new SpritePart(
@@ -44,8 +44,7 @@ public class NPCPlugin implements IGamePluginService{
                 positionPart,
                 new MovingPart(),
                 new InteractPart(positionPart, 5),
-                new AIControlPart(new Character[]{'R','R','L','L','L','L','R','R','U','U','D','D','D','D','U','U'}),
-                0);
+                new AIControlPart(new Character[]{'R','R','L','L','L','L','R','R','U','U','D','D','D','D','U','U'}));
         return npc;
     }
 
