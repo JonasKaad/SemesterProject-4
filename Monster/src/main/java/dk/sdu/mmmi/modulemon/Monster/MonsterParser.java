@@ -56,7 +56,7 @@ public class MonsterParser {
                 soundPath = JSONMove.getString("sound");
             }
             else {
-                soundPath = "sounds/Tackle.ogg";
+                soundPath = "sounds/tackle.ogg";
             }
             IMonsterMove move = new MonsterMove(JSONMove.getString("name"),
                     JSONMove.getInt("damage"),

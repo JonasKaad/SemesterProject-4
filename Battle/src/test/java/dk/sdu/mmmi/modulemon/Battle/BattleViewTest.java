@@ -14,6 +14,8 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.junit.jupiter.api.function.Executable;
 import org.mockito.invocation.Invocation;
 
+import java.io.IOException;
+import java.net.URISyntaxException;
 import java.util.Collection;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -50,7 +52,7 @@ public class BattleViewTest {
     }
 
     @Test
-    public void BattleView_UnloadingBattleSimulationOnRuntime_ShouldNotThrow() {
+    public void BattleView_UnloadingBattleSimulationOnRuntime_ShouldNotThrow() throws IOException, URISyntaxException {
         // Arrange
         BattleView battleView = new BattleView();
         battleView.init();
@@ -128,7 +130,7 @@ public class BattleViewTest {
     }
 
     @Test
-    public void BattleView_TextEvent_ShouldWriteToScene(){
+    public void BattleView_TextEvent_ShouldWriteToScene() throws IOException, URISyntaxException {
         // Arrange
         BattleView battleView = new BattleView();
         battleView.init();
@@ -137,8 +139,10 @@ public class BattleViewTest {
 
         IBattleSimulation simulation = mock(IBattleSimulation.class);
         IBattleState battleState = mock(IBattleState.class);
-        when(battleState.getPlayer()).thenReturn(BattleParticipantMocks.getPlayer());
-        when(battleState.getEnemy()).thenReturn(BattleParticipantMocks.getOpponent());
+        IBattleParticipant player = BattleParticipantMocks.getPlayer();
+        IBattleParticipant enemy = BattleParticipantMocks.getOpponent();
+        when(battleState.getPlayer()).thenReturn(player);
+        when(battleState.getEnemy()).thenReturn(enemy);
         when(simulation.getState()).thenReturn(battleState);
         when(simulation.getNextBattleEvent()).thenReturn(new InfoBattleEvent("Never gonna give you up!"));
         battleView.setBattleSimulation(simulation);

@@ -42,7 +42,7 @@ public class MonsterRegistryTest {
                 20,
                 70,
                 70,
-                Arrays.asList(new MonsterMove("Zap", 20, MonsterType.LIGHTNING, "/sounds/Zap.ogg")),
+                Arrays.asList(new MonsterMove("Zap", 20, MonsterType.LIGHTNING, "/sounds/zap.ogg")),
                 "/images/eel_1.png",
                 "/images/eel_2.png",
                 1);
