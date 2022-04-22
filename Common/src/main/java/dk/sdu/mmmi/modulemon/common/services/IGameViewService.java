@@ -5,7 +5,7 @@ import dk.sdu.mmmi.modulemon.common.data.IGameStateManager;
 import dk.sdu.mmmi.modulemon.common.data.World;
 
 public interface IGameViewService {
-    void init();
+    void init(IGameStateManager gameStateManager);
 
     void update(GameData gameData, IGameStateManager gameStateManager);
 

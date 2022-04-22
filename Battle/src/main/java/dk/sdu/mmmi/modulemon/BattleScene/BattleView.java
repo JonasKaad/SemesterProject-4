@@ -103,15 +103,16 @@ public class BattleView implements IGameViewService, IBattleView {
      * Initialize for GameState
      */
     @Override
-    public void init() {
+    public void init(IGameStateManager gameStateManager) {
         spriteBatch = new SpriteBatch();
         _battleScene = new BattleScene();
 
         _isInitialized = true;
         //Temp
+        /*
         if(_battleSimulation != null)
             startBattle(BattleParticipantMocks.getPlayer(), BattleParticipantMocks.getOpponent(), null);
-
+         */
     }
 
     //OSGi dependency injection
@@ -217,7 +218,7 @@ public class BattleView implements IGameViewService, IBattleView {
                 enemyDieAnimation.setOnEventDone(() -> {
                     handleBattleEnd((VictoryBattleEvent) battleEvent);
                     //Should be removed later:
-                    gameStateManager.setDefaultState();
+                    //gameStateManager.setDefaultState();
                 });
                 enemyDieAnimation.start();
                 blockingAnimations.add(enemyDieAnimation);

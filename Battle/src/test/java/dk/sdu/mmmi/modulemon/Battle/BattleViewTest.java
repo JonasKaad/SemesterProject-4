@@ -9,6 +9,7 @@ import dk.sdu.mmmi.modulemon.CommonBattleSimulation.IBattleSimulation;
 import dk.sdu.mmmi.modulemon.CommonBattleSimulation.IBattleState;
 import dk.sdu.mmmi.modulemon.CommonTest.GdxTestIntercepter;
 import dk.sdu.mmmi.modulemon.common.data.GameData;
+import dk.sdu.mmmi.modulemon.common.data.IGameStateManager;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.junit.jupiter.api.function.Executable;
@@ -35,7 +36,7 @@ public class BattleViewTest {
     public void BattleView_EmptyBattleSimulation_ShouldNotThrow() {
         // Arrange
         BattleView bw = new BattleView();
-        bw.init();
+        bw.init(mock(IGameStateManager.class));
         GameData gameData = new GameData();
 
         // Act
@@ -53,7 +54,7 @@ public class BattleViewTest {
     public void BattleView_UnloadingBattleSimulationOnRuntime_ShouldNotThrow() {
         // Arrange
         BattleView battleView = new BattleView();
-        battleView.init();
+        battleView.init(mock(IGameStateManager.class));
         GameData gameData = new GameData();
         IBattleSimulation simulation = mock(IBattleSimulation.class);
         IBattleState battleState = mock(IBattleState.class);
@@ -84,7 +85,7 @@ public class BattleViewTest {
     public void BattleView_DrawWidthHeight_ShouldBeUpdatedByGameData() {
         // Arrange
         BattleView battleView = new BattleView();
-        battleView.init();
+        battleView.init(mock(IGameStateManager.class));
         GameData gameData = new GameData();
         gameData.setDisplayHeight(120);
         gameData.setDisplayWidth(100);
@@ -109,7 +110,7 @@ public class BattleViewTest {
     public void BattleView_Init_ShouldStartBattle() {
         // Arrange
         BattleView battleView = new BattleView();
-        battleView.init();
+        battleView.init(mock(IGameStateManager.class));
         IBattleParticipant participant1 = mock(IBattleParticipant.class);
         when(participant1.isPlayerControlled()).thenReturn(true);
         IBattleParticipant participant2 = mock(IBattleParticipant.class);
@@ -131,7 +132,7 @@ public class BattleViewTest {
     public void BattleView_TextEvent_ShouldWriteToScene(){
         // Arrange
         BattleView battleView = new BattleView();
-        battleView.init();
+        battleView.init(mock(IGameStateManager.class));
         GameData gameData = new GameData();
         BattleScene scene = new BattleScene();
 

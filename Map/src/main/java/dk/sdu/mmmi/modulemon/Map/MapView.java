@@ -13,8 +13,13 @@ import com.badlogic.gdx.maps.tiled.TiledMap;
 import com.badlogic.gdx.maps.tiled.TiledMapTileLayer;
 import com.badlogic.gdx.maps.tiled.renderers.BatchTiledMapRenderer;
 import com.badlogic.gdx.maps.tiled.renderers.OrthogonalTiledMapRenderer;
+import dk.sdu.mmmi.modulemon.CommonBattle.IBattleParticipant;
 import dk.sdu.mmmi.modulemon.CommonBattle.MonsterTeamPart;
+import dk.sdu.mmmi.modulemon.CommonBattleClient.IBattleCallback;
+import dk.sdu.mmmi.modulemon.CommonBattleClient.IBattleResult;
+import dk.sdu.mmmi.modulemon.CommonBattleClient.IBattleView;
 import dk.sdu.mmmi.modulemon.CommonMap.IMapView;
+import dk.sdu.mmmi.modulemon.CommonMonster.MonsterType;
 import dk.sdu.mmmi.modulemon.Player.PlayerPlugin;
 import dk.sdu.mmmi.modulemon.common.data.*;
 import dk.sdu.mmmi.modulemon.common.OSGiFileHandle;
@@ -58,8 +63,12 @@ public class MapView implements IGameViewService, IMapView {
     private static final List<IGamePluginService> gamePluginList = new CopyOnWriteArrayList<>();
     private static Queue<Runnable> gdxThreadTasks = new LinkedList<>();
 
+    private IGameStateManager gameStateManager;
+    private IBattleView battleView;
+    private MonsterTeamPart playerMonsters;
+
     @Override
-    public void init() {
+    public void init(IGameStateManager gameStateManager) {
         mapMusic = Gdx.audio.newMusic(new OSGiFileHandle("/music/village_theme.ogg", MapView.class));
         tiledMap = new OSGiTmxLoader().load("/maps/SeasonalOverworld.tmx");
         overhangLayer = (TiledMapTileLayer) tiledMap.getLayers().get("Top");
@@ -80,6 +89,9 @@ public class MapView implements IGameViewService, IMapView {
         pauseMenu = new Rectangle(100, 100, 200, 250);
         shapeRenderer = new ShapeRenderer();
         gdxThreadTasks.add(() -> textUtils = TextUtils.getInstance());
+
+        // Battle
+        this.gameStateManager = gameStateManager;
     }
 
     private void initializeCameraDrawing(GameData gameData){
@@ -250,6 +262,15 @@ public class MapView implements IGameViewService, IMapView {
             isPaused = true;
             gameData.setPaused(isPaused);
         }
+        if(gameData.getKeys().isPressed(GameKeys.E)){
+            for(Entity entity: world.getEntities()){
+                if(entity.getClass() == dk.sdu.mmmi.modulemon.Player.Player.class){
+                    playerMonsters = entity.getPart(MonsterTeamPart.class);
+                    System.out.println("Added playermonsters");
+                }
+            }
+            startEncounter(playerMonsters, playerMonsters);
+        }
     }
 
     @Override
@@ -276,6 +297,10 @@ public class MapView implements IGameViewService, IMapView {
         this.gamePluginList.remove(plugin);
         gdxThreadTasks.add(() -> plugin.stop(gameData, world));
     }
+
+    public void setBattleView(IBattleView battleView){ this.battleView = battleView; }
+
+    public void removeBattleView(IBattleView battleView){ this.battleView = null; }
 
     @Override
     public float getMapLeft() {
@@ -312,5 +337,20 @@ public class MapView implements IGameViewService, IMapView {
     @Override
     public boolean isPaused() {
         return isPaused;
+    }
+
+    public void startEncounter(MonsterTeamPart playerMonsters, MonsterTeamPart enemyMonsters){
+        IBattleParticipant playerParticipant = playerMonsters.toBattleParticipant(true);
+        IBattleParticipant enemyParticipant = enemyMonsters.toBattleParticipant(false);
+        System.out.println(playerParticipant.getActiveMonster().getBackSprite());
+        ((IGameViewService) battleView).init(gameStateManager);
+        battleView.startBattle(playerParticipant, enemyParticipant, new IBattleCallback() {
+            @Override
+            public void onBattleEnd(IBattleResult result) {
+                System.out.println("Somebody won!");
+                gameStateManager.setState(MapView.this);
+            }
+        });
+        gameStateManager.setState((IGameViewService) battleView);
     }
 }

@@ -48,7 +48,7 @@ public class MenuState implements IGameViewService {
     }
 
     @Override
-    public void init() {
+    public void init(IGameStateManager gameStateManager) {
         // Instantiates the variables
         spriteBatch = new SpriteBatch();
         glyphLayout = new GlyphLayout();
