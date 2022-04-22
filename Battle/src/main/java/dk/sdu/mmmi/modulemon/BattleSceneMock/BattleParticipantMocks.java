@@ -57,6 +57,7 @@ public class BattleParticipantMocks {
                 "/monsters/alpacaB.png",
                 2
         ));
+
         /*
         bulbasaurMoves.add(new MockMonsterMove("Tackle", MonsterType.AIR, 5));
         bulbasaurMoves.add(new MockMonsterMove("Vine Whip", MonsterType.GRASS, 10));
@@ -100,23 +101,6 @@ public class BattleParticipantMocks {
         List<IMonsterMove> bulbasaurMoves = new ArrayList<>();
         List<IMonsterMove> charmanderMoves = new ArrayList<>();
 
-        alpacaMoves.add(new MonsterMove("Spit", 10, MonsterType.WATER));
-        alpacaMoves.add(new MonsterMove("Trample", 15, MonsterType.EARTH));
-        alpacaMoves.add(new MonsterMove("Horn Blast", 25, MonsterType.EARTH));
-        alpacaMoves.add(new MonsterMove("Fire Breath", 50, MonsterType.FIRE));
-        monsters.add(new Monster(
-                "Alpaca",
-                MonsterType.EARTH,
-                100,
-                10,
-                20,
-                5,
-                alpacaMoves,
-                "/monsters/alpacaF.png",
-                "/monsters/alpacaB.png",
-                2
-        ));
-
         eelMoves.add(new MonsterMove("Tackle", 5, MonsterType.AIR));
         eelMoves.add(new MonsterMove("Zap", 10, MonsterType.LIGHTNING));
         eelMoves.add(new MonsterMove("Egg Bomb", 20, MonsterType.GRASS));
@@ -134,8 +118,22 @@ public class BattleParticipantMocks {
                 1
         ));
 
-
-
+        alpacaMoves.add(new MonsterMove("Spit", 10, MonsterType.WATER));
+        alpacaMoves.add(new MonsterMove("Trample", 15, MonsterType.EARTH));
+        alpacaMoves.add(new MonsterMove("Horn Blast", 25, MonsterType.EARTH));
+        alpacaMoves.add(new MonsterMove("Fire Breath", 300, MonsterType.FIRE));
+        monsters.add(new Monster(
+                "Alpaca",
+                MonsterType.EARTH,
+                100,
+                10,
+                20,
+                5,
+                alpacaMoves,
+                "/monsters/alpacaF.png",
+                "/monsters/alpacaB.png",
+                2
+        ));
 
         /*
         slowpokeMoves.add(new MockMonsterMove("Water gun", MonsterType.WATER, 15));

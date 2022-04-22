@@ -26,7 +26,7 @@ public class BattleState implements IBattleState {
 
     @Override
     public boolean isPlayersTurn() {
-        return activeParticipant==player;
+        return activeParticipant.equals(player);
     }
 
     public IBattleParticipant getActiveParticipant() {

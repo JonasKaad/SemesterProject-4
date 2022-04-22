@@ -65,7 +65,7 @@ public class BattleParticipant implements IBattleParticipant {
                 cloneActiveMonster = cloneMonster;
             }
         }
-        return new BattleParticipant(cloneTeam, cloneActiveMonster, this.playerControlled);
+        return new BattleParticipant(cloneTeam, cloneActiveMonster, this.playerControlled, this.uuid);
 
     }
 

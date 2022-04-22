@@ -117,4 +117,9 @@ public class Monster implements IMonster {
         }
         return false;
     }
+
+    @Override
+    public int hashCode() {
+        return this.uuid.hashCode();
+    }
 }

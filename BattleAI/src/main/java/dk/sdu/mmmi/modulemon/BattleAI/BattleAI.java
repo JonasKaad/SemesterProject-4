@@ -49,7 +49,7 @@ public class BattleAI implements IBattleAI {
             knowledgeState.getEnemyMonsters().add(opposingParticipant.getActiveMonster());
         }
 
-        int searchDepth = 10;
+        int searchDepth = 5;
 
         // Try minmax on all available actions here
         IMonsterMove bestMove = null;
@@ -85,7 +85,6 @@ public class BattleAI implements IBattleAI {
 
     private float minmaxSearch(IBattleState battleState, int currentDepth, int maxDepth) {
         if (isTerminal(battleState) || currentDepth>=maxDepth) {
-            System.out.println("maximum depth reached (AI)");
             // dividing the utility of terminal states by the depth of that state in the search
             // will make the AI prefer winning fast over more slowly. If the AI is bound to lose
             // (negative utility) it will prefer doing so slowly
@@ -120,9 +119,9 @@ public class BattleAI implements IBattleAI {
     }
 
     private boolean isTerminal(IBattleState battleState) {
-        IBattleParticipant participantToControl = battleState.getPlayer().equals(this.participantToControl)
-                ? battleState.getPlayer()
-                : battleState.getEnemy();
+        IBattleParticipant enemy = battleState.getPlayer().equals(this.participantToControl)
+                ? battleState.getEnemy()
+                : battleState.getPlayer();
 
         // Check if all the AIs monsters are dead
         boolean allOwnMonstersDead = participantToControl.getMonsterTeam().stream()
@@ -130,7 +129,7 @@ public class BattleAI implements IBattleAI {
         if (allOwnMonstersDead) return true;
 
         // Check if all the opposing participant's (known) monster are dead
-        boolean allEnemyMonstersDead = participantToControl.getMonsterTeam().stream()
+        boolean allEnemyMonstersDead = enemy.getMonsterTeam().stream()
                 .filter(x -> knowledgeState.enemyMonsters.contains(x))  //only consider monsters we've seen
                 .allMatch(x -> x.getHitPoints()<=0);
         if (allEnemyMonstersDead) return true;
@@ -147,21 +146,23 @@ public class BattleAI implements IBattleAI {
                 ? battleState.getEnemy()
                 : battleState.getPlayer();
 
-        // Check if all the AIs monsters are dead
-        boolean allOwnMonstersDead = participantToControl.getMonsterTeam().stream()
-                .allMatch(x -> x.getHitPoints()<=0);
-        if (allOwnMonstersDead) return -1;
 
-        // Check if all the opposing participant's (known) monster are dead
-        boolean allEnemyMonstersDead = opposingParticipant.getMonsterTeam().stream()
-                .filter(x -> knowledgeState.enemyMonsters.contains(x))  //only consider monsters we've seen
-                .allMatch(x -> x.getHitPoints()<=0);
-        if (allEnemyMonstersDead) return 1;
+        int ownMonsterHPSum = 0;
+        for(IMonster monster : participantToControl.getMonsterTeam()) {
+            if (monster.getHitPoints()>0) ownMonsterHPSum += monster.getHitPoints();
+        }
 
-        return 0;
+        int enemyMonsterHPSum = 0;
+        for(IMonster monster : opposingParticipant.getMonsterTeam()) {
+            if (monster.getHitPoints()>0) enemyMonsterHPSum += monster.getHitPoints();
+        }
+
+        // This will return 1 if all the enemy's monsters are dead, 0 if all the AI's monster
+        // are dead, and a number in between otherwise, which will be higher if the AI's monsters
+        // have a larger proportion of the hp of all the monsters in the battle
+        return (float)ownMonsterHPSum/(ownMonsterHPSum+enemyMonsterHPSum);
     }
 
-    //TODO write comments
     private List<IBattleState> successorFunction(IBattleState battleState) {
 
         List<IBattleState> successors = new ArrayList<>();
@@ -170,8 +171,9 @@ public class BattleAI implements IBattleAI {
 
         for (IMonsterMove move : activeParticipant.getActiveMonster().getMoves()) {
             if (!activeParticipant.equals(participantToControl)) {
-                if (!knowledgeState.getMonsterMoves().get(activeParticipant.getActiveMonster()).contains(move)){
-                    break; // If we have not seen this move, don't consider the option where it is used
+                if (!(knowledgeState.getMonsterMoves().containsKey(activeParticipant.getActiveMonster()) &&
+                        knowledgeState.getMonsterMoves().get(activeParticipant.getActiveMonster()).contains(move))){
+                    continue; // If we have not seen this move, don't consider the option where it is used
                 }
             }
             successors.add(battleSimulation.simulateDoMove(activeParticipant, move, battleState));
@@ -185,11 +187,14 @@ public class BattleAI implements IBattleAI {
         for (IMonster monster : activeParticipant.getMonsterTeam()) {
             if (!activeParticipant.equals(participantToControl)) {
                 if (!knowledgeState.getEnemyMonsters().contains(monster)){
-                    break;
+                    continue;
                 }
             }
             if (monster.equals(activeParticipant.getActiveMonster())) {
-                break;
+                continue;
+            }
+            if (monster.getHitPoints()<=0) {
+                continue;
             }
             successors.add(battleSimulation.simulateSwitchMonster(activeParticipant, monster, battleState));
         }

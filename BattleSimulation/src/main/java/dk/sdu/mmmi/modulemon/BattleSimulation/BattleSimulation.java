@@ -163,15 +163,30 @@ public class BattleSimulation implements IBattleSimulation {
         BattleState newState = (BattleState) currentState.clone();
 
         IMonster source = newState.getActiveParticipant().getActiveMonster();
-        IMonster target;
+        IBattleParticipant opposingParticipant;
         if (newState.isPlayersTurn()) {
-            target = newState.getEnemy().getActiveMonster();
+            opposingParticipant = newState.getEnemy();
         } else {
-            target = newState.getPlayer().getActiveMonster();
+            opposingParticipant = newState.getPlayer();
         }
+        IMonster target = opposingParticipant.getActiveMonster();
 
         int damage = monsterProcessor.calculateDamage(source, move, target);
-        target.setHitPoints(target.getHitPoints()-damage);
+
+        int newHitPoints = target.getHitPoints()-damage;
+        if (newHitPoints>0) {
+            target.setHitPoints(newHitPoints);
+
+        } else {
+            target.setHitPoints(0);
+            Optional<IMonster> nextMonster = opposingParticipant.getMonsterTeam().stream().filter(x -> x.getHitPoints() > 0).findFirst();
+
+            if (nextMonster.isPresent()) {
+                opposingParticipant.setActiveMonster(nextMonster.get());
+            }
+        }
+
+        switchTurns(newState);
 
         return newState;
     }
@@ -183,7 +198,17 @@ public class BattleSimulation implements IBattleSimulation {
 
         newState.getActiveParticipant().setActiveMonster(monster.clone());
 
+        switchTurns(newState);
+
         return newState;
+    }
+
+    private void switchTurns(BattleState state) {
+        if (state.isPlayersTurn()) {
+            state.setActiveParticipant(battleState.getEnemy());
+        } else {
+            state.setActiveParticipant(battleState.getPlayer());
+        }
     }
 
     @Override
