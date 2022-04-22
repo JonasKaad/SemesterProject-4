@@ -3,6 +3,7 @@ package dk.sdu.mmmi.modulemon.Monster;
 import dk.sdu.mmmi.modulemon.CommonMonster.IMonster;
 import dk.sdu.mmmi.modulemon.CommonMonster.IMonsterMove;
 import dk.sdu.mmmi.modulemon.CommonMonster.MonsterType;
+import org.json.JSONException;
 import org.junit.jupiter.api.*;
 
 import java.io.IOException;
@@ -113,7 +114,7 @@ public class MonsterParserTest {
     @Test
     @Order(4)
     void monsterParser_validButWrongURL_failsCorrectly() {
-        assertThrows(IOException.class, () -> MonsterParser.parseMonsters(
+        assertThrows(JSONException.class, () -> MonsterParser.parseMonsters(
                 "/json",
                 "/json"
         ));
@@ -122,7 +123,7 @@ public class MonsterParserTest {
     @Test
     @Order(5)
     void monsterParser_invalidURL_failsCorrectly() {
-        assertThrows(NullPointerException.class, () -> MonsterParser.parseMonsters(
+        assertThrows(JSONException.class, () -> MonsterParser.parseMonsters(
                 "/json/wrong.json",
                 "/json/wrong.json"
         ));
