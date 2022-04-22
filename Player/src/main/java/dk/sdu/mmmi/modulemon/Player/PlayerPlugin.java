@@ -18,7 +18,7 @@ import java.util.concurrent.CopyOnWriteArrayList;
 public class PlayerPlugin implements IGamePluginService {
 
     private Entity player;
-    private static final List<IMonsterRegistry> monsterRegistryList = new CopyOnWriteArrayList<>();
+    private static List<IMonsterRegistry> monsterRegistryList = new CopyOnWriteArrayList<>();
 
     public PlayerPlugin() {
     }
@@ -44,11 +44,11 @@ public class PlayerPlugin implements IGamePluginService {
         Texture leftSprite = new Texture(new OSGiFileHandle("/assets/main-char-left5.png", Player.class));
         Texture rightSprite = new Texture(new OSGiFileHandle("/assets/main-char-right5.png", Player.class));
         player.add(new SpritePart(upSprite, downSprite, leftSprite, rightSprite));
-        IMonster[] monsterArray = monsterRegistryList.get(0).getAllMonsters();
+        IMonsterRegistry monsterRegistry = monsterRegistryList.get(0);
 
         List<IMonster> monsterList = new ArrayList<>();
-        monsterList.add(monsterArray[0]);
-        monsterList.add(monsterArray[1]);
+        monsterList.add(monsterRegistry.getMonster(0));
+        monsterList.add(monsterRegistry.getMonster(1));
         player.add(new MonsterTeamPart(monsterList));
 
         return player;
@@ -64,6 +64,12 @@ public class PlayerPlugin implements IGamePluginService {
     public void addMonsterRegistryService (IMonsterRegistry registry){
         this.monsterRegistryList.add(registry);
     }
+
+    // Used for tests
+    public void setMonsterRegistryList(List<IMonsterRegistry> monsterRegistryList) {
+        this.monsterRegistryList = monsterRegistryList;
+    }
+
     public void removeMonsterRegistryService (IMonsterRegistry registry){
         this.monsterRegistryList.remove(registry);
     }
