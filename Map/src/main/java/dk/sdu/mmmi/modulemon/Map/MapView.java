@@ -158,19 +158,7 @@ public class MapView implements IGameViewService, IMapView {
             for (Entity entity : world.getEntities()) {
                 if (entity.getClass() == dk.sdu.mmmi.modulemon.Player.Player.class) {
                     mtp = entity.getPart(MonsterTeamPart.class);
-                    //mtp.printMonsterTeamNames();
-                    //mtp.getMonsterTeam();
-
-                    //String[] monsterNames = mtp.getMonsterTeamNames();
-                    //monsterTeamNames = mtp.getMonsterTeamNames();
                     monsterTeam = mtp.getMonsterTeam();
-                    /*for (IMonster mons: monsterTeam) {
-                        monsterTeamNames.add(mons.getName());
-                    }
-                    for (int i = 0; i < monsterTeam.size(); i++) {
-                        monsterTeamNames.set(i, monsterTeam.get(i).getName());
-                    }*/
-                    //String[] monsterNames = {"Alpaca", "Eel"};
 
                     //Drawing monster menu box
                     shapeRenderer.setAutoShapeType(true);
@@ -289,8 +277,8 @@ public class MapView implements IGameViewService, IMapView {
         }
     }
 
-    int firstSelected = -1;
-    int secondSelected = -1;
+    int firstSelected = -1; // Default case = nothing selected
+    int secondSelected = -1; // Default case = nothing selected
 
     @Override
     public void handleInput(GameData gameData, IGameStateManager gameStateManager) {
@@ -337,13 +325,20 @@ public class MapView implements IGameViewService, IMapView {
             }
             if(gameData.getKeys().isPressed(GameKeys.ENTER)) {
                 if (showMonsterTeam) {
-                    if (firstSelected == -1) {
-                        firstSelected = selectedOptionIndexMonsterTeam;
+                    if (firstSelected == -1) { // If nothing is selected
+                        firstSelected = selectedOptionIndexMonsterTeam; // Select the current monster
                         System.out.println("Selected the first");
                         return;
-                    } else if (secondSelected == -1) {
-                        secondSelected = selectedOptionIndexMonsterTeam;
+                    }
+                    else if (secondSelected == -1) {
+                        secondSelected = selectedOptionIndexMonsterTeam; // Select the second current monster
                         System.out.println("Selected the second");
+                    }
+                    if (firstSelected == secondSelected){ // If the same monster has been chosen twice, reset
+                        firstSelected = -1;
+                        secondSelected = -1;
+                        System.out.println("Reset");
+                        return;
                     }
                     if (firstSelected != -1 && secondSelected != -1) {
                         IMonster newFirstMonster = monsterTeam.get(secondSelected);
