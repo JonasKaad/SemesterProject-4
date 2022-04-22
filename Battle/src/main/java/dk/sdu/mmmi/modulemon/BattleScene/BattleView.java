@@ -241,8 +241,6 @@ public class BattleView implements IGameViewService, IBattleView {
                     EnemyDieAnimation enemyDieAnimation = new EnemyDieAnimation(_battleScene);
                     enemyDieAnimation.setOnEventDone(() -> {
                         handleBattleEnd((VictoryBattleEvent) battleEvent);
-                        //Should be removed later:
-                        gameStateManager.setDefaultState();
                     });
                     enemyDieAnimation.start();
                     blockingAnimations.add(enemyDieAnimation);
