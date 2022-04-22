@@ -82,8 +82,6 @@ public class PlayerControlSystem implements IEntityProcessingService {
         entity.setSpriteTexture(result);
         entity.setPosX(x);
         entity.setPosY(y);
-
-        //entity.setSprite(new Texture(new OSGiFileHandle("/assets/main-char-right.png")));
     }
 
 
