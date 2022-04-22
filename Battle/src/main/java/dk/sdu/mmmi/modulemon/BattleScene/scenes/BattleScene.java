@@ -518,6 +518,10 @@ public class BattleScene {
         }
     }
 
+    public void setTextBoxPosition(Position pos) {
+        this._textBoxPosition = pos;
+    }
+
     public void resetPositions() {
         _backdropPosition = BattleSceneDefaults.backdropPosition();
         _playerBasePosition = BattleSceneDefaults.playerBasePosition();
