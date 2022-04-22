@@ -230,5 +230,4 @@ public class BattleSimulation implements IBattleSimulation {
     public void setAIFactory(IBattleAIFactory factory) {
         this.AIFactory = factory;
     }
-
 }

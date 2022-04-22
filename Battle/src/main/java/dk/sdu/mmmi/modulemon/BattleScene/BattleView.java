@@ -5,6 +5,7 @@ import com.badlogic.gdx.audio.Music;
 import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.utils.GdxRuntimeException;
 import dk.sdu.mmmi.modulemon.BattleScene.animations.*;
 import dk.sdu.mmmi.modulemon.BattleScene.scenes.BattleScene;
 import dk.sdu.mmmi.modulemon.BattleSceneMock.BattleParticipantMocks;
@@ -53,9 +54,13 @@ public class BattleView implements IGameViewService, IBattleView {
     private SpriteBatch spriteBatch;
 
     public Sound getAttackSound(IMonsterMove monsterMove){
-        Sound returnSound;
+        Sound returnSound = null;
 
-        returnSound = Gdx.audio.newSound(new OSGiFileHandle(monsterMove.getSoundPath(), monsterMove.getClass()));
+        try {
+            returnSound = Gdx.audio.newSound(new OSGiFileHandle(monsterMove.getSoundPath(), monsterMove.getClass()));
+        }catch(GdxRuntimeException ex){
+            System.out.println("[Warning] Failed to loadd attack sound for monster-move: " + monsterMove.getName());
+        }
 
         return returnSound;
     }
@@ -258,12 +263,14 @@ public class BattleView implements IGameViewService, IBattleView {
             IMonster playerActiveMonster = _battleSimulation.getState().getPlayer().getActiveMonster();
             _battleScene.setPlayerSprite(playerActiveMonster.getBackSprite(), playerActiveMonster.getClass());
             _battleScene.setPlayerMonsterName(playerActiveMonster.getName());
-            _battleScene.setPlayerHP(Integer.toString(playerActiveMonster.getHitPoints()));
+            _battleScene.setPlayerHP(playerActiveMonster.getHitPoints());
+            _battleScene.setMaxPlayerHP(playerActiveMonster.getMaxHitPoints());
 
             IMonster enemyActiveMonster = _battleSimulation.getState().getEnemy().getActiveMonster();
             _battleScene.setEnemySprite(enemyActiveMonster.getFrontSprite(), enemyActiveMonster.getClass());
             _battleScene.setEnemyMonsterName(enemyActiveMonster.getName());
-            _battleScene.setEnemyHP(Integer.toString(enemyActiveMonster.getHitPoints()));
+            _battleScene.setEnemyHP(enemyActiveMonster.getHitPoints());
+            _battleScene.setMaxEnemyHP(enemyActiveMonster.getMaxHitPoints());
         }
 
         _battleScene.setSelectedActionIndex(selectedAction);

@@ -69,7 +69,7 @@ public class EnemyBattleAttackAnimation extends BaseAnimation {
         _battleScene.setHealthIndicatorPosition(new Position(states[4], states[5]));
         _battleScene.setHealthIndicatorColor(new Color(1,0,0, states[6]));
         if(states[7] > 0.9f){
-            if(!_attackSoundPlayed) {
+            if(!_attackSoundPlayed && _attackSound != null) {
                 _attackSound.play();
                 _attackSoundPlayed = true;
             }
