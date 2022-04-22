@@ -1,6 +1,5 @@
 package dk.sdu.mmmi.modulemon.Battle;
 
-import dk.sdu.mmmi.modulemon.CommonBattle.IBattleParticipant;
 import dk.sdu.mmmi.modulemon.CommonMonster.IMonster;
 import org.junit.jupiter.api.Test;
 

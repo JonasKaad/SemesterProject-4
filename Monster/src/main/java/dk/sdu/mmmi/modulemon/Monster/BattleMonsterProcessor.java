@@ -5,23 +5,13 @@ import dk.sdu.mmmi.modulemon.CommonMonster.IMonster;
 import dk.sdu.mmmi.modulemon.CommonMonster.IMonsterMove;
 import dk.sdu.mmmi.modulemon.CommonMonster.MonsterType;
 
-/*
-    FIRE,
-    WATER,
-    GRASS,
-    AIR,
-    EARTH,
-    LIGHTNING
- */
-
 public class BattleMonsterProcessor implements IBattleMonsterProcessor {
 
     @Override
     public IMonster whichMonsterStarts(IMonster iMonster1, IMonster iMonster2) {
-//        Monster monster1 = (Monster) iMonster1;
-//        Monster monster2 = (Monster) iMonster2;
-//        return monster1.getSpeed() >= monster2.getSpeed() ? monster1 : monster2;
-        return iMonster1; //Temp while we figure things out.
+        Monster monster1 = (Monster) iMonster1;
+        Monster monster2 = (Monster) iMonster2;
+        return monster1.getSpeed() >= monster2.getSpeed() ? monster1 : monster2;
     }
 
     @Override

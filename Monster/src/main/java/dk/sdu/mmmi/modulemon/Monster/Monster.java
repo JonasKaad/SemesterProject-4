@@ -8,7 +8,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
-
 public class Monster implements IMonster {
     String name;
     MonsterType type;
