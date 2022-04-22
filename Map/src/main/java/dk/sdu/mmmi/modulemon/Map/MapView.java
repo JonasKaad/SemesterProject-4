@@ -19,6 +19,8 @@ import dk.sdu.mmmi.modulemon.CommonBattleClient.IBattleCallback;
 import dk.sdu.mmmi.modulemon.CommonBattleClient.IBattleResult;
 import dk.sdu.mmmi.modulemon.CommonBattleClient.IBattleView;
 import dk.sdu.mmmi.modulemon.CommonMap.IMapView;
+import dk.sdu.mmmi.modulemon.CommonMonster.IMonster;
+import dk.sdu.mmmi.modulemon.CommonMonster.IMonsterMove;
 import dk.sdu.mmmi.modulemon.CommonMonster.MonsterType;
 import dk.sdu.mmmi.modulemon.Player.PlayerPlugin;
 import dk.sdu.mmmi.modulemon.common.data.*;
@@ -29,6 +31,7 @@ import dk.sdu.mmmi.modulemon.common.services.IEntityProcessingService;
 import dk.sdu.mmmi.modulemon.common.services.IGamePluginService;
 import dk.sdu.mmmi.modulemon.common.services.IGameViewService;
 
+import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Queue;
@@ -342,15 +345,13 @@ public class MapView implements IGameViewService, IMapView {
     public void startEncounter(MonsterTeamPart playerMonsters, MonsterTeamPart enemyMonsters){
         IBattleParticipant playerParticipant = playerMonsters.toBattleParticipant(true);
         IBattleParticipant enemyParticipant = enemyMonsters.toBattleParticipant(false);
-        System.out.println(playerParticipant.getActiveMonster().getBackSprite());
-        ((IGameViewService) battleView).init(gameStateManager);
+
+        gameStateManager.setState((IGameViewService) battleView);
         battleView.startBattle(playerParticipant, enemyParticipant, new IBattleCallback() {
             @Override
             public void onBattleEnd(IBattleResult result) {
-                System.out.println("Somebody won!");
                 gameStateManager.setState(MapView.this);
             }
         });
-        gameStateManager.setState((IGameViewService) battleView);
     }
 }
