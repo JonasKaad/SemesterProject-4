@@ -208,7 +208,7 @@ public class PersonaRectangle extends Rectangle{
     }
 
     private float getDriftLevel(float time){
-        return map(getRawDriftLevel(time), -2, 2, 0, this.driftLevel);
+        return MathUtils.map(getRawDriftLevel(time), -2, 2, 0, this.driftLevel);
     }
 
     private float getRawDriftLevel(float time) {
@@ -217,9 +217,5 @@ public class PersonaRectangle extends Rectangle{
 
     private float randomFloat(Random random, int min, int max) {
         return min + random.nextFloat() * (max - min);
-    }
-
-    private float map(float value, float inputMin, float inputMax, float outputMin, float outputMax){
-        return (value - inputMin) * (outputMax - outputMin) / (inputMax - inputMin) + outputMin;
     }
 }

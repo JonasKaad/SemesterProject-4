@@ -199,5 +199,4 @@ public class BattleSimulation implements IBattleSimulation {
     public void setAI(IBattleAI AI) {
         this.AI = AI;
     }
-
 }
