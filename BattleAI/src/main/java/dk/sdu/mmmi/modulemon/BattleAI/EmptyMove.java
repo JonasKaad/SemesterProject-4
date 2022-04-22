@@ -18,4 +18,9 @@ public class EmptyMove implements IMonsterMove {
     public MonsterType getType() {
         return null;
     }
+
+    @Override
+    public String getSoundPath() {
+        return null;
+    }
 }
