@@ -135,6 +135,7 @@ public class BattleSimulation implements IBattleSimulation {
         if (battleState.getActiveParticipant()!=battleParticipant) {
             throw new IllegalArgumentException("It is not that battle participants turn!");
         }
+        if (monster.getHitPoints()<=0) throw new IllegalArgumentException("You can't change to a dead monster");
         if (battleParticipant.getMonsterTeam().contains(monster)) {
             nextEvent = new ChangeMonsterBattleEvent(getActiveParticipantTitle()+" changed monster to " + monster.getName(), battleParticipant, monster);
             onNextEvent = () -> {

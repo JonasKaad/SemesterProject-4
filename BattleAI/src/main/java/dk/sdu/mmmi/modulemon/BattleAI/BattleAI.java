@@ -67,7 +67,7 @@ public class BattleAI implements IBattleAI {
         IMonster bestSwitch = null;
         float bestSwitchUtil = -Float.MAX_VALUE;
         for (IMonster monster : participantToControl.getMonsterTeam()) {
-            if (monster != participantToControl.getActiveMonster()) {
+            if (monster != participantToControl.getActiveMonster() && monster.getHitPoints()>0) {
                 IBattleState state = battleSimulation.simulateSwitchMonster(participantToControl, monster, battleSimulation.getState());
                 float util = minmaxSearch(state, 1, searchDepth);
                 if (util>bestSwitchUtil) {
