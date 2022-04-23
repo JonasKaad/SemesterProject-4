@@ -18,6 +18,8 @@ import dk.sdu.mmmi.modulemon.CommonMap.IMapView;
 import dk.sdu.mmmi.modulemon.CommonMonster.IMonster;
 import dk.sdu.mmmi.modulemon.common.data.*;
 import dk.sdu.mmmi.modulemon.common.OSGiFileHandle;
+import dk.sdu.mmmi.modulemon.common.drawing.DrawingUtils;
+import dk.sdu.mmmi.modulemon.common.drawing.ImageDrawingUtils;
 import dk.sdu.mmmi.modulemon.common.drawing.Rectangle;
 import dk.sdu.mmmi.modulemon.common.drawing.TextUtils;
 import dk.sdu.mmmi.modulemon.common.services.IEntityProcessingService;
@@ -41,12 +43,12 @@ public class MapView implements IGameViewService, IMapView {
     private boolean isPaused;
     private boolean showMonsterTeam;
     private TextUtils textUtils;
+    private ImageDrawingUtils imageDrawingUtils;
     private TextUtils textUtilsMonster;
     private Rectangle pauseMenu;
     private Rectangle monsterTeamMenu;
     private String pauseMenuTitle = "GAME PAUSED";
     private String[] pauseActions = new String[]{"Resume", "Inventory", "Team", "Quit"};
-    private List<String> monsterTeamNames = new ArrayList<>();
     private List<IMonster> monsterTeam = new ArrayList<>();
     private int selectedOptionIndex = 0;
     private int selectedOptionIndexMonsterTeam = 0;
@@ -87,10 +89,11 @@ public class MapView implements IGameViewService, IMapView {
         isPaused = false;
         showMonsterTeam = false;
         pauseMenu = new Rectangle(100, 100, 200, 250);
-        monsterTeamMenu = new Rectangle(gameData.getDisplayWidth() / 2f, gameData.getDisplayHeight() / 2f, 200, 250);
+        monsterTeamMenu = new Rectangle(100, 100, 400, 400);
         shapeRenderer = new ShapeRenderer();
         gdxThreadTasks.add(() -> textUtils = TextUtils.getInstance());
         gdxThreadTasks.add(() -> textUtilsMonster = TextUtils.getInstance());
+        gdxThreadTasks.add(() -> imageDrawingUtils = ImageDrawingUtils.getInstance());
 
     }
 
@@ -166,8 +169,9 @@ public class MapView implements IGameViewService, IMapView {
                     shapeRenderer.setColor(Color.WHITE);
 
                     shapeRenderer.begin(ShapeRenderer.ShapeType.Filled);
-                    monsterTeamMenu.setX(cam.position.x);
-                    monsterTeamMenu.setY(cam.position.y);
+
+                    monsterTeamMenu.setX(cam.position.x - cam.viewportWidth / 2.6f);
+                    monsterTeamMenu.setY(cam.position.y - cam.viewportHeight / 3.2f);
                     monsterTeamMenu.draw(shapeRenderer, gameData.getDelta());
                     shapeRenderer.end();
 
@@ -176,6 +180,8 @@ public class MapView implements IGameViewService, IMapView {
                     spriteBatch.setProjectionMatrix(cam.combined);
                     spriteBatch.begin();
 
+
+
                     textUtilsMonster.drawNormalRoboto(
                             spriteBatch,
                             "Your Team",
@@ -183,9 +189,11 @@ public class MapView implements IGameViewService, IMapView {
                             monsterTeamMenu.getX() + 19,
                             monsterTeamMenu.getY() + monsterTeamMenu.getHeight() - 10);
 
-                    //Drawing options
+                    //Drawing Names
                     for (int i = 0; i < monsterTeam.size(); i++) {
-                        textUtilsMonster.drawSmallRoboto(spriteBatch, mtp.getMonsterTeam().get(i).getName(), Color.BLACK, monsterTeamMenu.getX() + 42, monsterTeamMenu.getY() + (monsterTeamMenu.getHeight() * 2 / 3f) - (i * 40));
+                        //textUtilsMonster.drawSmallRoboto(spriteBatch, mtp.getMonsterTeam().get(i).getName(), Color.BLACK, monsterTeamMenu.getX() + 42, monsterTeamMenu.getY() + (monsterTeamMenu.getHeight() * 2 / 3f) - (i * 40));
+                        //imageDrawingUtils.drawImage(spriteBatch, new Texture(new OSGiFileHandle(mtp.getMonsterTeam().get(i).getFrontSprite(), mtp.getMonsterTeam().getClass())), monsterTeamMenu.getX() + 42, monsterTeamMenu.getY() + (monsterTeamMenu.getHeight() * 2 / 3f) - (i * 40));
+                        imageDrawingUtils.drawImage(spriteBatch, mtp.getMonsterTeam().get(i).getFrontSprite(), mtp.getMonsterTeam().getClass(), monsterTeamMenu.getX() + 42, monsterTeamMenu.getY() + (monsterTeamMenu.getHeight() * 2 / 3f) - (i * 40));
                     }
 
                     spriteBatch.end();
@@ -341,19 +349,14 @@ public class MapView implements IGameViewService, IMapView {
                         return;
                     }
                     if (firstSelected != -1 && secondSelected != -1) {
-                        IMonster newFirstMonster = monsterTeam.get(secondSelected);
+                        IMonster newFirstMonster = monsterTeam.get(secondSelected); // Switching the two Monsters.
                         IMonster newSecondMonster = monsterTeam.get(firstSelected);
                         System.out.println("Updated team");
                         monsterTeam.set(firstSelected, newFirstMonster);
                         monsterTeam.set(secondSelected, newSecondMonster);
-                        mtp.setMonsterTeam(monsterTeam);
+                        mtp.setMonsterTeam(monsterTeam); // Set the player's monster team to the new order
                         firstSelected = -1;
                         secondSelected = -1;
-                                /*mtp.setMonsterTeam();
-                                monsterTeamNames.set(firstSelected, newFirstMonster);
-                                monsterTeamNames.set(secondSelected, newSecondMonster);
-
-                                 */
                     }
                 }
                 if(!showMonsterTeam) {
@@ -367,7 +370,6 @@ public class MapView implements IGameViewService, IMapView {
                     if (pauseActions[selectedOptionIndex].equals("Team")) {
                         showMonsterTeam = true;
                     }
-                    //System.out.println("You have no team");
 
                     if (pauseActions[selectedOptionIndex].equals("Quit")) {
                         isPaused = false;
