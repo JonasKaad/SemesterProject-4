@@ -66,6 +66,9 @@ public class MapView implements IGameViewService, IMapView {
     private float mapTop;
     private int tilePixelSize;
 
+    private Color switchIndicatorColor = Color.BLACK;
+    private boolean showSwitchingText = false;
+
     private MonsterTeamPart mtp;
     float playerPosX;
     float playerPosY;
@@ -207,6 +210,16 @@ public class MapView implements IGameViewService, IMapView {
                             monsterTeamMenu.getX() + 135,
                             monsterTeamMenu.getY() + monsterTeamMenu.getHeight() - 10);
 
+                    // Draws the text telling the player how to change order/switch monsters
+                    if(showSwitchingText){
+                        textUtilsMonster.drawSmallRoboto(
+                                spriteBatch,
+                                "Select two Monsters to switch their order",
+                                Color.BLACK,
+                                monsterTeamMenu.getX() + 50,
+                                monsterTeamMenu.getY() + monsterTeamMenu.getHeight() - 35);
+                    }
+
                     //Drawing Names
 
                     for (int i = 0; i < monsterTeam.size(); i++) {
@@ -260,7 +273,7 @@ public class MapView implements IGameViewService, IMapView {
             if(showMonsterTeam){
                 Gdx.gl.glEnable(GL20.GL_BLEND); //Allows for opacity
                 shapeRenderer.begin(ShapeRenderer.ShapeType.Filled);
-                shapeRenderer.setColor(Color.BLACK);
+                shapeRenderer.setColor(switchIndicatorColor);
 
                 int triangleHeight = 20;
                 int heightBetweenOptions = 40;
@@ -343,6 +356,8 @@ public class MapView implements IGameViewService, IMapView {
             if(gameData.getKeys().isPressed(GameKeys.ESC)){
                 if(showMonsterTeam){
                     showMonsterTeam = false;
+                    showSwitchingText = false;
+                    switchIndicatorColor = new Color(Color.BLACK);
                     selectedOptionIndexMonsterTeam = 0;
                     firstSelected = -1;
                     secondSelected = -1;
@@ -356,6 +371,8 @@ public class MapView implements IGameViewService, IMapView {
                 if (showMonsterTeam) {
                     if (firstSelected == -1) { // If nothing is selected
                         firstSelected = selectedOptionIndexMonsterTeam; // Select the current monster
+                        switchIndicatorColor = new Color(Color.valueOf("ffcb05"));
+                        showSwitchingText = true;
                         System.out.println("Selected the first");
                         return;
                     }
@@ -366,6 +383,8 @@ public class MapView implements IGameViewService, IMapView {
                     if (firstSelected == secondSelected){ // If the same monster has been chosen twice, reset
                         firstSelected = -1;
                         secondSelected = -1;
+                        switchIndicatorColor = new Color(Color.BLACK);
+                        showSwitchingText = false;
                         System.out.println("Reset");
                         return;
                     }
@@ -375,6 +394,8 @@ public class MapView implements IGameViewService, IMapView {
                         System.out.println("Updated team");
                         monsterTeam.set(firstSelected, newFirstMonster);
                         monsterTeam.set(secondSelected, newSecondMonster);
+                        switchIndicatorColor = new Color(Color.BLACK);
+                        showSwitchingText = false;
                         mtp.setMonsterTeam(monsterTeam); // Set the player's monster team to the new order
                         firstSelected = -1;
                         secondSelected = -1;
