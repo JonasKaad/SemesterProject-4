@@ -15,7 +15,6 @@ import dk.sdu.mmmi.modulemon.common.OSGiFileHandleByteReader;
 import dk.sdu.mmmi.modulemon.common.services.*;
 import dk.sdu.mmmi.modulemon.managers.GameInputManager;
 import dk.sdu.mmmi.modulemon.managers.GameStateManager;
-
 import java.nio.ByteBuffer;
 import java.util.LinkedList;
 import java.util.List;
@@ -43,14 +42,12 @@ public class Game implements ApplicationListener {
 
         WIDTH = 1280;
         HEIGHT = 720;
-
         cfg.title = "Modulémon";
         cfg.width = WIDTH;
         cfg.height = HEIGHT;
         cfg.useGL30 = false;
         cfg.resizable = true;
         cfg.samples = 32; //Anti aliasing
-
         new LwjglApplication(this, cfg);
     }
 
