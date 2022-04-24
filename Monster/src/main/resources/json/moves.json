@@ -81,6 +81,13 @@
     "name" : "Arc Bolt",
     "damage" : 60,
     "type" : "LIGHTNING",
-    "sound": "/sounds/zap.ogg"
+    "sound": "/sounds/arc_bolt.ogg"
+  },
+  {
+    "id": "furBall",
+    "name": "Fur Ball",
+    "damage": 15,
+    "type": "GRASS",
+    "sound": "/sounds/fur_ball.ogg"
   }
 ]
