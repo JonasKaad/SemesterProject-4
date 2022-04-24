@@ -22,8 +22,8 @@ public class BattleMonsterProcessor implements IBattleMonsterProcessor {
         float sourceAttack = (float) source.getAttack();
         float targetDefence = (float) target.getDefence();
 
-        int damage = Math.round(moveDamage * (sourceAttack/targetDefence) * calculateTypeAdvantage(move.getType(), target.getMonsterType()));
-
+        int damage = Math.round(moveDamage * (sourceAttack/targetDefence) );
+        //* calculateTypeAdvantage(move.getType(), target.getMonsterType()) //removed for now to test new monsters
         return damage;
     }
 
