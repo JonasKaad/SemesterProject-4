@@ -1,5 +1,6 @@
 package dk.sdu.mmmi.modulemon.Map;
 
+import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.audio.Music;
 import com.badlogic.gdx.graphics.Color;
@@ -100,7 +101,7 @@ public class MapView implements IGameViewService, IMapView {
         isPaused = false;
         showMonsterTeam = false;
         pauseMenu = new Rectangle(100, 100, 200, 250);
-        monsterTeamMenu = new Rectangle(100, 100, 400, 400);
+        monsterTeamMenu = new Rectangle(100, 100, 400, 550);
         shapeRenderer = new ShapeRenderer();
         gdxThreadTasks.add(() -> textUtils = TextUtils.getInstance());
 
@@ -203,14 +204,17 @@ public class MapView implements IGameViewService, IMapView {
                             spriteBatch,
                             "Your Team",
                             Color.BLACK,
-                            monsterTeamMenu.getX() + 19,
+                            monsterTeamMenu.getX() + 135,
                             monsterTeamMenu.getY() + monsterTeamMenu.getHeight() - 10);
 
                     //Drawing Names
+
                     for (int i = 0; i < monsterTeam.size(); i++) {
-                        textUtilsMonster.drawSmallRoboto(spriteBatch, mtp.getMonsterTeam().get(i).getName(), Color.BLACK, monsterTeamMenu.getX() + 42, monsterTeamMenu.getY() + (monsterTeamMenu.getHeight() * 2 / 3f) - (i * 40));
-                        //imageDrawingUtils.drawImage(spriteBatch, new Texture(new OSGiFileHandle(mtp.getMonsterTeam().get(i).getFrontSprite(), mtp.getMonsterTeam().getClass())), monsterTeamMenu.getX() + 42, monsterTeamMenu.getY() + (monsterTeamMenu.getHeight() * 2 / 3f) - (i * 40));
-                        //imageDrawingUtils.drawImage(spriteBatch, mtp.getMonsterTeam().get(i).getFrontSprite(), mtp.getMonsterTeam().getClass(), monsterTeamMenu.getX() + 42, monsterTeamMenu.getY() + (monsterTeamMenu.getHeight() * 2 / 3f) - (i * 40));
+                        //System.out.println(mtp.getMonsterTeam().get(i).getClass());
+                       //
+                        imageDrawingUtils.drawImage(spriteBatch, mtp.getMonsterTeam().get(i).getFrontSprite(), mtp.getMonsterTeam().get(i).getClass(), monsterTeamMenu.getX() + 42, monsterTeamMenu.getY() + (monsterTeamMenu.getHeight() * 2 / 2.6f) - (i * 80));
+                        textUtilsMonster.drawSmallRoboto(spriteBatch, "Name: \t" + mtp.getMonsterTeam().get(i).getName(), Color.BLACK, monsterTeamMenu.getX() + 42+ 110, monsterTeamMenu.getY() + (monsterTeamMenu.getHeight() * 2 / 2.3f) - (i * (80)));
+                        textUtilsMonster.drawSmallRoboto(spriteBatch, "HP: \t" + String.valueOf(mtp.getMonsterTeam().get(i).getHitPoints()), Color.BLACK, monsterTeamMenu.getX() + 42 + 110, monsterTeamMenu.getY() + (monsterTeamMenu.getHeight() * 2 / 2.45f) - (i * (80)));
                     }
 
                     spriteBatch.end();
@@ -259,10 +263,10 @@ public class MapView implements IGameViewService, IMapView {
                 shapeRenderer.setColor(Color.BLACK);
 
                 int triangleHeight = 20;
-                int heightBetweenOptions = 20;
+                int heightBetweenOptions = 40;
                 int normalTextHeight = 24;
-                int actionTopTextHeight = (int) (monsterTeamMenu.getHeight() * 2 / 3f) + 40;
-                int offsetFromActionHeadToFirstAction = 10;
+                int actionTopTextHeight = (int) (monsterTeamMenu.getHeight() * 2 / 2.6f) + 80;
+                int offsetFromActionHeadToFirstAction = 8;
 
                 selectedOptionIndexMonsterTeam = selectedOptionIndexMonsterTeam % monsterTeam.size();
 
@@ -325,7 +329,7 @@ public class MapView implements IGameViewService, IMapView {
             if(gameData.getKeys().isPressed(GameKeys.UP)){
                 if(showMonsterTeam){
                     if(selectedOptionIndexMonsterTeam <= 0)
-                        selectedOptionIndexMonsterTeam = pauseActions.length-1;
+                        selectedOptionIndexMonsterTeam = monsterTeam.size() -1;
                     else
                         selectedOptionIndexMonsterTeam--;
                 }
