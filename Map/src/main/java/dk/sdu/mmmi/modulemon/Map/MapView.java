@@ -191,9 +191,9 @@ public class MapView implements IGameViewService, IMapView {
 
                     //Drawing Names
                     for (int i = 0; i < monsterTeam.size(); i++) {
-                        //textUtilsMonster.drawSmallRoboto(spriteBatch, mtp.getMonsterTeam().get(i).getName(), Color.BLACK, monsterTeamMenu.getX() + 42, monsterTeamMenu.getY() + (monsterTeamMenu.getHeight() * 2 / 3f) - (i * 40));
+                        textUtilsMonster.drawSmallRoboto(spriteBatch, mtp.getMonsterTeam().get(i).getName(), Color.BLACK, monsterTeamMenu.getX() + 42, monsterTeamMenu.getY() + (monsterTeamMenu.getHeight() * 2 / 3f) - (i * 40));
                         //imageDrawingUtils.drawImage(spriteBatch, new Texture(new OSGiFileHandle(mtp.getMonsterTeam().get(i).getFrontSprite(), mtp.getMonsterTeam().getClass())), monsterTeamMenu.getX() + 42, monsterTeamMenu.getY() + (monsterTeamMenu.getHeight() * 2 / 3f) - (i * 40));
-                        imageDrawingUtils.drawImage(spriteBatch, mtp.getMonsterTeam().get(i).getFrontSprite(), mtp.getMonsterTeam().getClass(), monsterTeamMenu.getX() + 42, monsterTeamMenu.getY() + (monsterTeamMenu.getHeight() * 2 / 3f) - (i * 40));
+                        //imageDrawingUtils.drawImage(spriteBatch, mtp.getMonsterTeam().get(i).getFrontSprite(), mtp.getMonsterTeam().getClass(), monsterTeamMenu.getX() + 42, monsterTeamMenu.getY() + (monsterTeamMenu.getHeight() * 2 / 3f) - (i * 40));
                     }
 
                     spriteBatch.end();
