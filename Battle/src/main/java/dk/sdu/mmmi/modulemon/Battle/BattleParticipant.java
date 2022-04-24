@@ -5,26 +5,33 @@ import dk.sdu.mmmi.modulemon.CommonMonster.IMonster;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 
 public class BattleParticipant implements IBattleParticipant {
 
     private List<IMonster> monsterTeam;
     private IMonster activeMonster;
+    private UUID uuid;
 
     private boolean playerControlled;
 
     public BattleParticipant(List<IMonster> monsterTeam, boolean playerControlled) {
-        this.monsterTeam = monsterTeam;
+        this(monsterTeam, null, playerControlled);
         if (monsterTeam.size()>0) {
             this.activeMonster = monsterTeam.get(0);
         }
-        this.playerControlled = playerControlled;
     }
 
     public BattleParticipant(List<IMonster> monsterTeam, IMonster activeMonster, boolean playerControlled) {
         this.monsterTeam = monsterTeam;
         this.activeMonster = activeMonster;
         this.playerControlled = playerControlled;
+        this.uuid = UUID.randomUUID();
+    }
+
+    public BattleParticipant(List<IMonster> monsterTeam, IMonster activeMonster, boolean playerControlled, UUID uuid) {
+        this(monsterTeam, activeMonster, playerControlled);
+        this.uuid = uuid;
     }
 
     @Override
@@ -54,11 +61,19 @@ public class BattleParticipant implements IBattleParticipant {
         for (IMonster monster : this.monsterTeam) {
             IMonster cloneMonster = monster.clone();
             cloneTeam.add(cloneMonster);
-            if (monster == this.activeMonster) {
+            if (monster.equals(this.activeMonster)) {
                 cloneActiveMonster = cloneMonster;
             }
         }
-        return new BattleParticipant(cloneTeam, cloneActiveMonster, this.playerControlled);
+        return new BattleParticipant(cloneTeam, cloneActiveMonster, this.playerControlled, this.uuid);
 
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (obj instanceof BattleParticipant) {
+            return ((BattleParticipant) obj).uuid.equals(this.uuid);
+        }
+        return false;
     }
 }

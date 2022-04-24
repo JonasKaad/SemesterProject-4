@@ -1,5 +1,7 @@
 package dk.sdu.mmmi.modulemon.BattleSimulation;
 
+
+import dk.sdu.mmmi.modulemon.CommonBattleSimulation.IBattleAIFactory;
 import dk.sdu.mmmi.modulemon.CommonBattleSimulation.BattleEvents.*;
 import dk.sdu.mmmi.modulemon.CommonBattleSimulation.IBattleAI;
 import dk.sdu.mmmi.modulemon.CommonBattleSimulation.IBattleMonsterProcessor;
@@ -75,14 +77,24 @@ public class BattleSimulationTest {
             }
         });
 
-        sim.setAI(new IBattleAI() {
+        sim.setAIFactory(new IBattleAIFactory() {
             @Override
-            public void doAction(IBattleSimulation battleSimulation) {
-                IBattleParticipant activeParticipant =
-                        battleSimulation.getState().isPlayersTurn()
-                                ? battleSimulation.getState().getPlayer()
-                                : battleSimulation.getState().getEnemy();
-                battleSimulation.doMove(activeParticipant, activeParticipant.getActiveMonster().getMoves().get(0));
+            public IBattleAI getBattleAI(IBattleSimulation battleSimulation, IBattleParticipant participantToControl) {
+                return new IBattleAI() {
+                    @Override
+                    public void doAction(IBattleSimulation battleSimulation) {
+                        IBattleParticipant activeParticipant =
+                                battleSimulation.getState().isPlayersTurn()
+                                        ? battleSimulation.getState().getPlayer()
+                                        : battleSimulation.getState().getEnemy();
+                        battleSimulation.doMove(activeParticipant, activeParticipant.getActiveMonster().getMoves().get(0));
+                    }
+
+                    @Override
+                    public void opposingMonsterUsedMove(IMonster monster, IMonsterMove move) {
+
+                    }
+                };
             }
         });
 
@@ -227,6 +239,7 @@ public class BattleSimulationTest {
     void playerCanChangeMonster() {
         initMonsterMocks();
         IMonster newMonster = mock(IMonster.class);
+        when(newMonster.getHitPoints()).thenReturn(1);
         List<IMonster> playerTeam = new ArrayList<>();
         playerTeam.add(playerMonster);
         playerTeam.add(newMonster);

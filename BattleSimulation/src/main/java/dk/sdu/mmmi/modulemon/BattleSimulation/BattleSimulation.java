@@ -14,8 +14,8 @@ public class BattleSimulation implements IBattleSimulation {
     private IBattleEvent nextEvent;
     private Runnable onNextEvent;
 
-    //"Mocked" enemyControlSystem. Should be moved somewhere else and hidden behind an interface
     private IBattleAI AI;
+    private IBattleAIFactory AIFactory;
     private IBattleMonsterProcessor monsterProcessor;
 
     @Override
@@ -30,6 +30,9 @@ public class BattleSimulation implements IBattleSimulation {
         IBattleParticipant firstToTakeTurn = firstMonster == player.getActiveMonster() ? player : enemy;
 
         this.battleState = new BattleState(player, enemy);
+        this.battleState.setActiveParticipant(firstToTakeTurn);
+
+        this.AI = this.AIFactory.getBattleAI(this, enemy);
 
         if (!firstToTakeTurn.isPlayerControlled()) {
             nextEvent = new InfoBattleEvent("enemy starts the battle");
@@ -80,6 +83,10 @@ public class BattleSimulation implements IBattleSimulation {
         String opposingParticipantTitle;
         IBattleParticipant opposingParticipant;
 
+        if (battleParticipant.equals(battleState.getPlayer())) {
+            AI.opposingMonsterUsedMove(source, move);
+        }
+
         if (battleParticipant.isPlayerControlled()) {
             target = battleState.getEnemy().getActiveMonster();
             participantTitle = "player";
@@ -129,6 +136,7 @@ public class BattleSimulation implements IBattleSimulation {
         if (battleState.getActiveParticipant()!=battleParticipant) {
             throw new IllegalArgumentException("It is not that battle participants turn!");
         }
+        if (monster.getHitPoints()<=0) throw new IllegalArgumentException("You can't change to a dead monster");
         if (battleParticipant.getMonsterTeam().contains(monster)) {
             nextEvent = new ChangeMonsterBattleEvent(getActiveParticipantTitle()+" changed monster to " + monster.getName(), battleParticipant, monster);
             onNextEvent = () -> {
@@ -159,15 +167,30 @@ public class BattleSimulation implements IBattleSimulation {
         BattleState newState = (BattleState) currentState.clone();
 
         IMonster source = newState.getActiveParticipant().getActiveMonster();
-        IMonster target;
+        IBattleParticipant opposingParticipant;
         if (newState.isPlayersTurn()) {
-            target = newState.getEnemy().getActiveMonster();
+            opposingParticipant = newState.getEnemy();
         } else {
-            target = newState.getPlayer().getActiveMonster();
+            opposingParticipant = newState.getPlayer();
         }
+        IMonster target = opposingParticipant.getActiveMonster();
 
         int damage = monsterProcessor.calculateDamage(source, move, target);
-        target.setHitPoints(target.getHitPoints()-damage);
+
+        int newHitPoints = target.getHitPoints()-damage;
+        if (newHitPoints>0) {
+            target.setHitPoints(newHitPoints);
+
+        } else {
+            target.setHitPoints(0);
+            Optional<IMonster> nextMonster = opposingParticipant.getMonsterTeam().stream().filter(x -> x.getHitPoints() > 0).findFirst();
+
+            if (nextMonster.isPresent()) {
+                opposingParticipant.setActiveMonster(nextMonster.get());
+            }
+        }
+
+        switchTurns(newState);
 
         return newState;
     }
@@ -179,7 +202,17 @@ public class BattleSimulation implements IBattleSimulation {
 
         newState.getActiveParticipant().setActiveMonster(monster.clone());
 
+        switchTurns(newState);
+
         return newState;
+    }
+
+    private void switchTurns(BattleState state) {
+        if (state.isPlayersTurn()) {
+            state.setActiveParticipant(battleState.getEnemy());
+        } else {
+            state.setActiveParticipant(battleState.getPlayer());
+        }
     }
 
     @Override
@@ -196,8 +229,7 @@ public class BattleSimulation implements IBattleSimulation {
         this.monsterProcessor = monsterProcessor;
     }
 
-    public void setAI(IBattleAI AI) {
-        this.AI = AI;
+    public void setAIFactory(IBattleAIFactory factory) {
+        this.AIFactory = factory;
     }
-
 }

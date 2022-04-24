@@ -1,6 +1,5 @@
 package dk.sdu.mmmi.modulemon.Battle;
 
-import dk.sdu.mmmi.modulemon.CommonBattle.IBattleParticipant;
 import dk.sdu.mmmi.modulemon.CommonMonster.IMonster;
 import org.junit.jupiter.api.Test;
 
@@ -21,7 +20,7 @@ public class BattleParticipantTest {
         boolean ipc = true;
         BattleParticipant participant = new BattleParticipant(team, monster1, ipc);
         BattleParticipant clone = (BattleParticipant) participant.clone();
-        assertNotEquals(participant, clone);
+        assertNotSame(participant, clone);
     }
 
     @Test

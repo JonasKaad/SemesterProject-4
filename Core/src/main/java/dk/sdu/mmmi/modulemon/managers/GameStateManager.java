@@ -17,7 +17,7 @@ public class GameStateManager implements IGameStateManager {
 		if(currentGameState != null) currentGameState.dispose();
 		System.out.println(String.format("Changed state to: %s", state.getClass().getName()));
 		currentGameState = state;
-		currentGameState.init();
+		currentGameState.init(this);
 	}
 	
 	public void update(GameData gameData) {

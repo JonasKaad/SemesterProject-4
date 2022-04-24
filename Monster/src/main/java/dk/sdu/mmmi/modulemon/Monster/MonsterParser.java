@@ -10,9 +10,6 @@ import org.json.JSONObject;
 import java.io.*;
 import java.net.URISyntaxException;
 import java.nio.charset.StandardCharsets;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -56,7 +53,7 @@ public class MonsterParser {
                 soundPath = JSONMove.getString("sound");
             }
             else {
-                soundPath = "sounds/Tackle.ogg";
+                soundPath = "sounds/tackle.ogg";
             }
             IMonsterMove move = new MonsterMove(JSONMove.getString("name"),
                     JSONMove.getInt("damage"),

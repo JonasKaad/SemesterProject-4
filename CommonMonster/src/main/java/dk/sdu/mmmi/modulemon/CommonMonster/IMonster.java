@@ -5,6 +5,7 @@ import java.util.Map;
 
 public interface IMonster {
     String getName();
+    int getMaxHitPoints();
     int getHitPoints();
     void setHitPoints(int hitPoint);
     String getFrontSprite();

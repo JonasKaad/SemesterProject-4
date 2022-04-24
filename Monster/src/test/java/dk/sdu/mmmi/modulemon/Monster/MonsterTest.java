@@ -45,7 +45,7 @@ class MonsterTest {
     void monster_clone_returns_new_object() {
         Monster monster = new Monster("MonsterName", MonsterType.EARTH, 1, 1, 1, 1, new ArrayList<>());
         Monster clone = (Monster) monster.clone();
-        assertNotEquals(monster, clone);
+        assertNotSame(monster, clone);
     }
 
     @Test

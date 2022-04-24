@@ -1,6 +1,5 @@
 package dk.sdu.mmmi.modulemon.CommonBattle;
 
-import dk.sdu.mmmi.modulemon.CommonBattle.IBattleParticipant;
 import dk.sdu.mmmi.modulemon.CommonMonster.IMonster;
 
 import java.util.ArrayList;
