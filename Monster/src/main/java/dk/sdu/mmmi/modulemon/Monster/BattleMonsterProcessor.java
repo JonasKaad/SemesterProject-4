@@ -28,6 +28,8 @@ public class BattleMonsterProcessor implements IBattleMonsterProcessor {
     }
 
     public float calculateTypeAdvantage(MonsterType source, MonsterType target) {
+        if(source == null || target == null)
+            return 1;
         switch (source) {
             case FIRE:
                 switch (target) {

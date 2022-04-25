@@ -21,7 +21,7 @@ public class MonsterMove implements IMonsterMove {
         this.name = name;
         this.damage = damage;
         this.type = type;
-        this.soundPath = "sounds/tackle.ogg";
+        this.soundPath = "/sounds/tackle.ogg";
     }
 
     @Override

@@ -2,6 +2,7 @@ package dk.sdu.mmmi.modulemon.gamestates;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.audio.Music;
+import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
@@ -30,6 +31,8 @@ public class MenuState implements IGameViewService {
     private BitmapFont menuOptionsFont;
     private BitmapFont smallMenuFont;
     private Music menuMusic;
+    private Sound selectSound;
+    private Sound chooseSound;
 
     private Texture logo;
 
@@ -57,8 +60,10 @@ public class MenuState implements IGameViewService {
         spriteBatch = new SpriteBatch();
         glyphLayout = new GlyphLayout();
         menuMusic.play();
-        menuMusic.setVolume(0.8f);
+        menuMusic.setVolume(0.2f);
         menuMusic.setLooping(true);
+        chooseSound = Gdx.audio.newSound(new OSGiFileHandle("/sounds/choose.ogg", this.getClass()));
+        selectSound = Gdx.audio.newSound(new OSGiFileHandle("/sounds/select.ogg", this.getClass()));
 
         /*
           Sets up FontGenerator to enable us to use our own fonts.
@@ -164,6 +169,7 @@ public class MenuState implements IGameViewService {
             } else {
                 currentOption = menuOptions.length - 1;
             }
+            selectSound.play();
         }
         // Moves down in the menu
         if (gameData.getKeys().isPressed(GameKeys.DOWN) || gameData.getKeys().isPressed(GameKeys.RIGHT)) {
@@ -172,9 +178,11 @@ public class MenuState implements IGameViewService {
             } else {
                 currentOption = 0;
             }
+            selectSound.play();
         }
         // Selects the current option
         if (gameData.getKeys().isPressed(GameKeys.ENTER) || gameData.getKeys().isPressed(GameKeys.E)) {
+            chooseSound.play();
             selectOption(gameStateManager);
         }
     }

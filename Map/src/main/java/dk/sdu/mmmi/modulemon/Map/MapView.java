@@ -2,6 +2,7 @@ package dk.sdu.mmmi.modulemon.Map;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.audio.Music;
+import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
@@ -19,10 +20,6 @@ import dk.sdu.mmmi.modulemon.CommonBattleClient.IBattleCallback;
 import dk.sdu.mmmi.modulemon.CommonBattleClient.IBattleResult;
 import dk.sdu.mmmi.modulemon.CommonBattleClient.IBattleView;
 import dk.sdu.mmmi.modulemon.CommonMap.IMapView;
-import dk.sdu.mmmi.modulemon.CommonMonster.IMonster;
-import dk.sdu.mmmi.modulemon.CommonMonster.IMonsterMove;
-import dk.sdu.mmmi.modulemon.CommonMonster.MonsterType;
-import dk.sdu.mmmi.modulemon.Player.PlayerPlugin;
 import dk.sdu.mmmi.modulemon.common.data.*;
 import dk.sdu.mmmi.modulemon.common.OSGiFileHandle;
 import dk.sdu.mmmi.modulemon.common.drawing.Rectangle;
@@ -31,7 +28,6 @@ import dk.sdu.mmmi.modulemon.common.services.IEntityProcessingService;
 import dk.sdu.mmmi.modulemon.common.services.IGamePluginService;
 import dk.sdu.mmmi.modulemon.common.services.IGameViewService;
 
-import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Queue;
@@ -70,16 +66,23 @@ public class MapView implements IGameViewService, IMapView {
     private IBattleView battleView;
     private MonsterTeamPart playerMonsters;
 
+    private Sound chooseSound;
+    private Sound selectSound;
+
     @Override
     public void init(IGameStateManager gameStateManager) {
         mapMusic = Gdx.audio.newMusic(new OSGiFileHandle("/music/village_theme.ogg", MapView.class));
+        chooseSound = Gdx.audio.newSound(new OSGiFileHandle("/sounds/choose.ogg", this.getClass()));
+        selectSound = Gdx.audio.newSound(new OSGiFileHandle("/sounds/select.ogg", this.getClass()));
+        mapMusic.play();
+        mapMusic.setVolume(0.1f);
+        mapMusic.setLooping(true);
+
         tiledMap = new OSGiTmxLoader().load("/maps/SeasonalOverworld.tmx");
         overhangLayer = (TiledMapTileLayer) tiledMap.getLayers().get("Top");
         int scale = 4;
         tiledMapRenderer = new OrthogonalTiledMapRenderer(tiledMap, scale);
-        mapMusic.play();
-        mapMusic.setVolume(0.1f);
-        mapMusic.setLooping(true);
+
 
         // Pixel size
         tilePixelSize = 16 * scale;
@@ -222,12 +225,14 @@ public class MapView implements IGameViewService, IMapView {
                     selectedOptionIndex++;
                 else
                     selectedOptionIndex = 0;
+                selectSound.play();
             }
             if(gameData.getKeys().isPressed(GameKeys.UP)){
                 if(selectedOptionIndex <= 0)
                     selectedOptionIndex = pauseActions.length-1;
                 else
                     selectedOptionIndex--;
+                selectSound.play();
             }
             if(gameData.getKeys().isPressed(GameKeys.ESC)){
                 isPaused = false;
@@ -249,7 +254,7 @@ public class MapView implements IGameViewService, IMapView {
                         }
                     }
                 }
-                //System.out.println("You have no team");
+                chooseSound.play();
 
                 if(pauseActions[selectedOptionIndex].equals("Quit")){
                     isPaused = false;
@@ -264,10 +269,11 @@ public class MapView implements IGameViewService, IMapView {
         if(gameData.getKeys().isPressed(GameKeys.ESC)){
             isPaused = true;
             gameData.setPaused(isPaused);
+            selectSound.play();
         }
         if(gameData.getKeys().isPressed(GameKeys.E)){
             for(Entity entity: world.getEntities()){
-                if(entity.getClass() == dk.sdu.mmmi.modulemon.Player.Player.class){
+                if(entity.getClass() == dk.sdu.mmmi.modulemon.Player.Player.class && playerMonsters == null){
                     playerMonsters = entity.getPart(MonsterTeamPart.class);
                     System.out.println("Added playermonsters");
                 }

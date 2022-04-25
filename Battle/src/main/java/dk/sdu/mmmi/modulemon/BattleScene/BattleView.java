@@ -46,6 +46,8 @@ public class BattleView implements IGameViewService, IBattleView {
 
     private String[] defaultActions;
     private int selectedAction = 0;
+    private Sound selectSound;
+    private Sound chooseSound;
 
     private IGameStateManager gameStateManager;
 
@@ -92,6 +94,8 @@ public class BattleView implements IGameViewService, IBattleView {
 
         }
         selectedAction = 0;
+        chooseSound = Gdx.audio.newSound(new OSGiFileHandle("/sounds/choose.ogg", this.getClass()));
+        selectSound = Gdx.audio.newSound(new OSGiFileHandle("/sounds/select.ogg", this.getClass()));
         _battleMusic = Gdx.audio.newMusic(new OSGiFileHandle("/music/battle_music.ogg", this.getClass()));
         _winSound = Gdx.audio.newSound(new OSGiFileHandle("/sounds/you_won.ogg", this.getClass()));
         _battleSimulation.StartBattle(player, enemy);
@@ -298,12 +302,14 @@ public class BattleView implements IGameViewService, IBattleView {
                 if (keys.isPressed(GameKeys.ENTER)) {
                     this.selectedAction = 0;
                     this.menuState = MenuState.FIGHT;
+                    chooseSound.play();
                 }
             } else if (selectedAction.equalsIgnoreCase("Monsters")) {
                 _battleScene.setTextToDisplay("Change your active monster");
                 if (keys.isPressed(GameKeys.ENTER)) {
                     this.selectedAction = 0;
                     this.menuState = MenuState.SWITCH;
+                    chooseSound.play();
                 }
             } else if (selectedAction.equalsIgnoreCase("Animate")) {
                 _battleScene.setTextToDisplay("Show a fancy pancy battle-animation");
@@ -311,6 +317,7 @@ public class BattleView implements IGameViewService, IBattleView {
                     BaseAnimation openingAnimation = new BattleSceneOpenAnimation(_battleScene);
                     openingAnimation.start();
                     blockingAnimations.add(openingAnimation);
+                    chooseSound.play();
                 }
             } else if (selectedAction.equalsIgnoreCase("Style")) {
                 _battleScene.setTextToDisplay("Change box-styles");
@@ -326,11 +333,13 @@ public class BattleView implements IGameViewService, IBattleView {
                         _battleScene.setActionBoxRectStyle(PersonaRectangle.class);
                         _battleScene.setTextBoxRectStyle(PersonaRectangle.class);
                     }
+                    chooseSound.play();
                 }
             } else if (selectedAction.equalsIgnoreCase("Quit")) {
                 _battleScene.setTextToDisplay("Ends the battle");
                 if (keys.isPressed(GameKeys.ENTER)) {
                     handleBattleEnd(new VictoryBattleEvent("Player runs away", _battleSimulation.getState().getEnemy()));
+                    chooseSound.play();
                 }
             }
         } else if (menuState == MenuState.FIGHT) {
@@ -352,6 +361,7 @@ public class BattleView implements IGameViewService, IBattleView {
                 if (keys.isPressed(GameKeys.ENTER)) {
                     this.menuState = MenuState.DEFAULT;
                     this.selectedAction = 0;
+                    chooseSound.play();
                 }
             } else if (selectedAction instanceof IMonsterMove) {
                 IMonsterMove move = ((IMonsterMove) selectedAction);
@@ -360,6 +370,7 @@ public class BattleView implements IGameViewService, IBattleView {
                     _battleSimulation.doMove(_battleSimulation.getState().getPlayer(), move);
                     this.menuState = MenuState.DEFAULT;
                     this.selectedAction = 0;
+                    chooseSound.play();
                 }
             }
         } else if (this.menuState == MenuState.SWITCH) {
@@ -380,6 +391,7 @@ public class BattleView implements IGameViewService, IBattleView {
                 if (keys.isPressed(GameKeys.ENTER)) {
                     this.menuState = MenuState.DEFAULT;
                     this.selectedAction = 0;
+                    chooseSound.play();
                 }
             } else if (selectedAction instanceof IMonster) {
                 IMonster monster = ((IMonster) selectedAction);
@@ -391,6 +403,7 @@ public class BattleView implements IGameViewService, IBattleView {
                             _battleSimulation.switchMonster(player, monster);
                             this.menuState = MenuState.DEFAULT;
                             this.selectedAction = 0;
+                            chooseSound.play();
                         }
                     }else{
                         _battleScene.setTextToDisplay("This monster is dead. It cannot battle");
@@ -415,6 +428,7 @@ public class BattleView implements IGameViewService, IBattleView {
                 } else {
                     selectedAction = 0;
                 }
+                selectSound.play();
             }
             if (keys.isPressed(GameKeys.UP)) {
                 if (selectedAction > 0) {
@@ -422,6 +436,7 @@ public class BattleView implements IGameViewService, IBattleView {
                 } else {
                     selectedAction = currentlyShownActions.length - 1;
                 }
+                selectSound.play();
             }
         }
     }
