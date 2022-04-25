@@ -20,6 +20,7 @@ import dk.sdu.mmmi.modulemon.CommonBattleClient.IBattleResult;
 import dk.sdu.mmmi.modulemon.CommonBattleClient.IBattleView;
 import dk.sdu.mmmi.modulemon.CommonMap.IMapView;
 import dk.sdu.mmmi.modulemon.CommonMonster.IMonster;
+import dk.sdu.mmmi.modulemon.CommonMonster.IMonsterMove;
 import dk.sdu.mmmi.modulemon.common.data.*;
 import dk.sdu.mmmi.modulemon.common.OSGiFileHandle;
 import dk.sdu.mmmi.modulemon.common.drawing.ImageDrawingUtils;
@@ -29,10 +30,7 @@ import dk.sdu.mmmi.modulemon.common.services.IEntityProcessingService;
 import dk.sdu.mmmi.modulemon.common.services.IGamePluginService;
 import dk.sdu.mmmi.modulemon.common.services.IGameViewService;
 
-import java.util.ArrayList;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Queue;
+import java.util.*;
 import java.util.concurrent.CopyOnWriteArrayList;
 
 
@@ -188,6 +186,7 @@ public class MapView implements IGameViewService, IMapView {
         tiledMapRenderer.getBatch().end();
 
 
+
         if(showTeamOptions) {
             //Drawing options menu box
             shapeRenderer.setAutoShapeType(true);
@@ -197,7 +196,6 @@ public class MapView implements IGameViewService, IMapView {
             shapeRenderer.begin(ShapeRenderer.ShapeType.Filled);
             teamActionMenu.setX(monsterTeamMenu.getX() + monsterTeamMenu.getWidth() + 20);
             teamActionMenu.setY(monsterTeamMenu.getY() + monsterTeamMenu.getHeight() - teamActionMenu.getHeight());
-            //teamActionMenu.setY(cam.position.y - cam.viewportHeight / 2.8f);
             teamActionMenu.draw(shapeRenderer, gameData.getDelta());
             shapeRenderer.end();
 
@@ -267,7 +265,7 @@ public class MapView implements IGameViewService, IMapView {
                         //System.out.println(mtp.getMonsterTeam().get(i).getClass());
                         imageDrawingUtils.drawImage(spriteBatch, mtp.getMonsterTeam().get(i).getFrontSprite(), mtp.getMonsterTeam().get(i).getClass(), monsterTeamMenu.getX() + 42, monsterTeamMenu.getY() + (monsterTeamMenu.getHeight() * 2 / 2.6f) - (i * 80));
                         textUtils.drawSmallRoboto(spriteBatch, "Name: \t" + mtp.getMonsterTeam().get(i).getName(), Color.BLACK, monsterTeamMenu.getX() + 42+ 110, monsterTeamMenu.getY() + (monsterTeamMenu.getHeight() * 2 / 2.3f) - (i * (80)));
-                        textUtils.drawSmallRoboto(spriteBatch, "HP: \t" + (mtp.getMonsterTeam().get(i).getHitPoints()), Color.BLACK, monsterTeamMenu.getX() + 42 + 110, monsterTeamMenu.getY() + (monsterTeamMenu.getHeight() * 2 / 2.45f) - (i * (80)));
+                        textUtils.drawSmallRoboto(spriteBatch, "HP: \t" + mtp.getMonsterTeam().get(i).getHitPoints() + " / " + mtp.getMonsterTeam().get(i).getMaxHitPoints(), Color.BLACK, monsterTeamMenu.getX() + 42 + 110, monsterTeamMenu.getY() + (monsterTeamMenu.getHeight() * 2 / 2.45f) - (i * (80)));
 
                     }
                     spriteBatch.end();
@@ -287,6 +285,67 @@ public class MapView implements IGameViewService, IMapView {
                     shapeRenderer.end();
                 }
             }
+        }
+
+        if(showSummary){
+            // Drawing summary box
+            shapeRenderer.setAutoShapeType(true);
+            shapeRenderer.setProjectionMatrix(cam.combined);
+            shapeRenderer.setColor(Color.WHITE);
+
+            shapeRenderer.begin(ShapeRenderer.ShapeType.Filled);
+            summaryMenu.setX(monsterTeamMenu.getX() + 10 ); //(monsterTeamMenu.getWidth() - summaryMenu.getWidth())
+            summaryMenu.setY(monsterTeamMenu.getY() + monsterTeamMenu.getHeight() - summaryMenu.getHeight() - 20);
+            summaryMenu.draw(shapeRenderer, gameData.getDelta());
+            shapeRenderer.end();
+
+            //Drawing summary text
+            spriteBatch.setProjectionMatrix(cam.combined);
+            spriteBatch.begin();
+            IMonster currentMonster = mtp.getMonsterTeam().get(selectedOptionIndexMonsterTeam);
+            String name = currentMonster.getName();
+
+            textUtils.drawNormalRoboto(
+                    spriteBatch,
+                    name,
+                    Color.BLACK,
+                    summaryMenu.getX() + ((summaryMenu.getWidth() / 2) - ((summaryMenu.getWidth() / 2) / 2 / 2)) + 10,
+                    summaryMenu.getY() + summaryMenu.getHeight() - 10);
+
+            //Drawing image
+            imageDrawingUtils.drawImage(spriteBatch, currentMonster.getFrontSprite(), currentMonster.getClass(), summaryMenu.getX() + 6, monsterTeamMenu.getY() + (monsterTeamMenu.getHeight() / 2) + 20, 160, 160);
+
+
+            List<String> stats = new ArrayList<>();
+            stats.add("HP: " + currentMonster.getHitPoints() + " / " + currentMonster.getMaxHitPoints());
+            stats.addAll(currentMonster.getStats());
+            String monsterType = currentMonster.getMonsterType().toString().toLowerCase(Locale.ROOT);
+            String upperCaseMonsterType = monsterType.substring(0, 1).toUpperCase() + monsterType.substring(1);
+            stats.add("Type: " +  upperCaseMonsterType);
+
+            int posCounter = 0;
+            //Drawing stats
+            textUtils.drawSmallBoldRoboto(spriteBatch, "Stats:", Color.BLACK, summaryMenu.getX() + 170, summaryMenu.getY() + (summaryMenu.getHeight() * 2 / 2.4f));
+            for (int i = 0; i < stats.size(); i++) {
+                textUtils.drawSmallRoboto(spriteBatch, stats.get(i), Color.BLACK, summaryMenu.getX() + 170, summaryMenu.getY() + (summaryMenu.getHeight() * 2 / 2.4f) - ((i+1) * 20));
+                posCounter = (i+1) * 20;
+                //textUtils.drawSmallRoboto(spriteBatch, teamActions[i], Color.BLACK, teamActionMenu.getX() + 42, teamActionMenu.getY() + (teamActionMenu.getHeight() * 2 / 3f) - (i * 40));
+            }
+
+            //Drawing moves
+
+            List<String> moves = new ArrayList<>();
+            for (int i = 0; i < currentMonster.getMoves().size(); i++) {
+                String moveType = String.valueOf(currentMonster.getMoves().get(i).getType()).toLowerCase(Locale.ROOT);
+                String upperCaseMoveType = moveType.substring(0, 1).toUpperCase() + moveType.substring(1);
+                moves.add(currentMonster.getMoves().get(i) + " - " + currentMonster.getMoves().get(i).getDamage() + " - " + upperCaseMoveType);
+            }
+            textUtils.drawSmallBoldRoboto(spriteBatch, "Moves:", Color.BLACK, summaryMenu.getX() + 170, summaryMenu.getY() + (summaryMenu.getHeight() * 2 / 2.4f) - posCounter-30);
+            for (int i = 0; i < moves.size(); i++) {
+                textUtils.drawSmallRoboto(spriteBatch, moves.get(i), Color.BLACK, summaryMenu.getX() + 170, summaryMenu.getY() + (summaryMenu.getHeight() * 2 / 2.4f) - posCounter - 30 - ((i+1) * 20) ); //-((i+1) * 20)
+            }
+
+            spriteBatch.end();
         }
 
 
@@ -323,8 +382,11 @@ public class MapView implements IGameViewService, IMapView {
 
             // Drawing selection triangle
             // Yoinked from BattleScene
+            if(showSummary){
 
-            if(showTeamOptions){
+            }
+
+            else if(showTeamOptions){
                 Gdx.gl.glEnable(GL20.GL_BLEND); //Allows for opacity
                 shapeRenderer.begin(ShapeRenderer.ShapeType.Filled);
                 shapeRenderer.setColor(Color.BLACK);
@@ -406,7 +468,7 @@ public class MapView implements IGameViewService, IMapView {
     public void handleInput(GameData gameData, IGameStateManager gameStateManager) {
         if(isPaused){
             if(gameData.getKeys().isPressed(GameKeys.DOWN)) {
-                if(showTeamOptions){
+                if(showTeamOptions && !showSummary){
                     if (teamOptionIndex < teamActions.length)
                         teamOptionIndex++;
                     else
@@ -438,7 +500,7 @@ public class MapView implements IGameViewService, IMapView {
                 }
             }
             if(gameData.getKeys().isPressed(GameKeys.UP)){
-                if(showTeamOptions){
+                if(showTeamOptions && !showSummary){
                     if (teamOptionIndex <= 0)
                         teamOptionIndex  = teamActions.length - 1;
                     else
@@ -469,9 +531,21 @@ public class MapView implements IGameViewService, IMapView {
                 }
             }
             if(gameData.getKeys().isPressed(GameKeys.ESC)){
-                if(showTeamOptions){
+                if(showSummary){
+                    showSummary = false;
+                    for (Rectangle monsterRectangle : monsterRectangles) {
+                        monsterRectangle.setFillColor(Color.WHITE);
+                        monsterRectangle.setBorderColor(Color.BLACK);
+                    }
+                    monsterTeamMenu.setFillColor(Color.WHITE);
+                    teamActionMenu.setFillColor(Color.WHITE);
+                    monsterRectangles[selectedOptionIndexMonsterTeam].setBorderColor(Color.valueOf("ffcb05"));
+                }
+                else if(showTeamOptions){
                     showTeamOptions = false;
-                    monsterRectangles[selectedOptionIndexMonsterTeam].setBorderColor(Color.BLACK);
+                    for (Rectangle monsterRectangle : monsterRectangles) {
+                        monsterRectangle.setBorderColor(Color.BLACK);
+                    }
                     teamOptionIndex = 0;
                 }
                 else if(showMonsterTeam){
@@ -489,11 +563,18 @@ public class MapView implements IGameViewService, IMapView {
                 if (showMonsterTeam) {
                     if(showTeamOptions) {
                         if (teamActions[teamOptionIndex].equals("Summary")) {
+                            if(showSummary){
 
-                            String summary = mtp.getMonsterTeam().get(selectedOptionIndexMonsterTeam).getName() + "\n" +
-                                    mtp.getMonsterTeam().get(selectedOptionIndexMonsterTeam).getStats();
-                            System.out.println("\nShowing Summary:");
-                            System.out.println(summary);
+                            }
+                            else {
+                                showSummary = true;
+                                monsterTeamMenu.setFillColor(Color.LIGHT_GRAY);
+                                for (Rectangle monsterRectangle : monsterRectangles) {
+                                    monsterRectangle.setFillColor(Color.LIGHT_GRAY);
+                                }
+                                teamActionMenu.setFillColor(Color.LIGHT_GRAY);
+                                System.out.println("Only once");
+                            }
                         }
                         if (teamActions[teamOptionIndex].equals("Switch")) {
                             showTeamOptions = false;
@@ -512,9 +593,9 @@ public class MapView implements IGameViewService, IMapView {
                             monsterRectangles[selectedOptionIndexMonsterTeam].setBorderColor(Color.BLACK);
                         }
                     }
-                    else if (showSummary){
+                    //else if (showSummary){
 
-                    }
+                    //}
 
                     else if(currentlySwitching){
                         if (secondSelected == -1) {

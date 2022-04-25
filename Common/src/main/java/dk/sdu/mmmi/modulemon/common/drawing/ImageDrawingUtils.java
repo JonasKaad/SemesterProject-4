@@ -24,13 +24,13 @@ public class ImageDrawingUtils {
     public void drawImage(SpriteBatch batch, String spritePath, Class reference, float x, float y){
         this.image = new Image(new Texture(new OSGiFileHandle(spritePath, reference)));
         texture = new Texture(new OSGiFileHandle(spritePath, reference));
-        //batch.draw(image, x, y);
-        //image.setOrigin(x, y);
-        //image.setSize(50, 50);
-       // texture.draw();
         batch.draw(texture, x, y, 70, 70);
-        //texture.draw(new Texture(new OSGiFileHandle(spritePath, reference)), x, y, 15, 15);
-        //image.draw(batch, 1);
+    }
+
+    public void drawImage(SpriteBatch batch, String spritePath, Class reference, float x, float y, int width, int height){
+        this.image = new Image(new Texture(new OSGiFileHandle(spritePath, reference)));
+        texture = new Texture(new OSGiFileHandle(spritePath, reference));
+        batch.draw(texture, x, y, width, height);
     }
 
     public static ImageDrawingUtils getInstance(){

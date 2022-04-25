@@ -74,8 +74,8 @@ public class Monster implements IMonster {
     @Override
     public List<String> getStats() {
         List<String> statList = new ArrayList<>();
-        statList.add("Defence: " + this.getDefence());
         statList.add("Attack: " + this.getAttack());
+        statList.add("Defence: " + this.getDefence());
         statList.add("Speed: " + this.getSpeed());
         return statList;
     }
