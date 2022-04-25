@@ -13,6 +13,7 @@ import com.badlogic.gdx.maps.tiled.TiledMap;
 import com.badlogic.gdx.maps.tiled.TiledMapTileLayer;
 import com.badlogic.gdx.maps.tiled.renderers.BatchTiledMapRenderer;
 import com.badlogic.gdx.maps.tiled.renderers.OrthogonalTiledMapRenderer;
+import com.sun.org.apache.xpath.internal.operations.And;
 import dk.sdu.mmmi.modulemon.CommonBattle.IBattleParticipant;
 import dk.sdu.mmmi.modulemon.CommonBattle.MonsterTeamPart;
 import dk.sdu.mmmi.modulemon.CommonBattleClient.IBattleCallback;
@@ -262,7 +263,6 @@ public class MapView implements IGameViewService, IMapView {
                     //Drawing Names and HP
 
                     for (int i = 0; i < monsterTeam.size(); i++) {
-                        //System.out.println(mtp.getMonsterTeam().get(i).getClass());
                         imageDrawingUtils.drawImage(spriteBatch, mtp.getMonsterTeam().get(i).getFrontSprite(), mtp.getMonsterTeam().get(i).getClass(), monsterTeamMenu.getX() + 42, monsterTeamMenu.getY() + (monsterTeamMenu.getHeight() * 2 / 2.6f) - (i * 80));
                         textUtils.drawSmallRoboto(spriteBatch, "Name: \t" + mtp.getMonsterTeam().get(i).getName(), Color.BLACK, monsterTeamMenu.getX() + 42+ 110, monsterTeamMenu.getY() + (monsterTeamMenu.getHeight() * 2 / 2.3f) - (i * (80)));
                         textUtils.drawSmallRoboto(spriteBatch, "HP: \t" + mtp.getMonsterTeam().get(i).getHitPoints() + " / " + mtp.getMonsterTeam().get(i).getMaxHitPoints(), Color.BLACK, monsterTeamMenu.getX() + 42 + 110, monsterTeamMenu.getY() + (monsterTeamMenu.getHeight() * 2 / 2.45f) - (i * (80)));
@@ -294,7 +294,7 @@ public class MapView implements IGameViewService, IMapView {
             shapeRenderer.setColor(Color.WHITE);
 
             shapeRenderer.begin(ShapeRenderer.ShapeType.Filled);
-            summaryMenu.setX(monsterTeamMenu.getX() + 10 ); //(monsterTeamMenu.getWidth() - summaryMenu.getWidth())
+            summaryMenu.setX(monsterTeamMenu.getX() + 10 );
             summaryMenu.setY(monsterTeamMenu.getY() + monsterTeamMenu.getHeight() - summaryMenu.getHeight() - 20);
             summaryMenu.draw(shapeRenderer, gameData.getDelta());
             shapeRenderer.end();
@@ -316,35 +316,41 @@ public class MapView implements IGameViewService, IMapView {
             imageDrawingUtils.drawImage(spriteBatch, currentMonster.getFrontSprite(), currentMonster.getClass(), summaryMenu.getX() + 6, monsterTeamMenu.getY() + (monsterTeamMenu.getHeight() / 2) + 20, 160, 160);
 
 
+            // Creating a list of stats needed in order. HP, Attack, Defence, Speed, Type
             List<String> stats = new ArrayList<>();
             stats.add("HP: " + currentMonster.getHitPoints() + " / " + currentMonster.getMaxHitPoints());
             stats.addAll(currentMonster.getStats());
+
+            // String manipulation to make the enum value only uppercase on first letter.
             String monsterType = currentMonster.getMonsterType().toString().toLowerCase(Locale.ROOT);
             String upperCaseMonsterType = monsterType.substring(0, 1).toUpperCase() + monsterType.substring(1);
             stats.add("Type: " +  upperCaseMonsterType);
 
+            // Positional counter such that the following text can be drawn accordingly
             int posCounter = 0;
             //Drawing stats
             textUtils.drawSmallBoldRoboto(spriteBatch, "Stats:", Color.BLACK, summaryMenu.getX() + 170, summaryMenu.getY() + (summaryMenu.getHeight() * 2 / 2.4f));
             for (int i = 0; i < stats.size(); i++) {
                 textUtils.drawSmallRoboto(spriteBatch, stats.get(i), Color.BLACK, summaryMenu.getX() + 170, summaryMenu.getY() + (summaryMenu.getHeight() * 2 / 2.4f) - ((i+1) * 20));
                 posCounter = (i+1) * 20;
-                //textUtils.drawSmallRoboto(spriteBatch, teamActions[i], Color.BLACK, teamActionMenu.getX() + 42, teamActionMenu.getY() + (teamActionMenu.getHeight() * 2 / 3f) - (i * 40));
             }
 
             //Drawing moves
 
+            // String manipulation to make the enum value only uppercase on first letter.
+            // And to get the moves formatted in desired form
             List<String> moves = new ArrayList<>();
             for (int i = 0; i < currentMonster.getMoves().size(); i++) {
                 String moveType = String.valueOf(currentMonster.getMoves().get(i).getType()).toLowerCase(Locale.ROOT);
                 String upperCaseMoveType = moveType.substring(0, 1).toUpperCase() + moveType.substring(1);
                 moves.add(currentMonster.getMoves().get(i) + " - " + currentMonster.getMoves().get(i).getDamage() + " - " + upperCaseMoveType);
             }
+            //Drawing the "Moves:" text first.
             textUtils.drawSmallBoldRoboto(spriteBatch, "Moves:", Color.BLACK, summaryMenu.getX() + 170, summaryMenu.getY() + (summaryMenu.getHeight() * 2 / 2.4f) - posCounter-30);
+            //Drawing all moves that the monster has.
             for (int i = 0; i < moves.size(); i++) {
-                textUtils.drawSmallRoboto(spriteBatch, moves.get(i), Color.BLACK, summaryMenu.getX() + 170, summaryMenu.getY() + (summaryMenu.getHeight() * 2 / 2.4f) - posCounter - 30 - ((i+1) * 20) ); //-((i+1) * 20)
+                textUtils.drawSmallRoboto(spriteBatch, moves.get(i), Color.BLACK, summaryMenu.getX() + 170, summaryMenu.getY() + (summaryMenu.getHeight() * 2 / 2.4f) - posCounter - 30 - ((i+1) * 20) );
             }
-
             spriteBatch.end();
         }
 
@@ -382,6 +388,8 @@ public class MapView implements IGameViewService, IMapView {
 
             // Drawing selection triangle
             // Yoinked from BattleScene
+
+            // Empty on purpose such that the other triangles are not drawn.
             if(showSummary){
 
             }
