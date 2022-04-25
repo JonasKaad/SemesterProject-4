@@ -46,12 +46,14 @@ public class MapView implements IGameViewService, IMapView {
     private boolean isPaused;
     private boolean showMonsterTeam;
     private boolean showTeamOptions;
+    private boolean showSummary;
     private TextUtils textUtils;
     private ImageDrawingUtils imageDrawingUtils;
     private TextUtils textUtilsMonster;
     private Rectangle pauseMenu;
     private Rectangle monsterTeamMenu;
     private Rectangle teamActionMenu;
+    private Rectangle summaryMenu;
     private String pauseMenuTitle = "GAME PAUSED";
     private String[] pauseActions = new String[]{"Resume", "Team", "Inventory", "Quit"};
     private String[] teamActions = new String[]{"Summary", "Switch", "Cancel"};
@@ -104,6 +106,7 @@ public class MapView implements IGameViewService, IMapView {
         isPaused = false;
         showMonsterTeam = false;
         showTeamOptions = false;
+        summaryMenu = new Rectangle(100, 100, 380, 300);
         pauseMenu = new Rectangle(100, 100, 200, 250);
         monsterTeamMenu = new Rectangle(100, 100, 400, 550);
         teamActionMenu = new Rectangle(100, 100, 200, 200);
@@ -114,8 +117,7 @@ public class MapView implements IGameViewService, IMapView {
         }
         shapeRenderer = new ShapeRenderer();
         gdxThreadTasks.add(() -> textUtils = TextUtils.getInstance());
-
-        gdxThreadTasks.add(() -> textUtilsMonster = TextUtils.getInstance());
+        //gdxThreadTasks.add(() -> textUtilsMonster = TextUtils.getInstance());
         gdxThreadTasks.add(() -> imageDrawingUtils = ImageDrawingUtils.getInstance());
 
 
@@ -242,7 +244,7 @@ public class MapView implements IGameViewService, IMapView {
 
 
 
-                    textUtilsMonster.drawNormalRoboto(
+                    textUtils.drawNormalRoboto(
                             spriteBatch,
                             "Your Team",
                             Color.BLACK,
@@ -251,7 +253,7 @@ public class MapView implements IGameViewService, IMapView {
 
                     // Draws the text telling the player how to change order/switch monsters
                     if(showSwitchingText){
-                        textUtilsMonster.drawSmallRoboto(
+                        textUtils.drawSmallRoboto(
                                 spriteBatch,
                                 "Select two Monsters to switch their order",
                                 Color.BLACK,
@@ -264,8 +266,8 @@ public class MapView implements IGameViewService, IMapView {
                     for (int i = 0; i < monsterTeam.size(); i++) {
                         //System.out.println(mtp.getMonsterTeam().get(i).getClass());
                         imageDrawingUtils.drawImage(spriteBatch, mtp.getMonsterTeam().get(i).getFrontSprite(), mtp.getMonsterTeam().get(i).getClass(), monsterTeamMenu.getX() + 42, monsterTeamMenu.getY() + (monsterTeamMenu.getHeight() * 2 / 2.6f) - (i * 80));
-                        textUtilsMonster.drawSmallRoboto(spriteBatch, "Name: \t" + mtp.getMonsterTeam().get(i).getName(), Color.BLACK, monsterTeamMenu.getX() + 42+ 110, monsterTeamMenu.getY() + (monsterTeamMenu.getHeight() * 2 / 2.3f) - (i * (80)));
-                        textUtilsMonster.drawSmallRoboto(spriteBatch, "HP: \t" + (mtp.getMonsterTeam().get(i).getHitPoints()), Color.BLACK, monsterTeamMenu.getX() + 42 + 110, monsterTeamMenu.getY() + (monsterTeamMenu.getHeight() * 2 / 2.45f) - (i * (80)));
+                        textUtils.drawSmallRoboto(spriteBatch, "Name: \t" + mtp.getMonsterTeam().get(i).getName(), Color.BLACK, monsterTeamMenu.getX() + 42+ 110, monsterTeamMenu.getY() + (monsterTeamMenu.getHeight() * 2 / 2.3f) - (i * (80)));
+                        textUtils.drawSmallRoboto(spriteBatch, "HP: \t" + (mtp.getMonsterTeam().get(i).getHitPoints()), Color.BLACK, monsterTeamMenu.getX() + 42 + 110, monsterTeamMenu.getY() + (monsterTeamMenu.getHeight() * 2 / 2.45f) - (i * (80)));
 
                     }
                     spriteBatch.end();
@@ -411,11 +413,11 @@ public class MapView implements IGameViewService, IMapView {
                         teamOptionIndex = 0;
                 }
                 else if(showMonsterTeam){
-                    if(firstSelected >= 0 && firstSelected != selectedOptionIndexMonsterTeam){
+                    if(firstSelected >= 0 && firstSelected != selectedOptionIndexMonsterTeam && temporarySecondSelected != -1){
                         // Resets the color back to black every time we go up or down the list
                         monsterRectangles[temporarySecondSelected].setBorderColor(Color.BLACK);
                     }
-                    if(selectedOptionIndexMonsterTeam < monsterTeam.size()) {
+                    if(selectedOptionIndexMonsterTeam < monsterTeam.size()-1) {
                         selectedOptionIndexMonsterTeam++;
                     }
                     else {
@@ -423,7 +425,7 @@ public class MapView implements IGameViewService, IMapView {
                     }
                     temporarySecondSelected = selectedOptionIndexMonsterTeam;
                     // If the first monster to be switched has been selected, and it's not equal to the one being hovered
-                    if(firstSelected >= 0 && firstSelected != selectedOptionIndexMonsterTeam){
+                    if(firstSelected >= 0 && firstSelected != selectedOptionIndexMonsterTeam && temporarySecondSelected != -1){
                         // Color the currently hovered monster's border Cyan
                         monsterRectangles[temporarySecondSelected].setBorderColor(Color.valueOf("29d4ff"));
                     }
@@ -510,6 +512,10 @@ public class MapView implements IGameViewService, IMapView {
                             monsterRectangles[selectedOptionIndexMonsterTeam].setBorderColor(Color.BLACK);
                         }
                     }
+                    else if (showSummary){
+
+                    }
+
                     else if(currentlySwitching){
                         if (secondSelected == -1) {
                             secondSelected = selectedOptionIndexMonsterTeam; // Select the second current monster
