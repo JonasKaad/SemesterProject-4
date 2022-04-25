@@ -335,16 +335,29 @@ public class MapView implements IGameViewService, IMapView {
 
     int firstSelected = -1; // Default case = nothing selected
     int secondSelected = -1; // Default case = nothing selected
+    int temporarySecondSelected = -1; // Default case = nothing selected
 
     @Override
     public void handleInput(GameData gameData, IGameStateManager gameStateManager) {
         if(isPaused){
             if(gameData.getKeys().isPressed(GameKeys.DOWN)) {
                 if(showMonsterTeam){
-                    if(selectedOptionIndexMonsterTeam < monsterTeam.size())
+                    if(firstSelected >= 0 && firstSelected != selectedOptionIndexMonsterTeam){
+                        // Resets the color back to black every time we go up or down the list
+                        monsterRectangles[temporarySecondSelected].setBorderColor(Color.BLACK);
+                    }
+                    if(selectedOptionIndexMonsterTeam < monsterTeam.size()) {
                         selectedOptionIndexMonsterTeam++;
-                    else
+                    }
+                    else {
                         selectedOptionIndexMonsterTeam = 0;
+                    }
+                    temporarySecondSelected = selectedOptionIndexMonsterTeam;
+                    // If the first monster to be switched has been selected, and it's not equal to the one being hovered
+                    if(firstSelected >= 0 && firstSelected != selectedOptionIndexMonsterTeam){
+                        // Color the currently hovered monster's border Cyan
+                        monsterRectangles[temporarySecondSelected].setBorderColor(Color.valueOf("29d4ff"));
+                    }
                 }
                 else {
                     if (selectedOptionIndex < pauseActions.length)
@@ -355,10 +368,21 @@ public class MapView implements IGameViewService, IMapView {
             }
             if(gameData.getKeys().isPressed(GameKeys.UP)){
                 if(showMonsterTeam){
+                    if(firstSelected >= 0 && firstSelected != selectedOptionIndexMonsterTeam){
+                        // Resets the color back to black every time we go up or down the list
+                        monsterRectangles[temporarySecondSelected].setBorderColor(Color.BLACK);
+                    }
                     if(selectedOptionIndexMonsterTeam <= 0)
                         selectedOptionIndexMonsterTeam = monsterTeam.size() -1;
-                    else
+                    else {
                         selectedOptionIndexMonsterTeam--;
+                    }
+                    temporarySecondSelected = selectedOptionIndexMonsterTeam;
+                    // If the first monster to be switched has been selected, and it's not equal to the one being hovered
+                    if(firstSelected >= 0 && firstSelected != selectedOptionIndexMonsterTeam){
+                        // Color the currently hovered monster's border Cyan
+                        monsterRectangles[temporarySecondSelected].setBorderColor(Color.valueOf("29d4ff"));
+                    }
                 }
                 else {
                     if (selectedOptionIndex <= 0)
@@ -453,10 +477,18 @@ public class MapView implements IGameViewService, IMapView {
      */
     private void resetMonsterTeamDrawing(){
         showSwitchingText = false;
-        switchIndicatorColor = new Color(Color.BLACK);
+        switchIndicatorColor = new Color(Color.BLACK); // Sets the triangle back to black
+        // Sets the borders back to black
         if(firstSelected >= 0) {
             monsterRectangles[firstSelected].setBorderColor(Color.BLACK);
         }
+        if(secondSelected >= 0){
+            monsterRectangles[secondSelected].setBorderColor(Color.BLACK);
+        }
+        if(temporarySecondSelected >= 0) {
+            monsterRectangles[temporarySecondSelected].setBorderColor(Color.BLACK);
+        }
+        // Resets the indexes
         firstSelected = -1;
         secondSelected = -1;
     }
