@@ -21,16 +21,20 @@ public class TextUtils {
         glyphLayout = new GlyphLayout();
 
         FreeTypeFontGenerator fontGenerator = new FreeTypeFontGenerator(new OSGiFileHandle("/fonts/Roboto-Medium.ttf", this.getClass()));
+        // Since we are using Roboto Medium, which looks a lot like Roboto-Bold,
+        // the font size for the "bold" version is set to 2 higher, to give the feeling of it appearing bigger/bold.
         FreeTypeFontGenerator fontGeneratorBold = new FreeTypeFontGenerator(new OSGiFileHandle("/fonts/Roboto-Bold.ttf", this.getClass()));
 
         // Font size
         FreeTypeFontGenerator.FreeTypeFontParameter parameter = new FreeTypeFontGenerator.FreeTypeFontParameter();
         parameter.size = 34;
         bigRobotoFont = fontGenerator.generateFont(parameter);
+        parameter.size = 36;
         bigBoldRobotoFont = fontGeneratorBold.generateFont(parameter);
 
         parameter.size = 24;
         normalRobotoFont = fontGenerator.generateFont(parameter);
+        parameter.size = 26;
         normalBoldRobotoFont = fontGeneratorBold.generateFont(parameter);
 
         parameter.size = 16;

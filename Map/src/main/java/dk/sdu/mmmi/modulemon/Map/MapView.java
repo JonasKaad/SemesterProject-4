@@ -13,7 +13,6 @@ import com.badlogic.gdx.maps.tiled.TiledMap;
 import com.badlogic.gdx.maps.tiled.TiledMapTileLayer;
 import com.badlogic.gdx.maps.tiled.renderers.BatchTiledMapRenderer;
 import com.badlogic.gdx.maps.tiled.renderers.OrthogonalTiledMapRenderer;
-import com.sun.org.apache.xpath.internal.operations.And;
 import dk.sdu.mmmi.modulemon.CommonBattle.IBattleParticipant;
 import dk.sdu.mmmi.modulemon.CommonBattle.MonsterTeamPart;
 import dk.sdu.mmmi.modulemon.CommonBattleClient.IBattleCallback;
@@ -21,7 +20,6 @@ import dk.sdu.mmmi.modulemon.CommonBattleClient.IBattleResult;
 import dk.sdu.mmmi.modulemon.CommonBattleClient.IBattleView;
 import dk.sdu.mmmi.modulemon.CommonMap.IMapView;
 import dk.sdu.mmmi.modulemon.CommonMonster.IMonster;
-import dk.sdu.mmmi.modulemon.CommonMonster.IMonsterMove;
 import dk.sdu.mmmi.modulemon.common.data.*;
 import dk.sdu.mmmi.modulemon.common.OSGiFileHandle;
 import dk.sdu.mmmi.modulemon.common.drawing.ImageDrawingUtils;
@@ -48,7 +46,6 @@ public class MapView implements IGameViewService, IMapView {
     private boolean showSummary;
     private TextUtils textUtils;
     private ImageDrawingUtils imageDrawingUtils;
-    private TextUtils textUtilsMonster;
     private Rectangle pauseMenu;
     private Rectangle monsterTeamMenu;
     private Rectangle teamActionMenu;
@@ -112,11 +109,9 @@ public class MapView implements IGameViewService, IMapView {
         for (int i = 0; i < monsterRectangles.length; i++) {
             Rectangle rect = new Rectangle(100, 100, 320, 70);
             monsterRectangles[i] = rect;
-            //monsterRectangles[i] = new Rectangle(100, 100, 360, 100);
         }
         shapeRenderer = new ShapeRenderer();
         gdxThreadTasks.add(() -> textUtils = TextUtils.getInstance());
-        //gdxThreadTasks.add(() -> textUtilsMonster = TextUtils.getInstance());
         gdxThreadTasks.add(() -> imageDrawingUtils = ImageDrawingUtils.getInstance());
 
 

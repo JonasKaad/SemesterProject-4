@@ -1,10 +1,7 @@
 package dk.sdu.mmmi.modulemon.common.drawing;
 
-import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Texture;
-import com.badlogic.gdx.graphics.g2d.GlyphLayout;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
-import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import dk.sdu.mmmi.modulemon.common.OSGiFileHandle;
 
 public class ImageDrawingUtils {
@@ -12,23 +9,19 @@ public class ImageDrawingUtils {
     private static final Object _instanceLock = new Object();
     private static ImageDrawingUtils instance;
 
-    private GlyphLayout glyphLayout;
-
     private Texture texture;
-    private Image image;
 
     private ImageDrawingUtils () {
 
     }
 
     public void drawImage(SpriteBatch batch, String spritePath, Class reference, float x, float y){
-        this.image = new Image(new Texture(new OSGiFileHandle(spritePath, reference)));
         texture = new Texture(new OSGiFileHandle(spritePath, reference));
         batch.draw(texture, x, y, 70, 70);
     }
 
+    // Overloaded method to declare the wanted size of an image
     public void drawImage(SpriteBatch batch, String spritePath, Class reference, float x, float y, int width, int height){
-        this.image = new Image(new Texture(new OSGiFileHandle(spritePath, reference)));
         texture = new Texture(new OSGiFileHandle(spritePath, reference));
         batch.draw(texture, x, y, width, height);
     }
