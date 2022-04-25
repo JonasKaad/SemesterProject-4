@@ -1,6 +1,5 @@
 package dk.sdu.mmmi.modulemon.Map;
 
-import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.audio.Music;
 import com.badlogic.gdx.graphics.Color;
@@ -21,12 +20,8 @@ import dk.sdu.mmmi.modulemon.CommonBattleClient.IBattleResult;
 import dk.sdu.mmmi.modulemon.CommonBattleClient.IBattleView;
 import dk.sdu.mmmi.modulemon.CommonMap.IMapView;
 import dk.sdu.mmmi.modulemon.CommonMonster.IMonster;
-import dk.sdu.mmmi.modulemon.CommonMonster.IMonsterMove;
-import dk.sdu.mmmi.modulemon.CommonMonster.MonsterType;
-import dk.sdu.mmmi.modulemon.Player.PlayerPlugin;
 import dk.sdu.mmmi.modulemon.common.data.*;
 import dk.sdu.mmmi.modulemon.common.OSGiFileHandle;
-import dk.sdu.mmmi.modulemon.common.drawing.DrawingUtils;
 import dk.sdu.mmmi.modulemon.common.drawing.ImageDrawingUtils;
 import dk.sdu.mmmi.modulemon.common.drawing.Rectangle;
 import dk.sdu.mmmi.modulemon.common.drawing.TextUtils;
@@ -56,8 +51,9 @@ public class MapView implements IGameViewService, IMapView {
     private Rectangle pauseMenu;
     private Rectangle monsterTeamMenu;
     private String pauseMenuTitle = "GAME PAUSED";
-    private String[] pauseActions = new String[]{"Resume", "Inventory", "Team", "Quit"};
+    private String[] pauseActions = new String[]{"Resume", "Team", "Inventory", "Quit"};
     private List<IMonster> monsterTeam = new ArrayList<>();
+    private Rectangle[] monsterRectangles = new Rectangle[6];
     private int selectedOptionIndex = 0;
     private int selectedOptionIndexMonsterTeam = 0;
     private float mapLeft;
@@ -105,6 +101,11 @@ public class MapView implements IGameViewService, IMapView {
         showMonsterTeam = false;
         pauseMenu = new Rectangle(100, 100, 200, 250);
         monsterTeamMenu = new Rectangle(100, 100, 400, 550);
+        for (int i = 0; i < monsterRectangles.length; i++) {
+            Rectangle rect = new Rectangle(100, 100, 320, 70);
+            monsterRectangles[i] = rect;
+            //monsterRectangles[i] = new Rectangle(100, 100, 360, 100);
+        }
         shapeRenderer = new ShapeRenderer();
         gdxThreadTasks.add(() -> textUtils = TextUtils.getInstance());
 
@@ -220,17 +221,30 @@ public class MapView implements IGameViewService, IMapView {
                                 monsterTeamMenu.getY() + monsterTeamMenu.getHeight() - 35);
                     }
 
-                    //Drawing Names
+                    //Drawing Names and HP
 
                     for (int i = 0; i < monsterTeam.size(); i++) {
                         //System.out.println(mtp.getMonsterTeam().get(i).getClass());
-                       //
                         imageDrawingUtils.drawImage(spriteBatch, mtp.getMonsterTeam().get(i).getFrontSprite(), mtp.getMonsterTeam().get(i).getClass(), monsterTeamMenu.getX() + 42, monsterTeamMenu.getY() + (monsterTeamMenu.getHeight() * 2 / 2.6f) - (i * 80));
                         textUtilsMonster.drawSmallRoboto(spriteBatch, "Name: \t" + mtp.getMonsterTeam().get(i).getName(), Color.BLACK, monsterTeamMenu.getX() + 42+ 110, monsterTeamMenu.getY() + (monsterTeamMenu.getHeight() * 2 / 2.3f) - (i * (80)));
-                        textUtilsMonster.drawSmallRoboto(spriteBatch, "HP: \t" + String.valueOf(mtp.getMonsterTeam().get(i).getHitPoints()), Color.BLACK, monsterTeamMenu.getX() + 42 + 110, monsterTeamMenu.getY() + (monsterTeamMenu.getHeight() * 2 / 2.45f) - (i * (80)));
-                    }
+                        textUtilsMonster.drawSmallRoboto(spriteBatch, "HP: \t" + (mtp.getMonsterTeam().get(i).getHitPoints()), Color.BLACK, monsterTeamMenu.getX() + 42 + 110, monsterTeamMenu.getY() + (monsterTeamMenu.getHeight() * 2 / 2.45f) - (i * (80)));
 
+                    }
                     spriteBatch.end();
+
+                    /*
+                    For some reason it needs two different for loops, otherwise it won't draw all the stuff.
+                     */
+
+                    // Drawing boxes around Monsters
+                    shapeRenderer.begin();
+                    for (int i = 0; i < monsterTeam.size(); i++) {
+                        monsterRectangles[i].setX(monsterTeamMenu.getX() + 40);
+                        monsterRectangles[i].setY(monsterTeamMenu.getY() + (monsterTeamMenu.getHeight() * 2 / 2.6f) - (i * 80));
+                        monsterRectangles[i].draw(shapeRenderer, gameData.getDelta());
+                        Gdx.gl20.glLineWidth(2);
+                    }
+                    shapeRenderer.end();
                 }
             }
         }
@@ -356,11 +370,8 @@ public class MapView implements IGameViewService, IMapView {
             if(gameData.getKeys().isPressed(GameKeys.ESC)){
                 if(showMonsterTeam){
                     showMonsterTeam = false;
-                    showSwitchingText = false;
-                    switchIndicatorColor = new Color(Color.BLACK);
+                    resetMonsterTeamDrawing();
                     selectedOptionIndexMonsterTeam = 0;
-                    firstSelected = -1;
-                    secondSelected = -1;
                 }
                 else {
                     isPaused = false;
@@ -372,6 +383,7 @@ public class MapView implements IGameViewService, IMapView {
                     if (firstSelected == -1) { // If nothing is selected
                         firstSelected = selectedOptionIndexMonsterTeam; // Select the current monster
                         switchIndicatorColor = new Color(Color.valueOf("ffcb05"));
+                        monsterRectangles[firstSelected].setBorderColor(Color.valueOf("ffcb05"));
                         showSwitchingText = true;
                         System.out.println("Selected the first");
                         return;
@@ -381,10 +393,7 @@ public class MapView implements IGameViewService, IMapView {
                         System.out.println("Selected the second");
                     }
                     if (firstSelected == secondSelected){ // If the same monster has been chosen twice, reset
-                        firstSelected = -1;
-                        secondSelected = -1;
-                        switchIndicatorColor = new Color(Color.BLACK);
-                        showSwitchingText = false;
+                        resetMonsterTeamDrawing();
                         System.out.println("Reset");
                         return;
                     }
@@ -394,11 +403,9 @@ public class MapView implements IGameViewService, IMapView {
                         System.out.println("Updated team");
                         monsterTeam.set(firstSelected, newFirstMonster);
                         monsterTeam.set(secondSelected, newSecondMonster);
-                        switchIndicatorColor = new Color(Color.BLACK);
-                        showSwitchingText = false;
+                        resetMonsterTeamDrawing();
                         mtp.setMonsterTeam(monsterTeam); // Set the player's monster team to the new order
-                        firstSelected = -1;
-                        secondSelected = -1;
+
                     }
                 }
                 if(!showMonsterTeam) {
@@ -407,11 +414,12 @@ public class MapView implements IGameViewService, IMapView {
                         isPaused = false;
                         gameData.setPaused(isPaused);
                     }
-                    if (pauseActions[selectedOptionIndex].equals("Inventory"))
-                        System.out.println("Not implemented yet!");
                     if (pauseActions[selectedOptionIndex].equals("Team")) {
                         showMonsterTeam = true;
                     }
+                    if (pauseActions[selectedOptionIndex].equals("Inventory"))
+                        System.out.println("Not implemented yet!");
+
 
                     if (pauseActions[selectedOptionIndex].equals("Quit")) {
                         isPaused = false;
@@ -437,6 +445,20 @@ public class MapView implements IGameViewService, IMapView {
             }
             startEncounter(playerMonsters, playerMonsters);
         }
+    }
+
+    /**
+     * Resets all the drawing done to the Monster Team back to normal.
+     * Sets the colors back to black and resets indexes.
+     */
+    private void resetMonsterTeamDrawing(){
+        showSwitchingText = false;
+        switchIndicatorColor = new Color(Color.BLACK);
+        if(firstSelected >= 0) {
+            monsterRectangles[firstSelected].setBorderColor(Color.BLACK);
+        }
+        firstSelected = -1;
+        secondSelected = -1;
     }
 
     @Override
