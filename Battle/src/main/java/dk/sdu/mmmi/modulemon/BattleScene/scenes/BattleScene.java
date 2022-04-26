@@ -189,7 +189,7 @@ public class BattleScene {
 
         // Text box
         if (!textToDisplay.isEmpty())
-            textUtils.drawNormalRoboto(spriteBatch, textToDisplay, Color.BLACK, 30, BattleSceneDefaults.textBoxHeight());
+            textUtils.drawNormalRoboto(spriteBatch, textToDisplay, Color.BLACK, _textBoxPosition.getX() + 20, _textBoxPosition.getY() + 80);
 
         spriteBatch.end();
 
