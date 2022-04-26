@@ -37,6 +37,8 @@ public class BattleView implements IGameViewService, IBattleView {
     private boolean _isInitialized;
     private IBattleCallback _battleCallback;
     private IBattleSimulation _battleSimulation;
+    private IBattleState _currentBattleState;
+    private IBattleState _animationBattleState;
     private BattleScene _battleScene;
     private Music _battleMusic;
     private Sound _winSound;
@@ -104,6 +106,7 @@ public class BattleView implements IGameViewService, IBattleView {
         menuState = MenuState.DEFAULT;
         _battleScene.setActionTitle("Your actions:");
         _battleScene.setActions(this.defaultActions);
+        _currentBattleState = null;
 
         BaseAnimation openingAnimation = new BattleSceneOpenAnimation(_battleScene);
         blockingAnimations.add(openingAnimation);
@@ -196,6 +199,7 @@ public class BattleView implements IGameViewService, IBattleView {
         //Check for events
         IBattleEvent battleEvent = _battleSimulation.getNextBattleEvent();
         if (battleEvent != null) {
+            _currentBattleState = battleEvent.getState();
             if (battleEvent instanceof MoveBattleEvent) {
                 MoveBattleEvent event = (MoveBattleEvent) battleEvent;
                 if (event.getUsingParticipant().isPlayerControlled()) {
@@ -229,10 +233,10 @@ public class BattleView implements IGameViewService, IBattleView {
                 } else {
                     EnemyDieAnimation enemyDieAnimation = new EnemyDieAnimation(_battleScene);
                     enemyDieAnimation.start();
-                    enemyDieAnimation.setOnEventDone(() -> _battleScene.resetPositions());
                     blockingAnimations.add(enemyDieAnimation);
 
-                    EmptyAnimation emptyAnimation = new EmptyAnimation(2000);
+                    EmptyAnimation emptyAnimation = new EmptyAnimation(1600);
+                    emptyAnimation.setOnEventDone(() -> _battleScene.resetPositions());
                     blockingAnimations.add(emptyAnimation);
                     _battleScene.setTextToDisplay(battleEvent.getText());
                 }
@@ -250,6 +254,9 @@ public class BattleView implements IGameViewService, IBattleView {
                     handleBattleEnd((VictoryBattleEvent) battleEvent);
                 }
             }
+        }else{
+            //There is not an active battle-event. Get the latest one
+            _currentBattleState = _battleSimulation.getState();
         }
     }
 
@@ -260,14 +267,14 @@ public class BattleView implements IGameViewService, IBattleView {
         _battleScene.setGameWidth(gameData.getDisplayWidth());
 
         //Update information
-        if (_battleSimulation != null) {
-            IMonster playerActiveMonster = _battleSimulation.getState().getPlayer().getActiveMonster();
+        if (_currentBattleState != null) {
+            IMonster playerActiveMonster = _currentBattleState.getPlayer().getActiveMonster();
             _battleScene.setPlayerSprite(playerActiveMonster.getBackSprite(), playerActiveMonster.getClass());
             _battleScene.setPlayerMonsterName(playerActiveMonster.getName());
             _battleScene.setPlayerHP(playerActiveMonster.getHitPoints());
             _battleScene.setMaxPlayerHP(playerActiveMonster.getMaxHitPoints());
 
-            IMonster enemyActiveMonster = _battleSimulation.getState().getEnemy().getActiveMonster();
+            IMonster enemyActiveMonster = _currentBattleState.getEnemy().getActiveMonster();
             _battleScene.setEnemySprite(enemyActiveMonster.getFrontSprite(), enemyActiveMonster.getClass());
             _battleScene.setEnemyMonsterName(enemyActiveMonster.getName());
             _battleScene.setEnemyHP(enemyActiveMonster.getHitPoints());
