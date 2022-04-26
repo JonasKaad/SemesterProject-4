@@ -34,6 +34,7 @@ import java.util.Queue;
 
 public class BattleView implements IGameViewService, IBattleView {
 
+    private boolean updateHasRunOnce;
     private boolean _isInitialized;
     private IBattleCallback _battleCallback;
     private IBattleSimulation _battleSimulation;
@@ -96,14 +97,14 @@ public class BattleView implements IGameViewService, IBattleView {
         _winSound = Gdx.audio.newSound(new OSGiFileHandle("/sounds/you_won.ogg", this.getClass()));
         _battleSimulation.StartBattle(player, enemy);
         _battleCallback = callback;
-        blockingAnimations = new LinkedList<>();
-        backgroundAnimations = new LinkedList<>();
         _battleMusic.play();
         _battleMusic.setVolume(0.1f);
         _battleMusic.setLooping(true);
         menuState = MenuState.DEFAULT;
         _battleScene.setActionTitle("Your actions:");
         _battleScene.setActions(this.defaultActions);
+        blockingAnimations = new LinkedList<>();
+        backgroundAnimations = new LinkedList<>();
 
         BaseAnimation openingAnimation = new BattleSceneOpenAnimation(_battleScene);
         blockingAnimations.add(openingAnimation);
@@ -135,6 +136,7 @@ public class BattleView implements IGameViewService, IBattleView {
         spriteBatch = new SpriteBatch();
         _battleScene = new BattleScene();
 
+        updateHasRunOnce = false;
         _isInitialized = true;
         this.gameStateManager = gameStateManager;
     }
@@ -164,6 +166,8 @@ public class BattleView implements IGameViewService, IBattleView {
             spriteBatch.end();
             return;
         }
+
+        updateHasRunOnce = true;
 
         //Is there any animations active?
         if (!blockingAnimations.isEmpty()) {
@@ -255,6 +259,12 @@ public class BattleView implements IGameViewService, IBattleView {
 
     @Override
     public void draw(GameData gameData) {
+        if(!updateHasRunOnce){
+            // In order to not draw before the Opening Animation has moved things out of the way, we wait till update() has been called once.
+            // This is because we induce a race-condition when changing game-states in the GameStateManager.
+            // This usually dosn't mean a lot, but because of the way this class is written, it's important that update() is called before draw(), otherwise we would have a ghost frame in the beginning.
+            return;
+        }
         //Game data
         _battleScene.setGameHeight(gameData.getDisplayHeight());
         _battleScene.setGameWidth(gameData.getDisplayWidth());
@@ -429,6 +439,7 @@ public class BattleView implements IGameViewService, IBattleView {
     @Override
     public void dispose() {
         _battleMusic.stop();
+        _battleMusic = null; //Unload Battle Music
     }
 
     private void addEmptyAnimation(int duration, boolean autoStart) {
