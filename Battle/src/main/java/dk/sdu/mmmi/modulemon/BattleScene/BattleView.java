@@ -160,14 +160,15 @@ public class BattleView implements IGameViewService, IBattleView {
         if (!_isInitialized) {
             return;
         }
+
+        updateHasRunOnce = true;
+
         if (_battleSimulation == null) {
             spriteBatch.begin();
             TextUtils.getInstance().drawBigRoboto(spriteBatch, "Waiting for battle participants", Color.WHITE, 100, gameData.getDisplayHeight() / 2f);
             spriteBatch.end();
             return;
         }
-
-        updateHasRunOnce = true;
 
         //Is there any animations active?
         if (!blockingAnimations.isEmpty()) {
