@@ -116,7 +116,7 @@ public class BattleView implements IGameViewService, IBattleView {
 
     @Override
     public void forceBattleEnd() {
-        handleBattleEnd(new VictoryBattleEvent("The battle has ended prematurely", _battleSimulation.getState().getPlayer()));
+        handleBattleEnd(new VictoryBattleEvent("The battle has ended prematurely", _battleSimulation.getState().getPlayer(), null));
     }
 
     public void handleBattleEnd(VictoryBattleEvent victoryBattleEvent) {
@@ -330,7 +330,7 @@ public class BattleView implements IGameViewService, IBattleView {
             } else if (selectedAction.equalsIgnoreCase("Quit")) {
                 _battleScene.setTextToDisplay("Ends the battle");
                 if (keys.isPressed(GameKeys.ENTER)) {
-                    handleBattleEnd(new VictoryBattleEvent("Player runs away", _battleSimulation.getState().getEnemy()));
+                    handleBattleEnd(new VictoryBattleEvent("Player runs away", _battleSimulation.getState().getEnemy(), null));
                 }
             }
         } else if (menuState == MenuState.FIGHT) {

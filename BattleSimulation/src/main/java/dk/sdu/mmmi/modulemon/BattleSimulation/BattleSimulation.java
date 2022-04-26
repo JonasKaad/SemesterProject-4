@@ -35,13 +35,13 @@ public class BattleSimulation implements IBattleSimulation {
         this.AI = this.AIFactory.getBattleAI(this, enemy);
 
         if (!firstToTakeTurn.isPlayerControlled()) {
-            nextEvent = new InfoBattleEvent("enemy starts the battle");
+            nextEvent = new InfoBattleEvent("The opponent starts the battle", battleState.clone());
             onNextEvent = () -> {
                 battleState.setActiveParticipant(firstToTakeTurn);
                 AI.doAction(this);
             };
         } else {
-            nextEvent = new InfoBattleEvent("player starts the battle");
+            nextEvent = new InfoBattleEvent("Player starts the battle", battleState.clone());
             onNextEvent = () -> {
                 battleState.setActiveParticipant(firstToTakeTurn);
             };
@@ -60,7 +60,7 @@ public class BattleSimulation implements IBattleSimulation {
     }
 
     private String getActiveParticipantTitle() {
-        return battleState.isPlayersTurn() ? "player" : "enemy";
+        return battleState.isPlayersTurn() ? "Player" : "Enemy";
     }
 
     @Override
@@ -89,19 +89,19 @@ public class BattleSimulation implements IBattleSimulation {
 
         if (battleParticipant.isPlayerControlled()) {
             target = battleState.getEnemy().getActiveMonster();
-            participantTitle = "player";
-            opposingParticipantTitle = "enemy";
+            participantTitle = "Player";
+            opposingParticipantTitle = "Opponent";
             opposingParticipant = battleState.getEnemy();
         } else {
             target = battleState.getPlayer().getActiveMonster();
-            participantTitle = "enemy";
-            opposingParticipantTitle = "player";
+            participantTitle = "Opponent";
+            opposingParticipantTitle = "Player";
             opposingParticipant = battleState.getPlayer();
         }
 
         int damage = monsterProcessor.calculateDamage(source, move, target);
 
-        nextEvent = new MoveBattleEvent(participantTitle + " monster used " + move.getName() + " for " + damage + " damage", battleParticipant, move, damage);
+        nextEvent = new MoveBattleEvent(participantTitle + " monster used " + move.getName() + " for " + damage + " damage", battleParticipant, move, damage, battleState.clone());
 
         onNextEvent = () -> {
             int newHitPoints = target.getHitPoints()-damage;
@@ -115,13 +115,13 @@ public class BattleSimulation implements IBattleSimulation {
                 Optional<IMonster> nextMonster = opposingParticipant.getMonsterTeam().stream().filter(x -> x.getHitPoints() > 0).findFirst();
 
                 if (nextMonster.isPresent()) {
-                    nextEvent = new ChangeMonsterBattleEvent(opposingParticipantTitle + "s monster fainted... Changed to " + nextMonster.get().getName(), opposingParticipant, nextMonster.get());
+                    nextEvent = new ChangeMonsterBattleEvent(opposingParticipantTitle + "s monster fainted... Changed to " + nextMonster.get().getName(), opposingParticipant, nextMonster.get(), battleState.clone());
                     onNextEvent = () -> {
                         opposingParticipant.setActiveMonster(nextMonster.get());
                         switchTurns();
                     };
                 } else {
-                    nextEvent = new VictoryBattleEvent(opposingParticipantTitle + "s monster fainted... " + participantTitle + " won the battle.", battleParticipant);
+                    nextEvent = new VictoryBattleEvent(opposingParticipantTitle + "s monster fainted... " + participantTitle + " won the battle.", battleParticipant, battleState.clone());
                     onNextEvent = () -> {};
                 }
             }
@@ -138,7 +138,7 @@ public class BattleSimulation implements IBattleSimulation {
         }
         if (monster.getHitPoints()<=0) throw new IllegalArgumentException("You can't change to a dead monster");
         if (battleParticipant.getMonsterTeam().contains(monster)) {
-            nextEvent = new ChangeMonsterBattleEvent(getActiveParticipantTitle()+" changed monster to " + monster.getName(), battleParticipant, monster);
+            nextEvent = new ChangeMonsterBattleEvent(getActiveParticipantTitle()+" changed monster to " + monster.getName(), battleParticipant, monster, battleState.clone());
             onNextEvent = () -> {
                 battleParticipant.setActiveMonster(monster);
                 switchTurns();
@@ -155,7 +155,7 @@ public class BattleSimulation implements IBattleSimulation {
         }
 
         //Here some randomness could be introduced, so the player can't always run away
-        nextEvent = new RunAwayBattleEvent(getActiveParticipantTitle() + " ran away", battleParticipant);
+        nextEvent = new RunAwayBattleEvent(getActiveParticipantTitle() + " ran away", battleParticipant, battleState.clone());
 
     }
 

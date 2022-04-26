@@ -145,7 +145,7 @@ public class BattleViewTest {
         when(battleState.getPlayer()).thenReturn(player);
         when(battleState.getEnemy()).thenReturn(enemy);
         when(simulation.getState()).thenReturn(battleState);
-        when(simulation.getNextBattleEvent()).thenReturn(new InfoBattleEvent("Never gonna give you up!"));
+        when(simulation.getNextBattleEvent()).thenReturn(new InfoBattleEvent("Never gonna give you up!", null));
         battleView.setBattleSimulation(simulation);
         battleView.setBattleScene(scene);
 
