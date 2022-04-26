@@ -87,6 +87,5 @@ public class BattleSceneOpenAnimation extends BaseAnimation {
         _battleScene.setPlayerHealthBoxPosition(new Position(states[12], states[13]));
         _battleScene.setActionBoxPosition(new Position(states[14], states[15]));
         _battleScene.setTextBoxPosition(new Position(states[16], states[17]));
-
     }
 }
