@@ -21,7 +21,6 @@ import dk.sdu.mmmi.modulemon.CommonBattleClient.IBattleView;
 import dk.sdu.mmmi.modulemon.CommonMap.IMapView;
 import dk.sdu.mmmi.modulemon.CommonMonster.IMonster;
 import dk.sdu.mmmi.modulemon.common.AssetLoader;
-import dk.sdu.mmmi.modulemon.common.OSGiTmxLoader;
 import dk.sdu.mmmi.modulemon.common.data.*;
 import dk.sdu.mmmi.modulemon.common.OSGiFileHandle;
 import dk.sdu.mmmi.modulemon.common.drawing.Rectangle;
@@ -63,7 +62,7 @@ public class MapView implements IGameViewService, IMapView {
     private float mapBottom;
     private float mapTop;
     private int tilePixelSize;
-    AssetLoader loader = AssetLoader.getInstance();
+    private AssetLoader loader = AssetLoader.getInstance();
     private Color switchIndicatorColor = Color.BLACK;
     private boolean showSwitchingText = false;
 
@@ -83,7 +82,7 @@ public class MapView implements IGameViewService, IMapView {
 
     @Override
     public void init(IGameStateManager gameStateManager) {
-        mapMusic = Gdx.audio.newMusic(new OSGiFileHandle("/music/village_theme.ogg", MapView.class));
+        mapMusic = loader.getMusicAsset("/music/village_theme.ogg", MapView.class);
         tiledMap = new OSGiTmxLoader().load("/maps/SeasonalOverworld.tmx");
         overhangLayer = (TiledMapTileLayer) tiledMap.getLayers().get("Top");
         int scale = 4;

@@ -59,17 +59,6 @@ public class AssetLoader {
         return (Music) retrieved;
     }
 
-    public TiledMap getTiledMapAsset(String pathToAsset, Class classForAssetResources) {
-        String key = pathToAsset + "_" + classForAssetResources.getName();
-        if(!assetMap.containsKey(key)){
-            Object value = (new OSGiTmxLoader().load(pathToAsset));
-            assetMap.put(key, value);
-        }
-        Object retrieved = assetMap.get(key);
-        return (TiledMap) retrieved;
-    }
-
-
     private AssetLoader(){
         assetMap = new HashMap<>();
     }

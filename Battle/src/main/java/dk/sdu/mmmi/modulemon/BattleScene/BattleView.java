@@ -16,6 +16,7 @@ import dk.sdu.mmmi.modulemon.CommonBattleSimulation.*;
 import dk.sdu.mmmi.modulemon.CommonBattleSimulation.BattleEvents.*;
 import dk.sdu.mmmi.modulemon.CommonMonster.IMonster;
 import dk.sdu.mmmi.modulemon.CommonMonster.IMonsterMove;
+import dk.sdu.mmmi.modulemon.common.AssetLoader;
 import dk.sdu.mmmi.modulemon.common.animations.BaseAnimation;
 import dk.sdu.mmmi.modulemon.common.data.GameData;
 import dk.sdu.mmmi.modulemon.common.data.GameKeys;
@@ -44,6 +45,7 @@ public class BattleView implements IGameViewService, IBattleView {
     private Queue<BaseAnimation> blockingAnimations;
     private Queue<BaseAnimation> backgroundAnimations;
 
+    private AssetLoader loader = AssetLoader.getInstance();
     private String[] defaultActions;
     private int selectedAction = 0;
 
@@ -59,9 +61,9 @@ public class BattleView implements IGameViewService, IBattleView {
         Sound returnSound = null;
 
         try {
-            returnSound = Gdx.audio.newSound(new OSGiFileHandle(monsterMove.getSoundPath(), monsterMove.getClass()));
+            returnSound = loader.getSoundAsset(monsterMove.getSoundPath(), monsterMove.getClass());
         }catch(GdxRuntimeException ex){
-            System.out.println("[Warning] Failed to loadd attack sound for monster-move: " + monsterMove.getName());
+            System.out.println("[Warning] Failed to load attack sound for monster-move: " + monsterMove.getName());
         }
 
         return returnSound;
@@ -92,8 +94,8 @@ public class BattleView implements IGameViewService, IBattleView {
 
         }
         selectedAction = 0;
-        _battleMusic = Gdx.audio.newMusic(new OSGiFileHandle("/music/battle_music.ogg", this.getClass()));
-        _winSound = Gdx.audio.newSound(new OSGiFileHandle("/sounds/you_won.ogg", this.getClass()));
+        _battleMusic = loader.getMusicAsset("/music/battle_music.ogg", this.getClass());
+        _winSound = loader.getSoundAsset("/sounds/you_won.ogg", this.getClass());
         _battleSimulation.StartBattle(player, enemy);
         _battleCallback = callback;
         blockingAnimations = new LinkedList<>();

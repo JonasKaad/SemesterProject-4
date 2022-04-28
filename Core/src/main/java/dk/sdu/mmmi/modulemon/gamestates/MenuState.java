@@ -10,6 +10,7 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGenerator;
 import dk.sdu.mmmi.modulemon.CommonBattleClient.IBattleView;
 import dk.sdu.mmmi.modulemon.Game;
+import dk.sdu.mmmi.modulemon.common.AssetLoader;
 import dk.sdu.mmmi.modulemon.common.data.GameData;
 import dk.sdu.mmmi.modulemon.common.data.GameKeys;
 import dk.sdu.mmmi.modulemon.common.data.IGameStateManager;
@@ -52,7 +53,7 @@ public class MenuState implements IGameViewService {
 
     @Override
     public void init(IGameStateManager gameStateManager) {
-        menuMusic = Gdx.audio.newMusic(new OSGiFileHandle("/music/menu.ogg", MenuState.class));
+        menuMusic = AssetLoader.getInstance().getMusicAsset("/music/menu.ogg", MenuState.class);
         // Instantiates the variables
         spriteBatch = new SpriteBatch();
         glyphLayout = new GlyphLayout();
@@ -87,7 +88,7 @@ public class MenuState implements IGameViewService {
 
         fontGenerator.dispose();
 
-        logo = new Texture(new OSGiFileHandle("/icons/cat-logo.png", this.getClass()));
+        logo = AssetLoader.getInstance().getTextureAsset("/icons/cat-logo.png", this.getClass());
 
         // Sets the options for the menu
         menuOptions = defaultMenuOptions;
