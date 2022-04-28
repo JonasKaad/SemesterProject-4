@@ -20,6 +20,7 @@ import dk.sdu.mmmi.modulemon.CommonBattleClient.IBattleResult;
 import dk.sdu.mmmi.modulemon.CommonBattleClient.IBattleView;
 import dk.sdu.mmmi.modulemon.CommonMap.IMapView;
 import dk.sdu.mmmi.modulemon.CommonMonster.IMonster;
+import dk.sdu.mmmi.modulemon.common.AssetLoader;
 import dk.sdu.mmmi.modulemon.common.data.*;
 import dk.sdu.mmmi.modulemon.common.OSGiFileHandle;
 import dk.sdu.mmmi.modulemon.common.drawing.ImageDrawingUtils;
@@ -63,7 +64,7 @@ public class MapView implements IGameViewService, IMapView {
     private float mapBottom;
     private float mapTop;
     private int tilePixelSize;
-
+    AssetLoader loader = AssetLoader.getInstance();
     private Color switchIndicatorColor = Color.BLACK;
     private boolean showSwitchingText = false;
 
@@ -258,7 +259,12 @@ public class MapView implements IGameViewService, IMapView {
                     //Drawing Names and HP
 
                     for (int i = 0; i < monsterTeam.size(); i++) {
-                        imageDrawingUtils.drawImage(spriteBatch, mtp.getMonsterTeam().get(i).getFrontSprite(), mtp.getMonsterTeam().get(i).getClass(), monsterTeamMenu.getX() + 42, monsterTeamMenu.getY() + (monsterTeamMenu.getHeight() * 2 / 2.6f) - (i * 80));
+
+                        //imageDrawingUtils.drawImage(spriteBatch, mtp.getMonsterTeam().get(i).getFrontSprite(), mtp.getMonsterTeam().get(i).getClass(), monsterTeamMenu.getX() + 42, monsterTeamMenu.getY() + (monsterTeamMenu.getHeight() * 2 / 2.6f) - (i * 80), 70, 70);
+                        String spritePath = mtp.getMonsterTeam().get(i).getFrontSprite();
+                        Class reference = mtp.getMonsterTeam().get(i).getClass();
+                        Texture texture = loader.getTextureAsset(spritePath, reference);
+                        spriteBatch.draw(texture,monsterTeamMenu.getX() + 42, monsterTeamMenu.getY() + (monsterTeamMenu.getHeight() * 2 / 2.6f) - (i * 80), 70, 70);
                         textUtils.drawSmallRoboto(spriteBatch, "Name: \t" + mtp.getMonsterTeam().get(i).getName(), Color.BLACK, monsterTeamMenu.getX() + 42+ 110, monsterTeamMenu.getY() + (monsterTeamMenu.getHeight() * 2 / 2.3f) - (i * (80)));
                         textUtils.drawSmallRoboto(spriteBatch, "HP: \t" + mtp.getMonsterTeam().get(i).getHitPoints() + " / " + mtp.getMonsterTeam().get(i).getMaxHitPoints(), Color.BLACK, monsterTeamMenu.getX() + 42 + 110, monsterTeamMenu.getY() + (monsterTeamMenu.getHeight() * 2 / 2.45f) - (i * (80)));
 
