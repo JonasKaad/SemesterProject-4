@@ -14,16 +14,13 @@ import java.util.List;
  * @author Gorm
  */
 public class InteractPart implements EntityPart{
-    private boolean interact;
+    private boolean canInteract;
     private PositionPart positionPart;
-    private int tileSize = 64;
     private int range;
     private static final List<InteractPart> InteractPartList = new LinkedList();
-
-
-
+    
     public InteractPart(PositionPart positionPart, int range) {
-        this.interact = false;
+        this.canInteract = false;
         this.positionPart = positionPart;
         this.range = range;
         
@@ -38,8 +35,8 @@ public class InteractPart implements EntityPart{
         this.range = range;
     }
     
-    public boolean isInteract() {
-        return interact;
+    public boolean canInteract() {
+        return canInteract;
     }
 
     @Override
@@ -49,48 +46,46 @@ public class InteractPart implements EntityPart{
             if (this == interactPart) {
                 return;
             }
-            interact = this.isInRange(interactPart.positionPart.getX(), interactPart.positionPart.getY());            
+            canInteract = this.isInRange(interactPart.positionPart.getX(), interactPart.positionPart.getY());            
         }
     }
     
     private boolean isInRange(float x, float y) {
         boolean isInRange = false;
+        float thisX = this.positionPart.getX();
+        float thisY = this.positionPart.getY();
+        int direction = this.positionPart.getDirection();
+
+        boolean bothOnAxisX = (x-32 < thisX && thisX < x+32);
+        boolean bothOnAxisY = (y-32 < thisY && thisY < y+32);
+        boolean withinRange = (Math.abs(thisX-x) <= 64*range) && (Math.abs(thisY-y) <= 64*range);
         
-        if (this.positionPart.getX()*tileSize < x*tileSize 
-        && this.positionPart.getX()*tileSize + this.range*tileSize >= x*tileSize
-        && this.positionPart.getY()*tileSize > y*tileSize-32
-        && this.positionPart.getY()*tileSize < y*tileSize+32
-        //&& this.positionPart.isFacing('R')
-                ){
-            isInRange = true;
+        //If they are on one of the same axises
+        //They are within a range of tiles of each other
+        //Is facing the other interactpart.
+        if (bothOnAxisX && withinRange) {
+            if (thisY < y && direction == 90) {
+                
+            } else if (thisY > y && direction == 270) {
+                
+            } else {
+                return isInRange;
+            }
         } 
-        else if (this.positionPart.getX()*tileSize > x*tileSize 
-        && this.positionPart.getX()*tileSize - this.range*tileSize <= x*tileSize
-        && this.positionPart.getY()*tileSize > y*tileSize-32
-        && this.positionPart.getY()*tileSize < y*tileSize+32
-        //&& this.positionPart.isFacing('L')
-                ){
-            isInRange = true;
-        } 
-        else if (this.positionPart.getY()*tileSize < y*tileSize 
-        && this.positionPart.getY()*tileSize + this.range*tileSize >= y*tileSize
-        && this.positionPart.getX()*tileSize > x*tileSize-32
-        && this.positionPart.getX()*tileSize < x*tileSize+32
-        //&& this.positionPart.isFacing('U')
-                ){
-            isInRange = true;   
+        else if (bothOnAxisY && withinRange) {
+            if (thisX < x && direction == 0) {
+                
+            } else if (thisX > x && direction == 180) {
+                
+            } else {
+                return isInRange;
+            }
+            
+        } else {
+            return isInRange;
         }
-        else if (this.positionPart.getY()*tileSize > y*tileSize 
-        && this.positionPart.getY()*tileSize - this.range*tileSize <= y*tileSize
-        && this.positionPart.getX()*tileSize > x*tileSize-32
-        && this.positionPart.getX()*tileSize < x*tileSize+32   
-        //&& this.positionPart.isFacing('D')
-                ){
-            isInRange = true;            
-        }
-        if (isInRange) {
-            System.out.println("isInRange: " + isInRange);
-        }
+        isInRange = true;
+        
         return isInRange;
     }
 }   

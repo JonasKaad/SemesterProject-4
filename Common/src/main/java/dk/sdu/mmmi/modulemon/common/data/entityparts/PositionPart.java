@@ -34,57 +34,42 @@ public class PositionPart implements EntityPart {
 
     public void setX(float newX) {
         this.x = newX;
-        if (newX > x) {
-            direction = 0;
-        } else if (newX < x) {
-            direction = 180;
-        }
     }
     
     public void setY(float newY) {
         this.y = newY;
-        if (newY > y) {
-            direction = 90;
-        } else if (newY < y) {
-            direction = 270;
-        }
     }
 
     public int getDirection() {
-        return direction;
+        return direction%360;
     }
 
     public void setDirection(int direction) {
-        this.direction = direction;
+        this.direction = direction%360;
     }
     
-    public boolean isFacing(Character c) { //Poorly implemented, fix.
-        boolean result = false;
-        switch (c) {
-            case 'R': //Right
-               result = this.direction%360 == 0;
-                System.out.println("Right");
-               break;
-            case 'U': //Up
-                result = this.direction%360 == 90;
-                System.out.println("Up");
+    public boolean isFacing(Character c) {
+        if (null == c) {
+            System.out.println("Did not match any direction");
+        } else switch (c) {
+            case 'R':
+                return direction == 0;
+            case 'U':
+                return direction == 90;
+            case 'L':
+                return direction == 180;
+            case 'D':
+                return direction == 270;
+            default:
+                System.out.println("Did not match any direction");
                 break;
-            case 'L': //Left
-                result = this.direction%360 == 180;
-                System.out.println("Left");
-                break;
-            case 'D': //Down
-                result = this.direction%360 == 270;
-                System.out.println("Down");
-                break;
-            default: System.out.println(("Did not match any direction"));
         }
-        return result;
+        return false;
     }
 
     public void setPosition(float newX, float newY) {
-        this.x = newX;
-        this.y = newY;
+        setX(newX);
+        setY(newY);
     }
 
     @Override

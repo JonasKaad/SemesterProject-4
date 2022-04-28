@@ -54,8 +54,8 @@ public class NPCControlSystem implements IEntityProcessingService{
                 controlPart.process(gameData, npc);
                 interactPart.process(gameData, npc);
                 
-                if (interactPart.isInteract()) {
-                    System.out.println("Interacted when it should");
+                if (interactPart.canInteract()) {
+                    
                 } 
 
                 updateShape(npc);
