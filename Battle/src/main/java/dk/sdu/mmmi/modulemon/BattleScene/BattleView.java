@@ -38,7 +38,6 @@ public class BattleView implements IGameViewService, IBattleView {
     private IBattleCallback _battleCallback;
     private IBattleSimulation _battleSimulation;
     private IBattleState _currentBattleState;
-    private IBattleState _animationBattleState;
     private BattleScene _battleScene;
     private Music _battleMusic;
     private Sound _winSound;
