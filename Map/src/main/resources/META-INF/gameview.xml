@@ -15,4 +15,8 @@
                interface="dk.sdu.mmmi.modulemon.common.services.IGamePluginService"
                name="IGamePluginService" policy="dynamic" unbind="removeGamePluginService"/>
 
+    <reference bind="setBattleView" cardinality="0..1"
+               interface="dk.sdu.mmmi.modulemon.CommonBattleClient.IBattleView"
+               name="IBattleView" policy="dynamic" unbind="removeBattleView"/>
+
 </scr:component>

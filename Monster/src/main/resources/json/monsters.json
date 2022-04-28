@@ -9,10 +9,12 @@
     "speed" : 60,
     "moves" : [
       "spit",
-      "trample"
+      "trample",
+      "hornBlast",
+      "fireBreath"
     ],
-    "front": "images/alpaca_1.png",
-    "back": "images/alpaca_2.png"
+    "front": "/images/alpaca_1.png",
+    "back": "/images/alpaca_2.png"
   },
   {
     "id" : 1,
@@ -23,9 +25,44 @@
     "attack" : 70,
     "speed" : 70,
     "moves" : [
-      "zap"
+      "zap",
+      "tackle",
+      "eggBomb",
+      "waterBlast"
     ],
-    "front": "images/eel_1.png",
-    "back": "images/eel_2.png"
+    "front": "/images/eel_1.png",
+    "back": "/images/eel_2.png"
+  },
+  {
+    "id" : 2,
+    "name" : "Bird",
+    "type" : "AIR",
+    "hp" : 60,
+    "defence" : 20,
+    "attack" : 100,
+    "speed" : 100,
+    "moves" : [
+      "tackle",
+      "eggBomb"
+    ],
+    "front": "/images/bird_front.png",
+    "back": "/images/bird_back.png"
+  },
+  {
+    "id" : 3,
+    "name" : "Mole",
+    "type" : "EARTH",
+    "hp" : 100,
+    "defence" : 100,
+    "attack" : 40,
+    "speed" : 20,
+    "moves" : [
+      "tackle",
+      "dig",
+      "earthquake",
+      "mudBlast"
+    ],
+    "front": "/images/mole_front.png",
+    "back": "/images/mole_back.png"
   }
 ]

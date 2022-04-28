@@ -1,6 +1,7 @@
 package dk.sdu.mmmi.modulemon.Player;
 
 import com.badlogic.gdx.graphics.Texture;
+import dk.sdu.mmmi.modulemon.CommonBattle.MonsterTeamPart;
 import dk.sdu.mmmi.modulemon.common.data.Entity;
 import dk.sdu.mmmi.modulemon.common.data.GameData;
 import dk.sdu.mmmi.modulemon.common.data.World;
@@ -23,6 +24,7 @@ public class PlayerControlSystem implements IEntityProcessingService {
             PositionPart positionPart = player.getPart(PositionPart.class);
             MovingPart movingPart = player.getPart(MovingPart.class);
             SpritePart spritePart = player.getPart(SpritePart.class);
+            MonsterTeamPart monsterTeamPart = player.getPart(MonsterTeamPart.class);
 
             movingPart.setLeft(gameData.getKeys().isDown(LEFT));
             movingPart.setRight(gameData.getKeys().isDown(RIGHT));
@@ -45,6 +47,7 @@ public class PlayerControlSystem implements IEntityProcessingService {
             movingPart.process(gameData, player);
             positionPart.process(gameData, player);
             spritePart.process(gameData, player);
+            monsterTeamPart.process(gameData, player);
 
             updateShape(player);
         }
@@ -79,8 +82,6 @@ public class PlayerControlSystem implements IEntityProcessingService {
         entity.setSpriteTexture(result);
         entity.setPosX(x);
         entity.setPosY(y);
-
-        //entity.setSprite(new Texture(new OSGiFileHandle("/assets/main-char-right.png")));
     }
 
 

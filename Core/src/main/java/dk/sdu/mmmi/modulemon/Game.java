@@ -11,6 +11,7 @@ import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
 import dk.sdu.mmmi.modulemon.common.data.GameData;
 import dk.sdu.mmmi.modulemon.common.data.GameKeys;
+import dk.sdu.mmmi.modulemon.common.OSGiFileHandleByteReader;
 import dk.sdu.mmmi.modulemon.common.services.*;
 import dk.sdu.mmmi.modulemon.managers.GameInputManager;
 import dk.sdu.mmmi.modulemon.managers.GameStateManager;

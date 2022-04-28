@@ -12,7 +12,7 @@ import com.badlogic.gdx.maps.tiled.TmxMapLoader;
 import com.badlogic.gdx.maps.tiled.tiles.AnimatedTiledMapTile;
 import com.badlogic.gdx.maps.tiled.tiles.StaticTiledMapTile;
 import com.badlogic.gdx.utils.*;
-import dk.sdu.mmmi.modulemon.common.drawing.OSGiFileHandle;
+import dk.sdu.mmmi.modulemon.common.OSGiFileHandle;
 
 import java.io.IOException;
 import java.util.StringTokenizer;
@@ -88,17 +88,7 @@ public class OSGiTmxLoader extends TmxMapLoader {
     }
 
     protected static FileHandle getRelativeFileHandle(FileHandle file, String path) {
-        StringTokenizer tokenizer = new StringTokenizer(path, "\\/");
         FileHandle result = new OSGiFileHandle("/maps/" + path, OSGiTmxLoader.class);
-        /*
-        while(tokenizer.hasMoreElements()) {
-            String token = tokenizer.nextToken();
-            if (token.equals("..")) {
-                result = result.parent();
-            } else {
-                result = result.child(token);
-            }
-        }*/
 
         return result;
     }
