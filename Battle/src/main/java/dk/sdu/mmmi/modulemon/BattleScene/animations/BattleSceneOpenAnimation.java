@@ -1,5 +1,6 @@
 package dk.sdu.mmmi.modulemon.BattleScene.animations;
 
+import dk.sdu.mmmi.modulemon.common.animations.AnimationCurves;
 import dk.sdu.mmmi.modulemon.common.drawing.Position;
 import dk.sdu.mmmi.modulemon.BattleScene.scenes.BattleScene;
 import dk.sdu.mmmi.modulemon.BattleScene.scenes.BattleSceneDefaults;
@@ -14,11 +15,12 @@ public class BattleSceneOpenAnimation extends BaseAnimation {
 
     public BattleSceneOpenAnimation(BattleScene battleScene) {
         super();
+        super.animationCurve = AnimationCurves.EaseOut();
         this._battleScene = battleScene;
     }
 
     public void setInitialState(){
-        Timeline = new int[]{0, 2000, 2500};
+        Timeline = new int[]{0, 1200, 2000};
         States = new ArrayList<>(Timeline.length);
 
         States.add(new float[]{

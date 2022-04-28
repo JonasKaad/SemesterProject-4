@@ -2,6 +2,7 @@ package dk.sdu.mmmi.modulemon.BattleScene.animations;
 
 import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.Color;
+import dk.sdu.mmmi.modulemon.common.animations.AnimationCurves;
 import dk.sdu.mmmi.modulemon.common.drawing.Position;
 import dk.sdu.mmmi.modulemon.BattleScene.scenes.BattleScene;
 import dk.sdu.mmmi.modulemon.BattleScene.scenes.BattleSceneDefaults;
@@ -18,6 +19,7 @@ public class PlayerBattleAttackAnimation extends BaseAnimation {
 
     public PlayerBattleAttackAnimation(BattleScene battleScene, Sound attackSound) {
         super();
+        super.animationCurve = AnimationCurves.EaseIn();
         Timeline = new int[]{0, 300, 450, 730};
         States = new ArrayList<>(Timeline.length);
 
