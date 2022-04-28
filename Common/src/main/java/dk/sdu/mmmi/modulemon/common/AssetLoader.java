@@ -1,7 +1,11 @@
 package dk.sdu.mmmi.modulemon.common;
 
+import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.audio.Music;
+import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.Texture;
-import com.badlogic.gdx.scenes.scene2d.Actor;
+import com.badlogic.gdx.maps.tiled.TiledMap;
+import com.badlogic.gdx.scenes.scene2d.ui.Image;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -17,7 +21,6 @@ public class AssetLoader {
 
     public Texture getTextureAsset(String pathToAsset, Class classForAssetResources) {
         String key = pathToAsset + "_" + classForAssetResources.getName();
-        //T asset;
         if(!assetMap.containsKey(key)){
             Object value = new Texture(new OSGiFileHandle(pathToAsset, classForAssetResources));
             assetMap.put(key, value);
@@ -26,6 +29,45 @@ public class AssetLoader {
         return (Texture) retrieved;
     }
 
+    public Image getImageAsset(String pathToAsset, Class classForAssetResources) {
+        String key = pathToAsset + "_" + classForAssetResources.getName();
+        if(!assetMap.containsKey(key)){
+            Object value = new Image(new Texture(new OSGiFileHandle(pathToAsset, classForAssetResources)));
+            assetMap.put(key, value);
+        }
+        Object retrieved = assetMap.get(key);
+        return (Image) retrieved;
+    }
+
+    public Sound getSoundAsset(String pathToAsset, Class classForAssetResources) {
+        String key = pathToAsset + "_" + classForAssetResources.getName();
+        if(!assetMap.containsKey(key)){
+            Object value = Gdx.audio.newSound(new OSGiFileHandle(pathToAsset, classForAssetResources));
+            assetMap.put(key, value);
+        }
+        Object retrieved = assetMap.get(key);
+        return (Sound) retrieved;
+    }
+
+    public Music getMusicAsset(String pathToAsset, Class classForAssetResources) {
+        String key = pathToAsset + "_" + classForAssetResources.getName();
+        if(!assetMap.containsKey(key)){
+            Object value = Gdx.audio.newMusic(new OSGiFileHandle(pathToAsset, classForAssetResources));
+            assetMap.put(key, value);
+        }
+        Object retrieved = assetMap.get(key);
+        return (Music) retrieved;
+    }
+
+    public TiledMap getTiledMapAsset(String pathToAsset, Class classForAssetResources) {
+        String key = pathToAsset + "_" + classForAssetResources.getName();
+        if(!assetMap.containsKey(key)){
+            Object value = (new OSGiTmxLoader().load(pathToAsset));
+            assetMap.put(key, value);
+        }
+        Object retrieved = assetMap.get(key);
+        return (TiledMap) retrieved;
+    }
 
 
     private AssetLoader(){
