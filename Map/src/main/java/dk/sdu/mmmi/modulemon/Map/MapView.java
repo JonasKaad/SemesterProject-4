@@ -23,7 +23,6 @@ import dk.sdu.mmmi.modulemon.CommonMonster.IMonster;
 import dk.sdu.mmmi.modulemon.common.AssetLoader;
 import dk.sdu.mmmi.modulemon.common.data.*;
 import dk.sdu.mmmi.modulemon.common.OSGiFileHandle;
-import dk.sdu.mmmi.modulemon.common.drawing.ImageDrawingUtils;
 import dk.sdu.mmmi.modulemon.common.drawing.Rectangle;
 import dk.sdu.mmmi.modulemon.common.drawing.TextUtils;
 import dk.sdu.mmmi.modulemon.common.services.IEntityProcessingService;
@@ -46,7 +45,6 @@ public class MapView implements IGameViewService, IMapView {
     private boolean showTeamOptions;
     private boolean showSummary;
     private TextUtils textUtils;
-    private ImageDrawingUtils imageDrawingUtils;
     private Rectangle pauseMenu;
     private Rectangle monsterTeamMenu;
     private Rectangle teamActionMenu;
@@ -113,7 +111,6 @@ public class MapView implements IGameViewService, IMapView {
         }
         shapeRenderer = new ShapeRenderer();
         gdxThreadTasks.add(() -> textUtils = TextUtils.getInstance());
-        gdxThreadTasks.add(() -> imageDrawingUtils = ImageDrawingUtils.getInstance());
 
 
 
@@ -260,7 +257,6 @@ public class MapView implements IGameViewService, IMapView {
 
                     for (int i = 0; i < monsterTeam.size(); i++) {
 
-                        //imageDrawingUtils.drawImage(spriteBatch, mtp.getMonsterTeam().get(i).getFrontSprite(), mtp.getMonsterTeam().get(i).getClass(), monsterTeamMenu.getX() + 42, monsterTeamMenu.getY() + (monsterTeamMenu.getHeight() * 2 / 2.6f) - (i * 80), 70, 70);
                         String spritePath = mtp.getMonsterTeam().get(i).getFrontSprite();
                         Class reference = mtp.getMonsterTeam().get(i).getClass();
                         Texture texture = loader.getTextureAsset(spritePath, reference);
@@ -314,8 +310,10 @@ public class MapView implements IGameViewService, IMapView {
                     summaryMenu.getY() + summaryMenu.getHeight() - 10);
 
             //Drawing image
-            imageDrawingUtils.drawImage(spriteBatch, currentMonster.getFrontSprite(), currentMonster.getClass(), summaryMenu.getX() + 6, monsterTeamMenu.getY() + (monsterTeamMenu.getHeight() / 2) + 20, 160, 160);
-
+            String spritePath = currentMonster.getFrontSprite();
+            Class reference = currentMonster.getClass();
+            Texture texture = loader.getTextureAsset(spritePath, reference);
+            spriteBatch.draw(texture, summaryMenu.getX() + 6, monsterTeamMenu.getY() + (monsterTeamMenu.getHeight() / 2) + 20, 160, 160);
 
             // Creating a list of stats needed in order. HP, Attack, Defence, Speed, Type
             List<String> stats = new ArrayList<>();
