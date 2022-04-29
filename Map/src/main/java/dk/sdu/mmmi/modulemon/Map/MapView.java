@@ -344,7 +344,6 @@ public class MapView implements IGameViewService, IMapView {
                                     monsterRectangle.setFillColor(Color.LIGHT_GRAY);
                                 }
                                 teamActionMenu.setFillColor(Color.LIGHT_GRAY);
-                                System.out.println("Only once");
                             }
                         }
                         if (teamActions[teamOptionIndex].equals("Switch")) {
@@ -355,7 +354,6 @@ public class MapView implements IGameViewService, IMapView {
                                 switchIndicatorColor = new Color(Color.valueOf("ffcb05"));
                                 monsterRectangles[firstSelected].setBorderColor(Color.valueOf("ffcb05"));
                                 showSwitchingText = true;
-                                System.out.println("Selected the first");
                                 return;
                             }
                         }
@@ -369,17 +367,14 @@ public class MapView implements IGameViewService, IMapView {
                     else if (currentlySwitching) {
                         if (secondSelected == -1) {
                             secondSelected = selectedOptionIndexMonsterTeam; // Select the second current monster
-                            System.out.println("Selected the second");
                         }
                         if (firstSelected == secondSelected) { // If the same monster has been chosen twice, reset
                             resetMonsterTeamDrawing();
-                            System.out.println("Reset");
                             return;
                         }
                         if (firstSelected != -1 && secondSelected != -1) {
                             IMonster newFirstMonster = monsterTeam.get(secondSelected); // Switching the two Monsters.
                             IMonster newSecondMonster = monsterTeam.get(firstSelected);
-                            System.out.println("Updated team");
                             monsterTeam.set(firstSelected, newFirstMonster);
                             monsterTeam.set(secondSelected, newSecondMonster);
                             resetMonsterTeamDrawing();
