@@ -1,5 +1,6 @@
 package dk.sdu.mmmi.modulemon.BattleScene.animations;
 
+import dk.sdu.mmmi.modulemon.common.animations.AnimationCurves;
 import dk.sdu.mmmi.modulemon.common.drawing.Position;
 import dk.sdu.mmmi.modulemon.BattleScene.scenes.BattleScene;
 import dk.sdu.mmmi.modulemon.BattleScene.scenes.BattleSceneDefaults;
@@ -14,11 +15,12 @@ public class BattleSceneOpenAnimation extends BaseAnimation {
 
     public BattleSceneOpenAnimation(BattleScene battleScene) {
         super();
+        super.animationCurve = AnimationCurves.EaseOut();
         this._battleScene = battleScene;
     }
 
     public void setInitialState(){
-        Timeline = new int[]{0, 2000, 2500};
+        Timeline = new int[]{0, 1200, 2000};
         States = new ArrayList<>(Timeline.length);
 
         States.add(new float[]{
@@ -29,7 +31,8 @@ public class BattleSceneOpenAnimation extends BaseAnimation {
                 850, _battleScene.getGameWidth() + 500f, //Enemy mon,
                 -500f, 550, //enemy health box,
                 -500f, 300, //player health box,
-                _battleScene.getGameWidth() + 500, 155  // Action box position
+                _battleScene.getGameWidth() + 500, 155,  // Action box position
+                BattleSceneDefaults.textBoxPosition().getX(), -BattleSceneDefaults.textBoxHeight() - 20 // Text box position
         });
 
         States.add(new float[]{
@@ -40,7 +43,8 @@ public class BattleSceneOpenAnimation extends BaseAnimation {
                 850, _battleScene.getGameHeight() + 500f,
                 -500f, 550,
                 -500f, 300,
-                _battleScene.getGameWidth() + 500, 155
+                _battleScene.getGameWidth() + 500, 155,
+                BattleSceneDefaults.textBoxPosition().getX(), -BattleSceneDefaults.textBoxHeight() - 20
         });
 
         States.add(new float[]{
@@ -51,7 +55,8 @@ public class BattleSceneOpenAnimation extends BaseAnimation {
                 BattleSceneDefaults.enemyMonsterPosition().getX(), BattleSceneDefaults.enemyMonsterPosition().getY(),
                 BattleSceneDefaults.enemyHealthBoxPosition().getX(), BattleSceneDefaults.enemyHealthBoxPosition().getY(),
                 BattleSceneDefaults.playerHealthBoxPosition().getX(), BattleSceneDefaults.playerHealthBoxPosition().getY(),
-                BattleSceneDefaults.actionBoxPosition(_battleScene.getGameWidth()).getX(), BattleSceneDefaults.actionBoxPosition(_battleScene.getGameWidth()).getY()
+                BattleSceneDefaults.actionBoxPosition(_battleScene.getGameWidth()).getX(), BattleSceneDefaults.actionBoxPosition(_battleScene.getGameWidth()).getY(),
+                BattleSceneDefaults.textBoxPosition().getX(), BattleSceneDefaults.textBoxPosition().getY()
         });
 
         _battleScene.setBackdropPosition(new Position(_battleScene.getGameWidth(), 0));
@@ -62,6 +67,7 @@ public class BattleSceneOpenAnimation extends BaseAnimation {
         _battleScene.setEnemyHealthBoxPosition(new Position(-500f, 550));
         _battleScene.setPlayerHealthBoxPosition(new Position(-500f, 300));
         _battleScene.setActionBoxPosition(new Position(_battleScene.getGameWidth() + 500, 135));
+        _battleScene.setTextBoxPosition(new Position(BattleSceneDefaults.textBoxPosition().getX(), -BattleSceneDefaults.textBoxHeight() - 20));
     }
 
     @Override
@@ -82,5 +88,6 @@ public class BattleSceneOpenAnimation extends BaseAnimation {
         _battleScene.setEnemyHealthBoxPosition(new Position(states[10], states[11]));
         _battleScene.setPlayerHealthBoxPosition(new Position(states[12], states[13]));
         _battleScene.setActionBoxPosition(new Position(states[14], states[15]));
+        _battleScene.setTextBoxPosition(new Position(states[16], states[17]));
     }
 }

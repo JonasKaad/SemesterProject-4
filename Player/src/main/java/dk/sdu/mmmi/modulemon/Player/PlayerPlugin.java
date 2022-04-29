@@ -37,8 +37,10 @@ public class PlayerPlugin implements IGamePluginService {
         float y =  1984;
 
         Entity player = new Player();
-        player.add(new PositionPart(x, y));
+        PositionPart positionPart = new PositionPart(x, y);
+        player.add(positionPart);
         player.add(new MovingPart());
+        player.add(new InteractPart(positionPart, 1));
         Texture upSprite = AssetLoader.getInstance().getTextureAsset("/assets/main-char-up5.png", Player.class);
         Texture downSprite = AssetLoader.getInstance().getTextureAsset("/assets/main-char-down5.png", Player.class);
         Texture leftSprite = AssetLoader.getInstance().getTextureAsset("/assets/main-char-left5.png", Player.class);

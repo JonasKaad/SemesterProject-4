@@ -34,9 +34,11 @@ import java.util.Queue;
 
 public class BattleView implements IGameViewService, IBattleView {
 
+    private boolean updateHasRunOnce;
     private boolean _isInitialized;
     private IBattleCallback _battleCallback;
     private IBattleSimulation _battleSimulation;
+    private IBattleState _currentBattleState;
     private BattleScene _battleScene;
     private Music _battleMusic;
     private Sound _winSound;
@@ -96,15 +98,17 @@ public class BattleView implements IGameViewService, IBattleView {
         _battleMusic = loader.getMusicAsset("/music/battle_music.ogg", this.getClass());
         _winSound = loader.getSoundAsset("/sounds/you_won.ogg", this.getClass());
         _battleSimulation.StartBattle(player, enemy);
+        _currentBattleState = _battleSimulation.getState().clone(); // Set an initial battle-state
         _battleCallback = callback;
-        blockingAnimations = new LinkedList<>();
-        backgroundAnimations = new LinkedList<>();
         _battleMusic.play();
         _battleMusic.setVolume(0.1f);
         _battleMusic.setLooping(true);
         menuState = MenuState.DEFAULT;
         _battleScene.setActionTitle("Your actions:");
         _battleScene.setActions(this.defaultActions);
+      
+        blockingAnimations = new LinkedList<>();
+        backgroundAnimations = new LinkedList<>();
 
         BaseAnimation openingAnimation = new BattleSceneOpenAnimation(_battleScene);
         blockingAnimations.add(openingAnimation);
@@ -117,7 +121,7 @@ public class BattleView implements IGameViewService, IBattleView {
 
     @Override
     public void forceBattleEnd() {
-        handleBattleEnd(new VictoryBattleEvent("The battle has ended prematurely", _battleSimulation.getState().getPlayer()));
+        handleBattleEnd(new VictoryBattleEvent("The battle has ended prematurely", _battleSimulation.getState().getPlayer(), null));
     }
 
     public void handleBattleEnd(VictoryBattleEvent victoryBattleEvent) {
@@ -136,6 +140,7 @@ public class BattleView implements IGameViewService, IBattleView {
         spriteBatch = new SpriteBatch();
         _battleScene = new BattleScene();
 
+        updateHasRunOnce = false;
         _isInitialized = true;
         this.gameStateManager = gameStateManager;
     }
@@ -159,6 +164,9 @@ public class BattleView implements IGameViewService, IBattleView {
         if (!_isInitialized) {
             return;
         }
+
+        updateHasRunOnce = true;
+
         if (_battleSimulation == null) {
             spriteBatch.begin();
             TextUtils.getInstance().drawBigRoboto(spriteBatch, "Waiting for battle participants", Color.WHITE, 100, gameData.getDisplayHeight() / 2f);
@@ -197,7 +205,9 @@ public class BattleView implements IGameViewService, IBattleView {
         //Check for events
         IBattleEvent battleEvent = _battleSimulation.getNextBattleEvent();
         if (battleEvent != null) {
+            IBattleState eventState = battleEvent.getState();
             if (battleEvent instanceof MoveBattleEvent) {
+                _currentBattleState = eventState;
                 MoveBattleEvent event = (MoveBattleEvent) battleEvent;
                 if (event.getUsingParticipant().isPlayerControlled()) {
                     //Player attacked
@@ -219,23 +229,54 @@ public class BattleView implements IGameViewService, IBattleView {
 
                 this._battleScene.setTextToDisplay(event.getText());
             } else if (battleEvent instanceof InfoBattleEvent) {
+                _currentBattleState = eventState;
                 addEmptyAnimation(2000, true);
                 this._battleScene.setTextToDisplay(battleEvent.getText());
             } else if (battleEvent instanceof ChangeMonsterBattleEvent) {
                 ChangeMonsterBattleEvent event = (ChangeMonsterBattleEvent) battleEvent;
+                boolean causedByFaintingMonster = event instanceof MonsterFaintChangeBattleEvent;
                 if (event.getParticipant().isPlayerControlled()) {
-                    //There is no player enemy animation. Just a still frame for now
-                    addEmptyAnimation(2000, true);
+                    if(causedByFaintingMonster) {
+                        PlayerDieAnimation dieAnimation = new PlayerDieAnimation(_battleScene);
+                        blockingAnimations.add(dieAnimation);
+                    }else{
+                        PlayerChangeOutAnimation changeOutAnimation = new PlayerChangeOutAnimation(_battleScene);
+                        blockingAnimations.add(changeOutAnimation);
+                    }
+
+                    EmptyAnimation delay = new EmptyAnimation(1000);
+                    delay.setOnEventDone(() -> _currentBattleState = eventState);
+                    blockingAnimations.add(delay);
+
+                    PlayerChangeInAnimation changeInAnimation = new PlayerChangeInAnimation(_battleScene);
+                    blockingAnimations.add(changeInAnimation);
+
+                    addEmptyAnimation(2000, false);
                     this._battleScene.setTextToDisplay(battleEvent.getText());
                 } else {
-                    EnemyDieAnimation enemyDieAnimation = new EnemyDieAnimation(_battleScene);
-                    enemyDieAnimation.start();
-                    enemyDieAnimation.setOnEventDone(() -> _battleScene.resetPositions());
-                    blockingAnimations.add(enemyDieAnimation);
+                    if(causedByFaintingMonster) {
+                        EnemyDieAnimation enemyDieAnimation = new EnemyDieAnimation(_battleScene);
+                        blockingAnimations.add(enemyDieAnimation);
+                    }else{
+                        EnemyChangeOutAnimation changeOutAnimation = new EnemyChangeOutAnimation(_battleScene);
+                        blockingAnimations.add(changeOutAnimation);
+                    }
 
-                    EmptyAnimation emptyAnimation = new EmptyAnimation(2000);
+                    _battleScene.setTextToDisplay("...");
+
+                    EmptyAnimation displayChangedTextAnim = new EmptyAnimation(500);
+                    displayChangedTextAnim.setOnEventDone(() -> {
+                        _battleScene.setTextToDisplay(battleEvent.getText());
+                        _currentBattleState = eventState;
+                    });
+                    blockingAnimations.add(displayChangedTextAnim);
+
+                    EnemyChangeInAnimation changeInAnimation = new EnemyChangeInAnimation(_battleScene);
+                    blockingAnimations.add(changeInAnimation);
+
+                    EmptyAnimation emptyAnimation = new EmptyAnimation(1000);
+                    emptyAnimation.setOnEventDone(() -> _battleScene.resetPositions());
                     blockingAnimations.add(emptyAnimation);
-                    _battleScene.setTextToDisplay(battleEvent.getText());
                 }
             } else if (battleEvent instanceof VictoryBattleEvent) {
                 if(((VictoryBattleEvent) battleEvent).getWinner().equals(_battleSimulation.getState().getPlayer())){
@@ -248,27 +289,44 @@ public class BattleView implements IGameViewService, IBattleView {
                     this._winSound.play();
                     this._battleScene.setTextToDisplay(battleEvent.getText());
                 } else {
-                    handleBattleEnd((VictoryBattleEvent) battleEvent);
+                    PlayerDieAnimation dieAnimation = new PlayerDieAnimation(_battleScene);
+                    blockingAnimations.add(dieAnimation);
+
+                    _battleScene.setTextToDisplay(battleEvent.getText());
+
+                    EmptyAnimation e = new EmptyAnimation(2_000);
+                    e.setOnEventDone(() -> handleBattleEnd((VictoryBattleEvent) battleEvent));
+                    e.start();
+                    blockingAnimations.add(e);
                 }
             }
+        }else{
+            //There is not an active battle-event. Get the latest one
+           // _currentBattleState = _battleSimulation.getState();
         }
     }
 
     @Override
     public void draw(GameData gameData) {
+        if(!updateHasRunOnce){
+            // In order to not draw before the Opening Animation has moved things out of the way, we wait till update() has been called once.
+            // This is because we induce a race-condition when changing game-states in the GameStateManager.
+            // This usually dosn't mean a lot, but because of the way this class is written, it's important that update() is called before draw(), otherwise we would have a ghost frame in the beginning.
+            return;
+        }
         //Game data
         _battleScene.setGameHeight(gameData.getDisplayHeight());
         _battleScene.setGameWidth(gameData.getDisplayWidth());
 
         //Update information
-        if (_battleSimulation != null) {
-            IMonster playerActiveMonster = _battleSimulation.getState().getPlayer().getActiveMonster();
+        if (_currentBattleState != null) {
+            IMonster playerActiveMonster = _currentBattleState.getPlayer().getActiveMonster();
             _battleScene.setPlayerSprite(playerActiveMonster.getBackSprite(), playerActiveMonster.getClass());
             _battleScene.setPlayerMonsterName(playerActiveMonster.getName());
             _battleScene.setPlayerHP(playerActiveMonster.getHitPoints());
             _battleScene.setMaxPlayerHP(playerActiveMonster.getMaxHitPoints());
 
-            IMonster enemyActiveMonster = _battleSimulation.getState().getEnemy().getActiveMonster();
+            IMonster enemyActiveMonster = _currentBattleState.getEnemy().getActiveMonster();
             _battleScene.setEnemySprite(enemyActiveMonster.getFrontSprite(), enemyActiveMonster.getClass());
             _battleScene.setEnemyMonsterName(enemyActiveMonster.getName());
             _battleScene.setEnemyHP(enemyActiveMonster.getHitPoints());
@@ -331,7 +389,7 @@ public class BattleView implements IGameViewService, IBattleView {
             } else if (selectedAction.equalsIgnoreCase("Quit")) {
                 _battleScene.setTextToDisplay("Ends the battle");
                 if (keys.isPressed(GameKeys.ENTER)) {
-                    handleBattleEnd(new VictoryBattleEvent("Player runs away", _battleSimulation.getState().getEnemy()));
+                    handleBattleEnd(new VictoryBattleEvent("Player runs away", _battleSimulation.getState().getEnemy(), null));
                 }
             }
         } else if (menuState == MenuState.FIGHT) {
@@ -430,6 +488,7 @@ public class BattleView implements IGameViewService, IBattleView {
     @Override
     public void dispose() {
         _battleMusic.stop();
+        _battleMusic = null; //Unload Battle Music
     }
 
     private void addEmptyAnimation(int duration, boolean autoStart) {

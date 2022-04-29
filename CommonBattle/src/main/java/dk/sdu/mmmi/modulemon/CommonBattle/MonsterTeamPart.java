@@ -3,6 +3,7 @@ package dk.sdu.mmmi.modulemon.CommonBattle;
 import dk.sdu.mmmi.modulemon.CommonMonster.IMonster;
 import dk.sdu.mmmi.modulemon.common.data.Entity;
 import dk.sdu.mmmi.modulemon.common.data.GameData;
+import dk.sdu.mmmi.modulemon.common.data.World;
 import dk.sdu.mmmi.modulemon.common.data.entityparts.EntityPart;
 
 import java.util.ArrayList;
@@ -45,7 +46,7 @@ public class MonsterTeamPart implements EntityPart {
 
 
     @Override
-    public void process(GameData gameData, Entity entity) {
+    public void process(GameData gameData, World world, Entity entity) {
 
     }
 }

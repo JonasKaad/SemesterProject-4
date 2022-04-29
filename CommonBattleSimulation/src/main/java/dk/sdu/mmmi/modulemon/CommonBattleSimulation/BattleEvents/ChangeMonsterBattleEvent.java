@@ -1,6 +1,7 @@
 package dk.sdu.mmmi.modulemon.CommonBattleSimulation.BattleEvents;
 
 import dk.sdu.mmmi.modulemon.CommonBattle.IBattleParticipant;
+import dk.sdu.mmmi.modulemon.CommonBattleSimulation.IBattleState;
 import dk.sdu.mmmi.modulemon.CommonMonster.IMonster;
 
 public class ChangeMonsterBattleEvent implements IBattleEvent {
@@ -11,10 +12,13 @@ public class ChangeMonsterBattleEvent implements IBattleEvent {
 
     private IMonster changeTo;
 
-    public ChangeMonsterBattleEvent(String text, IBattleParticipant participant, IMonster changeTo) {
+    private IBattleState battleState;
+
+    public ChangeMonsterBattleEvent(String text, IBattleParticipant participant, IMonster changeTo, IBattleState state) {
         this.text = text;
         this.participant = participant;
         this.changeTo = changeTo;
+        this.battleState = state;
     }
 
     public IBattleParticipant getParticipant() {
@@ -28,5 +32,10 @@ public class ChangeMonsterBattleEvent implements IBattleEvent {
     @Override
     public String getText() {
         return text;
+    }
+
+    @Override
+    public IBattleState getState() {
+        return this.battleState;
     }
 }

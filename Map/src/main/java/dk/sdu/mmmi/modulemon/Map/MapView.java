@@ -1,14 +1,12 @@
 package dk.sdu.mmmi.modulemon.Map;
 
-import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.audio.Music;
 import com.badlogic.gdx.graphics.Color;
-import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.maps.MapProperties;
-import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.maps.tiled.TiledMap;
 import com.badlogic.gdx.maps.tiled.TiledMapTileLayer;
 import com.badlogic.gdx.maps.tiled.renderers.BatchTiledMapRenderer;
@@ -27,8 +25,10 @@ import dk.sdu.mmmi.modulemon.common.drawing.TextUtils;
 import dk.sdu.mmmi.modulemon.common.services.IEntityProcessingService;
 import dk.sdu.mmmi.modulemon.common.services.IGamePluginService;
 import dk.sdu.mmmi.modulemon.common.services.IGameViewService;
-
-import java.util.*;
+import java.util.ArrayList;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Queue;
 import java.util.concurrent.CopyOnWriteArrayList;
 
 
@@ -161,12 +161,11 @@ public class MapView implements IGameViewService, IMapView {
                 spriteBatch.draw(sprite, entity.getPosX(), entity.getPosY());
                 spriteBatch.end();
 
-                if (entity.getClass() == dk.sdu.mmmi.modulemon.Player.Player.class) {
+                if (entity.getType().equals(EntityType.PLAYER)) {
                     playerPosX = entity.getPosX();
                     playerPosY = entity.getPosY();
                     if (playerPosY > mapBottom && playerPosY < mapTop) {
                         cam.position.set(cam.position.x, playerPosY, 0);
-
                         cam.update();
                     }
                     if (playerPosX > mapLeft && playerPosX < mapRight) {
@@ -185,7 +184,7 @@ public class MapView implements IGameViewService, IMapView {
         }
         if (showMonsterTeam) {
             for (Entity entity : world.getEntities()) {
-                if (entity.getClass() == dk.sdu.mmmi.modulemon.Player.Player.class) {
+                if(entity.getType().equals(EntityType.PLAYER)){
                     mtp = entity.getPart(MonsterTeamPart.class);
                     monsterTeam = mtp.getMonsterTeam();
 
@@ -365,9 +364,7 @@ public class MapView implements IGameViewService, IMapView {
                             monsterRectangles[selectedOptionIndexMonsterTeam].setBorderColor(Color.BLACK);
                         }
                     }
-                    //else if (showSummary){
 
-                    //}
 
                     else if (currentlySwitching) {
                         if (secondSelected == -1) {
@@ -425,11 +422,12 @@ public class MapView implements IGameViewService, IMapView {
             //currentlySwitching = false;
             gameData.setPaused(isPaused);
         }
-        if (gameData.getKeys().isPressed(GameKeys.E)) {
-            for (Entity entity : world.getEntities()) {
-                if (entity.getClass() == dk.sdu.mmmi.modulemon.Player.Player.class) {
+        if(gameData.getKeys().isPressed(GameKeys.E)){
+            for(Entity entity: world.getEntities()){
+                if(entity.getType().equals(EntityType.PLAYER)){
                     playerMonsters = entity.getPart(MonsterTeamPart.class);
                     System.out.println("Added playermonsters");
+                    break;
                 }
             }
             startEncounter(playerMonsters, playerMonsters);

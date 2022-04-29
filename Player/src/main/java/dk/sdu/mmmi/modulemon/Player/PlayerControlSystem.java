@@ -44,10 +44,10 @@ public class PlayerControlSystem implements IEntityProcessingService {
                 current = "down";
             }
 
-            movingPart.process(gameData, player);
-            positionPart.process(gameData, player);
-            spritePart.process(gameData, player);
-            monsterTeamPart.process(gameData, player);
+            movingPart.process(gameData, world, player);
+            positionPart.process(gameData, world, player);
+            spritePart.process(gameData, world, player);
+            monsterTeamPart.process(gameData, world, player);
 
             updateShape(player);
         }

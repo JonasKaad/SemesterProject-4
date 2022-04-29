@@ -3,6 +3,7 @@ package dk.sdu.mmmi.modulemon.gamestates;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.audio.Music;
 import com.badlogic.gdx.graphics.Color;
+import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.GlyphLayout;
@@ -113,6 +114,10 @@ public class MenuState implements IGameViewService {
 
     @Override
     public void draw(GameData _) {
+        // clear screen to black
+        Gdx.gl.glClearColor(0, 0, 0, 1);
+        Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
+
         spriteBatch.setProjectionMatrix(Game.cam.combined);
 
         spriteBatch.begin();

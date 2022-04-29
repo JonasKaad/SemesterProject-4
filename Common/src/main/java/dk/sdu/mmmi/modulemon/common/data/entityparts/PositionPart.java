@@ -7,6 +7,7 @@ package dk.sdu.mmmi.modulemon.common.data.entityparts;
 
 import dk.sdu.mmmi.modulemon.common.data.Entity;
 import dk.sdu.mmmi.modulemon.common.data.GameData;
+import dk.sdu.mmmi.modulemon.common.data.World;
 
 /**
  *
@@ -16,10 +17,12 @@ public class PositionPart implements EntityPart {
 
     private float x;
     private float y;
+    private int direction; // facing direction in comparison to the unit circle
 
     public PositionPart(float x, float y) {
         this.x = x;
         this.y = y;
+        this.direction = 270;
     }
 
     public float getX() {
@@ -38,15 +41,41 @@ public class PositionPart implements EntityPart {
         this.y = newY;
     }
 
-    public void setPosition(float newX, float newY) {
-        this.x = newX;
-        this.y = newY;
+    public int getDirection() {
+        return direction%360;
     }
 
-    public void process(GameData gameData, Entity entity) {
+    public void setDirection(int direction) {
+        this.direction = direction%360;
     }
     
-    
-    
+    public boolean isFacing(Character c) {
+        if (null == c) {
+            System.out.println("Did not match any direction");
+        } else switch (c) {
+            case 'R':
+                return direction == 0;
+            case 'U':
+                return direction == 90;
+            case 'L':
+                return direction == 180;
+            case 'D':
+                return direction == 270;
+            default:
+                System.out.println("Did not match any direction");
+                break;
+        }
+        return false;
+    }
+
+    public void setPosition(float newX, float newY) {
+        setX(newX);
+        setY(newY);
+    }
+
+    @Override
+    public void process(GameData gameData, World world, Entity entity) {
+        
+    }
     
 }

@@ -88,7 +88,7 @@ class PlayerTest {
 
         gameData.getKeys().setKey(UP, true);
         movPart.setUp(gameData.getKeys().isDown(UP));
-        movPart.process(gameData, player);
+        movPart.process(gameData, world, player);
 
         float afterMoving = posPart.getY();
 
@@ -118,7 +118,7 @@ class PlayerTest {
 
 
         movPart.setUp(gameData.getKeys().isDown(UP));
-        movPart.process(gameData, player);
+        movPart.process(gameData, world, player);
 
         float afterMoving = posPart.getY();
 
