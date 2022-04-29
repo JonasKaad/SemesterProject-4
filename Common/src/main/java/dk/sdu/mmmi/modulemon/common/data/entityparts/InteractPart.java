@@ -20,12 +20,11 @@ import java.util.stream.Collectors;
  * @author Gorm
  */
 public class InteractPart implements EntityPart{
-    private boolean canInteract;
+    private Entity interactWith;
     private PositionPart positionPart;
     private int range;
     
     public InteractPart(PositionPart positionPart, int range) {
-        this.canInteract = false;
         this.positionPart = positionPart;
         this.range = range;
     }
@@ -39,21 +38,26 @@ public class InteractPart implements EntityPart{
     }
     
     public boolean canInteract() {
-        return canInteract;
+        return this.interactWith != null;
     }
 
     @Override
     public void process(GameData gameData, World world, Entity entity) {
-        List<InteractPart> allInteractParts =  world.getEntities().stream() // Get all entities
-                .map(x -> x.getPart(InteractPart.class))                    // Find their InteractPart
-                .filter(x -> x instanceof InteractPart)                     // Filter entities that do not have a InteractPart
-                .map(x -> (InteractPart) x)                                 // Cast our stream to InteractPart
-                .filter(x -> x != this)                                     // Filter this interact part.
-                .collect(Collectors.toList());                              // .toList()
+        for (Entity e : world.getEntities()){
+            InteractPart interactPart = e.getPart(InteractPart.class);
+            if(interactPart == null || interactPart == this){
+                continue;
+            }
 
-        for (InteractPart interactPart : allInteractParts) {
-            canInteract = this.isInRange(interactPart.positionPart.getX(), interactPart.positionPart.getY());            
+            boolean canInteract = this.isInRange(interactPart.positionPart.getX(), interactPart.positionPart.getY());
+            if(canInteract){
+                this.interactWith = e;
+                return;
+            }
         }
+
+        //If there we no entiies to interact with, set to null
+        this.interactWith = null;
     }
     
     private boolean isInRange(float x, float y) {
@@ -93,5 +97,9 @@ public class InteractPart implements EntityPart{
         isInRange = true;
         
         return isInRange;
+    }
+
+    public Entity getInteractWith() {
+        return interactWith;
     }
 }   

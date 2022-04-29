@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package dk.sdu.mmmi.modulemon.common.data.entityparts;
+package dk.sdu.mmmi.modulemon.CommonMap.Data;
 
 import com.badlogic.gdx.math.Vector2;
 import dk.sdu.mmmi.modulemon.CommonMap.IMapView;
