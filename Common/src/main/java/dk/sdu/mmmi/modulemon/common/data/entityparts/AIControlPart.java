@@ -6,6 +6,7 @@ package dk.sdu.mmmi.modulemon.common.data.entityparts;
 
 import dk.sdu.mmmi.modulemon.common.data.Entity;
 import dk.sdu.mmmi.modulemon.common.data.GameData;
+import dk.sdu.mmmi.modulemon.common.data.World;
 
 /**
  *
@@ -25,7 +26,7 @@ public class AIControlPart implements EntityPart{
     }
 
     @Override
-    public void process(GameData gameData, Entity entity) {
+    public void process(GameData gameData, World world, Entity entity) {
         float dt = gameData.getDelta(); // Time in seconds between frames
         
         if (movingTimer > 0) {

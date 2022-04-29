@@ -4,6 +4,7 @@ package dk.sdu.mmmi.modulemon.common.data.entityparts;
 import com.badlogic.gdx.graphics.Texture;
 import dk.sdu.mmmi.modulemon.common.data.Entity;
 import dk.sdu.mmmi.modulemon.common.data.GameData;
+import dk.sdu.mmmi.modulemon.common.data.World;
 
 public class SpritePart implements EntityPart{
     private Texture upSprite;
@@ -52,7 +53,7 @@ public class SpritePart implements EntityPart{
     }
 
     @Override
-    public void process(GameData gameData, Entity entity) {
+    public void process(GameData gameData, World world, Entity entity) {
 
     }
 }

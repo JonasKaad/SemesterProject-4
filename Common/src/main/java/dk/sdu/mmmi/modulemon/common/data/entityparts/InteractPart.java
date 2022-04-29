@@ -6,8 +6,14 @@ package dk.sdu.mmmi.modulemon.common.data.entityparts;
 
 import dk.sdu.mmmi.modulemon.common.data.Entity;
 import dk.sdu.mmmi.modulemon.common.data.GameData;
+import dk.sdu.mmmi.modulemon.common.data.World;
+
+import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Objects;
+import java.util.function.Function;
+import java.util.stream.Collectors;
 
 /**
  *
@@ -17,14 +23,11 @@ public class InteractPart implements EntityPart{
     private boolean canInteract;
     private PositionPart positionPart;
     private int range;
-    private static final List<InteractPart> InteractPartList = new LinkedList();
     
     public InteractPart(PositionPart positionPart, int range) {
         this.canInteract = false;
         this.positionPart = positionPart;
         this.range = range;
-        
-        InteractPartList.add(this);
     }
 
     public void setPositionPart(PositionPart positionPart) {
@@ -40,12 +43,15 @@ public class InteractPart implements EntityPart{
     }
 
     @Override
-    public void process(GameData gameData, Entity entity) {
-        if (InteractPartList.size() < 2) return; 
-        for (InteractPart interactPart : InteractPartList) {
-            if (this == interactPart) {
-                return;
-            }
+    public void process(GameData gameData, World world, Entity entity) {
+        List<InteractPart> allInteractParts =  world.getEntities().stream() // Get all entities
+                .map(x -> x.getPart(InteractPart.class))                    // Find their InteractPart
+                .filter(x -> x instanceof InteractPart)                     // Filter entities that do not have a InteractPart
+                .map(x -> (InteractPart) x)                                 // Cast our stream to InteractPart
+                .filter(x -> x != this)                                     // Filter this interact part.
+                .collect(Collectors.toList());                              // .toList()
+
+        for (InteractPart interactPart : allInteractParts) {
             canInteract = this.isInRange(interactPart.positionPart.getX(), interactPart.positionPart.getY());            
         }
     }

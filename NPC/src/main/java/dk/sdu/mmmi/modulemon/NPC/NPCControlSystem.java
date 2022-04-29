@@ -48,14 +48,14 @@ public class NPCControlSystem implements IEntityProcessingService{
                     current = "down";
                 }
                 
-                movingPart.process(gameData, npc);
-                positionPart.process(gameData, npc);
-                spritePart.process(gameData, npc);
-                controlPart.process(gameData, npc);
-                interactPart.process(gameData, npc);
+                movingPart.process(gameData, world, npc);
+                positionPart.process(gameData, world, npc);
+                spritePart.process(gameData, world, npc);
+                controlPart.process(gameData, world, npc);
+                interactPart.process(gameData, world, npc);
                 
                 if (interactPart.canInteract()) {
-                    
+
                 } 
 
                 updateShape(npc);
