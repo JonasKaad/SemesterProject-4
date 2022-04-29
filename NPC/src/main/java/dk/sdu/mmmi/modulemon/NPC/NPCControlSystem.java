@@ -17,6 +17,8 @@ import dk.sdu.mmmi.modulemon.common.services.IEntityProcessingService;
  */
 public class NPCControlSystem implements IEntityProcessingService{
 
+    private String current = ""; // Save the current or it will be overrided to nothing.
+    
     @Override
     public void process(GameData gameData, World world) {
 
@@ -32,7 +34,6 @@ public class NPCControlSystem implements IEntityProcessingService{
                 movingPart.setUp(controlPart.shouldGoUp());
                 movingPart.setDown(controlPart.shouldGoDown());
                 // else stand still
-                String current = "";
                 
                 if(controlPart.shouldGoLeft()){
                     current = "left";
