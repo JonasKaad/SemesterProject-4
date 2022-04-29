@@ -555,10 +555,7 @@ public class MapView implements IGameViewService, IMapView {
                 if (showMonsterTeam) {
                     if(showTeamOptions) {
                         if (teamActions[teamOptionIndex].equals("Summary")) {
-                            if(showSummary){
-
-                            }
-                            else {
+                            if (!showSummary) {
                                 showSummary = true;
                                 monsterTeamMenu.setFillColor(Color.LIGHT_GRAY);
                                 for (Rectangle monsterRectangle : monsterRectangles) {

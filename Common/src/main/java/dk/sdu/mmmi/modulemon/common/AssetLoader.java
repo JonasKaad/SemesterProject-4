@@ -29,7 +29,7 @@ public class AssetLoader {
     }
 
     public Image getImageAsset(String pathToAsset, Class classForAssetResources) {
-        String key = pathToAsset + "_" + classForAssetResources.getName();
+        String key = pathToAsset + "_" + classForAssetResources.getName()+".image";
         if(!assetMap.containsKey(key)){
             Object value = new Image(new Texture(new OSGiFileHandle(pathToAsset, classForAssetResources)));
             assetMap.put(key, value);
