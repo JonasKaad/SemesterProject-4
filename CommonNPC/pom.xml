@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd" xmlns="http://maven.apache.org/POM/4.0.0"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+  <parent>
+    <relativePath>../poms/compiled/</relativePath>
+    <groupId>modulemon.build</groupId>
+    <artifactId>compiled-bundle-settings</artifactId>
+    <version>1.0-SNAPSHOT</version>
+  </parent>
+  
+  <properties>
+    <bundle.symbolicName>CommonNPC</bundle.symbolicName>
+    <bundle.namespace>dk.sdu.mmmi.modulemon</bundle.namespace>
+    <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+    <maven.compiler.target>1.8</maven.compiler.target>
+    <maven.compiler.source>1.8</maven.compiler.source>
+  </properties>
+  
+  <modelVersion>4.0.0</modelVersion>
+  <artifactId>CommonNPC</artifactId>
+  <version>1.0-SNAPSHOT</version>
+  <packaging>bundle</packaging>
+  <name>CommonNPC</name>
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.apache.felix</groupId>
+                <artifactId>maven-bundle-plugin</artifactId>
+                <extensions>true</extensions>
+                <configuration>
+                    <instructions>
+                        <Export-Package>!dk.sdu.mmmi.modulemon.internal.*,dk.sdu.mmmi.modulemon.*;version="1.0-SNAPSHOT",dk.sdu.mmmi.modulemon.CommonNPC</Export-Package>
+                    </instructions>
+                </configuration>
+            </plugin>
+        </plugins>
+    </build>
+    <dependencies>
+      <dependency>
+      <groupId>org.osgi</groupId>
+      <artifactId>osgi_R4_core</artifactId>
+      <scope>provided</scope>
+    </dependency>
+  </dependencies>
+  
+</project>

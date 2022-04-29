@@ -37,8 +37,10 @@ public class PlayerPlugin implements IGamePluginService {
         float y =  1984;
 
         Entity player = new Player();
-        player.add(new PositionPart(x, y));
+        PositionPart positionPart = new PositionPart(x, y);
+        player.add(positionPart);
         player.add(new MovingPart());
+        player.add(new InteractPart(positionPart, 1));
         Texture upSprite = new Texture(new OSGiFileHandle("/assets/main-char-up5.png", Player.class));
         Texture downSprite = new Texture(new OSGiFileHandle("/assets/main-char-down5.png", Player.class));
         Texture leftSprite = new Texture(new OSGiFileHandle("/assets/main-char-left5.png", Player.class));
