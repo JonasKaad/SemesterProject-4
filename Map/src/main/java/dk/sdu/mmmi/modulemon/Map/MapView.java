@@ -39,45 +39,48 @@ public class MapView implements IGameViewService, IMapView {
     private OrthographicCamera cam;
     private ShapeRenderer shapeRenderer;
     private Music mapMusic;
-    private boolean isPaused;
-    private boolean showMonsterTeam;
-    private boolean showTeamOptions;
-    private boolean showSummary;
     private TextUtils textUtils;
+    private Color switchIndicatorColor = Color.BLACK;
     private Rectangle pauseMenu;
     private Rectangle monsterTeamMenu;
     private Rectangle teamActionMenu;
     private Rectangle summaryMenu;
+    private Rectangle[] monsterRectangles = new Rectangle[6];
     private String pauseMenuTitle = "GAME PAUSED";
     private String[] pauseActions = new String[]{"Resume", "Team", "Inventory", "Quit"};
     private String[] teamActions = new String[]{"Summary", "Switch", "Cancel"};
     private List<IMonster> monsterTeam = new ArrayList<>();
-    private Rectangle[] monsterRectangles = new Rectangle[6];
-    private int selectedOptionIndex = 0;
-    private int selectedOptionIndexMonsterTeam = 0;
-    private int teamOptionIndex = 0;
     private float mapLeft;
     private float mapRight;
     private float mapBottom;
     private float mapTop;
+    private float playerPosX;
+    private float playerPosY;
     private int tilePixelSize;
-    private AssetLoader loader = AssetLoader.getInstance();
-    private Color switchIndicatorColor = Color.BLACK;
+    private int selectedOptionIndex = 0;
+    private int selectedOptionIndexMonsterTeam = 0;
+    private int teamOptionIndex = 0;
+    private int firstSelected = -1; // Default case = nothing selected
+    private int secondSelected = -1; // Default case = nothing selected
+    private int temporarySecondSelected = -1; // Default case = nothing selected
+    private boolean currentlySwitching = false;
     private boolean showSwitchingText = false;
-
+    private boolean isPaused;
+    private boolean showMonsterTeam;
+    private boolean showTeamOptions;
+    private boolean showSummary;
     private MonsterTeamPart mtp;
-    float playerPosX;
-    float playerPosY;
-    SpriteBatch spriteBatch;
+    private SpriteBatch spriteBatch;
+    private AssetLoader loader = AssetLoader.getInstance();
     private static World world = new World();
     private final GameData gameData = new GameData();
     private static final List<IEntityProcessingService> entityProcessorList = new CopyOnWriteArrayList<>();
     private static final List<IGamePluginService> gamePluginList = new CopyOnWriteArrayList<>();
     private static Queue<Runnable> gdxThreadTasks = new LinkedList<>();
-
     private IGameStateManager gameStateManager;
     private IBattleView battleView;
     private MonsterTeamPart playerMonsters;
+
 
     @Override
     public void init(IGameStateManager gameStateManager) {
@@ -182,8 +185,6 @@ public class MapView implements IGameViewService, IMapView {
 
         if(showTeamOptions) {
             //Drawing options menu box
-            shapeRenderer.setAutoShapeType(true);
-            shapeRenderer.setProjectionMatrix(cam.combined);
             shapeRenderer.setColor(Color.WHITE);
 
             shapeRenderer.begin(ShapeRenderer.ShapeType.Filled);
@@ -193,7 +194,6 @@ public class MapView implements IGameViewService, IMapView {
             shapeRenderer.end();
 
             //Drawing options menu text
-            spriteBatch.setProjectionMatrix(cam.combined);
             spriteBatch.begin();
 
             textUtils.drawNormalRoboto(
@@ -217,8 +217,6 @@ public class MapView implements IGameViewService, IMapView {
                     monsterTeam = mtp.getMonsterTeam();
 
                     //Drawing monster menu box
-                    shapeRenderer.setAutoShapeType(true);
-                    shapeRenderer.setProjectionMatrix(cam.combined);
                     shapeRenderer.setColor(Color.WHITE);
 
                     shapeRenderer.begin(ShapeRenderer.ShapeType.Filled);
@@ -230,7 +228,6 @@ public class MapView implements IGameViewService, IMapView {
 
 
                     //Drawing monster menu text
-                    spriteBatch.setProjectionMatrix(cam.combined);
                     spriteBatch.begin();
 
 
@@ -286,8 +283,6 @@ public class MapView implements IGameViewService, IMapView {
 
         if(showSummary){
             // Drawing summary box
-            shapeRenderer.setAutoShapeType(true);
-            shapeRenderer.setProjectionMatrix(cam.combined);
             shapeRenderer.setColor(Color.WHITE);
             shapeRenderer.begin(ShapeRenderer.ShapeType.Filled);
             summaryMenu.setX(monsterTeamMenu.getX() + 10 );
@@ -296,7 +291,6 @@ public class MapView implements IGameViewService, IMapView {
             shapeRenderer.end();
 
             //Drawing summary text
-            spriteBatch.setProjectionMatrix(cam.combined);
             spriteBatch.begin();
             IMonster currentMonster = mtp.getMonsterTeam().get(selectedOptionIndexMonsterTeam);
             String name = currentMonster.getName();
@@ -393,7 +387,6 @@ public class MapView implements IGameViewService, IMapView {
             }
 
             else if(showTeamOptions){
-                Gdx.gl.glEnable(GL20.GL_BLEND); //Allows for opacity
                 shapeRenderer.begin(ShapeRenderer.ShapeType.Filled);
                 shapeRenderer.setColor(Color.BLACK);
 
@@ -417,7 +410,6 @@ public class MapView implements IGameViewService, IMapView {
             }
 
             else if(showMonsterTeam){
-                Gdx.gl.glEnable(GL20.GL_BLEND); //Allows for opacity
                 shapeRenderer.begin(ShapeRenderer.ShapeType.Filled);
                 shapeRenderer.setColor(switchIndicatorColor);
 
@@ -440,7 +432,6 @@ public class MapView implements IGameViewService, IMapView {
                 shapeRenderer.end();
             }
             else {
-                Gdx.gl.glEnable(GL20.GL_BLEND); //Allows for opacity
                 shapeRenderer.begin(ShapeRenderer.ShapeType.Filled);
                 shapeRenderer.setColor(Color.BLACK);
 
@@ -464,11 +455,6 @@ public class MapView implements IGameViewService, IMapView {
             }
         }
     }
-
-    int firstSelected = -1; // Default case = nothing selected
-    int secondSelected = -1; // Default case = nothing selected
-    int temporarySecondSelected = -1; // Default case = nothing selected
-    boolean currentlySwitching = false;
 
     @Override
     public void handleInput(GameData gameData, IGameStateManager gameStateManager) {
