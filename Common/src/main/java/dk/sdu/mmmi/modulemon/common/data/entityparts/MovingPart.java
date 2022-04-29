@@ -11,6 +11,7 @@ import dk.sdu.mmmi.modulemon.common.animations.BaseAnimation;
 import static dk.sdu.mmmi.modulemon.common.data.Direction.*;
 import dk.sdu.mmmi.modulemon.common.data.Entity;
 import dk.sdu.mmmi.modulemon.common.data.GameData;
+import dk.sdu.mmmi.modulemon.common.data.World;
 
 import java.util.ArrayList;
 
@@ -44,7 +45,7 @@ public class MovingPart extends BaseAnimation implements EntityPart {
         this.down = down;
     }
 
-    public void process(GameData gameData, Entity entity) {
+    public void process(GameData gameData, World world, Entity entity) {
         if(gameData.isPaused()) return;
         PositionPart positionPart = entity.getPart(PositionPart.class);
         float x = positionPart.getX();
