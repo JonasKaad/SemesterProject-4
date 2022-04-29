@@ -47,19 +47,19 @@ public class AIControlPart implements EntityPart{
         return current;
     }
     
-    public boolean goLeft() {
+    public boolean shouldGoLeft() {
         return current == 'L';
     }
     
-    public boolean goRight() {
+    public boolean shouldGoRight() {
         return current == 'R';
     }
     
-    public boolean goUp() {
+    public boolean shouldGoUp() {
         return current == 'U';
     }
     
-    public boolean goDown() {
+    public boolean shouldGoDown() {
         return current == 'D';        
     }
 

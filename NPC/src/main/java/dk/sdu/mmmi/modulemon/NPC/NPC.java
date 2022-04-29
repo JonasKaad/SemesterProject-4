@@ -4,7 +4,6 @@
  */
 package dk.sdu.mmmi.modulemon.NPC;
 
-import com.badlogic.gdx.graphics.Texture;
 import dk.sdu.mmmi.modulemon.CommonNPC.INPC;
 import dk.sdu.mmmi.modulemon.common.data.Entity;
 import dk.sdu.mmmi.modulemon.common.data.entityparts.*;
@@ -22,25 +21,5 @@ public class NPC extends Entity implements INPC {
         this.add(movement);
         this.add(interact);
         this.add(control);
-    }
-    
-    @Override
-    public void turnClockwise() {
-    }
-
-    @Override
-    public void turnCounterClockwise() {
-
-    }
-
-    @Override
-    public void takeStep() {
-        
-    }
-
-    @Override
-    public void interact() {
-        System.out.println("Interact");
-    }
-    
+    }   
 }

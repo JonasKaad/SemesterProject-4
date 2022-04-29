@@ -16,9 +16,6 @@ import dk.sdu.mmmi.modulemon.common.services.IEntityProcessingService;
  * @author Gorm Krings
  */
 public class NPCControlSystem implements IEntityProcessingService{
-    
-    private String current = "";
-    private int interactCounter = 0;
 
     @Override
     public void process(GameData gameData, World world) {
@@ -30,22 +27,23 @@ public class NPCControlSystem implements IEntityProcessingService{
                 AIControlPart controlPart = npc.getPart(AIControlPart.class);
                 InteractPart interactPart = npc.getPart(InteractPart.class);
                 
-                movingPart.setLeft(controlPart.goLeft());
-                movingPart.setRight(controlPart.goRight());
-                movingPart.setUp(controlPart.goUp());
-                movingPart.setDown(controlPart.goDown());
+                movingPart.setLeft(controlPart.shouldGoLeft());
+                movingPart.setRight(controlPart.shouldGoRight());
+                movingPart.setUp(controlPart.shouldGoUp());
+                movingPart.setDown(controlPart.shouldGoDown());
                 // else stand still
+                String current = "";
                 
-                if(controlPart.goLeft()){
+                if(controlPart.shouldGoLeft()){
                     current = "left";
                 }
-                if(controlPart.goRight()){
+                if(controlPart.shouldGoRight()){
                     current = "right";
                 }
-                if(controlPart.goUp()){
+                if(controlPart.shouldGoUp()){
                     current = "up";
                 }
-                if(controlPart.goDown()){
+                if(controlPart.shouldGoDown()){
                     current = "down";
                 }
                 
@@ -56,15 +54,14 @@ public class NPCControlSystem implements IEntityProcessingService{
                 interactPart.process(gameData, npc);
                 
                 if (interactPart.canInteract()) {
-                    interactCounter++;
-                    System.out.println("Interactedede: " + interactCounter);
+                    
                 } 
 
-                updateShape(npc);
+                updateShape(npc, current);
         }
     }
 
-    private void updateShape(Entity entity) {
+    private void updateShape(Entity entity, String current) {
 
         PositionPart positionPart = entity.getPart(PositionPart.class);
         float x = positionPart.getX();
@@ -86,7 +83,7 @@ public class NPCControlSystem implements IEntityProcessingService{
             case "down":
                 result = spritePart.getDownSprite();
                 break;
-            default: System.out.println(("Did not match any direction"));
+            default: System.out.println(("The NPC sprite could not be loaded: Current did not match any direction"));
         }
         
 
