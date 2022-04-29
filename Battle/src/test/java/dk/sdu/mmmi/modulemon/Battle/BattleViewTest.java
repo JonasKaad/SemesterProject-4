@@ -119,6 +119,7 @@ public class BattleViewTest {
         IBattleParticipant participant2 = mock(IBattleParticipant.class);
 
         IBattleSimulation simulation = mock(IBattleSimulation.class);
+        when(simulation.getState()).thenReturn(mock(IBattleState.class));
         battleView.setBattleSimulation(simulation);
 
         // Act
