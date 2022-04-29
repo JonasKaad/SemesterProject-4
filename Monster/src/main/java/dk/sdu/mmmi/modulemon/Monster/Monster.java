@@ -22,10 +22,10 @@ public class Monster implements IMonster {
     int ID;
     UUID uuid;
 
-    public Monster(String name, MonsterType type, int hitPoints, int defence, int attack, int speed,  List<IMonsterMove> moves, String frontSprite, String backSprite, int ID) {
+    public Monster(String name, MonsterType type, int hitPoints, int maxHitPoints, int defence, int attack, int speed,  List<IMonsterMove> moves, String frontSprite, String backSprite, int ID, UUID uuid) {
         this.name = name;
         this.type = type;
-        this.maxHitPoints = hitPoints;
+        this.maxHitPoints = maxHitPoints;
         this.hitPoints = hitPoints;
         this.defence = defence;
         this.attack = attack;
@@ -34,12 +34,11 @@ public class Monster implements IMonster {
         this.frontSprite = frontSprite;
         this.backSprite = backSprite;
         this.ID = ID;
-        this.uuid = UUID.randomUUID();
+        this.uuid = uuid;
     }
 
-    public Monster(String name, MonsterType type, int hitPoints, int defence, int attack, int speed,  List<IMonsterMove> moves, String frontSprite, String backSprite, int ID, UUID uuid) {
-        this(name, type, hitPoints, defence, attack, speed, moves, frontSprite, backSprite, ID);
-        this.uuid = uuid;
+    public Monster(String name, MonsterType type, int hitPoints, int defence, int attack, int speed,  List<IMonsterMove> moves, String frontSprite, String backSprite, int ID) {
+        this(name, type, hitPoints, hitPoints, defence, attack, speed, moves, frontSprite, backSprite, ID, UUID.randomUUID());
     }
 
     public Monster(String name, MonsterType type, int hitPoints, int defence, int attack, int speed,  List<IMonsterMove> moves) {
@@ -119,7 +118,7 @@ public class Monster implements IMonster {
 
     @Override
     public IMonster clone() {
-        return new Monster(this.name, this.type, this.hitPoints, this.defence, this.attack, this.speed, this.moves, this.frontSprite, this.backSprite, this.ID, this.uuid);
+        return new Monster(this.name, this.type, this.hitPoints, this.maxHitPoints, this.defence, this.attack, this.speed, this.moves, this.frontSprite, this.backSprite, this.ID, this.uuid);
     }
 
     @Override

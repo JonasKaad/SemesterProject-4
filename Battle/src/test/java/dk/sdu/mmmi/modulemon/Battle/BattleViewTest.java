@@ -96,8 +96,9 @@ public class BattleViewTest {
         battleView.setBattleScene(scene);
 
         // Act / Assert
-        battleView.draw(gameData);
         battleView.update(gameData, null);
+        battleView.draw(gameData);
+
         assertEquals(120, scene.getGameHeight());
         assertEquals(100, scene.getGameWidth());
 
@@ -145,7 +146,7 @@ public class BattleViewTest {
         when(battleState.getPlayer()).thenReturn(player);
         when(battleState.getEnemy()).thenReturn(enemy);
         when(simulation.getState()).thenReturn(battleState);
-        when(simulation.getNextBattleEvent()).thenReturn(new InfoBattleEvent("Never gonna give you up!"));
+        when(simulation.getNextBattleEvent()).thenReturn(new InfoBattleEvent("Never gonna give you up!", null));
         battleView.setBattleSimulation(simulation);
         battleView.setBattleScene(scene);
 

@@ -76,10 +76,6 @@ public class Game implements ApplicationListener {
     @Override
     public void render() {
 
-        // clear screen to black
-        Gdx.gl.glClearColor(0, 0, 0, 1);
-        Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
-
         cam.update();
         gameData.setDisplayWidth(WIDTH);
         gameData.setDisplayHeight(HEIGHT);
