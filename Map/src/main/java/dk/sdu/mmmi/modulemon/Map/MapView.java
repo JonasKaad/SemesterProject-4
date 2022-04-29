@@ -258,12 +258,13 @@ public class MapView implements IGameViewService, IMapView {
 
                     for (int i = 0; i < monsterTeam.size(); i++) {
 
-                        String spritePath = mtp.getMonsterTeam().get(i).getFrontSprite();
-                        Class reference = mtp.getMonsterTeam().get(i).getClass();
+                        IMonster currentMonster = monsterTeam.get(i);
+                        String spritePath = currentMonster.getFrontSprite();
+                        Class reference = currentMonster.getClass();
                         Texture texture = loader.getTextureAsset(spritePath, reference);
                         spriteBatch.draw(texture,monsterTeamMenu.getX() + 42, monsterTeamMenu.getY() + (monsterTeamMenu.getHeight() * 2 / 2.6f) - (i * 80), 70, 70);
-                        textUtils.drawSmallRoboto(spriteBatch, "Name: \t" + mtp.getMonsterTeam().get(i).getName(), Color.BLACK, monsterTeamMenu.getX() + 42+ 110, monsterTeamMenu.getY() + (monsterTeamMenu.getHeight() * 2 / 2.3f) - (i * (80)));
-                        textUtils.drawSmallRoboto(spriteBatch, "HP: \t" + mtp.getMonsterTeam().get(i).getHitPoints() + " / " + mtp.getMonsterTeam().get(i).getMaxHitPoints(), Color.BLACK, monsterTeamMenu.getX() + 42 + 110, monsterTeamMenu.getY() + (monsterTeamMenu.getHeight() * 2 / 2.45f) - (i * (80)));
+                        textUtils.drawSmallRoboto(spriteBatch, "Name: \t" + currentMonster.getName(), Color.BLACK, monsterTeamMenu.getX() + 42+ 110, monsterTeamMenu.getY() + (monsterTeamMenu.getHeight() * 2 / 2.3f) - (i * (80)));
+                        textUtils.drawSmallRoboto(spriteBatch, "HP: \t" + currentMonster.getHitPoints() + " / " + currentMonster.getMaxHitPoints(), Color.BLACK, monsterTeamMenu.getX() + 42 + 110, monsterTeamMenu.getY() + (monsterTeamMenu.getHeight() * 2 / 2.45f) - (i * (80)));
 
                     }
                     spriteBatch.end();
@@ -290,7 +291,6 @@ public class MapView implements IGameViewService, IMapView {
             shapeRenderer.setAutoShapeType(true);
             shapeRenderer.setProjectionMatrix(cam.combined);
             shapeRenderer.setColor(Color.WHITE);
-
             shapeRenderer.begin(ShapeRenderer.ShapeType.Filled);
             summaryMenu.setX(monsterTeamMenu.getX() + 10 );
             summaryMenu.setY(monsterTeamMenu.getY() + monsterTeamMenu.getHeight() - summaryMenu.getHeight() - 20);
