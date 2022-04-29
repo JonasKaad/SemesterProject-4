@@ -24,19 +24,22 @@
     "id" : "dig",
     "name" : "Dig",
     "damage" : 40,
-    "type" : "EARTH"
+    "type" : "EARTH",
+    "sound": "/sounds/dig.ogg"
   },
   {
     "id" : "earthquake",
     "name" : "Earthquake",
     "damage" : 50,
-    "type" : "EARTH"
+    "type" : "EARTH",
+    "sound": "/sounds/earthquake.ogg"
   },
   {
     "id" : "mudBlast",
     "name" : "Mud Blast",
     "damage" : 40,
-    "type" : "WATER"
+    "type" : "WATER",
+    "sound": "/sounds/mud_blast.ogg"
   },
   {
     "id": "eggBomb",
@@ -72,5 +75,19 @@
     "damage" : 20,
     "type" : "LIGHTNING",
     "sound": "/sounds/zap.ogg"
+  },
+  {
+    "id" : "arcBolt",
+    "name" : "Arc Bolt",
+    "damage" : 60,
+    "type" : "LIGHTNING",
+    "sound": "/sounds/arc_bolt.ogg"
+  },
+  {
+    "id": "furBall",
+    "name": "Fur Ball",
+    "damage": 15,
+    "type": "GRASS",
+    "sound": "/sounds/fur_ball.ogg"
   }
 ]

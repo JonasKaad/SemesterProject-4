@@ -4,11 +4,10 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
-import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
-import dk.sdu.mmmi.modulemon.common.OSGiFileHandle;
+import dk.sdu.mmmi.modulemon.common.AssetLoader;
 import dk.sdu.mmmi.modulemon.common.drawing.*;
 
 public class BattleScene {
@@ -20,7 +19,7 @@ public class BattleScene {
     private String _enemyMonsterSpritePath = "";
     private Image _playerMonster;
     private Image _enemyMonster;
-
+    private final AssetLoader loader = AssetLoader.getInstance();
     private Position _backdropPosition;
     private Position _playerBasePosition;
     private Position _enemyBasePosition;
@@ -68,9 +67,9 @@ public class BattleScene {
     private TextUtils textUtils = TextUtils.getInstance();
 
     public BattleScene() {
-        _backdrop = new Image(new Texture(new OSGiFileHandle("/battleart/backdrop1.png", this.getClass())));
-        _playerBase = new Image(new Texture(new OSGiFileHandle("/battleart/playerbase1.png", this.getClass())));
-        _enemyBase = new Image(new Texture(new OSGiFileHandle("/battleart/enemybase1.png", this.getClass())));
+        _backdrop = loader.getImageAsset("/battleart/backdrop1.png", this.getClass());
+        _playerBase = loader.getImageAsset("/battleart/playerbase1.png", this.getClass());
+        _enemyBase = loader.getImageAsset("/battleart/enemybase1.png", this.getClass());
         _textBoxRect =  new Rectangle(-100,-100,  0,0); // All these values are dynamically calculated anyway
         _actionBoxRect = new Rectangle(-100,-100, BattleSceneDefaults.actionBoxWidth(), BattleSceneDefaults.actionBoxHeight());
         _enemyHealthRect = new Rectangle(-100,-100, BattleSceneDefaults.enemyHealthBoxWidth(), BattleSceneDefaults.enemyHealthBoxHeight());
@@ -280,7 +279,7 @@ public class BattleScene {
 
     public void setEnemySprite(String spritePath, Class reference) {
         if(!spritePath.equalsIgnoreCase(this._enemyMonsterSpritePath)) {
-            this._enemyMonster = new Image(new Texture(new OSGiFileHandle(spritePath, reference)));
+            this._enemyMonster = loader.getImageAsset(spritePath, reference);
             this._enemyMonsterSpritePath = spritePath;
         }
     }
@@ -299,7 +298,7 @@ public class BattleScene {
 
     public void setPlayerSprite(String spritePath, Class reference) {
         if(!spritePath.equalsIgnoreCase(this._playerMonsterSpritePath)) {
-            this._playerMonster = new Image(new Texture(new OSGiFileHandle(spritePath, reference)));
+            this._playerMonster = loader.getImageAsset(spritePath, reference);
             this._playerMonsterSpritePath = spritePath;
         }
     }

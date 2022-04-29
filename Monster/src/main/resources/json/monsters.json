@@ -64,5 +64,39 @@
     ],
     "front": "/images/mole_front.png",
     "back": "/images/mole_back.png"
+  },
+  {
+    "id" : 4,
+    "name" : "Cat",
+    "type" : "LIGHTNING",
+    "hp" : 120,
+    "defence" : 60,
+    "attack" : 80,
+    "speed" : 88,
+    "moves" : [
+      "furBall",
+      "zap",
+      "arcBolt",
+      "tackle"
+    ],
+    "front": "/images/cat_front.png",
+    "back": "/images/cat_back.png"
+  },
+  {
+    "id" : 5,
+    "name" : "Dog",
+    "type" : "FIRE",
+    "hp" : 150,
+    "defence" : 66,
+    "attack" : 66,
+    "speed" : 66,
+    "moves" : [
+      "trample",
+      "fireBreath",
+      "earthquake",
+      "tackle"
+    ],
+    "front": "/images/dog_front.png",
+    "back": "/images/dog_back.png"
   }
 ]
