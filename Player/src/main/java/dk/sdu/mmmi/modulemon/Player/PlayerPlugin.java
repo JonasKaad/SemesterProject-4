@@ -4,11 +4,11 @@ import com.badlogic.gdx.graphics.Texture;
 import dk.sdu.mmmi.modulemon.CommonBattle.MonsterTeamPart;
 import dk.sdu.mmmi.modulemon.CommonMonster.IMonster;
 import dk.sdu.mmmi.modulemon.CommonMonster.IMonsterRegistry;
+import dk.sdu.mmmi.modulemon.common.AssetLoader;
 import dk.sdu.mmmi.modulemon.common.data.Entity;
 import dk.sdu.mmmi.modulemon.common.data.GameData;
 import dk.sdu.mmmi.modulemon.common.data.World;
 import dk.sdu.mmmi.modulemon.common.data.entityparts.*;
-import dk.sdu.mmmi.modulemon.common.OSGiFileHandle;
 import dk.sdu.mmmi.modulemon.common.services.IGamePluginService;
 
 import java.util.ArrayList;
@@ -39,10 +39,10 @@ public class PlayerPlugin implements IGamePluginService {
         Entity player = new Player();
         player.add(new PositionPart(x, y));
         player.add(new MovingPart());
-        Texture upSprite = new Texture(new OSGiFileHandle("/assets/main-char-up5.png", Player.class));
-        Texture downSprite = new Texture(new OSGiFileHandle("/assets/main-char-down5.png", Player.class));
-        Texture leftSprite = new Texture(new OSGiFileHandle("/assets/main-char-left5.png", Player.class));
-        Texture rightSprite = new Texture(new OSGiFileHandle("/assets/main-char-right5.png", Player.class));
+        Texture upSprite = AssetLoader.getInstance().getTextureAsset("/assets/main-char-up5.png", Player.class);
+        Texture downSprite = AssetLoader.getInstance().getTextureAsset("/assets/main-char-down5.png", Player.class);
+        Texture leftSprite = AssetLoader.getInstance().getTextureAsset("/assets/main-char-left5.png", Player.class);
+        Texture rightSprite = AssetLoader.getInstance().getTextureAsset("/assets/main-char-right5.png", Player.class);
         player.add(new SpritePart(upSprite, downSprite, leftSprite, rightSprite));
         IMonsterRegistry monsterRegistry = monsterRegistryList.get(0);
 

@@ -4,7 +4,6 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.audio.Music;
 import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.Texture;
-import com.badlogic.gdx.maps.tiled.TiledMap;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
 
 import java.util.HashMap;
@@ -58,17 +57,6 @@ public class AssetLoader {
         Object retrieved = assetMap.get(key);
         return (Music) retrieved;
     }
-
-    public TiledMap getTiledMapAsset(String pathToAsset, Class classForAssetResources) {
-        String key = pathToAsset + "_" + classForAssetResources.getName();
-        if(!assetMap.containsKey(key)){
-            Object value = (new OSGiTmxLoader().load(pathToAsset));
-            assetMap.put(key, value);
-        }
-        Object retrieved = assetMap.get(key);
-        return (TiledMap) retrieved;
-    }
-
 
     private AssetLoader(){
         assetMap = new HashMap<>();
