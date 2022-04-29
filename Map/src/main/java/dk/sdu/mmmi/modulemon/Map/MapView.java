@@ -98,7 +98,7 @@ public class MapView implements IGameViewService, IMapView {
 
         // Sprites
         spriteBatch = new SpriteBatch();
-      
+
         // Pausing
         isPaused = false;
         showMonsterTeam = false;
@@ -115,13 +115,12 @@ public class MapView implements IGameViewService, IMapView {
         gdxThreadTasks.add(() -> textUtils = TextUtils.getInstance());
 
 
-
         // Battle
         this.gameStateManager = gameStateManager;
 
     }
 
-    private void initializeCameraDrawing(GameData gameData){
+    private void initializeCameraDrawing(GameData gameData) {
         cam = gameData.getCamera();
 
         // Setting bounds for map
@@ -132,13 +131,13 @@ public class MapView implements IGameViewService, IMapView {
         mapRight = mapWidth * tilePixelSize - (cam.viewportWidth / 2f);
         mapBottom = 360;
         mapTop = mapBottom + mapHeight * tilePixelSize - (cam.viewportWidth / 2f) - 80;
-        cam.position.set(mapRight /2f, mapTop / 2f, 0);
+        cam.position.set(mapRight / 2f, mapTop / 2f, 0);
 
     }
 
     @Override
     public void update(GameData gameData, IGameStateManager gameStateManager) {
-        while(!gdxThreadTasks.isEmpty()){
+        while (!gdxThreadTasks.isEmpty()) {
             gdxThreadTasks.poll().run();
         }
         for (IEntityProcessingService entityProcessorService : entityProcessorList) {
@@ -149,7 +148,7 @@ public class MapView implements IGameViewService, IMapView {
 
     @Override
     public void draw(GameData gameData) {
-        if(cam == null)
+        if (cam == null)
             initializeCameraDrawing(gameData);
         tiledMapRenderer.setView(cam);
         tiledMapRenderer.render();
@@ -165,7 +164,7 @@ public class MapView implements IGameViewService, IMapView {
                 if (entity.getClass() == dk.sdu.mmmi.modulemon.Player.Player.class) {
                     playerPosX = entity.getPosX();
                     playerPosY = entity.getPosY();
-                    if(playerPosY > mapBottom && playerPosY < mapTop){
+                    if (playerPosY > mapBottom && playerPosY < mapTop) {
                         cam.position.set(cam.position.x, playerPosY, 0);
 
                         cam.update();
@@ -181,173 +180,27 @@ public class MapView implements IGameViewService, IMapView {
         tiledMapRenderer.renderTileLayer(overhangLayer);
         tiledMapRenderer.getBatch().end();
 
-
-
-        if(showTeamOptions) {
-            //Drawing options menu box
-            shapeRenderer.setColor(Color.WHITE);
-
-            shapeRenderer.begin(ShapeRenderer.ShapeType.Filled);
-            teamActionMenu.setX(monsterTeamMenu.getX() + monsterTeamMenu.getWidth() + 20);
-            teamActionMenu.setY(monsterTeamMenu.getY() + monsterTeamMenu.getHeight() - teamActionMenu.getHeight());
-            teamActionMenu.draw(shapeRenderer, gameData.getDelta());
-            shapeRenderer.end();
-
-            //Drawing options menu text
-            spriteBatch.begin();
-
-            textUtils.drawNormalRoboto(
-                    spriteBatch,
-                    "Choose Action",
-                    Color.BLACK,
-                    teamActionMenu.getX() + 19,
-                    teamActionMenu.getY() + teamActionMenu.getHeight() - 10);
-
-            //Drawing options
-            for (int i = 0; i < teamActions.length; i++) {
-                textUtils.drawSmallRoboto(spriteBatch, teamActions[i], Color.BLACK, teamActionMenu.getX() + 42, teamActionMenu.getY() + (teamActionMenu.getHeight() * 2 / 3f) - (i * 40));
-            }
-
-            spriteBatch.end();
+        if (showTeamOptions) {
+            MonsterTeam.drawTeamOptions(gameData, shapeRenderer, spriteBatch, textUtils, teamActionMenu, monsterTeamMenu, teamActions);
         }
-        if(showMonsterTeam) {
+        if (showMonsterTeam) {
             for (Entity entity : world.getEntities()) {
                 if (entity.getClass() == dk.sdu.mmmi.modulemon.Player.Player.class) {
                     mtp = entity.getPart(MonsterTeamPart.class);
                     monsterTeam = mtp.getMonsterTeam();
 
-                    //Drawing monster menu box
-                    shapeRenderer.setColor(Color.WHITE);
-
-                    shapeRenderer.begin(ShapeRenderer.ShapeType.Filled);
-
-                    monsterTeamMenu.setX(cam.position.x - cam.viewportWidth / 2.6f);
-                    monsterTeamMenu.setY(cam.position.y - cam.viewportHeight / 3.2f);
-                    monsterTeamMenu.draw(shapeRenderer, gameData.getDelta());
-                    shapeRenderer.end();
-
-
-                    //Drawing monster menu text
-                    spriteBatch.begin();
-
-
-
-                    textUtils.drawNormalRoboto(
-                            spriteBatch,
-                            "Your Team",
-                            Color.BLACK,
-                            monsterTeamMenu.getX() + 135,
-                            monsterTeamMenu.getY() + monsterTeamMenu.getHeight() - 10);
-
-                    // Draws the text telling the player how to change order/switch monsters
-                    if(showSwitchingText){
-                        textUtils.drawSmallRoboto(
-                                spriteBatch,
-                                "Select two Monsters to switch their order",
-                                Color.BLACK,
-                                monsterTeamMenu.getX() + 50,
-                                monsterTeamMenu.getY() + monsterTeamMenu.getHeight() - 35);
-                    }
-
-                    //Drawing Names and HP
-
-                    for (int i = 0; i < monsterTeam.size(); i++) {
-
-                        IMonster currentMonster = monsterTeam.get(i);
-                        String spritePath = currentMonster.getFrontSprite();
-                        Class reference = currentMonster.getClass();
-                        Texture texture = loader.getTextureAsset(spritePath, reference);
-                        spriteBatch.draw(texture,monsterTeamMenu.getX() + 42, monsterTeamMenu.getY() + (monsterTeamMenu.getHeight() * 2 / 2.6f) - (i * 80), 70, 70);
-                        textUtils.drawSmallRoboto(spriteBatch, "Name: \t" + currentMonster.getName(), Color.BLACK, monsterTeamMenu.getX() + 42+ 110, monsterTeamMenu.getY() + (monsterTeamMenu.getHeight() * 2 / 2.3f) - (i * (80)));
-                        textUtils.drawSmallRoboto(spriteBatch, "HP: \t" + currentMonster.getHitPoints() + " / " + currentMonster.getMaxHitPoints(), Color.BLACK, monsterTeamMenu.getX() + 42 + 110, monsterTeamMenu.getY() + (monsterTeamMenu.getHeight() * 2 / 2.45f) - (i * (80)));
-
-                    }
-                    spriteBatch.end();
-
-                    /*
-                    For some reason it needs two different for loops, otherwise it won't draw all the stuff.
-                     */
-
-                    // Drawing boxes around Monsters
-                    shapeRenderer.begin();
-                    for (int i = 0; i < monsterTeam.size(); i++) {
-                        monsterRectangles[i].setX(monsterTeamMenu.getX() + 40);
-                        monsterRectangles[i].setY(monsterTeamMenu.getY() + (monsterTeamMenu.getHeight() * 2 / 2.6f) - (i * 80));
-                        monsterRectangles[i].draw(shapeRenderer, gameData.getDelta());
-                        Gdx.gl20.glLineWidth(2);
-                    }
-                    shapeRenderer.end();
+                    MonsterTeam.drawMonsterTeam(gameData, shapeRenderer, spriteBatch, textUtils, cam, showSwitchingText, monsterTeamMenu, monsterTeam, monsterRectangles);
+                    break;
                 }
             }
         }
 
-        if(showSummary){
-            // Drawing summary box
-            shapeRenderer.setColor(Color.WHITE);
-            shapeRenderer.begin(ShapeRenderer.ShapeType.Filled);
-            summaryMenu.setX(monsterTeamMenu.getX() + 10 );
-            summaryMenu.setY(monsterTeamMenu.getY() + monsterTeamMenu.getHeight() - summaryMenu.getHeight() - 20);
-            summaryMenu.draw(shapeRenderer, gameData.getDelta());
-            shapeRenderer.end();
-
-            //Drawing summary text
-            spriteBatch.begin();
-            IMonster currentMonster = mtp.getMonsterTeam().get(selectedOptionIndexMonsterTeam);
-            String name = currentMonster.getName();
-
-            textUtils.drawNormalRoboto(
-                    spriteBatch,
-                    name,
-                    Color.BLACK,
-                    summaryMenu.getX() + ((summaryMenu.getWidth() / 2) - ((summaryMenu.getWidth() / 2) / 2 / 2)) + 10,
-                    summaryMenu.getY() + summaryMenu.getHeight() - 10);
-
-            //Drawing image
-            String spritePath = currentMonster.getFrontSprite();
-            Class reference = currentMonster.getClass();
-            Texture texture = loader.getTextureAsset(spritePath, reference);
-            spriteBatch.draw(texture, summaryMenu.getX() + 6, monsterTeamMenu.getY() + (monsterTeamMenu.getHeight() / 2) + 20, 160, 160);
-
-            // Creating a list of stats needed in order. HP, Attack, Defence, Speed, Type
-            List<String> stats = new ArrayList<>();
-            stats.add("HP: " + currentMonster.getHitPoints() + " / " + currentMonster.getMaxHitPoints());
-            stats.addAll(currentMonster.getStats());
-
-            // String manipulation to make the enum value only uppercase on first letter.
-            String monsterType = currentMonster.getMonsterType().toString().toLowerCase(Locale.ROOT);
-            String upperCaseMonsterType = monsterType.substring(0, 1).toUpperCase() + monsterType.substring(1);
-            stats.add("Type: " +  upperCaseMonsterType);
-
-            // Positional counter such that the following text can be drawn accordingly
-            int posCounter = 0;
-            //Drawing stats
-            textUtils.drawSmallBoldRoboto(spriteBatch, "Stats:", Color.BLACK, summaryMenu.getX() + 170, summaryMenu.getY() + (summaryMenu.getHeight() * 2 / 2.4f));
-            for (int i = 0; i < stats.size(); i++) {
-                textUtils.drawSmallRoboto(spriteBatch, stats.get(i), Color.BLACK, summaryMenu.getX() + 170, summaryMenu.getY() + (summaryMenu.getHeight() * 2 / 2.4f) - ((i+1) * 20));
-                posCounter = (i+1) * 20;
-            }
-
-            //Drawing moves
-
-            // String manipulation to make the enum value only uppercase on first letter.
-            // And to get the moves formatted in desired form
-            List<String> moves = new ArrayList<>();
-            for (int i = 0; i < currentMonster.getMoves().size(); i++) {
-                String moveType = String.valueOf(currentMonster.getMoves().get(i).getType()).toLowerCase(Locale.ROOT);
-                String upperCaseMoveType = moveType.substring(0, 1).toUpperCase() + moveType.substring(1);
-                moves.add(currentMonster.getMoves().get(i) + " - " + currentMonster.getMoves().get(i).getDamage() + " - " + upperCaseMoveType);
-            }
-            //Drawing the "Moves:" text first.
-            textUtils.drawSmallBoldRoboto(spriteBatch, "Moves:", Color.BLACK, summaryMenu.getX() + 170, summaryMenu.getY() + (summaryMenu.getHeight() * 2 / 2.4f) - posCounter-30);
-            //Drawing all moves that the monster has.
-            for (int i = 0; i < moves.size(); i++) {
-                textUtils.drawSmallRoboto(spriteBatch, moves.get(i), Color.BLACK, summaryMenu.getX() + 170, summaryMenu.getY() + (summaryMenu.getHeight() * 2 / 2.4f) - posCounter - 30 - ((i+1) * 20) );
-            }
-            spriteBatch.end();
+        if (showSummary) {
+            MonsterTeam.drawSummary(gameData, shapeRenderer, spriteBatch, textUtils, summaryMenu, monsterTeamMenu, mtp, selectedOptionIndexMonsterTeam);
         }
 
 
-        if(isPaused) {
+        if (isPaused) {
             //Drawing pause menu box
             shapeRenderer.setAutoShapeType(true);
             shapeRenderer.setProjectionMatrix(cam.combined);
@@ -382,148 +235,81 @@ public class MapView implements IGameViewService, IMapView {
             // Yoinked from BattleScene
 
             // Empty on purpose such that the other triangles are not drawn.
-            if(showSummary){
-
-            }
-
-            else if(showTeamOptions){
-                shapeRenderer.begin(ShapeRenderer.ShapeType.Filled);
-                shapeRenderer.setColor(Color.BLACK);
-
-                int triangleHeight = 20;
-                int heightBetweenOptions = 20;
-                int normalTextHeight = 24;
-                int actionTopTextHeight = (int) (teamActionMenu.getHeight() * 2 / 3f) + 40;
-                int offsetFromActionHeadToFirstAction = 10;
-
-                teamOptionIndex = teamOptionIndex % teamActions.length;
-
-                int renderHeight = actionTopTextHeight - triangleHeight - normalTextHeight - offsetFromActionHeadToFirstAction;
-                renderHeight = renderHeight + teamOptionIndex * -heightBetweenOptions * 2;
-
-                shapeRenderer.triangle(
-                        teamActionMenu.getX() + 15, teamActionMenu.getY() + renderHeight,
-                        teamActionMenu.getX() + 30, teamActionMenu.getY() + triangleHeight / 2f + renderHeight,
-                        teamActionMenu.getX() + 15, teamActionMenu.getY() + triangleHeight + renderHeight
-                );
-                shapeRenderer.end();
-            }
-
-            else if(showMonsterTeam){
-                shapeRenderer.begin(ShapeRenderer.ShapeType.Filled);
-                shapeRenderer.setColor(switchIndicatorColor);
-
-                int triangleHeight = 20;
-                int heightBetweenOptions = 40;
-                int normalTextHeight = 24;
-                int actionTopTextHeight = (int) (monsterTeamMenu.getHeight() * 2 / 2.6f) + 80;
-                int offsetFromActionHeadToFirstAction = 8;
-
-                selectedOptionIndexMonsterTeam = selectedOptionIndexMonsterTeam % monsterTeam.size();
-
-                int renderHeight = actionTopTextHeight - triangleHeight - normalTextHeight - offsetFromActionHeadToFirstAction;
-                renderHeight = renderHeight + selectedOptionIndexMonsterTeam * -heightBetweenOptions * 2;
-
-                shapeRenderer.triangle(
-                        monsterTeamMenu.getX() + 15, monsterTeamMenu.getY() + renderHeight,
-                        monsterTeamMenu.getX() + 30, monsterTeamMenu.getY() + triangleHeight / 2f + renderHeight,
-                        monsterTeamMenu.getX() + 15, monsterTeamMenu.getY() + triangleHeight + renderHeight
-                );
-                shapeRenderer.end();
-            }
-            else {
-                shapeRenderer.begin(ShapeRenderer.ShapeType.Filled);
-                shapeRenderer.setColor(Color.BLACK);
-
-                int triangleHeight = 20;
-                int heightBetweenOptions = 20;
-                int normalTextHeight = 24;
-                int actionTopTextHeight = (int) (pauseMenu.getHeight() * 2 / 3f) + 40;
-                int offsetFromActionHeadToFirstAction = 10;
-
-                selectedOptionIndex = selectedOptionIndex % pauseActions.length;
-
-                int renderHeight = actionTopTextHeight - triangleHeight - normalTextHeight - offsetFromActionHeadToFirstAction;
-                renderHeight = renderHeight + selectedOptionIndex * -heightBetweenOptions * 2;
-
-                shapeRenderer.triangle(
-                        pauseMenu.getX() + 15, pauseMenu.getY() + renderHeight,
-                        pauseMenu.getX() + 30, pauseMenu.getY() + triangleHeight / 2f + renderHeight,
-                        pauseMenu.getX() + 15, pauseMenu.getY() + triangleHeight + renderHeight
-                );
-                shapeRenderer.end();
+            if (!showSummary) {
+                if (showTeamOptions) {
+                    MonsterTeam.drawTeamOptionsTriangle(shapeRenderer, teamActionMenu, teamOptionIndex, teamActions);
+                } else if (showMonsterTeam) {
+                    MonsterTeam.drawMonsterTeamTriangle(shapeRenderer, switchIndicatorColor, monsterTeamMenu, selectedOptionIndexMonsterTeam, monsterTeam);
+                } else {
+                    MonsterTeam.drawDefaultTriangle(shapeRenderer, pauseMenu, selectedOptionIndex, pauseActions);
+                }
             }
         }
     }
 
     @Override
     public void handleInput(GameData gameData, IGameStateManager gameStateManager) {
-        if(isPaused){
-            if(gameData.getKeys().isPressed(GameKeys.DOWN)) {
-                if(showTeamOptions && !showSummary){
+        if (isPaused) {
+            if (gameData.getKeys().isPressed(GameKeys.DOWN)) {
+                if (showTeamOptions && !showSummary) {
                     if (teamOptionIndex < teamActions.length)
                         teamOptionIndex++;
                     else
                         teamOptionIndex = 0;
-                }
-                else if(showMonsterTeam){
-                    if(firstSelected >= 0 && firstSelected != selectedOptionIndexMonsterTeam && temporarySecondSelected != -1){
+                } else if (showMonsterTeam) {
+                    if (firstSelected >= 0 && firstSelected != selectedOptionIndexMonsterTeam && temporarySecondSelected != -1) {
                         // Resets the color back to black every time we go up or down the list
                         monsterRectangles[temporarySecondSelected].setBorderColor(Color.BLACK);
                     }
-                    if(selectedOptionIndexMonsterTeam < monsterTeam.size()-1) {
+                    if (selectedOptionIndexMonsterTeam < monsterTeam.size() - 1) {
                         selectedOptionIndexMonsterTeam++;
-                    }
-                    else {
+                    } else {
                         selectedOptionIndexMonsterTeam = 0;
                     }
                     temporarySecondSelected = selectedOptionIndexMonsterTeam;
                     // If the first monster to be switched has been selected, and it's not equal to the one being hovered
-                    if(firstSelected >= 0 && firstSelected != selectedOptionIndexMonsterTeam && temporarySecondSelected != -1){
+                    if (firstSelected >= 0 && firstSelected != selectedOptionIndexMonsterTeam && temporarySecondSelected != -1) {
                         // Color the currently hovered monster's border Cyan
                         monsterRectangles[temporarySecondSelected].setBorderColor(Color.valueOf("29d4ff"));
                     }
-                }
-                else {
+                } else {
                     if (selectedOptionIndex < pauseActions.length)
                         selectedOptionIndex++;
                     else
                         selectedOptionIndex = 0;
                 }
             }
-            if(gameData.getKeys().isPressed(GameKeys.UP)){
-                if(showTeamOptions && !showSummary){
+            if (gameData.getKeys().isPressed(GameKeys.UP)) {
+                if (showTeamOptions && !showSummary) {
                     if (teamOptionIndex <= 0)
-                        teamOptionIndex  = teamActions.length - 1;
+                        teamOptionIndex = teamActions.length - 1;
                     else
                         teamOptionIndex--;
-                }
-                else if(showMonsterTeam){
-                    if(firstSelected >= 0 && firstSelected != selectedOptionIndexMonsterTeam){
+                } else if (showMonsterTeam) {
+                    if (firstSelected >= 0 && firstSelected != selectedOptionIndexMonsterTeam) {
                         // Resets the color back to black every time we go up or down the list
                         monsterRectangles[temporarySecondSelected].setBorderColor(Color.BLACK);
                     }
-                    if(selectedOptionIndexMonsterTeam <= 0)
-                        selectedOptionIndexMonsterTeam = monsterTeam.size() -1;
+                    if (selectedOptionIndexMonsterTeam <= 0)
+                        selectedOptionIndexMonsterTeam = monsterTeam.size() - 1;
                     else {
                         selectedOptionIndexMonsterTeam--;
                     }
                     temporarySecondSelected = selectedOptionIndexMonsterTeam;
                     // If the first monster to be switched has been selected, and it's not equal to the one being hovered
-                    if(firstSelected >= 0 && firstSelected != selectedOptionIndexMonsterTeam){
+                    if (firstSelected >= 0 && firstSelected != selectedOptionIndexMonsterTeam) {
                         // Color the currently hovered monster's border Cyan
                         monsterRectangles[temporarySecondSelected].setBorderColor(Color.valueOf("29d4ff"));
                     }
-                }
-                else {
+                } else {
                     if (selectedOptionIndex <= 0)
                         selectedOptionIndex = pauseActions.length - 1;
                     else
                         selectedOptionIndex--;
                 }
             }
-            if(gameData.getKeys().isPressed(GameKeys.ESC)){
-                if(showSummary){
+            if (gameData.getKeys().isPressed(GameKeys.ESC)) {
+                if (showSummary) {
                     showSummary = false;
                     for (Rectangle monsterRectangle : monsterRectangles) {
                         monsterRectangle.setFillColor(Color.WHITE);
@@ -532,28 +318,25 @@ public class MapView implements IGameViewService, IMapView {
                     monsterTeamMenu.setFillColor(Color.WHITE);
                     teamActionMenu.setFillColor(Color.WHITE);
                     monsterRectangles[selectedOptionIndexMonsterTeam].setBorderColor(Color.valueOf("ffcb05"));
-                }
-                else if(showTeamOptions){
+                } else if (showTeamOptions) {
                     showTeamOptions = false;
                     for (Rectangle monsterRectangle : monsterRectangles) {
                         monsterRectangle.setBorderColor(Color.BLACK);
                     }
                     teamOptionIndex = 0;
-                }
-                else if(showMonsterTeam){
+                } else if (showMonsterTeam) {
                     showMonsterTeam = false;
                     resetMonsterTeamDrawing();
                     selectedOptionIndexMonsterTeam = 0;
                     pauseMenu.setFillColor(Color.WHITE);
-                }
-                else {
+                } else {
                     isPaused = false;
                     gameData.setPaused(isPaused);
                 }
             }
-            if(gameData.getKeys().isPressed(GameKeys.ENTER)) {
+            if (gameData.getKeys().isPressed(GameKeys.ENTER)) {
                 if (showMonsterTeam) {
-                    if(showTeamOptions) {
+                    if (showTeamOptions) {
                         if (teamActions[teamOptionIndex].equals("Summary")) {
                             if (!showSummary) {
                                 showSummary = true;
@@ -586,12 +369,12 @@ public class MapView implements IGameViewService, IMapView {
 
                     //}
 
-                    else if(currentlySwitching){
+                    else if (currentlySwitching) {
                         if (secondSelected == -1) {
                             secondSelected = selectedOptionIndexMonsterTeam; // Select the second current monster
                             System.out.println("Selected the second");
                         }
-                        if (firstSelected == secondSelected){ // If the same monster has been chosen twice, reset
+                        if (firstSelected == secondSelected) { // If the same monster has been chosen twice, reset
                             resetMonsterTeamDrawing();
                             System.out.println("Reset");
                             return;
@@ -607,15 +390,13 @@ public class MapView implements IGameViewService, IMapView {
                             currentlySwitching = false;
                             teamOptionIndex = 0;
                         }
-                    }
-
-                    else {
-                            showTeamOptions = true;
-                            monsterRectangles[selectedOptionIndexMonsterTeam].setBorderColor(Color.valueOf("ffcb05"));
+                    } else {
+                        showTeamOptions = true;
+                        monsterRectangles[selectedOptionIndexMonsterTeam].setBorderColor(Color.valueOf("ffcb05"));
                     }
 
                 }
-                if(!showMonsterTeam) {
+                if (!showMonsterTeam) {
                     if (pauseActions[selectedOptionIndex].equals("Resume")) {
                         isPaused = false;
                         gameData.setPaused(isPaused);
@@ -639,14 +420,14 @@ public class MapView implements IGameViewService, IMapView {
             }
             return;
         }
-        if(gameData.getKeys().isPressed(GameKeys.ESC)){
+        if (gameData.getKeys().isPressed(GameKeys.ESC)) {
             isPaused = true;
             //currentlySwitching = false;
             gameData.setPaused(isPaused);
         }
-        if(gameData.getKeys().isPressed(GameKeys.E)){
-            for(Entity entity: world.getEntities()){
-                if(entity.getClass() == dk.sdu.mmmi.modulemon.Player.Player.class){
+        if (gameData.getKeys().isPressed(GameKeys.E)) {
+            for (Entity entity : world.getEntities()) {
+                if (entity.getClass() == dk.sdu.mmmi.modulemon.Player.Player.class) {
                     playerMonsters = entity.getPart(MonsterTeamPart.class);
                     System.out.println("Added playermonsters");
                 }
@@ -659,17 +440,17 @@ public class MapView implements IGameViewService, IMapView {
      * Resets all the drawing done to the Monster Team back to normal.
      * Sets the colors back to black and resets indexes.
      */
-    private void resetMonsterTeamDrawing(){
+    private void resetMonsterTeamDrawing() {
         showSwitchingText = false;
         switchIndicatorColor = new Color(Color.BLACK); // Sets the triangle back to black
         // Sets the borders back to black
-        if(firstSelected >= 0) {
+        if (firstSelected >= 0) {
             monsterRectangles[firstSelected].setBorderColor(Color.BLACK);
         }
-        if(secondSelected >= 0){
+        if (secondSelected >= 0) {
             monsterRectangles[secondSelected].setBorderColor(Color.BLACK);
         }
-        if(temporarySecondSelected >= 0) {
+        if (temporarySecondSelected >= 0) {
             monsterRectangles[temporarySecondSelected].setBorderColor(Color.BLACK);
         }
         // Resets the indexes
@@ -681,51 +462,55 @@ public class MapView implements IGameViewService, IMapView {
 
     @Override
     public void dispose() {
-        if(cam != null)
-            cam.position.set(cam.viewportWidth/2,cam.viewportHeight/2, 0);
+        if (cam != null)
+            cam.position.set(cam.viewportWidth / 2, cam.viewportHeight / 2, 0);
         mapMusic.stop();
     }
 
-    public void addEntityProcessingService (IEntityProcessingService eps){
+    public void addEntityProcessingService(IEntityProcessingService eps) {
         this.entityProcessorList.add(eps);
     }
 
-    public void removeEntityProcessingService (IEntityProcessingService eps){
+    public void removeEntityProcessingService(IEntityProcessingService eps) {
         this.entityProcessorList.remove(eps);
     }
 
-    public void addGamePluginService (IGamePluginService plugin){
+    public void addGamePluginService(IGamePluginService plugin) {
         this.gamePluginList.add(plugin);
         gdxThreadTasks.add(() -> plugin.start(gameData, world));
     }
 
-    public void removeGamePluginService (IGamePluginService plugin){
+    public void removeGamePluginService(IGamePluginService plugin) {
         this.gamePluginList.remove(plugin);
         gdxThreadTasks.add(() -> plugin.stop(gameData, world));
     }
 
-    public void setBattleView(IBattleView battleView){ this.battleView = battleView; }
+    public void setBattleView(IBattleView battleView) {
+        this.battleView = battleView;
+    }
 
-    public void removeBattleView(IBattleView battleView){ this.battleView = null; }
+    public void removeBattleView(IBattleView battleView) {
+        this.battleView = null;
+    }
 
     @Override
     public float getMapLeft() {
-        return mapLeft - (cam.viewportWidth/2f);
+        return mapLeft - (cam.viewportWidth / 2f);
     }
 
     @Override
     public float getMapRight() {
-        return mapRight + (cam.viewportWidth/2f);
+        return mapRight + (cam.viewportWidth / 2f);
     }
 
     @Override
     public float getMapBottom() {
-        return mapBottom - (cam.viewportHeight/2f);
+        return mapBottom - (cam.viewportHeight / 2f);
     }
 
     @Override
     public float getMapTop() {
-        return mapTop + (cam.viewportHeight/2f);
+        return mapTop + (cam.viewportHeight / 2f);
     }
 
     @Override
@@ -735,8 +520,8 @@ public class MapView implements IGameViewService, IMapView {
 
     @Override
     public boolean isCellBlocked(float x, float y) {
-        TiledMapTileLayer collsionLayer = (TiledMapTileLayer)tiledMap.getLayers().get(0);
-        TiledMapTileLayer.Cell cell = collsionLayer.getCell((int)Math.floor(x/tilePixelSize), (int) Math.floor(y/tilePixelSize));
+        TiledMapTileLayer collsionLayer = (TiledMapTileLayer) tiledMap.getLayers().get(0);
+        TiledMapTileLayer.Cell cell = collsionLayer.getCell((int) Math.floor(x / tilePixelSize), (int) Math.floor(y / tilePixelSize));
         return cell.getTile().getProperties().containsKey("blocked");
     }
 
@@ -745,7 +530,7 @@ public class MapView implements IGameViewService, IMapView {
         return isPaused;
     }
 
-    public void startEncounter(MonsterTeamPart playerMonsters, MonsterTeamPart enemyMonsters){
+    public void startEncounter(MonsterTeamPart playerMonsters, MonsterTeamPart enemyMonsters) {
         IBattleParticipant playerParticipant = playerMonsters.toBattleParticipant(true);
         IBattleParticipant enemyParticipant = enemyMonsters.toBattleParticipant(false);
 
