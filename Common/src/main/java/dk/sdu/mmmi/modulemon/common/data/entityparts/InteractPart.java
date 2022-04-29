@@ -4,6 +4,8 @@
  */
 package dk.sdu.mmmi.modulemon.common.data.entityparts;
 
+import dk.sdu.mmmi.modulemon.common.data.Direction;
+import static dk.sdu.mmmi.modulemon.common.data.Direction.*;
 import dk.sdu.mmmi.modulemon.common.data.Entity;
 import dk.sdu.mmmi.modulemon.common.data.GameData;
 import java.util.LinkedList;
@@ -51,41 +53,24 @@ public class InteractPart implements EntityPart{
     }
     
     private boolean isInRange(float x, float y) {
-        boolean isInRange = false;
         float thisX = this.positionPart.getX();
         float thisY = this.positionPart.getY();
-        int direction = this.positionPart.getDirection();
+        Direction direction = this.positionPart.getDirection();
 
-        boolean bothOnAxisX = (x-32 < thisX && thisX < x+32);
-        boolean bothOnAxisY = (y-32 < thisY && thisY < y+32);
+        boolean bothHaveSameX = (x-32 < thisX && thisX < x+32);
+        boolean bothHaveSameY = (y-32 < thisY && thisY < y+32);
         boolean withinRange = (Math.abs(thisX-x) <= 64*range) && (Math.abs(thisY-y) <= 64*range);
         
-        //If they are on one of the same axises
-        //They are within a range of tiles of each other
+        //If they have one of the same values of X or Y axises,
+        //They are within a range of tiles of each other,
         //Is facing the other interactpart.
-        if (bothOnAxisX && withinRange) {
-            if (thisY < y && direction == 90) {
-                
-            } else if (thisY > y && direction == 270) {
-                
-            } else {
-                return isInRange;
-            }
+        if (bothHaveSameX && withinRange && ((thisY < y && direction == NORTH) || (thisY > y && direction == SOUTH))) {
+            return true;
         } 
-        else if (bothOnAxisY && withinRange) {
-            if (thisX < x && direction == 0) {
-                
-            } else if (thisX > x && direction == 180) {
-                
-            } else {
-                return isInRange;
-            }
-            
-        } else {
-            return isInRange;
+        else if (bothHaveSameY && withinRange && ((thisX < x && direction == EAST) || (thisX > x && direction == WEST))) {
+            return true;    
         }
-        isInRange = true;
         
-        return isInRange;
+        return false;
     }
 }   

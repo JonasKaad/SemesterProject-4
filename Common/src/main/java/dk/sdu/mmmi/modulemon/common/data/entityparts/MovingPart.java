@@ -8,6 +8,7 @@ package dk.sdu.mmmi.modulemon.common.data.entityparts;
 import com.badlogic.gdx.math.Vector2;
 import dk.sdu.mmmi.modulemon.CommonMap.IMapView;
 import dk.sdu.mmmi.modulemon.common.animations.BaseAnimation;
+import static dk.sdu.mmmi.modulemon.common.data.Direction.*;
 import dk.sdu.mmmi.modulemon.common.data.Entity;
 import dk.sdu.mmmi.modulemon.common.data.GameData;
 
@@ -68,7 +69,7 @@ public class MovingPart extends BaseAnimation implements EntityPart {
                 animationTimer = 0;
 
                 newPosition.set(x, y);
-                positionPart.setDirection(180);
+                positionPart.setDirection(WEST);
                 if(newPosition.x < mapView.getMapLeft() || mapView.isCellBlocked(newPosition.x, newPosition.y)){
                     newPosition.x = currentPosition.x;
                 }
@@ -80,7 +81,7 @@ public class MovingPart extends BaseAnimation implements EntityPart {
                 animationTimer = 0;
 
                 newPosition.set(x, y);
-                positionPart.setDirection(0);
+                positionPart.setDirection(EAST);
                 if(newPosition.x > mapView.getMapRight() - 64 + 8 || mapView.isCellBlocked(newPosition.x, newPosition.y)){
                     newPosition.x = currentPosition.x;
                 }
@@ -92,7 +93,7 @@ public class MovingPart extends BaseAnimation implements EntityPart {
                 animationTimer = 0;
 
                 newPosition.set(x, y);
-                positionPart.setDirection(90);
+                positionPart.setDirection(NORTH);
                 if(newPosition.y > mapView.getMapTop() - 64 || mapView.isCellBlocked(newPosition.x, newPosition.y)){
                     newPosition.y = currentPosition.y;
                 }
@@ -104,7 +105,7 @@ public class MovingPart extends BaseAnimation implements EntityPart {
                 animationTimer = 0;
 
                 newPosition.set(x, y);
-                positionPart.setDirection(270);                
+                positionPart.setDirection(SOUTH);                
                 if(newPosition.y < mapView.getMapBottom() || mapView.isCellBlocked(newPosition.x, newPosition.y)){
                     newPosition.y = currentPosition.y;
                 }

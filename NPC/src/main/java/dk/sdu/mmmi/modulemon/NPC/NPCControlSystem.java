@@ -18,6 +18,7 @@ import dk.sdu.mmmi.modulemon.common.services.IEntityProcessingService;
 public class NPCControlSystem implements IEntityProcessingService{
     
     private String current = "";
+    private int interactCounter = 0;
 
     @Override
     public void process(GameData gameData, World world) {
@@ -55,7 +56,8 @@ public class NPCControlSystem implements IEntityProcessingService{
                 interactPart.process(gameData, npc);
                 
                 if (interactPart.canInteract()) {
-                    
+                    interactCounter++;
+                    System.out.println("Interactedede: " + interactCounter);
                 } 
 
                 updateShape(npc);
