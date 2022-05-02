@@ -304,8 +304,7 @@ public class MapView implements IGameViewService, IMapView {
         gdxThreadTasks.add(() -> plugin.stop(gameData, world));
     }
 
-    public void setBattleView(IBattleView battleView){ this.battleView = battleView;
-        System.out.println("SET BATTLEVIEW");}
+    public void setBattleView(IBattleView battleView){ this.battleView = battleView; }
 
     public void removeBattleView(IBattleView battleView){ this.battleView = null; }
 
