@@ -19,10 +19,6 @@ import dk.sdu.mmmi.modulemon.CommonBattleClient.IBattleCallback;
 import dk.sdu.mmmi.modulemon.CommonBattleClient.IBattleResult;
 import dk.sdu.mmmi.modulemon.CommonBattleClient.IBattleView;
 import dk.sdu.mmmi.modulemon.CommonMap.IMapView;
-import dk.sdu.mmmi.modulemon.CommonMonster.IMonster;
-import dk.sdu.mmmi.modulemon.CommonMonster.IMonsterMove;
-import dk.sdu.mmmi.modulemon.CommonMonster.MonsterType;
-import dk.sdu.mmmi.modulemon.Player.PlayerPlugin;
 import dk.sdu.mmmi.modulemon.common.data.*;
 import dk.sdu.mmmi.modulemon.common.OSGiFileHandle;
 import dk.sdu.mmmi.modulemon.common.drawing.Rectangle;
@@ -31,7 +27,6 @@ import dk.sdu.mmmi.modulemon.common.services.IEntityProcessingService;
 import dk.sdu.mmmi.modulemon.common.services.IGamePluginService;
 import dk.sdu.mmmi.modulemon.common.services.IGameViewService;
 
-import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Queue;
@@ -68,7 +63,11 @@ public class MapView implements IGameViewService, IMapView {
 
     private IGameStateManager gameStateManager;
     private IBattleView battleView;
-    private MonsterTeamPart playerMonsters;
+    private Entity player;
+
+    public MapView() {
+        System.out.println("MapView was constructed");
+    }
 
     @Override
     public void init(IGameStateManager gameStateManager) {
@@ -268,11 +267,10 @@ public class MapView implements IGameViewService, IMapView {
         if(gameData.getKeys().isPressed(GameKeys.E)){
             for(Entity entity: world.getEntities()){
                 if(entity.getClass() == dk.sdu.mmmi.modulemon.Player.Player.class){
-                    playerMonsters = entity.getPart(MonsterTeamPart.class);
-                    System.out.println("Added playermonsters");
+                    player = entity;
                 }
             }
-            startEncounter(playerMonsters, playerMonsters);
+            startEncounter(player, player);
         }
     }
 
@@ -342,9 +340,12 @@ public class MapView implements IGameViewService, IMapView {
         return isPaused;
     }
 
-    public void startEncounter(MonsterTeamPart playerMonsters, MonsterTeamPart enemyMonsters){
-        IBattleParticipant playerParticipant = playerMonsters.toBattleParticipant(true);
-        IBattleParticipant enemyParticipant = enemyMonsters.toBattleParticipant(false);
+    @Override
+    public void startEncounter(Entity participant1, Entity participant2){
+        IBattleParticipant playerParticipant = ((MonsterTeamPart)  participant1.getPart(MonsterTeamPart.class))
+                .toBattleParticipant(true);
+        IBattleParticipant enemyParticipant = ((MonsterTeamPart)  participant2.getPart(MonsterTeamPart.class))
+                .toBattleParticipant(false);
 
         gameStateManager.setState((IGameViewService) battleView);
         battleView.startBattle(playerParticipant, enemyParticipant, new IBattleCallback() {
@@ -354,4 +355,6 @@ public class MapView implements IGameViewService, IMapView {
             }
         });
     }
+
+
 }

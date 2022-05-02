@@ -5,6 +5,9 @@
 package dk.sdu.mmmi.modulemon.NPC;
 
 import com.badlogic.gdx.graphics.Texture;
+import dk.sdu.mmmi.modulemon.CommonBattle.MonsterTeamPart;
+import dk.sdu.mmmi.modulemon.CommonMap.Data.MovingPart;
+import dk.sdu.mmmi.modulemon.CommonMap.IMapView;
 import dk.sdu.mmmi.modulemon.common.data.Entity;
 import dk.sdu.mmmi.modulemon.common.data.GameData;
 import dk.sdu.mmmi.modulemon.common.data.World;
@@ -18,6 +21,7 @@ import dk.sdu.mmmi.modulemon.common.services.IEntityProcessingService;
 public class NPCControlSystem implements IEntityProcessingService{
     
     private String current = "";
+    private IMapView mapView;
 
     @Override
     public void process(GameData gameData, World world) {
@@ -55,7 +59,10 @@ public class NPCControlSystem implements IEntityProcessingService{
                 interactPart.process(gameData, world, npc);
                 
                 if (interactPart.canInteract()) {
-
+                    if (interactPart.getInteractWith().getPart(MonsterTeamPart.class) == null || npc.getPart(MonsterTeamPart.class) == null) {
+                        continue;
+                    }
+                    mapView.startEncounter(interactPart.getInteractWith(), npc);
                 } 
 
                 updateShape(npc);
@@ -91,8 +98,16 @@ public class NPCControlSystem implements IEntityProcessingService{
         entity.setSpriteTexture(result);
         entity.setPosX(x);
         entity.setPosY(y);
+    }
 
-        //entity.setSprite(new Texture(new OSGiFileHandle("/assets/main-char-right.png")));
+    public void setMapView(IMapView mapView) {
+        this.mapView = mapView;
+        System.out.println("INJECTED MAPVIEW IN NPC");
+    }
+
+    public void removeMapView(IMapView mapView) {
+        this.mapView = null;
+        System.out.println("MapView removed from NPCControlSystem");
     }
     
 }

@@ -1,24 +1,19 @@
 package dk.sdu.mmmi.modulemon.Player;
 
-import com.badlogic.gdx.graphics.Pixmap;
-import com.badlogic.gdx.graphics.g2d.Gdx2DPixmap;
 import dk.sdu.mmmi.modulemon.CommonMap.IMapView;
 import dk.sdu.mmmi.modulemon.CommonMonster.IMonster;
 import dk.sdu.mmmi.modulemon.CommonMonster.IMonsterRegistry;
 import dk.sdu.mmmi.modulemon.CommonTest.GdxTestIntercepter;
 import dk.sdu.mmmi.modulemon.common.data.Entity;
 import dk.sdu.mmmi.modulemon.common.data.GameData;
-import dk.sdu.mmmi.modulemon.common.data.GameKeys;
 import dk.sdu.mmmi.modulemon.common.data.World;
-import dk.sdu.mmmi.modulemon.common.data.entityparts.MovingPart;
+import dk.sdu.mmmi.modulemon.CommonMap.Data.MovingPart;
 import dk.sdu.mmmi.modulemon.common.data.entityparts.PositionPart;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 
-import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.List;
 
 import static dk.sdu.mmmi.modulemon.common.data.GameKeys.UP;
 import static org.junit.jupiter.api.Assertions.*;

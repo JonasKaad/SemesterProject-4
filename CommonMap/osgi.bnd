@@ -1,2 +1,3 @@
 Bundle-SymbolicName: CommonMap
+Service-Component: META-INF/movingpart.xml
 Export-Package: dk.sdu.mmmi.modulemon.CommonMap.*

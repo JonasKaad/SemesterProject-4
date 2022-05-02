@@ -157,6 +157,10 @@ public class BattleSimulation implements IBattleSimulation {
 
         BattleState newState = (BattleState) currentState.clone();
 
+        if (!newState.getActiveParticipant().equals(battleParticipant)) {
+            return newState;
+        }
+
         IMonster source = newState.getActiveParticipant().getActiveMonster();
         IBattleParticipant opposingParticipant;
         if (newState.isPlayersTurn()) {
