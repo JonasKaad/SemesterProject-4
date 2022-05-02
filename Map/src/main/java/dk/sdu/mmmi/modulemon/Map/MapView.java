@@ -65,10 +65,6 @@ public class MapView implements IGameViewService, IMapView {
     private IBattleView battleView;
     private Entity player;
 
-    public MapView() {
-        System.out.println("MapView was constructed");
-    }
-
     @Override
     public void init(IGameStateManager gameStateManager) {
         mapMusic = Gdx.audio.newMusic(new OSGiFileHandle("/music/village_theme.ogg", MapView.class));
