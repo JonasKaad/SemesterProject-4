@@ -1,3 +1,4 @@
 Service-Component: META-INF/gameview.xml
 Bundle-SymbolicName: Battle
 Bundle-ActivationPolicy: lazy
+Bundle-Activator: dk.sdu.mmmi.modulemon.BattleScene.BattleViewActivator

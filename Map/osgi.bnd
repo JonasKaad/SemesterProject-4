@@ -1,3 +1,4 @@
 Bundle-SymbolicName: Map
 Service-Component: META-INF/gameview.xml
 Bundle-ActivationPolicy: lazy
+Bundle-Activator: dk.sdu.mmmi.modulemon.Map.MapActivator

@@ -26,10 +26,10 @@ import dk.sdu.mmmi.modulemon.common.drawing.TextUtils;
 import dk.sdu.mmmi.modulemon.common.services.IEntityProcessingService;
 import dk.sdu.mmmi.modulemon.common.services.IGamePluginService;
 import dk.sdu.mmmi.modulemon.common.services.IGameViewService;
+import org.osgi.service.component.annotations.Activate;
+import org.osgi.framework.BundleContext;
 
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Queue;
+import java.util.*;
 import java.util.concurrent.CopyOnWriteArrayList;
 
 
@@ -94,6 +94,11 @@ public class MapView implements IGameViewService, IMapView {
 
         // Battle
         this.gameStateManager = gameStateManager;
+    }
+
+    @Activate
+    void activate(BundleContext context, Map<String,Object> properties) {
+        context.registerService(IMapView.class, this, new Hashtable<String,Object>(properties));
     }
 
     private void initializeCameraDrawing(GameData gameData){
@@ -299,7 +304,8 @@ public class MapView implements IGameViewService, IMapView {
         gdxThreadTasks.add(() -> plugin.stop(gameData, world));
     }
 
-    public void setBattleView(IBattleView battleView){ this.battleView = battleView; }
+    public void setBattleView(IBattleView battleView){ this.battleView = battleView;
+        System.out.println("SET BATTLEVIEW");}
 
     public void removeBattleView(IBattleView battleView){ this.battleView = null; }
 

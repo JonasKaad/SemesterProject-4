@@ -45,6 +45,11 @@
             <scope>provided</scope>
         </dependency>
         <dependency>
+            <groupId>org.osgi</groupId>
+            <artifactId>org.osgi.service.component.annotations</artifactId>
+            <version>1.5.0</version>
+        </dependency>
+        <dependency>
             <groupId>modulemon.build</groupId>
             <artifactId>Common</artifactId>
             <version>1.0-SNAPSHOT</version>
