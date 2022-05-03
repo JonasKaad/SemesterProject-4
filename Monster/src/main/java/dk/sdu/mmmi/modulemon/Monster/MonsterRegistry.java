@@ -25,7 +25,7 @@ public class MonsterRegistry implements IMonsterRegistry {
 
     @Override
     public IMonster getMonster(int ID) {
-        return monsters[ID].clone();
+        return ((Monster) monsters[ID]).copy();
     }
 
     @Override

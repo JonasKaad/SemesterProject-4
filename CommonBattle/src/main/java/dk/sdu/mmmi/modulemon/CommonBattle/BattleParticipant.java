@@ -53,7 +53,7 @@ public class BattleParticipant implements IBattleParticipant {
         for (IMonster monster : this.monsterTeam) {
             IMonster cloneMonster = monster.clone();
             cloneTeam.add(cloneMonster);
-            if (monster == this.activeMonster) {
+            if (monster.equals(this.activeMonster)) {
                 cloneActiveMonster = cloneMonster;
             }
         }
