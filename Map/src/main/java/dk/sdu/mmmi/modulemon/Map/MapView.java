@@ -26,7 +26,6 @@ import dk.sdu.mmmi.modulemon.common.drawing.TextUtils;
 import dk.sdu.mmmi.modulemon.common.services.IEntityProcessingService;
 import dk.sdu.mmmi.modulemon.common.services.IGamePluginService;
 import dk.sdu.mmmi.modulemon.common.services.IGameViewService;
-import org.osgi.service.component.annotations.Activate;
 import org.osgi.framework.BundleContext;
 
 import java.util.*;
@@ -96,8 +95,7 @@ public class MapView implements IGameViewService, IMapView {
         this.gameStateManager = gameStateManager;
     }
 
-    @Activate
-    void activate(BundleContext context, Map<String,Object> properties) {
+    void registerMapView(BundleContext context, Map<String,Object> properties) {
         context.registerService(IMapView.class, this, new Hashtable<String,Object>(properties));
     }
 
