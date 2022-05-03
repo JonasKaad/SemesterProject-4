@@ -39,6 +39,12 @@
       <artifactId>osgi_R4_compendium</artifactId>
       <optional>true</optional>
     </dependency>
+    <dependency>
+      <groupId>modulemon.build</groupId>
+      <artifactId>Common</artifactId>
+      <version>1.0-SNAPSHOT</version>
+      <scope>compile</scope>
+    </dependency>
   </dependencies>
 
 </project>

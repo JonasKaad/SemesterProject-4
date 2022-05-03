@@ -132,7 +132,6 @@ public class MapView implements IGameViewService, IMapView {
         mapBottom = 360;
         mapTop = mapBottom + mapHeight * tilePixelSize - (cam.viewportWidth / 2f) - 80;
         cam.position.set(mapRight / 2f, mapTop / 2f, 0);
-
     }
 
     @Override
@@ -144,7 +143,6 @@ public class MapView implements IGameViewService, IMapView {
             entityProcessorService.process(gameData, world);
         }
     }
-
 
     @Override
     public void draw(GameData gameData) {
