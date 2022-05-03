@@ -32,6 +32,7 @@ public class NPCControlSystem implements IEntityProcessingService{
                 SpritePart spritePart = npc.getPart(SpritePart.class);
                 AIControlPart controlPart = npc.getPart(AIControlPart.class);
                 InteractPart interactPart = npc.getPart(InteractPart.class);
+                MonsterTeamPart monsterTeamPart = npc.getPart(MonsterTeamPart.class);
                 
                 movingPart.setLeft(controlPart.goLeft());
                 movingPart.setRight(controlPart.goRight());
@@ -57,8 +58,8 @@ public class NPCControlSystem implements IEntityProcessingService{
                 spritePart.process(gameData, world, npc);
                 controlPart.process(gameData, world, npc);
                 interactPart.process(gameData, world, npc);
-                
-                if (interactPart.canInteract()) {
+
+                if (interactPart.canInteract() && monsterTeamPart.hasAliveMonsters()) {
                     if (interactPart.getInteractWith().getPart(MonsterTeamPart.class) == null || npc.getPart(MonsterTeamPart.class) == null) {
                         continue;
                     }

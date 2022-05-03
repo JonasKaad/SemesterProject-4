@@ -121,6 +121,10 @@ public class Monster implements IMonster {
         return new Monster(this.name, this.type, this.hitPoints, this.maxHitPoints, this.defence, this.attack, this.speed, this.moves, this.frontSprite, this.backSprite, this.ID, this.uuid);
     }
 
+    public IMonster copy() {
+        return new Monster(this.name, this.type, this.hitPoints, this.maxHitPoints, this.defence, this.attack, this.speed, this.moves, this.frontSprite, this.backSprite, this.ID, UUID.randomUUID());
+    }
+
     @Override
     public boolean equals(Object o) {
         if (o instanceof Monster) {
