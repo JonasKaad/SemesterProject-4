@@ -56,7 +56,7 @@ public class InteractPart implements EntityPart{
             }
         }
 
-        //If there we no entiies to interact with, set to null
+        //If there we no entities to interact with, set to null
         this.interactWith = null;
     }
     

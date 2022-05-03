@@ -8,9 +8,5 @@ Click nbfs://nbhost/SystemFileSystem/Templates/XML/XMLDocument.xml to edit this 
     <service>
         <provide interface="dk.sdu.mmmi.modulemon.common.services.IEntityProcessingService"/>
     </service>
-
-    <reference bind="setMapView" cardinality="0..1"
-               interface="dk.sdu.mmmi.modulemon.CommonMap.IMapView"
-               name="IMapView" policy="dynamic" unbind="removeMapView"/>
 </scr:component>
 

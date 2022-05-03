@@ -42,8 +42,8 @@ public class NPCPlugin implements IGamePluginService{
         PositionPart positionPart = new PositionPart(3014, 1984);
 
         List<IMonster> monsterList = new ArrayList<>();
-        monsterList.add(monsterRegistry.getMonster(1));
-        monsterList.add(monsterRegistry.getMonster(1));
+        monsterList.add(monsterRegistry.getMonster(2));
+        monsterList.add(monsterRegistry.getMonster(3));
 
         Entity npc = new NPC(
                 "John", 

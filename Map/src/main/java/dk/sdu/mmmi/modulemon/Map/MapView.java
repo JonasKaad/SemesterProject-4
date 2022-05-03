@@ -21,11 +21,13 @@ import dk.sdu.mmmi.modulemon.CommonBattleClient.IBattleView;
 import dk.sdu.mmmi.modulemon.CommonMap.IMapView;
 import dk.sdu.mmmi.modulemon.common.data.*;
 import dk.sdu.mmmi.modulemon.common.OSGiFileHandle;
+import dk.sdu.mmmi.modulemon.common.data.entityparts.InteractPart;
 import dk.sdu.mmmi.modulemon.common.drawing.Rectangle;
 import dk.sdu.mmmi.modulemon.common.drawing.TextUtils;
 import dk.sdu.mmmi.modulemon.common.services.IEntityProcessingService;
 import dk.sdu.mmmi.modulemon.common.services.IGamePluginService;
 import dk.sdu.mmmi.modulemon.common.services.IGameViewService;
+import dk.sdu.mmmi.modulemon.common.services.IPostEntityProcessingService;
 import org.osgi.framework.BundleContext;
 
 import java.util.*;
@@ -57,6 +59,7 @@ public class MapView implements IGameViewService, IMapView {
     private static World world = new World();
     private final GameData gameData = new GameData();
     private static final List<IEntityProcessingService> entityProcessorList = new CopyOnWriteArrayList<>();
+    private static final List<IPostEntityProcessingService> postProcessingList = new CopyOnWriteArrayList<>();
     private static final List<IGamePluginService> gamePluginList = new CopyOnWriteArrayList<>();
     private static Queue<Runnable> gdxThreadTasks = new LinkedList<>();
 
@@ -91,10 +94,6 @@ public class MapView implements IGameViewService, IMapView {
         this.gameStateManager = gameStateManager;
     }
 
-    void registerMapView(BundleContext context, Map<String,Object> properties) {
-        context.registerService(IMapView.class, this, new Hashtable<String,Object>(properties));
-    }
-
     private void initializeCameraDrawing(GameData gameData){
         cam = gameData.getCamera();
 
@@ -117,6 +116,10 @@ public class MapView implements IGameViewService, IMapView {
         }
         for (IEntityProcessingService entityProcessorService : entityProcessorList) {
             entityProcessorService.process(gameData, world);
+        }
+
+        for (IPostEntityProcessingService postProcessingService : postProcessingList) {
+            postProcessingService.process(gameData, world);
         }
     }
 
@@ -286,6 +289,14 @@ public class MapView implements IGameViewService, IMapView {
 
     public void removeEntityProcessingService (IEntityProcessingService eps){
         this.entityProcessorList.remove(eps);
+    }
+
+    public void addPostProcessingService (IPostEntityProcessingService pps){
+        this.postProcessingList.add(pps);
+    }
+
+    public void removePostProcessingService (IPostEntityProcessingService pps){
+        this.postProcessingList.remove(pps);
     }
 
     public void addGamePluginService (IGamePluginService plugin){
