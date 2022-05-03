@@ -102,12 +102,10 @@ public class NPCControlSystem implements IEntityProcessingService{
 
     public void setMapView(IMapView mapView) {
         this.mapView = mapView;
-        System.out.println("INJECTED MAPVIEW IN NPC");
     }
 
     public void removeMapView(IMapView mapView) {
         this.mapView = null;
-        System.out.println("MapView removed from NPCControlSystem");
     }
     
 }
