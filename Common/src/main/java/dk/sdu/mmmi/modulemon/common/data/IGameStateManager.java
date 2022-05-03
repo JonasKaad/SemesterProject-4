@@ -4,5 +4,6 @@ import dk.sdu.mmmi.modulemon.common.services.IGameViewService;
 
 public interface IGameStateManager {
     void setDefaultState();
+    void setState(IGameViewService state, boolean disposeCurrent);
     void setState(IGameViewService state);
 }

@@ -527,7 +527,7 @@ public class MapView implements IGameViewService, IMapView {
         IBattleParticipant playerParticipant = playerMonsters.toBattleParticipant(true);
         IBattleParticipant enemyParticipant = enemyMonsters.toBattleParticipant(false);
 
-        gameStateManager.setState((IGameViewService) battleView);
+        gameStateManager.setState((IGameViewService) battleView, false); // Do not dispose the map
         battleView.startBattle(playerParticipant, enemyParticipant, new IBattleCallback() {
             @Override
             public void onBattleEnd(IBattleResult result) {
