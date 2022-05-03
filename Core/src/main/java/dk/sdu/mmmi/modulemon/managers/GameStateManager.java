@@ -13,13 +13,17 @@ public class GameStateManager implements IGameStateManager {
 		setDefaultState();
 	}
 	
-	public void setState(IGameViewService state) {
-		if(currentGameState != null) currentGameState.dispose();
+	public void setState(IGameViewService state, boolean disposeCurrent) {
+		if(currentGameState != null && disposeCurrent) currentGameState.dispose();
 		System.out.println(String.format("Changed state to: %s", state.getClass().getName()));
 		currentGameState = state;
 		currentGameState.init(this);
 	}
-	
+
+	public void setState(IGameViewService state){
+		setState(state, true);
+	}
+
 	public void update(GameData gameData) {
 		currentGameState.update(gameData, this);
 		currentGameState.handleInput(gameData, this);
