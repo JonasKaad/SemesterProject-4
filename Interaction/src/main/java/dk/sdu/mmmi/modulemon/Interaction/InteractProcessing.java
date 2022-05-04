@@ -25,23 +25,9 @@ public class InteractProcessing implements IPostEntityProcessingService {
                         continue;
                     }
 
-                    // Check if at least one monster is alive on team 1
-                    boolean deadTeam = true;
-                    for (IMonster monster : monsterTeam1.getMonsterTeam()) {
-                        if (monster.getHitPoints() > 0) {
-                            deadTeam = false;
-                        }
+                    if (!monsterTeam1.hasAliveMonsters() || !monsterTeam2.hasAliveMonsters()) {
+                        continue;
                     }
-                    if (deadTeam) continue;
-
-                    // Check if at least one monster is alive on team 2
-                    deadTeam = true;
-                    for (IMonster monster : monsterTeam2.getMonsterTeam()) {
-                        if (monster.getHitPoints() > 0) {
-                            deadTeam = false;
-                        }
-                    }
-                    if (deadTeam) continue;
 
                     // This isn't great. Currently this relies on the NPC always initiating the battle.
                     // Could be nice to somehow check who is player, who is npc, and put them in the right spots.

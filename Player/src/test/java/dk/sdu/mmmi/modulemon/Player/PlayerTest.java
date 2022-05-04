@@ -76,7 +76,6 @@ class PlayerTest {
         when(map.getMapLeft()).thenReturn(50000f);
         when(map.getMapRight()).thenReturn(50000f);
         when(map.getMapBottom()).thenReturn(50000f);
-        movPart.setMapView(map);
       
         float beforeMoving = posPart.getY();
 
