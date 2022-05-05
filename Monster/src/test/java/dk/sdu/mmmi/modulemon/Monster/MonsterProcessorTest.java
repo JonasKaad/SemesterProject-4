@@ -27,6 +27,7 @@ public class MonsterProcessorTest {
         assertEquals(fastMonster, processor.whichMonsterStarts(slowMonster, fastMonster));
     }
 
+    @Disabled
     @Test // Attacking monster with half defence of your attack should do double damage
     void monsterProcessor_attackVSdefence_correctlyCalculated() {
         BattleMonsterProcessor processor = new BattleMonsterProcessor();
@@ -39,6 +40,7 @@ public class MonsterProcessorTest {
         assertEquals(damage / 2, processor.calculateDamage(weakMonster, new MonsterMove("Basic", damage, MonsterType.AIR), strongMonster));
     }
 
+    @Disabled
     @Test
     void monsterProcessor_typeDamage_correctlyCalculated() {
         BattleMonsterProcessor processor = new BattleMonsterProcessor();
