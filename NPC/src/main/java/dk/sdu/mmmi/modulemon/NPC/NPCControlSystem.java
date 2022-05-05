@@ -5,6 +5,7 @@
 package dk.sdu.mmmi.modulemon.NPC;
 
 import com.badlogic.gdx.graphics.Texture;
+import dk.sdu.mmmi.modulemon.CommonMap.Data.MovingPart;
 import dk.sdu.mmmi.modulemon.common.data.Entity;
 import dk.sdu.mmmi.modulemon.common.data.GameData;
 import dk.sdu.mmmi.modulemon.common.data.World;
@@ -53,10 +54,6 @@ public class NPCControlSystem implements IEntityProcessingService{
                 spritePart.process(gameData, world, npc);
                 controlPart.process(gameData, world, npc);
                 interactPart.process(gameData, world, npc);
-                
-                if (interactPart.canInteract()) {
-
-                } 
 
                 updateShape(npc, current);
         }
@@ -91,8 +88,6 @@ public class NPCControlSystem implements IEntityProcessingService{
         entity.setSpriteTexture(result);
         entity.setPosX(x);
         entity.setPosY(y);
-
-        //entity.setSprite(new Texture(new OSGiFileHandle("/assets/main-char-right.png")));
     }
     
 }

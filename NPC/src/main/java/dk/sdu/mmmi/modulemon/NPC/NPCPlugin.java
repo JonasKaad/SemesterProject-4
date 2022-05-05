@@ -5,6 +5,10 @@
 package dk.sdu.mmmi.modulemon.NPC;
 
 import com.badlogic.gdx.graphics.Texture;
+import dk.sdu.mmmi.modulemon.CommonBattle.MonsterTeamPart;
+import dk.sdu.mmmi.modulemon.CommonMap.Data.MovingPart;
+import dk.sdu.mmmi.modulemon.CommonMonster.IMonster;
+import dk.sdu.mmmi.modulemon.CommonMonster.IMonsterRegistry;
 import dk.sdu.mmmi.modulemon.common.data.Entity;
 import dk.sdu.mmmi.modulemon.common.data.GameData;
 import dk.sdu.mmmi.modulemon.common.data.World;
@@ -12,6 +16,7 @@ import dk.sdu.mmmi.modulemon.common.data.entityparts.*;
 import dk.sdu.mmmi.modulemon.common.OSGiFileHandle;
 import dk.sdu.mmmi.modulemon.common.services.IGamePluginService;
 import java.util.ArrayList;
+import java.util.List;
 
 /**
  *
@@ -20,6 +25,7 @@ import java.util.ArrayList;
 public class NPCPlugin implements IGamePluginService{
     
     ArrayList<Entity> npcs = new ArrayList<>();
+    IMonsterRegistry monsterRegistry;
 
     @Override
     public void start(GameData gameData, World world) {
@@ -34,6 +40,11 @@ public class NPCPlugin implements IGamePluginService{
     private Entity createNPC() {
         System.out.println("createNPC()");
         PositionPart positionPart = new PositionPart(3014, 1984);
+
+        List<IMonster> monsterList = new ArrayList<>();
+        monsterList.add(monsterRegistry.getMonster(0));
+        monsterList.add(monsterRegistry.getMonster(3));
+
         Entity npc = new NPC(
                 "John", 
                 new SpritePart(
@@ -44,7 +55,8 @@ public class NPCPlugin implements IGamePluginService{
                 positionPart,
                 new MovingPart(),
                 new InteractPart(positionPart, 5),
-                new AIControlPart(new Character[]{'R','R','L','L','L','L','R','R','U','U','D','D','D','D','U','U'}));
+                new AIControlPart(new Character[]{'R','R','L','L','L','L','R','R','U','U','D','D','D','D','U','U'}),
+                new MonsterTeamPart(monsterList));
         return npc;
     }
 
@@ -56,6 +68,14 @@ public class NPCPlugin implements IGamePluginService{
                 world.removeEntity(npc);
             }
         }
+    }
+
+    public void setMonsterRegistryService(IMonsterRegistry monsterRegistry) {
+        this.monsterRegistry = monsterRegistry;
+    }
+
+    public void removeMonsterRegistryService(IMonsterRegistry monsterRegistry) {
+        this.monsterRegistry = null;
     }
     
 }
