@@ -21,8 +21,8 @@ public class BattleParticipantMocks {
     public static IBattleParticipant getPlayer() throws IOException, URISyntaxException {
         IMonsterRegistry monsterRegistry = new MonsterRegistry();
         List<IMonster> monsters = new ArrayList<>();
-        monsters.add(monsterRegistry.getMonster(0));
-        monsters.add(monsterRegistry.getMonster(1));
+        monsters.add(monsterRegistry.getMonster(4));
+        monsters.add(monsterRegistry.getMonster(5));
         IBattleParticipant player = new BattleParticipant(monsters, true);
         return player;
     }

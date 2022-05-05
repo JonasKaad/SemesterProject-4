@@ -15,7 +15,6 @@ import com.badlogic.gdx.utils.*;
 import dk.sdu.mmmi.modulemon.common.OSGiFileHandle;
 
 import java.io.IOException;
-import java.util.StringTokenizer;
 
 public class OSGiTmxLoader extends TmxMapLoader {
     @Override
