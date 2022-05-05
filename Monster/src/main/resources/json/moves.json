@@ -72,7 +72,7 @@
   {
     "id": "fireBreath",
     "name": "Fire Breath",
-    "damage": 60,
+    "damage": 55,
     "type": "FIRE",
     "sound": "/sounds/fire_breath.ogg"
   },
@@ -105,10 +105,10 @@
     "sound": "/sounds/tornado.ogg"
   },
   {
-    "id": "wingSlap",
-    "name": "Wing Slap",
+    "id": "windGust",
+    "name": "Wind Gust",
     "damage": 45,
     "type": "AIR",
-    "sound": "/sounds/wing_slap.ogg"
+    "sound": "/sounds/wind_gust.ogg"
   }
 ]
