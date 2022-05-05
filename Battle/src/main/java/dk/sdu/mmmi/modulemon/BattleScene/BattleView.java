@@ -292,7 +292,7 @@ public class BattleView implements IGameViewService, IBattleView {
                 } else {
                     PlayerDieAnimation dieAnimation = new PlayerDieAnimation(_battleScene);
                     blockingAnimations.add(dieAnimation);
-
+                    this._battleMusic.stop();
                     this._loseSound.play();
                     _battleScene.setTextToDisplay(battleEvent.getText());
 
