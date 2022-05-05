@@ -16,7 +16,7 @@ public class EmptyMove implements IMonsterMove {
 
     @Override
     public MonsterType getType() {
-        return MonsterType.AIR;
+        return MonsterType.NORMAL;
     }
 
     @Override
