@@ -59,7 +59,7 @@ public class MenuState implements IGameViewService {
         spriteBatch = new SpriteBatch();
         glyphLayout = new GlyphLayout();
         menuMusic.play();
-        menuMusic.setVolume(0.8f);
+        menuMusic.setVolume(0.6f);
         menuMusic.setLooping(true);
 
         /*
