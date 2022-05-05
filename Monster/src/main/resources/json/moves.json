@@ -2,92 +2,113 @@
   {
     "id" : "spit",
     "name" : "Spit",
-    "damage" : 10,
+    "damage" : 40,
     "type" : "WATER",
     "sound": "/sounds/spit.ogg"
   },
   {
-    "id": "tackle",
-    "name": "Tackle",
-    "damage": 5,
-    "type": "AIR",
-    "sound": "/sounds/tackle.ogg"
+    "id": "waterBlast",
+    "name": "Water Blast",
+    "damage": 70,
+    "type": "WATER",
+    "sound": "/sounds/water_blast.ogg"
+  },
+  {
+    "id" : "mudBlast",
+    "name" : "Mud Blast",
+    "damage" : 55,
+    "type" : "WATER",
+    "sound": "/sounds/mud_blast.ogg"
   },
   {
     "id" : "trample",
     "name" : "Trample",
-    "damage" : 25,
+    "damage" : 60,
     "type" : "GRASS",
     "sound": "/sounds/trample.ogg"
   },
   {
+    "id": "furBall",
+    "name": "Fur Ball",
+    "damage": 45,
+    "type": "GRASS",
+    "sound": "/sounds/fur_ball.ogg"
+  },
+  {
     "id" : "dig",
     "name" : "Dig",
-    "damage" : 40,
+    "damage" : 70,
     "type" : "EARTH",
     "sound": "/sounds/dig.ogg"
   },
   {
     "id" : "earthquake",
     "name" : "Earthquake",
-    "damage" : 50,
+    "damage" : 100,
     "type" : "EARTH",
     "sound": "/sounds/earthquake.ogg"
   },
   {
-    "id" : "mudBlast",
-    "name" : "Mud Blast",
-    "damage" : 40,
-    "type" : "WATER",
-    "sound": "/sounds/mud_blast.ogg"
-  },
-  {
-    "id": "eggBomb",
-    "name": "Egg Bomb",
-    "damage": 20,
-    "type": "EARTH",
-    "sound": "/sounds/egg_bomb.ogg"
-  },
-  {
     "id": "hornBlast",
     "name": "Horn Blast",
-    "damage": 25,
+    "damage": 55,
     "type": "EARTH",
     "sound": "/sounds/horn_blast.ogg"
   },
   {
+    "id": "tackle",
+    "name": "Tackle",
+    "damage": 40,
+    "type": "NORMAL",
+    "sound": "/sounds/tackle.ogg"
+  },
+  {
+    "id": "eggBomb",
+    "name": "Egg Bomb",
+    "damage": 65,
+    "type": "NORMAL",
+    "sound": "/sounds/egg_bomb.ogg"
+  },
+  {
     "id": "fireBreath",
     "name": "Fire Breath",
-    "damage": 50,
+    "damage": 60,
     "type": "FIRE",
     "sound": "/sounds/fire_breath.ogg"
   },
   {
-    "id": "waterBlast",
-    "name": "Water Blast",
-    "damage": 30,
-    "type": "WATER",
-    "sound": "/sounds/water_blast.ogg"
+    "id": "flameFang",
+    "name": "Flame Fang",
+    "damage": 70,
+    "type": "FIRE",
+    "sound": "/sounds/flame_fang.ogg"
   },
   {
     "id" : "zap",
     "name" : "Zap",
-    "damage" : 20,
+    "damage" : 40,
     "type" : "LIGHTNING",
     "sound": "/sounds/zap.ogg"
   },
   {
     "id" : "arcBolt",
     "name" : "Arc Bolt",
-    "damage" : 60,
+    "damage" : 80,
     "type" : "LIGHTNING",
     "sound": "/sounds/arc_bolt.ogg"
   },
   {
-    "id": "furBall",
-    "name": "Fur Ball",
-    "damage": 15,
-    "type": "GRASS",
-    "sound": "/sounds/fur_ball.ogg"
+    "id": "tornado",
+    "name": "Tornado",
+    "damage": 75,
+    "type": "AIR",
+    "sound": "/sounds/tornado.ogg"
+  },
+  {
+    "id": "wingSlap",
+    "name": "Wing Slap",
+    "damage": 45,
+    "type": "AIR",
+    "sound": "/sounds/wing_slap.ogg"
   }
 ]

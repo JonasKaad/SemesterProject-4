@@ -17,7 +17,6 @@ public class MonsterProcessorTest {
 
     }
 
-    @Disabled("This test needs to be updated for the new stats-system as the Speed stat no longer exists.")
     @Test
     void fasterMonsterShouldStart() {
         BattleMonsterProcessor processor = new BattleMonsterProcessor();
