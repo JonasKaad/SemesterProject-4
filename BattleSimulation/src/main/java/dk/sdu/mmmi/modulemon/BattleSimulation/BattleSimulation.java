@@ -121,7 +121,8 @@ public class BattleSimulation implements IBattleSimulation {
         int newHitPoints = target.getHitPoints()-damage;
         target.setHitPoints(Math.max(newHitPoints, 0));
 
-        nextEvent = new MoveBattleEvent(participantTitle + " monster used " + move.getName() + " for " + damage + " damage", battleParticipant, move, damage, battleState.clone());
+        //nextEvent = new MoveBattleEvent(participantTitle + " monster used " + move.getName() + " for " + damage + " damage", battleParticipant, move, damage, battleState.clone());
+        nextEvent = new MoveBattleEvent(participantTitle + "'s " + source.getName() + " used " + move.getName() + " for " + damage + " damage!", battleParticipant, move, damage, battleState.clone());
 
         onNextEvent = () -> {
             if (newHitPoints>0) {
