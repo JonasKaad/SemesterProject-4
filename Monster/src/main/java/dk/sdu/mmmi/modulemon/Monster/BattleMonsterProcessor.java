@@ -5,6 +5,8 @@ import dk.sdu.mmmi.modulemon.CommonMonster.IMonster;
 import dk.sdu.mmmi.modulemon.CommonMonster.IMonsterMove;
 import dk.sdu.mmmi.modulemon.CommonMonster.MonsterType;
 
+import java.util.Random;
+
 public class BattleMonsterProcessor implements IBattleMonsterProcessor {
 
     @Override
@@ -22,8 +24,20 @@ public class BattleMonsterProcessor implements IBattleMonsterProcessor {
         float sourceAttack = (float) source.getAttack();
         float targetDefence = (float) target.getDefence();
 
-        int damage = Math.round(moveDamage * (sourceAttack/targetDefence) * calculateTypeAdvantage(move.getType(), target.getMonsterType()));
+
+
+        // Same type attack bonus. Effectively the same as STAB in that other game
+        boolean same_attack_type = source.getMonsterType() == move.getType();
+        float attack_bonus = 1;
+
+        if(same_attack_type){
+            attack_bonus = 1.5f;
+        }
+
+        int damage = Math.round(((40 * moveDamage * (sourceAttack/targetDefence)) / 50) * attack_bonus * calculateTypeAdvantage(move.getType(), target.getMonsterType()));
         return damage;
+
+        //int damage = Math.round(moveDamage * (sourceAttack/targetDefence) * calculateTypeAdvantage(move.getType(), target.getMonsterType()));
     }
 
     public float calculateTypeAdvantage(MonsterType source, MonsterType target) {
