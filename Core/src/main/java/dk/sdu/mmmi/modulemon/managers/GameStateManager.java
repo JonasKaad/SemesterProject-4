@@ -3,7 +3,6 @@ package dk.sdu.mmmi.modulemon.managers;
 import dk.sdu.mmmi.modulemon.common.data.GameData;
 import dk.sdu.mmmi.modulemon.common.data.IGameStateManager;
 import dk.sdu.mmmi.modulemon.common.services.IGameViewService;
-import dk.sdu.mmmi.modulemon.gamestates.GameState;
 import dk.sdu.mmmi.modulemon.gamestates.MenuState;
 
 public class GameStateManager implements IGameStateManager {
