@@ -25,24 +25,4 @@ public class NPC extends Entity implements INPC {
         this.add(control);
         this.add(monsterTeamPart);
     }
-    
-    @Override
-    public void turnClockwise() {
-    }
-
-    @Override
-    public void turnCounterClockwise() {
-
-    }
-
-    @Override
-    public void takeStep() {
-        
-    }
-
-    @Override
-    public void interact() {
-        System.out.println("Interact");
-    }
-    
 }

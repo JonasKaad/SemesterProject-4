@@ -7,6 +7,7 @@ package dk.sdu.mmmi.modulemon.CommonMap.Data;
 
 import com.badlogic.gdx.math.Vector2;
 import dk.sdu.mmmi.modulemon.common.animations.BaseAnimation;
+import static dk.sdu.mmmi.modulemon.common.data.Direction.*;
 import dk.sdu.mmmi.modulemon.common.data.Entity;
 import dk.sdu.mmmi.modulemon.common.data.GameData;
 import dk.sdu.mmmi.modulemon.common.data.World;
@@ -69,7 +70,7 @@ public class MovingPart extends BaseAnimation implements EntityPart {
                 animationTimer = 0;
 
                 newPosition.set(x, y);
-                positionPart.setDirection(180);
+                positionPart.setDirection(WEST);
             }
             else if (right) {
                 x = x + pixels;
@@ -78,7 +79,7 @@ public class MovingPart extends BaseAnimation implements EntityPart {
                 animationTimer = 0;
 
                 newPosition.set(x, y);
-                positionPart.setDirection(0);
+                positionPart.setDirection(EAST);
             }
             else if (up) {
                 y = y + pixels;
@@ -87,7 +88,7 @@ public class MovingPart extends BaseAnimation implements EntityPart {
                 animationTimer = 0;
 
                 newPosition.set(x, y);
-                positionPart.setDirection(90);
+                positionPart.setDirection(NORTH);
             }
             else if (down) {
                 y = y - pixels;
@@ -96,7 +97,7 @@ public class MovingPart extends BaseAnimation implements EntityPart {
                 animationTimer = 0;
 
                 newPosition.set(x, y);
-                positionPart.setDirection(270);
+                positionPart.setDirection(SOUTH);
             }
         }
         if(animationTimer < 0.5){
