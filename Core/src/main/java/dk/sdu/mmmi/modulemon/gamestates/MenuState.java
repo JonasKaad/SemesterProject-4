@@ -180,7 +180,7 @@ public class MenuState implements IGameViewService {
             }
         }
         // Selects the current option
-        if (gameData.getKeys().isPressed(GameKeys.ENTER) || gameData.getKeys().isPressed(GameKeys.E)) {
+        if (gameData.getKeys().isPressed(GameKeys.ACTION) || gameData.getKeys().isPressed(GameKeys.E)) {
             selectOption(gameStateManager);
         }
     }

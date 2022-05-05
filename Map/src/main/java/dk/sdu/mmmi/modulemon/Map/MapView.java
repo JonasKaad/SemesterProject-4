@@ -311,7 +311,7 @@ public class MapView implements IGameViewService, IMapView {
                         selectedOptionIndex--;
                 }
             }
-            if (gameData.getKeys().isPressed(GameKeys.ESC)) {
+            if (gameData.getKeys().isPressed(GameKeys.BACK)) {
                 if (showSummary) {
                     showSummary = false;
                     for (Rectangle monsterRectangle : monsterRectangles) {
@@ -337,7 +337,7 @@ public class MapView implements IGameViewService, IMapView {
                     gameData.setPaused(isPaused);
                 }
             }
-            if (gameData.getKeys().isPressed(GameKeys.ENTER)) {
+            if (gameData.getKeys().isPressed(GameKeys.ACTION)) {
                 if (showMonsterTeam) {
                     if (showTeamOptions) {
                         if (teamActions[teamOptionIndex].equals("Summary")) {
@@ -416,7 +416,7 @@ public class MapView implements IGameViewService, IMapView {
             }
             return;
         }
-        if (gameData.getKeys().isPressed(GameKeys.ESC)) {
+        if (gameData.getKeys().isPressed(GameKeys.BACK)) {
             isPaused = true;
             //currentlySwitching = false;
             gameData.setPaused(isPaused);

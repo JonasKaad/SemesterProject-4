@@ -1,6 +1,5 @@
 package dk.sdu.mmmi.modulemon.BattleScene;
 
-import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.audio.Music;
 import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.Color;
@@ -354,26 +353,26 @@ public class BattleView implements IGameViewService, IBattleView {
             String selectedAction = defaultActions[this.selectedAction % defaultActions.length];
             if (selectedAction.equalsIgnoreCase("Fight")) {
                 _battleScene.setTextToDisplay("Choose a move to damage your opponent");
-                if (keys.isPressed(GameKeys.ENTER)) {
+                if (keys.isPressed(GameKeys.ACTION)) {
                     this.selectedAction = 0;
                     this.menuState = MenuState.FIGHT;
                 }
             } else if (selectedAction.equalsIgnoreCase("Monsters")) {
                 _battleScene.setTextToDisplay("Change your active monster");
-                if (keys.isPressed(GameKeys.ENTER)) {
+                if (keys.isPressed(GameKeys.ACTION)) {
                     this.selectedAction = 0;
                     this.menuState = MenuState.SWITCH;
                 }
             } else if (selectedAction.equalsIgnoreCase("Animate")) {
                 _battleScene.setTextToDisplay("Show a fancy pancy battle-animation");
-                if (keys.isPressed(GameKeys.ENTER)) {
+                if (keys.isPressed(GameKeys.ACTION)) {
                     BaseAnimation openingAnimation = new BattleSceneOpenAnimation(_battleScene);
                     openingAnimation.start();
                     blockingAnimations.add(openingAnimation);
                 }
             } else if (selectedAction.equalsIgnoreCase("Style")) {
                 _battleScene.setTextToDisplay("Change box-styles");
-                if (keys.isPressed(GameKeys.ENTER)) {
+                if (keys.isPressed(GameKeys.ACTION)) {
                     if (_battleScene.getPlayerBoxRect() instanceof PersonaRectangle) {
                         _battleScene.setPlayerBoxRectStyle(Rectangle.class);
                         _battleScene.setEnemyBoxRectStyle(Rectangle.class);
@@ -388,7 +387,7 @@ public class BattleView implements IGameViewService, IBattleView {
                 }
             } else if (selectedAction.equalsIgnoreCase("Quit")) {
                 _battleScene.setTextToDisplay("Ends the battle");
-                if (keys.isPressed(GameKeys.ENTER)) {
+                if (keys.isPressed(GameKeys.ACTION)) {
                     handleBattleEnd(new VictoryBattleEvent("Player runs away", _battleSimulation.getState().getEnemy(), null));
                 }
             }
@@ -408,14 +407,14 @@ public class BattleView implements IGameViewService, IBattleView {
             Object selectedAction = monsterMoves[this.selectedAction % monsterMoves.length];
             if (selectedAction instanceof String) {
                 _battleScene.setTextToDisplay("Go back");
-                if (keys.isPressed(GameKeys.ENTER)) {
+                if (keys.isPressed(GameKeys.ACTION)) {
                     this.menuState = MenuState.DEFAULT;
                     this.selectedAction = 0;
                 }
             } else if (selectedAction instanceof IMonsterMove) {
                 IMonsterMove move = ((IMonsterMove) selectedAction);
                 _battleScene.setTextToDisplay("Move: [" + move.getType() + "] " + move.getName() + ". Deals damage: " + move.getDamage());
-                if (keys.isPressed(GameKeys.ENTER)) {
+                if (keys.isPressed(GameKeys.ACTION)) {
                     _battleSimulation.doMove(_battleSimulation.getState().getPlayer(), move);
                     this.menuState = MenuState.DEFAULT;
                     this.selectedAction = 0;
@@ -436,7 +435,7 @@ public class BattleView implements IGameViewService, IBattleView {
             Object selectedAction = monsters[this.selectedAction % monsters.length];
             if (selectedAction instanceof String) {
                 _battleScene.setTextToDisplay("Go back");
-                if (keys.isPressed(GameKeys.ENTER)) {
+                if (keys.isPressed(GameKeys.ACTION)) {
                     this.menuState = MenuState.DEFAULT;
                     this.selectedAction = 0;
                 }
@@ -446,7 +445,7 @@ public class BattleView implements IGameViewService, IBattleView {
                     if(monster.getHitPoints() > 0) {
                         _battleScene.setTextToDisplay(String.format("Switch to '%s'? ", monster.getName()));
 
-                        if (keys.isPressed(GameKeys.ENTER)) {
+                        if (keys.isPressed(GameKeys.ACTION)) {
                             _battleSimulation.switchMonster(player, monster);
                             this.menuState = MenuState.DEFAULT;
                             this.selectedAction = 0;
