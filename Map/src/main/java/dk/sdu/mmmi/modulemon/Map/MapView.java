@@ -541,11 +541,14 @@ public class MapView implements IGameViewService, IMapView {
         IBattleParticipant enemyParticipant = ((MonsterTeamPart)  participant2.getPart(MonsterTeamPart.class))
                 .toBattleParticipant(false);
 
-        gameStateManager.setState((IGameViewService) battleView, true); // Do not dispose the map
+        gameStateManager.setState((IGameViewService) battleView, false); // Do not dispose the map
+        cam.position.set(cam.viewportWidth / 2, cam.viewportHeight / 2, 0);
+        mapMusic.stop();
         battleView.startBattle(playerParticipant, enemyParticipant, new IBattleCallback() {
             @Override
             public void onBattleEnd(IBattleResult result) {
                 gameStateManager.setState(MapView.this);
+                mapMusic.play();
             }
         });
     }
