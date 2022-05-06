@@ -34,7 +34,6 @@ public class BattleMonsterProcessor implements IBattleMonsterProcessor {
             attack_bonus = 1.5f;
         }
 
-        //int damage = Math.round((((15 * moveDamage * (sourceAttack/targetDefence)) / 50) + 2) * attack_bonus * calculateTypeAdvantage(move.getType(), target.getMonsterType()));
 
         int damage =  Math.round( ( (0.2f * sourceAttack + 3 + 20 ) / (targetDefence + 50) ) * moveDamage * attack_bonus * calculateTypeAdvantage(move.getType(), target.getMonsterType()) );
         return damage;
