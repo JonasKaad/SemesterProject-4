@@ -26,7 +26,9 @@ public class BundleControllerUI extends JFrame {
             "Battle",
             "Map",
             "Player",
-            "NPC"
+            "NPC",
+            "Interaction",
+            "Collision"
     );
 
     public BundleControllerUI(BundleControllerService service) {
