@@ -76,15 +76,13 @@ public class BattleAI implements IBattleAI {
                 }
             }
         }
-        battleSimulation.doMove(participantToControl, bestMove);
 
-        /*
         if (bestMoveUtil>=bestSwitchUtil) {
             battleSimulation.doMove(participantToControl, bestMove);
         } else {
             battleSimulation.switchMonster(participantToControl, bestSwitch);
         }
-         */
+
     }
 
     private float minmaxSearch(IBattleState battleState, int currentDepth, int maxDepth) {
