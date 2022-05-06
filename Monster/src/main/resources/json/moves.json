@@ -37,14 +37,14 @@
   {
     "id" : "dig",
     "name" : "Dig",
-    "damage" : 70,
+    "damage" : 60,
     "type" : "EARTH",
     "sound": "/sounds/dig.ogg"
   },
   {
     "id" : "earthquake",
     "name" : "Earthquake",
-    "damage" : 100,
+    "damage" : 80,
     "type" : "EARTH",
     "sound": "/sounds/earthquake.ogg"
   },
