@@ -4,6 +4,7 @@ import com.badlogic.gdx.math.Vector2;
 import dk.sdu.mmmi.modulemon.CommonMap.IMapView;
 import dk.sdu.mmmi.modulemon.common.AssetLoader;
 import dk.sdu.mmmi.modulemon.common.data.Entity;
+import dk.sdu.mmmi.modulemon.common.data.EntityType;
 import dk.sdu.mmmi.modulemon.common.data.GameData;
 import dk.sdu.mmmi.modulemon.common.data.World;
 import dk.sdu.mmmi.modulemon.common.data.entityparts.PositionPart;
@@ -18,14 +19,14 @@ public class CollisionProcessing implements IPostEntityProcessingService {
     public void process(GameData gameData, World world) {
         for (Entity entity : world.getEntities()) {
             PositionPart entityPosPart = entity.getPart(PositionPart.class);
-            if(mapView.isCellBlocked(entityPosPart.getTargetPos().x, entityPosPart.getTargetPos().y)){
+            if(mapView.isCellBlocked(entityPosPart.getTargetPos().x, entityPosPart.getTargetPos().y)) {
                 entityPosPart.setTargetPos(entityPosPart.getX(), entityPosPart.getY());
-                if(bonkCooldown <= 0){
+                if (bonkCooldown <= 0 && entity.getType().equals(EntityType.PLAYER)) {
                     loader.getSoundAsset("/sounds/bonk.ogg", this.getClass()).play();
                     bonkCooldown = 0.5f;
                 }
             }
-            /*
+
             for (Entity checking : world.getEntities()) {
                 if(entity.equals(checking))
                     continue;
@@ -33,19 +34,18 @@ public class CollisionProcessing implements IPostEntityProcessingService {
                 PositionPart checkPosPart = checking.getPart(PositionPart.class);
 
                 if(entityPosPart.getTargetPos().equals(checkPosPart.getCurrentPos()) && !checkPosPart.getCurrentPos().equals(new Vector2(0,0))){
-                    entityPosPart.setTargetPos(entityPosPart.getCurrentPos());
+                    entityPosPart.setTargetPos(entityPosPart.getX(), entityPosPart.getY());
                 }
                 if(entityPosPart.getTargetPos().equals(checkPosPart.getTargetPos())){
                     float entityDistanceToTarget = entityPosPart.getTargetPos().dst(entityPosPart.getCurrentPos());
                     float checkingDistanceToTarget = checkPosPart.getTargetPos().dst(checkPosPart.getCurrentPos());
                     if(entityDistanceToTarget > checkingDistanceToTarget){
-                        entityPosPart.setTargetPos(entityPosPart.getCurrentPos());
+                        entityPosPart.setTargetPos(entityPosPart.getX(), entityPosPart.getY());
                     } else {
-                        checkPosPart.setTargetPos(checkPosPart.getCurrentPos());
+                        checkPosPart.setTargetPos(checkPosPart.getX(), checkPosPart.getY());
                     }
                 }
             }
-             */
         }
         if(bonkCooldown >= 0){
             bonkCooldown -= gameData.getDelta();
