@@ -23,7 +23,6 @@ public class PositionPart implements EntityPart {
     private Direction direction; // facing direction in comparison to the unit circle
     private Vector2 currentPos = new Vector2();
     private Vector2 targetPos = new Vector2();
-    private Vector2 beforeMovePos = new Vector2();
 
     public PositionPart(float x, float y) {
         this.x = x;
