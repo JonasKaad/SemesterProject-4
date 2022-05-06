@@ -42,7 +42,7 @@
     "attack" : 87,
     "speed" : 75,
     "moves" : [
-      "tackle",
+      "slam",
       "tornado",
       "zap",
       "spit"
@@ -59,7 +59,7 @@
     "attack" : 100,
     "speed" : 35,
     "moves" : [
-      "tackle",
+      "slam",
       "dig",
       "earthquake",
       "trample"
@@ -79,7 +79,7 @@
       "furBall",
       "dig",
       "arcBolt",
-      "tackle"
+      "slam"
     ],
     "front": "/images/cat_front.png",
     "back": "/images/cat_back.png"
@@ -96,7 +96,7 @@
       "zap",
       "flameFang",
       "earthquake",
-      "tackle"
+      "slam"
     ],
     "front": "/images/dog_front.png",
     "back": "/images/dog_back.png"

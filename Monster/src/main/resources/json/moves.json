@@ -56,11 +56,11 @@
     "sound": "/sounds/horn_blast.ogg"
   },
   {
-    "id": "tackle",
-    "name": "Tackle",
+    "id": "slam",
+    "name": "Slam",
     "damage": 40,
     "type": "NORMAL",
-    "sound": "/sounds/tackle.ogg"
+    "sound": "/sounds/slam.ogg"
   },
   {
     "id": "eggBomb",
