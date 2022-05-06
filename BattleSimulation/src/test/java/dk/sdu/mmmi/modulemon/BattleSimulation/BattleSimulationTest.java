@@ -38,6 +38,8 @@ public class BattleSimulationTest {
 
         playerMonster = mock(IMonster.class);
         enemyMonster = mock(IMonster.class);
+        when(playerMonster.getName()).thenReturn("Koala");
+        when(enemyMonster.getName()).thenReturn("Giraffe");
 
         IMonsterMove simpleMove = mock(IMonsterMove.class);
         when(simpleMove.getName()).thenReturn("basic attack");
@@ -126,7 +128,7 @@ public class BattleSimulationTest {
         IBattleEvent event = battleSimulation.getNextBattleEvent();
         assertEquals("The opponent starts the battle", event.getText());
         event = battleSimulation.getNextBattleEvent();
-        assertEquals("Opponent monster used basic attack", event.getText().substring(0, 34));
+        assertEquals("Opponent's Giraffe used basic attack", event.getText().substring(0, 36));
     }
 
     @Test
@@ -148,7 +150,7 @@ public class BattleSimulationTest {
         battleSimulation.doMove(player, player.getActiveMonster().getMoves().get(0));
         IBattleEvent event = battleSimulation.getNextBattleEvent();
         assertInstanceOf(MoveBattleEvent.class, event);
-        assertEquals("Player monster used basic attack", event.getText().substring(0, 32));
+        assertEquals("Player's Koala used basic attack", event.getText().substring(0, 32));
     }
 
     @Test

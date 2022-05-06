@@ -41,6 +41,7 @@ public class BattleView implements IGameViewService, IBattleView {
     private BattleScene _battleScene;
     private Music _battleMusic;
     private Sound _winSound;
+    private Sound _loseSound;
     private MenuState menuState = MenuState.DEFAULT;
     private Queue<BaseAnimation> blockingAnimations;
     private Queue<BaseAnimation> backgroundAnimations;
@@ -96,6 +97,7 @@ public class BattleView implements IGameViewService, IBattleView {
         selectedAction = 0;
         _battleMusic = loader.getMusicAsset("/music/battle_music.ogg", this.getClass());
         _winSound = loader.getSoundAsset("/sounds/you_won.ogg", this.getClass());
+        _loseSound = loader.getSoundAsset("/sounds/you_lost.ogg", this.getClass());
         _battleSimulation.StartBattle(player, enemy);
         _currentBattleState = _battleSimulation.getState().clone(); // Set an initial battle-state
         _battleCallback = callback;
@@ -290,7 +292,8 @@ public class BattleView implements IGameViewService, IBattleView {
                 } else {
                     PlayerDieAnimation dieAnimation = new PlayerDieAnimation(_battleScene);
                     blockingAnimations.add(dieAnimation);
-
+                    this._battleMusic.stop();
+                    this._loseSound.play();
                     _battleScene.setTextToDisplay(battleEvent.getText());
 
                     EmptyAnimation e = new EmptyAnimation(2_000);

@@ -4,9 +4,9 @@
     "name" : "Alpaca",
     "type" : "GRASS",
     "hp" : 100,
-    "defence" : 25,
-    "attack" : 60,
-    "speed" : 60,
+    "defence" : 90,
+    "attack" : 125,
+    "speed" : 85,
     "moves" : [
       "spit",
       "trample",
@@ -20,13 +20,13 @@
     "id" : 1,
     "name" : "Eel",
     "type" : "WATER",
-    "hp" : 90,
-    "defence" : 20,
-    "attack" : 70,
-    "speed" : 70,
+    "hp" : 74,
+    "defence" : 65,
+    "attack" : 125,
+    "speed" : 120,
     "moves" : [
       "zap",
-      "tackle",
+      "windGust",
       "eggBomb",
       "waterBlast"
     ],
@@ -37,13 +37,15 @@
     "id" : 2,
     "name" : "Bird",
     "type" : "AIR",
-    "hp" : 60,
-    "defence" : 20,
-    "attack" : 100,
-    "speed" : 100,
+    "hp" : 98,
+    "defence" : 105,
+    "attack" : 87,
+    "speed" : 75,
     "moves" : [
-      "tackle",
-      "eggBomb"
+      "slam",
+      "tornado",
+      "zap",
+      "spit"
     ],
     "front": "/images/bird_front.png",
     "back": "/images/bird_back.png"
@@ -52,15 +54,15 @@
     "id" : 3,
     "name" : "Mole",
     "type" : "EARTH",
-    "hp" : 100,
-    "defence" : 100,
-    "attack" : 40,
-    "speed" : 20,
+    "hp" : 80,
+    "defence" : 110,
+    "attack" : 90,
+    "speed" : 35,
     "moves" : [
-      "tackle",
+      "slam",
       "dig",
       "earthquake",
-      "mudBlast"
+      "trample"
     ],
     "front": "/images/mole_front.png",
     "back": "/images/mole_back.png"
@@ -69,15 +71,15 @@
     "id" : 4,
     "name" : "Cat",
     "type" : "LIGHTNING",
-    "hp" : 120,
-    "defence" : 60,
-    "attack" : 80,
-    "speed" : 88,
+    "hp" : 75,
+    "defence" : 90,
+    "attack" : 123,
+    "speed" : 95,
     "moves" : [
       "furBall",
-      "zap",
+      "dig",
       "arcBolt",
-      "tackle"
+      "slam"
     ],
     "front": "/images/cat_front.png",
     "back": "/images/cat_back.png"
@@ -86,15 +88,15 @@
     "id" : 5,
     "name" : "Dog",
     "type" : "FIRE",
-    "hp" : 150,
-    "defence" : 66,
-    "attack" : 66,
-    "speed" : 66,
+    "hp" : 85,
+    "defence" : 85,
+    "attack" : 116,
+    "speed" : 119,
     "moves" : [
-      "trample",
-      "fireBreath",
+      "zap",
+      "flameFang",
       "earthquake",
-      "tackle"
+      "slam"
     ],
     "front": "/images/dog_front.png",
     "back": "/images/dog_back.png"

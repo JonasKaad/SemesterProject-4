@@ -17,6 +17,7 @@ import java.util.List;
 public class MonsterParser {
     private static HashMap<String, MonsterType> monsterTypeHashMap = new HashMap<String, MonsterType>(){{
         put("fire", MonsterType.FIRE);
+        put("normal", MonsterType.NORMAL);
         put("water", MonsterType.WATER);
         put("grass", MonsterType.GRASS);
         put("air", MonsterType.AIR);
