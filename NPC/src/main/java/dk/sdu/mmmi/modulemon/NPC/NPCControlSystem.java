@@ -12,6 +12,8 @@ import dk.sdu.mmmi.modulemon.common.data.World;
 import dk.sdu.mmmi.modulemon.common.data.entityparts.*;
 import dk.sdu.mmmi.modulemon.common.services.IEntityProcessingService;
 
+import java.util.Collection;
+
 /**
  *
  * @author Gorm Krings
@@ -24,36 +26,34 @@ public class NPCControlSystem implements IEntityProcessingService{
     public void process(GameData gameData, World world) {
 
             for (Entity npc : world.getEntities(NPC.class)) {
-                PositionPart positionPart = npc.getPart(PositionPart.class);
                 MovingPart movingPart = npc.getPart(MovingPart.class);
-                SpritePart spritePart = npc.getPart(SpritePart.class);
                 AIControlPart controlPart = npc.getPart(AIControlPart.class);
-                InteractPart interactPart = npc.getPart(InteractPart.class);
-                
-                movingPart.setLeft(controlPart.shouldGoLeft());
-                movingPart.setRight(controlPart.shouldGoRight());
-                movingPart.setUp(controlPart.shouldGoUp());
-                movingPart.setDown(controlPart.shouldGoDown());
-                // else stand still
-                
-                if(controlPart.shouldGoLeft()){
-                    current = "left";
+
+                if (movingPart != null && controlPart != null) {
+                    movingPart.setLeft(controlPart.shouldGoLeft());
+                    movingPart.setRight(controlPart.shouldGoRight());
+                    movingPart.setUp(controlPart.shouldGoUp());
+                    movingPart.setDown(controlPart.shouldGoDown());
+
+                    // else stand still
+                    if(controlPart.shouldGoLeft()){
+                        current = "left";
+                    }
+                    if(controlPart.shouldGoRight()){
+                        current = "right";
+                    }
+                    if(controlPart.shouldGoUp()){
+                        current = "up";
+                    }
+                    if(controlPart.shouldGoDown()){
+                        current = "down";
+                    }
                 }
-                if(controlPart.shouldGoRight()){
-                    current = "right";
+
+                Collection<EntityPart> entityParts = npc.getParts();
+                for (EntityPart entityPart : entityParts) {
+                    entityPart.process(gameData, world, npc);
                 }
-                if(controlPart.shouldGoUp()){
-                    current = "up";
-                }
-                if(controlPart.shouldGoDown()){
-                    current = "down";
-                }
-                
-                movingPart.process(gameData, world, npc);
-                positionPart.process(gameData, world, npc);
-                spritePart.process(gameData, world, npc);
-                controlPart.process(gameData, world, npc);
-                interactPart.process(gameData, world, npc);
 
                 updateShape(npc, current);
         }

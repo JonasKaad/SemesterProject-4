@@ -4,6 +4,8 @@ import com.badlogic.gdx.graphics.Texture;
 import dk.sdu.mmmi.modulemon.common.data.entityparts.EntityPart;
 
 import java.io.Serializable;
+import java.util.Collection;
+import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
@@ -35,6 +37,10 @@ public abstract class Entity implements Serializable {
 
     public <E extends EntityPart> E getPart(Class partClass) {
         return (E) parts.get(partClass);
+    }
+
+    public Collection<EntityPart> getParts() {
+        return parts.values();
     }
 
     public String getID() {

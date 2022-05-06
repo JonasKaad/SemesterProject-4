@@ -15,6 +15,7 @@ import dk.sdu.mmmi.modulemon.common.data.World;
 import dk.sdu.mmmi.modulemon.common.data.entityparts.*;
 import dk.sdu.mmmi.modulemon.common.OSGiFileHandle;
 import dk.sdu.mmmi.modulemon.common.services.IGamePluginService;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -24,40 +25,40 @@ import java.util.List;
  */
 public class NPCPlugin implements IGamePluginService{
     
-    ArrayList<Entity> npcs = new ArrayList<>();
+    List<Entity> npcs;
     IMonsterRegistry monsterRegistry;
 
     @Override
     public void start(GameData gameData, World world) {
-        System.out.println("NPCPlugin start");
-        npcs.add(createNPC());
-                
+        createNPCs();
         for (Entity npc : npcs) {
             world.addEntity(npc);
         }
     }
     
-    private Entity createNPC() {
-        System.out.println("createNPC()");
-        PositionPart positionPart = new PositionPart(3014, 1984);
+    private void createNPCs() {
+        npcs = new ArrayList<>();
 
+        npcs.add(0, new NPC());
+        PositionPart positionPart = new PositionPart(3014, 1984);
+        npcs.get(0).add(new SpritePart(
+                new Texture(new OSGiFileHandle("/assets/npc-char-up.png", NPCPlugin.class)), //upSprite
+                new Texture(new OSGiFileHandle("/assets/npc-char-down.png", NPCPlugin.class)), //downSprite
+                new Texture(new OSGiFileHandle("/assets/npc-char-left.png", NPCPlugin.class)), //leftSprite
+                new Texture(new OSGiFileHandle("/assets/npc-char-right.png", NPCPlugin.class))));
+        npcs.get(0).add(positionPart);
+        npcs.get(0).add(new MovingPart());
+        npcs.get(0).add(new InteractPart(positionPart, 5));
+        npcs.get(0).add(new AIControlPart(new Character[]{'R','R','L','L','L','L','R','R','U','U','D','D','D','D','U','U'}));
+        npcs.get(0).add(new AIControlPart(new Character[]{'R','R','L','L','L','L','R','R','U','U','D','D','D','D','U','U'}));
+        addMonsterTeam(npcs);
+    }
+
+    public void addMonsterTeam(List<Entity> entities) {
         List<IMonster> monsterList = new ArrayList<>();
         monsterList.add(monsterRegistry.getMonster(0));
         monsterList.add(monsterRegistry.getMonster(3));
-
-        Entity npc = new NPC(
-                "John", 
-                new SpritePart(
-                        new Texture(new OSGiFileHandle("/assets/npc-char-up.png", NPCPlugin.class)), //upSprite 
-                        new Texture(new OSGiFileHandle("/assets/npc-char-down.png", NPCPlugin.class)), //downSprite
-                        new Texture(new OSGiFileHandle("/assets/npc-char-left.png", NPCPlugin.class)), //leftSprite
-                        new Texture(new OSGiFileHandle("/assets/npc-char-right.png", NPCPlugin.class))),//rightSprite
-                positionPart,
-                new MovingPart(),
-                new InteractPart(positionPart, 5),
-                new AIControlPart(new Character[]{'R','R','L','L','L','L','R','R','U','U','D','D','D','D','U','U'}),
-                new MonsterTeamPart(monsterList));
-        return npc;
+        entities.get(0).add(new MonsterTeamPart(monsterList));
     }
 
     @Override
@@ -72,10 +73,16 @@ public class NPCPlugin implements IGamePluginService{
 
     public void setMonsterRegistryService(IMonsterRegistry monsterRegistry) {
         this.monsterRegistry = monsterRegistry;
+        if (npcs != null) {
+            addMonsterTeam(npcs);
+        }
     }
 
     public void removeMonsterRegistryService(IMonsterRegistry monsterRegistry) {
         this.monsterRegistry = null;
+        for (Entity entity : npcs) {
+            entity.remove(MonsterTeamPart.class);
+        }
     }
     
 }

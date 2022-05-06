@@ -8,6 +8,7 @@ import dk.sdu.mmmi.modulemon.CommonBattle.MonsterTeamPart;
 import dk.sdu.mmmi.modulemon.CommonMap.Data.MovingPart;
 import dk.sdu.mmmi.modulemon.CommonNPC.INPC;
 import dk.sdu.mmmi.modulemon.common.data.Entity;
+import dk.sdu.mmmi.modulemon.common.data.EntityType;
 import dk.sdu.mmmi.modulemon.common.data.entityparts.*;
 
 /**
@@ -15,6 +16,9 @@ import dk.sdu.mmmi.modulemon.common.data.entityparts.*;
  * @author Gorm Krings
  */
 public class NPC extends Entity implements INPC {
+    public NPC(){
+        super(EntityType.GENERIC);
+    }
 
     
     public NPC(String name, SpritePart sprites, PositionPart position, MovingPart movement, InteractPart interact, AIControlPart control, MonsterTeamPart monsterTeamPart) {

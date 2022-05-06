@@ -238,6 +238,10 @@ public class BattleSimulation implements IBattleSimulation {
         this.monsterProcessor = monsterProcessor;
     }
 
+    public void removeMonsterProcessor(IBattleMonsterProcessor monsterProcessor) {
+        this.monsterProcessor = null;
+    }
+
     public void setAIFactory(IBattleAIFactory factory) {
         this.AIFactory = factory;
     }
