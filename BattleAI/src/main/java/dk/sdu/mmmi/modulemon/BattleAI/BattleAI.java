@@ -82,7 +82,6 @@ public class BattleAI implements IBattleAI {
         } else {
             battleSimulation.switchMonster(participantToControl, bestSwitch);
         }
-
     }
 
     private float minmaxSearch(IBattleState battleState, int currentDepth, int maxDepth) {
