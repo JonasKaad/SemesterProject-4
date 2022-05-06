@@ -6,73 +6,53 @@ import dk.sdu.mmmi.modulemon.common.data.GameData;
 import dk.sdu.mmmi.modulemon.common.data.GameKeys;
 
 public class GameInputManager extends InputAdapter {
-
     private final GameData gameData;
-
     public GameInputManager(GameData gameData) {
         this.gameData = gameData;
     }
 
     public boolean keyDown(int k) {
-        if (k == Input.Keys.UP) {
-            gameData.getKeys().setKey(GameKeys.UP, true);
-        }
-        if (k == Input.Keys.LEFT) {
-            gameData.getKeys().setKey(GameKeys.LEFT, true);
-        }
-        if (k == Input.Keys.DOWN) {
-            gameData.getKeys().setKey(GameKeys.DOWN, true);
-        }
-        if (k == Input.Keys.RIGHT) {
-            gameData.getKeys().setKey(GameKeys.RIGHT, true);
-        }
-        if (k == Input.Keys.ENTER) {
-            gameData.getKeys().setKey(GameKeys.ENTER, true);
-        }
-        if (k == Input.Keys.E) {
-            gameData.getKeys().setKey(GameKeys.E, true);
-        }
-        if (k == Input.Keys.K) {
-            gameData.getKeys().setKey(GameKeys.K, true);
-        }
-        if(k == Input.Keys.CONTROL_LEFT){
-            gameData.getKeys().setKey(GameKeys.LEFT_CTRL, true);
-        }
-        if(k == Input.Keys.ESCAPE){
-            gameData.getKeys().setKey(GameKeys.ESC, true);
-        }
+        handleButtons(k, true);
         return true;
     }
 
-
     public boolean keyUp(int k) {
-        if(k == Input.Keys.UP) {
-            gameData.getKeys().setKey(GameKeys.UP, false);
+        handleButtons(k, false);
+        return true;
+    }
+
+    private void handleButtons(int k, boolean state) {
+        if (k == Input.Keys.UP) {
+            gameData.getKeys().setKey(GameKeys.UP, state);
         }
-        if(k == Input.Keys.LEFT) {
-            gameData.getKeys().setKey(GameKeys.LEFT, false);
+        if (k == Input.Keys.LEFT) {
+            gameData.getKeys().setKey(GameKeys.LEFT, state);
         }
-        if(k == Input.Keys.DOWN) {
-            gameData.getKeys().setKey(GameKeys.DOWN, false);
+        if (k == Input.Keys.DOWN) {
+            gameData.getKeys().setKey(GameKeys.DOWN, state);
         }
-        if(k == Input.Keys.RIGHT) {
-            gameData.getKeys().setKey(GameKeys.RIGHT, false);
+        if (k == Input.Keys.RIGHT) {
+            gameData.getKeys().setKey(GameKeys.RIGHT, state);
         }
-        if(k == Input.Keys.ENTER) {
-            gameData.getKeys().setKey(GameKeys.ENTER, false);
+        if (k == Input.Keys.ENTER
+                || k == Input.Keys.SPACE
+                || k == Input.Keys.BUTTON_A) {
+            gameData.getKeys().setKey(GameKeys.ACTION, state);
         }
         if (k == Input.Keys.E) {
-            gameData.getKeys().setKey(GameKeys.E, false);
+            gameData.getKeys().setKey(GameKeys.E, state);
         }
         if (k == Input.Keys.K) {
-            gameData.getKeys().setKey(GameKeys.K, false);
+            gameData.getKeys().setKey(GameKeys.K, state);
         }
-        if(k == Input.Keys.CONTROL_LEFT){
-            gameData.getKeys().setKey(GameKeys.LEFT_CTRL, false);
+        if (k == Input.Keys.CONTROL_LEFT) {
+            gameData.getKeys().setKey(GameKeys.LEFT_CTRL, state);
         }
-        if(k == Input.Keys.ESCAPE){
-            gameData.getKeys().setKey(GameKeys.ESC, false);
+        if (k == Input.Keys.ESCAPE
+                || k == Input.Keys.BACKSPACE
+                || k == Input.Keys.BUTTON_B
+                || k == Input.Keys.BUTTON_START) {
+            gameData.getKeys().setKey(GameKeys.BACK, state);
         }
-        return true;
     }
 }

@@ -9,8 +9,5 @@ package dk.sdu.mmmi.modulemon.CommonNPC;
  * @author Gorm
  */
 public interface INPC {
-    void turnClockwise();
-    void turnCounterClockwise();
-    void takeStep();
-    void interact();
+
 }

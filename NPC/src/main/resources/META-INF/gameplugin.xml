@@ -8,5 +8,9 @@ Click nbfs://nbhost/SystemFileSystem/Templates/XML/XMLDocument.xml to edit this 
     <service>
         <provide interface="dk.sdu.mmmi.modulemon.common.services.IGamePluginService"/>
     </service>
+
+    <reference bind="setMonsterRegistryService" cardinality="0..1"
+               interface="dk.sdu.mmmi.modulemon.CommonMonster.IMonsterRegistry"
+               name="IMonsterRegistry" policy="dynamic" unbind="removeMonsterRegistryService"/>
 </scr:component>
 

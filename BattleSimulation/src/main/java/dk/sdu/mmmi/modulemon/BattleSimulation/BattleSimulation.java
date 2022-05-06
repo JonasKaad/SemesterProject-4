@@ -21,7 +21,25 @@ public class BattleSimulation implements IBattleSimulation {
     @Override
     public void StartBattle(IBattleParticipant player, IBattleParticipant enemy) {
 
-        if (player.getActiveMonster().getHitPoints()<=0 || enemy.getActiveMonster().getHitPoints()<=0){
+        if (player.getActiveMonster().getHitPoints()<=0){
+            for (IMonster monster : player.getMonsterTeam()) {
+                if (monster.getHitPoints() > 0){
+                    player.setActiveMonster(monster);
+                    break;
+                }
+            }
+        }
+
+        if (enemy.getActiveMonster().getHitPoints()<=0){
+            for (IMonster monster : enemy.getMonsterTeam()) {
+                if (monster.getHitPoints() > 0){
+                    enemy.setActiveMonster(monster);
+                    break;
+                }
+            }
+        }
+
+        if(player.getActiveMonster().getHitPoints()<=0 || enemy.getActiveMonster().getHitPoints()<=0){
             throw new RuntimeException("Active monsters should have at least 1 HP");
         }
 

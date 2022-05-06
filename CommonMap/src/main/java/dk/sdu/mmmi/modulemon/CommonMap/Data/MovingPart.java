@@ -3,14 +3,16 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package dk.sdu.mmmi.modulemon.common.data.entityparts;
+package dk.sdu.mmmi.modulemon.CommonMap.Data;
 
 import com.badlogic.gdx.math.Vector2;
-import dk.sdu.mmmi.modulemon.CommonMap.IMapView;
 import dk.sdu.mmmi.modulemon.common.animations.BaseAnimation;
+import static dk.sdu.mmmi.modulemon.common.data.Direction.*;
 import dk.sdu.mmmi.modulemon.common.data.Entity;
 import dk.sdu.mmmi.modulemon.common.data.GameData;
 import dk.sdu.mmmi.modulemon.common.data.World;
+import dk.sdu.mmmi.modulemon.common.data.entityparts.EntityPart;
+import dk.sdu.mmmi.modulemon.common.data.entityparts.PositionPart;
 
 import java.util.ArrayList;
 
@@ -20,7 +22,6 @@ public class MovingPart extends BaseAnimation implements EntityPart {
     private float movingTimer = 0;
     private float animationTimer;
     private Vector2 newPosition = new Vector2();
-    private static IMapView mapView;
 
 
     public MovingPart() {
@@ -69,10 +70,7 @@ public class MovingPart extends BaseAnimation implements EntityPart {
                 animationTimer = 0;
 
                 newPosition.set(x, y);
-                positionPart.setDirection(180);
-                if(newPosition.x < mapView.getMapLeft() || mapView.isCellBlocked(newPosition.x, newPosition.y)){
-                    newPosition.x = currentPosition.x;
-                }
+                positionPart.setDirection(WEST);
             }
             else if (right) {
                 x = x + pixels;
@@ -81,10 +79,7 @@ public class MovingPart extends BaseAnimation implements EntityPart {
                 animationTimer = 0;
 
                 newPosition.set(x, y);
-                positionPart.setDirection(0);
-                if(newPosition.x > mapView.getMapRight() - 64 + 8 || mapView.isCellBlocked(newPosition.x, newPosition.y)){
-                    newPosition.x = currentPosition.x;
-                }
+                positionPart.setDirection(EAST);
             }
             else if (up) {
                 y = y + pixels;
@@ -93,10 +88,7 @@ public class MovingPart extends BaseAnimation implements EntityPart {
                 animationTimer = 0;
 
                 newPosition.set(x, y);
-                positionPart.setDirection(90);
-                if(newPosition.y > mapView.getMapTop() - 64 || mapView.isCellBlocked(newPosition.x, newPosition.y)){
-                    newPosition.y = currentPosition.y;
-                }
+                positionPart.setDirection(NORTH);
             }
             else if (down) {
                 y = y - pixels;
@@ -105,10 +97,7 @@ public class MovingPart extends BaseAnimation implements EntityPart {
                 animationTimer = 0;
 
                 newPosition.set(x, y);
-                positionPart.setDirection(270);                
-                if(newPosition.y < mapView.getMapBottom() || mapView.isCellBlocked(newPosition.x, newPosition.y)){
-                    newPosition.y = currentPosition.y;
-                }
+                positionPart.setDirection(SOUTH);
             }
         }
         if(animationTimer < 0.5){
@@ -132,20 +121,5 @@ public class MovingPart extends BaseAnimation implements EntityPart {
     public void update(GameData gameData) {
         super.tick();
         float[] states = getCurrentStates();
-    }
-
-    public void setMapView(IMapView mapView){
-        while(MovingPart.mapView == null){
-            MovingPart.mapView = mapView;
-            try {
-                Thread.sleep(10);
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            }
-        }
-    }
-
-    public void removeMapView(IMapView mapView){
-        MovingPart.mapView = null;
     }
 }

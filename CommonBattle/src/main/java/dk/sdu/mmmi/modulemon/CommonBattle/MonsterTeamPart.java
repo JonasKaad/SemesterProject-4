@@ -44,6 +44,14 @@ public class MonsterTeamPart implements EntityPart {
         return battleParticipant;
     }
 
+    public boolean hasAliveMonsters(){
+        for (IMonster monster: monsterTeam) {
+            if(monster.getHitPoints() > 0)
+                return true;
+        }
+        return false;
+    }
+
 
     @Override
     public void process(GameData gameData, World world, Entity entity) {
