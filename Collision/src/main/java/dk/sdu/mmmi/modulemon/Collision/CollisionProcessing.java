@@ -2,6 +2,7 @@ package dk.sdu.mmmi.modulemon.Collision;
 
 import com.badlogic.gdx.math.Vector2;
 import dk.sdu.mmmi.modulemon.CommonMap.IMapView;
+import dk.sdu.mmmi.modulemon.common.AssetLoader;
 import dk.sdu.mmmi.modulemon.common.data.Entity;
 import dk.sdu.mmmi.modulemon.common.data.GameData;
 import dk.sdu.mmmi.modulemon.common.data.World;
@@ -10,6 +11,8 @@ import dk.sdu.mmmi.modulemon.common.services.IPostEntityProcessingService;
 
 public class CollisionProcessing implements IPostEntityProcessingService {
     private IMapView mapView;
+    private AssetLoader loader = AssetLoader.getInstance();
+    private float bonkCooldown;
 
     @Override
     public void process(GameData gameData, World world) {
@@ -17,6 +20,10 @@ public class CollisionProcessing implements IPostEntityProcessingService {
             PositionPart entityPosPart = entity.getPart(PositionPart.class);
             if(mapView.isCellBlocked(entityPosPart.getTargetPos().x, entityPosPart.getTargetPos().y)){
                 entityPosPart.setTargetPos(entityPosPart.getX(), entityPosPart.getY());
+                if(bonkCooldown <= 0){
+                    loader.getSoundAsset("/sounds/bonk.ogg", this.getClass()).play();
+                    bonkCooldown = 0.5f;
+                }
             }
             /*
             for (Entity checking : world.getEntities()) {
@@ -39,6 +46,9 @@ public class CollisionProcessing implements IPostEntityProcessingService {
                 }
             }
              */
+        }
+        if(bonkCooldown >= 0){
+            bonkCooldown -= gameData.getDelta();
         }
     }
 
