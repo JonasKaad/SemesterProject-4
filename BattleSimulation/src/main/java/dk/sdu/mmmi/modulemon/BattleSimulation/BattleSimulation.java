@@ -90,6 +90,7 @@ public class BattleSimulation implements IBattleSimulation {
     @Override
     public void doMove(IBattleParticipant battleParticipant, IMonsterMove move) {
         if (monstersUnloaded) {
+            // Could not get this to work with run away event.
             nextEvent = new VictoryBattleEvent("Monsters unloaded, it's a draw", battleParticipant, battleState.clone());
             onNextEvent = () -> {};
             return;
