@@ -2,6 +2,6 @@
 <scr:component xmlns:scr="http://www.osgi.org/xmlns/scr/v1.1.0" name="dk.sdu.mmmi.modulemon.Player.processor">
     <implementation class="dk.sdu.mmmi.modulemon.Player.PlayerControlSystem"/>
    <service>
-       <provide interface="dk.sdu.mmmi.modulemon.common.services.IEntityProcessingService"/>
+       <provide interface="dk.sdu.mmmi.modulemon.CommonMap.Services.IEntityProcessingService"/>
    </service>
 </scr:component>

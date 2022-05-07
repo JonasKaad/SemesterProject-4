@@ -4,13 +4,12 @@ import dk.sdu.mmmi.modulemon.CommonMap.IMapView;
 import dk.sdu.mmmi.modulemon.CommonMonster.IMonster;
 import dk.sdu.mmmi.modulemon.CommonMonster.IMonsterRegistry;
 import dk.sdu.mmmi.modulemon.CommonTest.GdxTestIntercepter;
-import dk.sdu.mmmi.modulemon.common.data.Entity;
+import dk.sdu.mmmi.modulemon.CommonMap.Data.Entity;
 import dk.sdu.mmmi.modulemon.common.data.GameData;
-import dk.sdu.mmmi.modulemon.common.data.World;
-import dk.sdu.mmmi.modulemon.CommonMap.Data.MovingPart;
-import dk.sdu.mmmi.modulemon.common.data.entityparts.PositionPart;
+import dk.sdu.mmmi.modulemon.CommonMap.Data.World;
+import dk.sdu.mmmi.modulemon.CommonMap.Data.EntityParts.MovingPart;
+import dk.sdu.mmmi.modulemon.CommonMap.Data.EntityParts.PositionPart;
 import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 

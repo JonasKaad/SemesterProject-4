@@ -2,17 +2,16 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
  * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
  */
-package dk.sdu.mmmi.modulemon.common.data.entityparts;
+package dk.sdu.mmmi.modulemon.CommonMap.Data;
 
-import dk.sdu.mmmi.modulemon.common.data.Entity;
+import dk.sdu.mmmi.modulemon.CommonMap.Data.EntityParts.EntityPart;
 import dk.sdu.mmmi.modulemon.common.data.GameData;
-import dk.sdu.mmmi.modulemon.common.data.World;
 
 /**
  *
  * @author Gorm
  */
-public class AIControlPart implements EntityPart{
+public class AIControlPart implements EntityPart {
     
     private Character[] movementArray;
     private int index;

@@ -5,12 +5,15 @@
 package dk.sdu.mmmi.modulemon.NPC;
 
 import com.badlogic.gdx.graphics.Texture;
-import dk.sdu.mmmi.modulemon.CommonMap.Data.MovingPart;
-import dk.sdu.mmmi.modulemon.common.data.Entity;
+import dk.sdu.mmmi.modulemon.CommonMap.Data.*;
+import dk.sdu.mmmi.modulemon.CommonMap.Data.Entity;
+import dk.sdu.mmmi.modulemon.CommonMap.Data.EntityParts.InteractPart;
+import dk.sdu.mmmi.modulemon.CommonMap.Data.EntityParts.MovingPart;
+import dk.sdu.mmmi.modulemon.CommonMap.Data.EntityParts.PositionPart;
+import dk.sdu.mmmi.modulemon.CommonMap.Data.EntityParts.SpritePart;
 import dk.sdu.mmmi.modulemon.common.data.GameData;
-import dk.sdu.mmmi.modulemon.common.data.World;
-import dk.sdu.mmmi.modulemon.common.data.entityparts.*;
-import dk.sdu.mmmi.modulemon.common.services.IEntityProcessingService;
+import dk.sdu.mmmi.modulemon.CommonMap.Data.World;
+import dk.sdu.mmmi.modulemon.CommonMap.Services.IEntityProcessingService;
 
 /**
  *

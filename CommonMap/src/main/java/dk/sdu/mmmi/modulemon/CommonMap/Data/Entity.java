@@ -1,7 +1,7 @@
-package dk.sdu.mmmi.modulemon.common.data;
+package dk.sdu.mmmi.modulemon.CommonMap.Data;
 
 import com.badlogic.gdx.graphics.Texture;
-import dk.sdu.mmmi.modulemon.common.data.entityparts.EntityPart;
+import dk.sdu.mmmi.modulemon.CommonMap.Data.EntityParts.EntityPart;
 
 import java.io.Serializable;
 import java.util.Map;

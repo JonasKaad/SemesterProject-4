@@ -3,16 +3,15 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package dk.sdu.mmmi.modulemon.CommonMap.Data;
+package dk.sdu.mmmi.modulemon.CommonMap.Data.EntityParts;
 
 import com.badlogic.gdx.math.Vector2;
+import dk.sdu.mmmi.modulemon.CommonMap.Data.Entity;
+import dk.sdu.mmmi.modulemon.CommonMap.Data.World;
 import dk.sdu.mmmi.modulemon.common.animations.BaseAnimation;
-import static dk.sdu.mmmi.modulemon.common.data.Direction.*;
-import dk.sdu.mmmi.modulemon.common.data.Entity;
+import static dk.sdu.mmmi.modulemon.CommonMap.Data.Direction.*;
+
 import dk.sdu.mmmi.modulemon.common.data.GameData;
-import dk.sdu.mmmi.modulemon.common.data.World;
-import dk.sdu.mmmi.modulemon.common.data.entityparts.EntityPart;
-import dk.sdu.mmmi.modulemon.common.data.entityparts.PositionPart;
 
 import java.util.ArrayList;
 
