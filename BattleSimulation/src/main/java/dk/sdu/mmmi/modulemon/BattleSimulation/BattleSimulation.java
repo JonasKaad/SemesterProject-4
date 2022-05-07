@@ -128,7 +128,7 @@ public class BattleSimulation implements IBattleSimulation {
         int newHitPoints = target.getHitPoints()-damage;
         target.setHitPoints(Math.max(newHitPoints, 0));
 
-        nextEvent = new MoveBattleEvent(participantTitle + " monster used " + move.getName() + " for " + damage + " damage", battleParticipant, move, damage, battleState.clone());
+        nextEvent = new MoveBattleEvent(participantTitle + "'s " + source.getName() + " used " + move.getName() + " for " + damage + " damage!", battleParticipant, move, damage, battleState.clone());
 
         onNextEvent = () -> {
             if (newHitPoints>0) {
@@ -153,7 +153,7 @@ public class BattleSimulation implements IBattleSimulation {
         if (battleState.getActiveParticipant()!=battleParticipant) {
             throw new IllegalArgumentException("It is not that battle participants turn!");
         }
-        IBattleParticipant participant = battleState.getPlayer();
+        IBattleParticipant participant = battleState.getActiveParticipant();
         if (monster.getHitPoints()<=0) throw new IllegalArgumentException("You can't change to a dead monster");
         if (participant.getMonsterTeam().contains(monster)) {
             participant.setActiveMonster(monster);

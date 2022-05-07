@@ -46,6 +46,7 @@
     <module>CommonBattleSimulation</module>
     <module>CommonBattleClient</module>
     <module>Interaction</module>
+    <module>Collision</module>
   </modules>
 
   <build>
