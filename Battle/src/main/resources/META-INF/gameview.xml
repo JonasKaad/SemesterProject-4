@@ -11,4 +11,8 @@
     <reference bind="setBattleSimulation" cardinality="0..1"
                interface="dk.sdu.mmmi.modulemon.CommonBattleSimulation.IBattleSimulation"
                name="BattleSimulation" policy="dynamic" unbind="removeBattleSimulation" />
+
+    <reference bind="setMonsterRegistry" cardinality="0..1"
+               interface="dk.sdu.mmmi.modulemon.CommonMonster.IMonsterRegistry"
+               name="MonsterRegistry" policy="dynamic" unbind="removeMonsterRegistry" />
 </scr:component>

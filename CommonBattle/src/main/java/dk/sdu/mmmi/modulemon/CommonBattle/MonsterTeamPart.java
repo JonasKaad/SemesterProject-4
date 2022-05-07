@@ -39,11 +39,6 @@ public class MonsterTeamPart implements EntityPart {
         return monsterTeam;
     }
 
-    public IBattleParticipant toBattleParticipant(boolean playerControlled){
-        IBattleParticipant battleParticipant = new BattleParticipant(getMonsterTeam(), playerControlled);
-        return battleParticipant;
-    }
-
     public boolean hasAliveMonsters(){
         for (IMonster monster: monsterTeam) {
             if(monster.getHitPoints() > 0)
