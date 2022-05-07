@@ -2,7 +2,7 @@ package dk.sdu.mmmi.modulemon.CommonMonster;
 
 public interface IMonsterMove {
     String getName();
-    int getDamage();
-    MonsterType getType();
     String getSoundPath();
+    String getLongDescription();
+    String getShortDescription();
 }

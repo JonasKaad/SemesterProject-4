@@ -77,14 +77,14 @@ class PlayerTest {
         when(map.getMapRight()).thenReturn(50000f);
         when(map.getMapBottom()).thenReturn(50000f);
       
-        float beforeMoving = posPart.getY();
+        float beforeMoving = posPart.getTargetPos().y;
 
 
         gameData.getKeys().setKey(UP, true);
         movPart.setUp(gameData.getKeys().isDown(UP));
         movPart.process(gameData, world, player);
 
-        float afterMoving = posPart.getY();
+        float afterMoving = posPart.getTargetPos().y;
 
         assertNotEquals(beforeMoving, afterMoving);
     }
@@ -108,13 +108,13 @@ class PlayerTest {
         MovingPart movPart = player.getPart(MovingPart.class);
         PositionPart posPart = player.getPart(PositionPart.class);
 
-        float beforeMoving = posPart.getY();
+        float beforeMoving = posPart.getTargetPos().y;
 
 
         movPart.setUp(gameData.getKeys().isDown(UP));
         movPart.process(gameData, world, player);
 
-        float afterMoving = posPart.getY();
+        float afterMoving = posPart.getTargetPos().y;
 
         assertEquals(beforeMoving, afterMoving);
     }

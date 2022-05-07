@@ -11,7 +11,6 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import dk.sdu.mmmi.modulemon.CommonBattleSimulation.IBattleSimulation;
 
 public class BattleAI implements IBattleAI {
 
@@ -19,7 +18,6 @@ public class BattleAI implements IBattleAI {
     private IBattleParticipant participantToControl;
     private IBattleParticipant opposingParticipant;
     private IBattleSimulation battleSimulation;
-    private IMonsterMove emptyMove = new EmptyMove();
 
     public BattleAI(IBattleSimulation battleSimulation, IBattleParticipant participantToControl) {
         knowledgeState = new KnowledgeState();
@@ -182,7 +180,7 @@ public class BattleAI implements IBattleAI {
 
         if (successors.isEmpty()) {
             // If we don't know any of the monsters moves, add an empty move dealing 0 damage;
-            successors.add(battleSimulation.simulateDoMove(activeParticipant, emptyMove, battleState));
+            successors.add(battleSimulation.simulateDoMove(activeParticipant, null, battleState));
         }
 
         for (IMonster monster : activeParticipant.getMonsterTeam()) {

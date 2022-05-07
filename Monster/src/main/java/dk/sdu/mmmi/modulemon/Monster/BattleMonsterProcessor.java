@@ -5,8 +5,6 @@ import dk.sdu.mmmi.modulemon.CommonMonster.IMonster;
 import dk.sdu.mmmi.modulemon.CommonMonster.IMonsterMove;
 import dk.sdu.mmmi.modulemon.CommonMonster.MonsterType;
 
-import java.util.Random;
-
 public class BattleMonsterProcessor implements IBattleMonsterProcessor {
 
     @Override
@@ -17,9 +15,10 @@ public class BattleMonsterProcessor implements IBattleMonsterProcessor {
     }
 
     @Override
-    public int calculateDamage(IMonster iSource, IMonsterMove move, IMonster iTarget) {
+    public int calculateDamage(IMonster iSource, IMonsterMove iMove, IMonster iTarget) {
         Monster source = (Monster) iSource;
         Monster target = (Monster) iTarget;
+        MonsterMove move = (MonsterMove) iMove;
         float moveDamage = (float) move.getDamage();
         float sourceAttack = (float) source.getAttack();
         float targetDefence = (float) target.getDefence();
