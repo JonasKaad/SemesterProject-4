@@ -6,7 +6,7 @@ Click nbfs://nbhost/SystemFileSystem/Templates/XML/XMLDocument.xml to edit this 
 <scr:component xmlns:scr="http://www.osgi.org/xmlns/scr/v1.1.0" name="dk.sdu.mmmi.modulemon.NPC.NPCControlSystem">
     <implementation class="dk.sdu.mmmi.modulemon.NPC.NPCControlSystem"/>
     <service>
-        <provide interface="dk.sdu.mmmi.modulemon.common.services.IEntityProcessingService"/>
+        <provide interface="dk.sdu.mmmi.modulemon.CommonMap.Services.IEntityProcessingService"/>
     </service>
 </scr:component>
 

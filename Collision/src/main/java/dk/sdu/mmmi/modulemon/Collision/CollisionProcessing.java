@@ -3,12 +3,12 @@ package dk.sdu.mmmi.modulemon.Collision;
 import com.badlogic.gdx.math.Vector2;
 import dk.sdu.mmmi.modulemon.CommonMap.IMapView;
 import dk.sdu.mmmi.modulemon.common.AssetLoader;
-import dk.sdu.mmmi.modulemon.common.data.Entity;
-import dk.sdu.mmmi.modulemon.common.data.EntityType;
+import dk.sdu.mmmi.modulemon.CommonMap.Data.Entity;
+import dk.sdu.mmmi.modulemon.CommonMap.Data.EntityType;
 import dk.sdu.mmmi.modulemon.common.data.GameData;
-import dk.sdu.mmmi.modulemon.common.data.World;
-import dk.sdu.mmmi.modulemon.common.data.entityparts.PositionPart;
-import dk.sdu.mmmi.modulemon.common.services.IPostEntityProcessingService;
+import dk.sdu.mmmi.modulemon.CommonMap.Data.World;
+import dk.sdu.mmmi.modulemon.CommonMap.Data.EntityParts.PositionPart;
+import dk.sdu.mmmi.modulemon.CommonMap.Services.IPostEntityProcessingService;
 
 public class CollisionProcessing implements IPostEntityProcessingService {
     private IMapView mapView;

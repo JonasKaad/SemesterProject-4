@@ -2,11 +2,11 @@ package dk.sdu.mmmi.modulemon.Battle;
 
 import dk.sdu.mmmi.modulemon.BattleScene.BattleView;
 import dk.sdu.mmmi.modulemon.BattleScene.scenes.BattleScene;
-import dk.sdu.mmmi.modulemon.BattleSceneMock.BattleParticipantMocks;
 import dk.sdu.mmmi.modulemon.CommonBattleSimulation.BattleEvents.InfoBattleEvent;
 import dk.sdu.mmmi.modulemon.CommonBattle.IBattleParticipant;
 import dk.sdu.mmmi.modulemon.CommonBattleSimulation.IBattleSimulation;
 import dk.sdu.mmmi.modulemon.CommonBattleSimulation.IBattleState;
+import dk.sdu.mmmi.modulemon.CommonMonster.IMonster;
 import dk.sdu.mmmi.modulemon.CommonTest.GdxTestIntercepter;
 import dk.sdu.mmmi.modulemon.common.data.GameData;
 import dk.sdu.mmmi.modulemon.common.data.IGameStateManager;
@@ -17,7 +17,9 @@ import org.mockito.invocation.Invocation;
 
 import java.io.IOException;
 import java.net.URISyntaxException;
+import java.util.ArrayList;
 import java.util.Collection;
+import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
@@ -60,8 +62,8 @@ public class BattleViewTest {
         GameData gameData = new GameData();
         IBattleSimulation simulation = mock(IBattleSimulation.class);
         IBattleState battleState = mock(IBattleState.class);
-        when(battleState.getPlayer()).thenReturn(BattleParticipantMocks.getPlayer());
-        when(battleState.getEnemy()).thenReturn(BattleParticipantMocks.getOpponent());
+        when(battleState.getPlayer()).thenReturn(mock(IBattleParticipant.class));
+        when(battleState.getEnemy()).thenReturn(mock(IBattleParticipant.class));
         when(simulation.getState()).thenReturn(battleState);
         battleView.setBattleSimulation(simulation);
 
@@ -114,16 +116,15 @@ public class BattleViewTest {
         // Arrange
         BattleView battleView = new BattleView();
         battleView.init(mock(IGameStateManager.class));
-        IBattleParticipant participant1 = mock(IBattleParticipant.class);
-        when(participant1.isPlayerControlled()).thenReturn(true);
-        IBattleParticipant participant2 = mock(IBattleParticipant.class);
+        List<IMonster> playerMonsters = new ArrayList<>();
+        List<IMonster> enemyMonsters = new ArrayList<>();
 
         IBattleSimulation simulation = mock(IBattleSimulation.class);
         when(simulation.getState()).thenReturn(mock(IBattleState.class));
         battleView.setBattleSimulation(simulation);
 
         // Act
-        battleView.startBattle(participant1, participant2, null);
+        battleView.startBattle(playerMonsters, enemyMonsters, null);
         battleView.dispose();
 
         // Assert
@@ -142,10 +143,8 @@ public class BattleViewTest {
 
         IBattleSimulation simulation = mock(IBattleSimulation.class);
         IBattleState battleState = mock(IBattleState.class);
-        IBattleParticipant player = BattleParticipantMocks.getPlayer();
-        IBattleParticipant enemy = BattleParticipantMocks.getOpponent();
-        when(battleState.getPlayer()).thenReturn(player);
-        when(battleState.getEnemy()).thenReturn(enemy);
+        when(battleState.getPlayer()).thenReturn(mock(IBattleParticipant.class));
+        when(battleState.getEnemy()).thenReturn(mock(IBattleParticipant.class));
         when(simulation.getState()).thenReturn(battleState);
         when(simulation.getNextBattleEvent()).thenReturn(new InfoBattleEvent("Never gonna give you up!", null));
         battleView.setBattleSimulation(simulation);

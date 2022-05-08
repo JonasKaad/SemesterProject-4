@@ -1,4 +1,4 @@
-package dk.sdu.mmmi.modulemon.common.data;
+package dk.sdu.mmmi.modulemon.CommonMap.Data;
 
 import java.util.ArrayList;
 import java.util.Collection;

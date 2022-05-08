@@ -1,12 +1,12 @@
-package dk.sdu.mmmi.modulemon.common.data.entityparts;
+package dk.sdu.mmmi.modulemon.CommonMap.Data.EntityParts;
 
 
 import com.badlogic.gdx.graphics.Texture;
-import dk.sdu.mmmi.modulemon.common.data.Entity;
+import dk.sdu.mmmi.modulemon.CommonMap.Data.Entity;
+import dk.sdu.mmmi.modulemon.CommonMap.Data.World;
 import dk.sdu.mmmi.modulemon.common.data.GameData;
-import dk.sdu.mmmi.modulemon.common.data.World;
 
-public class SpritePart implements EntityPart{
+public class SpritePart implements EntityPart {
     private Texture upSprite;
     private Texture downSprite;
     private Texture leftSprite;

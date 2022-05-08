@@ -2,7 +2,7 @@
 <scr:component xmlns:scr="http://www.osgi.org/xmlns/scr/v1.1.0" name="dk.sdu.mmmi.modulemon.Player.plugin">
     <implementation class="dk.sdu.mmmi.modulemon.Player.PlayerPlugin"/>
     <service>
-        <provide interface="dk.sdu.mmmi.modulemon.common.services.IGamePluginService"/>
+        <provide interface="dk.sdu.mmmi.modulemon.CommonMap.Services.IGamePluginService"/>
     </service>
 
     <reference bind="addMonsterRegistryService" cardinality="0..n"
