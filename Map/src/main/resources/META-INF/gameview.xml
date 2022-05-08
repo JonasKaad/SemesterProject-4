@@ -10,15 +10,15 @@
     </service>
 
     <reference bind="addEntityProcessingService" cardinality="0..n"
-               interface="dk.sdu.mmmi.modulemon.common.services.IEntityProcessingService"
+               interface="dk.sdu.mmmi.modulemon.CommonMap.Services.IEntityProcessingService"
                name="IEntityProcessingService" policy="dynamic" unbind="removeEntityProcessingService"/>
 
     <reference bind="addPostProcessingService" cardinality="0..n"
-               interface="dk.sdu.mmmi.modulemon.common.services.IPostEntityProcessingService"
+               interface="dk.sdu.mmmi.modulemon.CommonMap.Services.IPostEntityProcessingService"
                name="IPostEntityProcessingService" policy="dynamic" unbind="removePostProcessingService"/>
 
     <reference bind="addGamePluginService" cardinality="0..n"
-               interface="dk.sdu.mmmi.modulemon.common.services.IGamePluginService"
+               interface="dk.sdu.mmmi.modulemon.CommonMap.Services.IGamePluginService"
                name="IGamePluginService" policy="dynamic" unbind="removeGamePluginService"/>
 
     <reference bind="setBattleView" cardinality="0..1"

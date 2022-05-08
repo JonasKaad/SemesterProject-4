@@ -4,12 +4,9 @@
  */
 package dk.sdu.mmmi.modulemon.NPC;
 
-import dk.sdu.mmmi.modulemon.CommonBattle.MonsterTeamPart;
-import dk.sdu.mmmi.modulemon.CommonMap.Data.MovingPart;
+import dk.sdu.mmmi.modulemon.CommonMap.Data.EntityParts.*;
 import dk.sdu.mmmi.modulemon.CommonNPC.INPC;
-import dk.sdu.mmmi.modulemon.common.data.Entity;
-import dk.sdu.mmmi.modulemon.common.data.EntityType;
-import dk.sdu.mmmi.modulemon.common.data.entityparts.*;
+import dk.sdu.mmmi.modulemon.CommonMap.Data.Entity;
 
 /**
  *

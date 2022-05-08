@@ -2,26 +2,20 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
  * Click nbfs://nbhost/SystemFileSystem/Templates/Other/File.java to edit this template
  */
-package dk.sdu.mmmi.modulemon.common.data.entityparts;
+package dk.sdu.mmmi.modulemon.CommonMap.Data.EntityParts;
 
-import dk.sdu.mmmi.modulemon.common.data.Direction;
-import static dk.sdu.mmmi.modulemon.common.data.Direction.*;
-import dk.sdu.mmmi.modulemon.common.data.Entity;
+import static dk.sdu.mmmi.modulemon.CommonMap.Data.Direction.*;
+
+import dk.sdu.mmmi.modulemon.CommonMap.Data.Direction;
+import dk.sdu.mmmi.modulemon.CommonMap.Data.Entity;
+import dk.sdu.mmmi.modulemon.CommonMap.Data.World;
 import dk.sdu.mmmi.modulemon.common.data.GameData;
-import dk.sdu.mmmi.modulemon.common.data.World;
-
-import java.util.ArrayList;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Objects;
-import java.util.function.Function;
-import java.util.stream.Collectors;
 
 /**
  *
  * @author Gorm
  */
-public class InteractPart implements EntityPart{
+public class InteractPart implements EntityPart {
     private Entity interactWith;
     private PositionPart positionPart;
     private int range;

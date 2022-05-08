@@ -1,14 +1,12 @@
 package dk.sdu.mmmi.modulemon.Interaction;
 
-import dk.sdu.mmmi.modulemon.CommonBattle.MonsterTeamPart;
+import dk.sdu.mmmi.modulemon.CommonMap.Data.EntityParts.MonsterTeamPart;
 import dk.sdu.mmmi.modulemon.CommonMap.IMapView;
-import dk.sdu.mmmi.modulemon.CommonMonster.IMonster;
-import dk.sdu.mmmi.modulemon.common.data.Entity;
-import dk.sdu.mmmi.modulemon.common.data.EntityType;
+import dk.sdu.mmmi.modulemon.CommonMap.Data.Entity;
 import dk.sdu.mmmi.modulemon.common.data.GameData;
-import dk.sdu.mmmi.modulemon.common.data.World;
-import dk.sdu.mmmi.modulemon.common.data.entityparts.InteractPart;
-import dk.sdu.mmmi.modulemon.common.services.IPostEntityProcessingService;
+import dk.sdu.mmmi.modulemon.CommonMap.Data.World;
+import dk.sdu.mmmi.modulemon.CommonMap.Data.EntityParts.InteractPart;
+import dk.sdu.mmmi.modulemon.CommonMap.Services.IPostEntityProcessingService;
 
 public class InteractProcessing implements IPostEntityProcessingService {
     private IMapView mapView;

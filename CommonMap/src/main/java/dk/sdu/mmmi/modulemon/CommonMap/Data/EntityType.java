@@ -1,4 +1,4 @@
-package dk.sdu.mmmi.modulemon.common.data;
+package dk.sdu.mmmi.modulemon.CommonMap.Data;
 
 public enum EntityType {
     GENERIC, // For all entities that does not fit into other types

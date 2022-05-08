@@ -1,6 +1,6 @@
 package dk.sdu.mmmi.modulemon.CommonMap;
 
-import dk.sdu.mmmi.modulemon.common.data.Entity;
+import dk.sdu.mmmi.modulemon.CommonMap.Data.Entity;
 
 public interface IMapView {
     float getMapLeft();

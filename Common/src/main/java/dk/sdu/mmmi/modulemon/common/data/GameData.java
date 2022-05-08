@@ -1,7 +1,6 @@
 package dk.sdu.mmmi.modulemon.common.data;
 
 import com.badlogic.gdx.graphics.OrthographicCamera;
-import dk.sdu.mmmi.modulemon.common.event.Event;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -13,21 +12,8 @@ public class GameData {
     private int displayWidth;
     private int displayHeight;
     private final GameKeys keys = new GameKeys();
-    private List<Event> events = new CopyOnWriteArrayList<Event>();
     private OrthographicCamera cam;
     private boolean isPaused;
-
-    public void addEvent(Event e) {
-        events.add(e);
-    }
-
-    public void removeEvent(Event e) {
-        events.remove(e);
-    }
-
-    public List<Event> getEvents() {
-        return events;
-    }
 
     public GameKeys getKeys() {
         return keys;
@@ -57,27 +43,12 @@ public class GameData {
         return displayHeight;
     }
 
-    public void setEvents(List<Event> events) {
-        this.events = events;
-    }
-
     public OrthographicCamera getCamera() {
         return cam;
     }
 
     public void setCamera(OrthographicCamera cam) {
         this.cam = cam;
-    }
-
-    public <E extends Event> List<Event> getEvents(Class<E> type, String sourceID) {
-        List<Event> r = new ArrayList();
-        for (Event event : events) {
-            if (event.getClass().equals(type) && event.getSource().getID().equals(sourceID)) {
-                r.add(event);
-            }
-        }
-
-        return r;
     }
 
     public boolean isPaused() {
