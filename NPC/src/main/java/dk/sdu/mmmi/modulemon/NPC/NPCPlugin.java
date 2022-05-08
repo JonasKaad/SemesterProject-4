@@ -5,7 +5,6 @@
 package dk.sdu.mmmi.modulemon.NPC;
 
 import com.badlogic.gdx.graphics.Texture;
-import dk.sdu.mmmi.modulemon.CommonMap.Data.*;
 import dk.sdu.mmmi.modulemon.CommonMap.Data.EntityParts.*;
 import dk.sdu.mmmi.modulemon.CommonMonster.IMonster;
 import dk.sdu.mmmi.modulemon.CommonMonster.IMonsterRegistry;

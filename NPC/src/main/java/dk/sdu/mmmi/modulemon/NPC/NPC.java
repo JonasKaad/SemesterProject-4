@@ -4,7 +4,6 @@
  */
 package dk.sdu.mmmi.modulemon.NPC;
 
-import dk.sdu.mmmi.modulemon.CommonMap.Data.*;
 import dk.sdu.mmmi.modulemon.CommonMap.Data.EntityParts.*;
 import dk.sdu.mmmi.modulemon.CommonNPC.INPC;
 import dk.sdu.mmmi.modulemon.CommonMap.Data.Entity;
