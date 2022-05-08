@@ -70,12 +70,6 @@ public class Monster implements IMonster {
         hitPoints = hitPoint;
     }
 
-    /*
-    String monsterType = currentMonster.getMonsterType().toString().toLowerCase(Locale.ROOT);
-        String upperCaseMonsterType = monsterType.substring(0, 1).toUpperCase() + monsterType.substring(1);
-        stats.add("Type: " +  upperCaseMonsterType);
-     */
-
     @Override
     public List<String> getStats() {
         List<String> statList = new ArrayList<>();
