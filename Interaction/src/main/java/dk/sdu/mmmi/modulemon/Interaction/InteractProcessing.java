@@ -1,6 +1,7 @@
 package dk.sdu.mmmi.modulemon.Interaction;
 
 import dk.sdu.mmmi.modulemon.CommonMap.Data.EntityParts.MonsterTeamPart;
+import dk.sdu.mmmi.modulemon.CommonMap.Data.EntityType;
 import dk.sdu.mmmi.modulemon.CommonMap.IMapView;
 import dk.sdu.mmmi.modulemon.CommonMap.Data.Entity;
 import dk.sdu.mmmi.modulemon.common.data.GameData;

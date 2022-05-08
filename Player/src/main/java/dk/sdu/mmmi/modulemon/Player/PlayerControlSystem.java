@@ -1,17 +1,13 @@
 package dk.sdu.mmmi.modulemon.Player;
 
 import com.badlogic.gdx.graphics.Texture;
-import dk.sdu.mmmi.modulemon.CommonMap.Data.EntityParts.MonsterTeamPart;
+import dk.sdu.mmmi.modulemon.CommonMap.Data.EntityParts.*;
 import dk.sdu.mmmi.modulemon.CommonMap.Data.Entity;
 import dk.sdu.mmmi.modulemon.common.data.GameData;
 import dk.sdu.mmmi.modulemon.CommonMap.Data.World;
-import dk.sdu.mmmi.modulemon.CommonMap.Data.EntityParts.MovingPart;
-import dk.sdu.mmmi.modulemon.CommonMap.Data.EntityParts.PositionPart;
-import dk.sdu.mmmi.modulemon.CommonMap.Data.EntityParts.SpritePart;
 import dk.sdu.mmmi.modulemon.CommonMap.Services.IEntityProcessingService;
 
 import java.util.Collection;
-import java.util.List;
 
 import static dk.sdu.mmmi.modulemon.common.data.GameKeys.*;
 
