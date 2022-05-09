@@ -45,12 +45,12 @@ public class MonsterMove implements IMonsterMove {
     }
 
     @Override
-    public String getLongDescription() {
+    public String getBattleDescription() {
         return "Move: [" + this.getType() + "] " + this.getName() + ". Deals damage: " + this.getDamage();
     }
 
     @Override
-    public String getShortDescription() {
+    public String getSummaryScreenDescription() {
         String moveType = String.valueOf(getType()).toLowerCase(Locale.ROOT);
         String upperCaseMoveType = moveType.substring(0, 1).toUpperCase() + moveType.substring(1);
         return this.getName() + " - " + this.getDamage() + " - " + upperCaseMoveType;

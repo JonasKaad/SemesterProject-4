@@ -9,16 +9,13 @@ import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import dk.sdu.mmmi.modulemon.CommonBattle.MonsterTeamPart;
 import dk.sdu.mmmi.modulemon.CommonMonster.IMonster;
 import dk.sdu.mmmi.modulemon.common.AssetLoader;
-import dk.sdu.mmmi.modulemon.common.data.Entity;
 import dk.sdu.mmmi.modulemon.common.data.GameData;
-import dk.sdu.mmmi.modulemon.common.data.GameKeys;
 import dk.sdu.mmmi.modulemon.common.drawing.Rectangle;
 import dk.sdu.mmmi.modulemon.common.drawing.TextUtils;
 
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Locale;
 
 public class MonsterTeam {
     private static AssetLoader loader = AssetLoader.getInstance();
@@ -161,7 +158,7 @@ public class MonsterTeam {
         // And to get the moves formatted in desired form
         List<String> moves = new ArrayList<>();
         for (int i = 0; i < currentMonster.getMoves().size(); i++) {
-            moves.add(currentMonster.getMoves().get(i).getShortDescription());
+            moves.add(currentMonster.getMoves().get(i).getSummaryScreenDescription());
         }
         //Drawing the "Moves:" text first.
         textUtils.drawSmallBoldRoboto(spriteBatch, "Moves:", Color.BLACK, summaryMenu.getX() + 170, summaryMenu.getY() + (summaryMenu.getHeight() * 2 / 2.4f) - posCounter-30);
