@@ -88,6 +88,11 @@ public class BattleSimulation implements IBattleSimulation {
 
     @Override
     public void doMove(IBattleParticipant battleParticipant, IMonsterMove move) {
+        if (monsterProcessor == null) {
+            nextEvent = new VictoryBattleEvent("Monsters unloaded, it's a draw", battleParticipant, battleState.clone());
+            onNextEvent = () -> {};
+            return;
+        }
         if (battleParticipant!=battleState.getActiveParticipant()) {
             throw new IllegalArgumentException("It is not that battle participants turn!");
         }
@@ -238,6 +243,10 @@ public class BattleSimulation implements IBattleSimulation {
 
     public void setMonsterProcessor(IBattleMonsterProcessor monsterProcessor) {
         this.monsterProcessor = monsterProcessor;
+    }
+
+    public void removeMonsterProcessor(IBattleMonsterProcessor monsterProcessor) {
+        this.monsterProcessor = null;
     }
 
     public void setAIFactory(IBattleAIFactory factory) {
