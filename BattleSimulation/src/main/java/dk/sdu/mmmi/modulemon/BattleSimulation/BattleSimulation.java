@@ -17,7 +17,6 @@ public class BattleSimulation implements IBattleSimulation {
     private IBattleAI AI;
     private IBattleAIFactory AIFactory;
     private IBattleMonsterProcessor monsterProcessor;
-    private boolean monstersUnloaded = false;
 
     @Override
     public void StartBattle(IBattleParticipant player, IBattleParticipant enemy) {
@@ -89,8 +88,7 @@ public class BattleSimulation implements IBattleSimulation {
 
     @Override
     public void doMove(IBattleParticipant battleParticipant, IMonsterMove move) {
-        if (monstersUnloaded) {
-            // Could not get this to work with run away event.
+        if (monsterProcessor == null) {
             nextEvent = new VictoryBattleEvent("Monsters unloaded, it's a draw", battleParticipant, battleState.clone());
             onNextEvent = () -> {};
             return;
@@ -247,7 +245,6 @@ public class BattleSimulation implements IBattleSimulation {
 
     public void removeMonsterProcessor(IBattleMonsterProcessor monsterProcessor) {
         this.monsterProcessor = null;
-        this.monstersUnloaded = true;
     }
 
     public void setAIFactory(IBattleAIFactory factory) {
