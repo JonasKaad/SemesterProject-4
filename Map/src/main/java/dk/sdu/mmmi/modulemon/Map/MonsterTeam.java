@@ -16,7 +16,6 @@ import dk.sdu.mmmi.modulemon.common.drawing.TextUtils;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Locale;
 
 public class MonsterTeam {
     private static AssetLoader loader = AssetLoader.getInstance();
@@ -144,11 +143,6 @@ public class MonsterTeam {
         stats.add("HP: " + currentMonster.getHitPoints() + " / " + currentMonster.getMaxHitPoints());
         stats.addAll(currentMonster.getStats());
 
-        // String manipulation to make the enum value only uppercase on first letter.
-        String monsterType = currentMonster.getMonsterType().toString().toLowerCase(Locale.ROOT);
-        String upperCaseMonsterType = monsterType.substring(0, 1).toUpperCase() + monsterType.substring(1);
-        stats.add("Type: " +  upperCaseMonsterType);
-
         // Positional counter such that the following text can be drawn accordingly
         int posCounter = 0;
         //Drawing stats
@@ -164,9 +158,7 @@ public class MonsterTeam {
         // And to get the moves formatted in desired form
         List<String> moves = new ArrayList<>();
         for (int i = 0; i < currentMonster.getMoves().size(); i++) {
-            String moveType = String.valueOf(currentMonster.getMoves().get(i).getType()).toLowerCase(Locale.ROOT);
-            String upperCaseMoveType = moveType.substring(0, 1).toUpperCase() + moveType.substring(1);
-            moves.add(currentMonster.getMoves().get(i) + " - " + currentMonster.getMoves().get(i).getDamage() + " - " + upperCaseMoveType);
+            moves.add(currentMonster.getMoves().get(i).getSummaryScreenDescription());
         }
         //Drawing the "Moves:" text first.
         textUtils.drawSmallBoldRoboto(spriteBatch, "Moves:", Color.BLACK, summaryMenu.getX() + 170, summaryMenu.getY() + (summaryMenu.getHeight() * 2 / 2.4f) - posCounter-30);

@@ -43,7 +43,6 @@ public class BattleSimulationTest {
 
         IMonsterMove simpleMove = mock(IMonsterMove.class);
         when(simpleMove.getName()).thenReturn("basic attack");
-        when(simpleMove.getDamage()).thenReturn(10);
         moveList = new ArrayList<>();
         moveList.add(simpleMove);
 
@@ -75,7 +74,7 @@ public class BattleSimulationTest {
 
             @Override
             public int calculateDamage(IMonster source, IMonsterMove move, IMonster target) {
-                return move.getDamage();
+                return 10;
             }
         });
 

@@ -430,7 +430,7 @@ public class BattleView implements IGameViewService, IBattleView {
                 }
             } else if (selectedAction instanceof IMonsterMove) {
                 IMonsterMove move = ((IMonsterMove) selectedAction);
-                _battleScene.setTextToDisplay("Move: [" + move.getType() + "] " + move.getName() + ". Deals damage: " + move.getDamage());
+                _battleScene.setTextToDisplay(move.getBattleDescription());
                 if (keys.isPressed(GameKeys.ACTION)) {
                     _battleSimulation.doMove(_battleSimulation.getState().getPlayer(), move);
                     this.menuState = MenuState.DEFAULT;

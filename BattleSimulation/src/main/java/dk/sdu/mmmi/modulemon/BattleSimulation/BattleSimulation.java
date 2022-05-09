@@ -170,7 +170,6 @@ public class BattleSimulation implements IBattleSimulation {
 
     @Override
     public IBattleState simulateDoMove(IBattleParticipant battleParticipant, IMonsterMove move, IBattleState currentState) {
-
         //Maybe add a check, that the battleParticipant is actually the active participant
 
         BattleState newState = (BattleState) currentState.clone();
@@ -184,7 +183,10 @@ public class BattleSimulation implements IBattleSimulation {
         }
         IMonster target = opposingParticipant.getActiveMonster();
 
-        int damage = monsterProcessor.calculateDamage(source, move, target);
+        int damage = 0;
+        if (move != null) {
+            damage = monsterProcessor.calculateDamage(source, move, target);
+        }
 
         int newHitPoints = target.getHitPoints()-damage;
         if (newHitPoints>0) {
