@@ -48,7 +48,8 @@ public class NPCPlugin implements IGamePluginService{
         npcs.get(0).add(new InteractPart(positionPart, 5));
         npcs.get(0).add(new AIControlPart(new Character[]{'R','R','L','L','L','L','R','R','U','U','D','D','D','D','U','U'}));
         npcs.get(0).add(new AIControlPart(new Character[]{'R','R','L','L','L','L','R','R','U','U','D','D','D','D','U','U'}));
-        addMonsterTeam(npcs);
+        if(monsterRegistry != null)
+            addMonsterTeam(npcs);
     }
 
     public void addMonsterTeam(List<Entity> entities) {
@@ -77,9 +78,8 @@ public class NPCPlugin implements IGamePluginService{
 
     public void removeMonsterRegistryService(IMonsterRegistry monsterRegistry) {
         this.monsterRegistry = null;
-        for (Entity entity : npcs) {
+        if(npcs != null) for (Entity entity : npcs) {
             entity.remove(MonsterTeamPart.class);
         }
     }
-    
 }
