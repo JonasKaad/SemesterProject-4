@@ -1,9 +1,7 @@
 package dk.sdu.mmmi.modulemon.BundleController;
 
-import org.osgi.framework.Bundle;
-import org.osgi.framework.BundleContext;
-import org.osgi.framework.BundleException;
-import org.osgi.framework.FrameworkUtil;
+import org.apache.felix.scr.ScrService;
+import org.osgi.framework.*;
 
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
@@ -17,6 +15,7 @@ public class BundleControllerUI extends JFrame {
     private BundleControllerUI _self;
     private BundleControllerService service;
     private BundleContext context;
+    private ScrService componentService;
     private boolean yoloMode = false;
     private JPanel contentPane;
     private JPanel bundlePanel;
@@ -30,12 +29,12 @@ public class BundleControllerUI extends JFrame {
             "Monster",
             "Interaction",
             "Collision"
-
     );
 
     public BundleControllerUI(BundleControllerService service) {
         _self = this;
         context = FrameworkUtil.getBundle(BundleControllerService.class).getBundleContext();
+        componentService = getScrService();
         this.service = service;
         setTitle("OSGi BundleController");
         setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
@@ -112,7 +111,6 @@ public class BundleControllerUI extends JFrame {
         return e -> {
             int returnVal = fileChooser.showOpenDialog(_self);
 
-
             if (returnVal != JFileChooser.APPROVE_OPTION) {
                 return;
             }
@@ -129,11 +127,14 @@ public class BundleControllerUI extends JFrame {
     }
 
     public JPanel getBundleEntry(Bundle bundle) {
+        JPanel wrapperPanel = new JPanel();
+        wrapperPanel.setLayout(new BoxLayout(wrapperPanel, BoxLayout.Y_AXIS));
         JPanel bundlePanel = new JPanel();
         bundlePanel.setLayout(new BoxLayout(bundlePanel, BoxLayout.X_AXIS));
 
         JCheckBox chckbxEnableBundle = new JCheckBox(String.format("%d - %s (%s)", bundle.getBundleId(), bundle.getSymbolicName(), getState(bundle.getState())));
-        chckbxEnableBundle.setSelected(bundle.getState() == Bundle.ACTIVE);
+        boolean bundleActivated = bundle.getState() == Bundle.ACTIVE;
+        chckbxEnableBundle.setSelected(bundleActivated);
 
         boolean shouldBeToggleable = this.dynamicallyLoadUnloadBundles.stream().anyMatch(x -> x.equalsIgnoreCase(bundle.getSymbolicName()))
                 || yoloMode;
@@ -190,7 +191,48 @@ public class BundleControllerUI extends JFrame {
         bundlePanel.add(horizontalGlue_1);
         bundlePanel.add(btnLocation);
         bundlePanel.add(btnUninstall);
-        return bundlePanel;
+
+        wrapperPanel.add(bundlePanel);
+
+        org.apache.felix.scr.Component[] components = componentService.getComponents(bundle);
+        if(components != null && components.length > 0) {
+            Arrays.sort(components, new ComponentComparer());
+
+            JPanel componentWrapperPanel = new JPanel();
+            componentWrapperPanel.setLayout(new BoxLayout(componentWrapperPanel, BoxLayout.Y_AXIS));
+
+            int componentInset = 40;
+            for (org.apache.felix.scr.Component c : components) {
+                JPanel componentPanel = new JPanel();
+                componentPanel.setLayout(new BoxLayout(componentPanel, BoxLayout.X_AXIS));
+                JCheckBox chckbxEnableComponent = new JCheckBox(String.format("%d - %s", c.getId(), c.getName()));
+                chckbxEnableComponent.setSelected(c.getState() == org.apache.felix.scr.Component.STATE_ACTIVE);
+
+                if (!shouldBeToggleable) {
+                    chckbxEnableComponent.setEnabled(false);
+                    chckbxEnableComponent.setToolTipText("This component can not be dynamically enabled/disabled.");
+                }
+
+                Component constraint = Box.createHorizontalStrut(componentInset);
+                componentPanel.add(constraint);
+                componentPanel.add(chckbxEnableComponent);
+                Component componentCheckboxSpring = Box.createHorizontalGlue();
+                componentPanel.add(componentCheckboxSpring);
+
+                chckbxEnableComponent.addActionListener(e -> {
+                    if(chckbxEnableComponent.isSelected()){
+                        c.enable();
+                    }else{
+                        c.disable();
+                    }
+                });
+
+                componentWrapperPanel.add(componentPanel);
+            }
+            wrapperPanel.add(componentWrapperPanel);
+        }
+
+        return wrapperPanel;
     }
 
     private String getState(int state) {
@@ -210,6 +252,11 @@ public class BundleControllerUI extends JFrame {
             default:
                 return "Unknown";
         }
+    }
+
+    private ScrService getScrService(){
+        ServiceReference scrServiceRef = context.getServiceReference( ScrService.class.getName() );
+        return (ScrService) context.getService(scrServiceRef);
     }
 
     @Override
