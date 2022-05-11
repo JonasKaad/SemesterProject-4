@@ -6,6 +6,7 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.math.Vector3;
 import dk.sdu.mmmi.modulemon.CommonMap.Data.Entity;
+import dk.sdu.mmmi.modulemon.CommonMap.Data.EntityType;
 import dk.sdu.mmmi.modulemon.CommonMap.IMapEvent;
 import dk.sdu.mmmi.modulemon.CommonMap.IMapView;
 import dk.sdu.mmmi.modulemon.common.data.GameData;
@@ -71,6 +72,13 @@ public class BattleEvent implements IMapEvent {
         spriteBatch.setProjectionMatrix(gameData.getCamera().combined);
         Camera cam = gameData.getCamera();
         spriteBatch.begin();
+        if(victim.getType() == EntityType.GENERIC){
+            TextUtils.getInstance().drawBigRoboto(spriteBatch,
+                    "!",
+                    Color.BLACK,
+                    victim.getPosX() + 16,
+                    victim.getPosY() + 85);
+        }
         TextUtils.getInstance().drawNormalRoboto(spriteBatch,
                 lines.peek(),
                 Color.BLACK,
