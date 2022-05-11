@@ -26,6 +26,8 @@ public class BundleControllerUI extends JFrame {
             "Map",
             "Player",
             "NPC",
+            "BattleAI",
+            "SimpleAI",
             "Monster",
             "Interaction",
             "Collision"
