@@ -2,7 +2,6 @@ package dk.sdu.mmmi.modulemon.Monster;
 
 import dk.sdu.mmmi.modulemon.CommonMonster.IMonster;
 import dk.sdu.mmmi.modulemon.CommonMonster.IMonsterMove;
-import dk.sdu.mmmi.modulemon.CommonMonster.MonsterType;
 import dk.sdu.mmmi.modulemon.common.OSGiFileHandleByteReader;
 import org.json.JSONArray;
 import org.json.JSONObject;

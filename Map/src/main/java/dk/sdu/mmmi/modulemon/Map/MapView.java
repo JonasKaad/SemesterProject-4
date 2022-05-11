@@ -94,7 +94,7 @@ public class MapView implements IGameViewService, IMapView {
     @Override
     public void init(IGameStateManager gameStateManager) {
         mapMusic = loader.getMusicAsset("/music/village_theme.ogg", MapView.class);
-        tiledMap = new OSGiTmxLoader().load("/maps/SeasonalOverworld.tmx");
+        tiledMap = new OSGiTmxLoader().load("/maps/ForestOverworld.tmx");
         overhangLayer = (TiledMapTileLayer) tiledMap.getLayers().get("Top");
         int scale = 4;
         tiledMapRenderer = new OrthogonalTiledMapRenderer(tiledMap, scale);
@@ -186,14 +186,16 @@ public class MapView implements IGameViewService, IMapView {
                 if (entity.getType().equals(EntityType.PLAYER)) {
                     playerPosX = entity.getPosX();
                     playerPosY = entity.getPosY();
-                    if (playerPosY > mapBottom && playerPosY < mapTop) {
-                        cam.position.set(cam.position.x, playerPosY, 0);
-                        cam.update();
-                    }
-                    if (playerPosX > mapLeft && playerPosX < mapRight) {
-                        cam.position.set(playerPosX, cam.position.y, 0);
-                        cam.update();
-                    }
+
+                    /*
+                    The value of the leftmost position of the camera and the rightmost position of the camera
+                    gets compared to the player's position. If the player is too far to the left or the right,
+                    the camera will be "locked" in place at the leftmost or rightmost legal position,
+                    such that it does not go out of bounds. The same applies to the top and bottom positions.
+                     */
+                    cam.position.set(Math.min(Math.max(mapLeft, playerPosX), mapRight),
+                            Math.min(Math.max(mapBottom, playerPosY), mapTop), 0);
+                    cam.update();
                 }
             }
         }

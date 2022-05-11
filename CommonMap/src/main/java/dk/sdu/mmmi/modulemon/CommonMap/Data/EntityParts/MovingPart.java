@@ -52,7 +52,8 @@ public class MovingPart extends BaseAnimation implements EntityPart {
         float y = positionPart.getY();
         float start_y = positionPart.getY();
         float dt = gameData.getDelta();
-        float pixels = 64;
+        float scale = 4;
+        float pixels = 16 * scale;
         float movingTimerFactor = 0.001f;
 
         Vector2 currentPosition = new Vector2(start_x,start_y);

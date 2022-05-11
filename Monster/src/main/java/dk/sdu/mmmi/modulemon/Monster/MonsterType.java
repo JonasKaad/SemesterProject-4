@@ -1,4 +1,4 @@
-package dk.sdu.mmmi.modulemon.CommonMonster;
+package dk.sdu.mmmi.modulemon.Monster;
 
 public enum MonsterType {
     FIRE,

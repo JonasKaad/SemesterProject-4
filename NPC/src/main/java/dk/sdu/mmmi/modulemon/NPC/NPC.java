@@ -5,7 +5,6 @@
 package dk.sdu.mmmi.modulemon.NPC;
 
 import dk.sdu.mmmi.modulemon.CommonMap.Data.EntityParts.*;
-import dk.sdu.mmmi.modulemon.CommonNPC.INPC;
 import dk.sdu.mmmi.modulemon.CommonMap.Data.Entity;
 import dk.sdu.mmmi.modulemon.CommonMap.Data.EntityType;
 
@@ -13,7 +12,7 @@ import dk.sdu.mmmi.modulemon.CommonMap.Data.EntityType;
  *
  * @author Gorm Krings
  */
-public class NPC extends Entity implements INPC {
+public class NPC extends Entity {
     public NPC(){
         super(EntityType.GENERIC);
     }
