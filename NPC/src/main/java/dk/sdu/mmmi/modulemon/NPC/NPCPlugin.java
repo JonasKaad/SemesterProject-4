@@ -4,14 +4,13 @@
  */
 package dk.sdu.mmmi.modulemon.NPC;
 
-import com.badlogic.gdx.graphics.Texture;
 import dk.sdu.mmmi.modulemon.CommonMap.Data.EntityParts.*;
 import dk.sdu.mmmi.modulemon.CommonMonster.IMonster;
 import dk.sdu.mmmi.modulemon.CommonMonster.IMonsterRegistry;
 import dk.sdu.mmmi.modulemon.CommonMap.Data.Entity;
+import dk.sdu.mmmi.modulemon.common.AssetLoader;
 import dk.sdu.mmmi.modulemon.common.data.GameData;
 import dk.sdu.mmmi.modulemon.CommonMap.Data.World;
-import dk.sdu.mmmi.modulemon.common.OSGiFileHandle;
 import dk.sdu.mmmi.modulemon.CommonMap.Services.IGamePluginService;
 import java.util.ArrayList;
 import java.util.List;
@@ -35,10 +34,10 @@ public class NPCPlugin implements IGamePluginService{
         npcs.add(0, new NPC());
         PositionPart positionPart1 = new PositionPart((30)* 64 + 7, (64*63 - (46) * 64 ) + 20);
         npcs.get(0).add(new SpritePart(
-                new Texture(new OSGiFileHandle("/assets/npc/npc1up.png", NPCPlugin.class)), //upSprite
-                new Texture(new OSGiFileHandle("/assets/npc/npc1down.png", NPCPlugin.class)), //downSprite
-                new Texture(new OSGiFileHandle("/assets/npc/npc1left.png", NPCPlugin.class)), //leftSprite
-                new Texture(new OSGiFileHandle("/assets/npc/npc1right.png", NPCPlugin.class)))); //rightSprite
+                AssetLoader.getInstance().getTextureAsset("/assets/npc/npc1up.png", NPCPlugin.class), //upSprite
+                AssetLoader.getInstance().getTextureAsset("/assets/npc/npc1down.png", NPCPlugin.class), //downSprite
+                AssetLoader.getInstance().getTextureAsset("/assets/npc/npc1left.png", NPCPlugin.class), //leftSprite
+                AssetLoader.getInstance().getTextureAsset("/assets/npc/npc1right.png", NPCPlugin.class))); //rightSprite
         npcs.get(0).add(positionPart1);
         npcs.get(0).add(new MovingPart());
         npcs.get(0).add(new InteractPart(positionPart1, 5));
@@ -49,10 +48,10 @@ public class NPCPlugin implements IGamePluginService{
         npcs.add(1, new NPC());
         PositionPart positionPart2 = new PositionPart((55)* 64 + 7, (64*63 - (31) * 64 ) + 20);
         npcs.get(1).add(new SpritePart(
-                new Texture(new OSGiFileHandle("/assets/npc/npc2up.png", NPCPlugin.class)), //upSprite
-                new Texture(new OSGiFileHandle("/assets/npc/npc2down.png", NPCPlugin.class)), //downSprite
-                new Texture(new OSGiFileHandle("/assets/npc/npc2left.png", NPCPlugin.class)), //leftSprite
-                new Texture(new OSGiFileHandle("/assets/npc/npc2right.png", NPCPlugin.class)))); //rightSprite
+                AssetLoader.getInstance().getTextureAsset("/assets/npc/npc2up.png", NPCPlugin.class), //upSprite
+                AssetLoader.getInstance().getTextureAsset("/assets/npc/npc2down.png", NPCPlugin.class), //downSprite
+                AssetLoader.getInstance().getTextureAsset("/assets/npc/npc2left.png", NPCPlugin.class), //leftSprite
+                AssetLoader.getInstance().getTextureAsset("/assets/npc/npc2right.png", NPCPlugin.class))); //rightSprite
         npcs.get(1).add(positionPart2);
         npcs.get(1).add(new MovingPart());
         npcs.get(1).add(new InteractPart(positionPart2, 7));
@@ -62,10 +61,10 @@ public class NPCPlugin implements IGamePluginService{
         npcs.add(2, new NPC());
         PositionPart positionPart3 = new PositionPart((14)* 64 + 7, (64*63 - (14) * 64 ) + 20);
         npcs.get(2).add(new SpritePart(
-                new Texture(new OSGiFileHandle("/assets/npc/npc3up.png", NPCPlugin.class)), //upSprite
-                new Texture(new OSGiFileHandle("/assets/npc/npc3down.png", NPCPlugin.class)), //downSprite
-                new Texture(new OSGiFileHandle("/assets/npc/npc3left.png", NPCPlugin.class)), //leftSprite
-                new Texture(new OSGiFileHandle("/assets/npc/npc3right.png", NPCPlugin.class)))); //rightSprite
+                AssetLoader.getInstance().getTextureAsset("/assets/npc/npc3up.png", NPCPlugin.class), //upSprite
+                AssetLoader.getInstance().getTextureAsset("/assets/npc/npc3down.png", NPCPlugin.class), //downSprite
+                AssetLoader.getInstance().getTextureAsset("/assets/npc/npc3left.png", NPCPlugin.class), //leftSprite
+                AssetLoader.getInstance().getTextureAsset("/assets/npc/npc3right.png", NPCPlugin.class))); //rightSprite
         npcs.get(2).add(positionPart3);
         npcs.get(2).add(new MovingPart());
         npcs.get(2).add(new InteractPart(positionPart3, 5));
