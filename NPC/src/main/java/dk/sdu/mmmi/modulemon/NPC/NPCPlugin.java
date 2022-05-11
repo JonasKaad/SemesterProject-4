@@ -79,6 +79,10 @@ public class NPCPlugin implements IGamePluginService{
         npcs.get(2).add(new InteractPart(positionPart3, 5));
         npcs.get(2).add(new AIControlPart(new Character[]{'R','R','L','L','L','L','R','R','U','U','D','D','D','D','U','U'}));
         npcs.get(2).add(new AIControlPart(new Character[]{'R','R','L','L','L','L','R','R','U','U','D','D','D','D','U','U'}));
+        Queue<String> npc3Lines = new LinkedList<>();
+        npc3Lines.add("So, you made it all the way to me...");
+        npc3Lines.add("Lets see if you can really battle");
+        npcs.get(2).add(new LinesPart(npc3Lines));
 
 
         if(monsterRegistry != null) {
