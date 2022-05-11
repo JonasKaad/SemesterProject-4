@@ -82,13 +82,10 @@ public class BattleSimulationTest {
             @Override
             public IBattleAI getBattleAI(IBattleSimulation battleSimulation, IBattleParticipant participantToControl) {
                 return new IBattleAI() {
+
                     @Override
                     public void doAction(IBattleSimulation battleSimulation) {
-                        IBattleParticipant activeParticipant =
-                                battleSimulation.getState().isPlayersTurn()
-                                        ? battleSimulation.getState().getPlayer()
-                                        : battleSimulation.getState().getEnemy();
-                        battleSimulation.doMove(activeParticipant, activeParticipant.getActiveMonster().getMoves().get(0));
+                        battleSimulation.doMove(participantToControl, participantToControl.getActiveMonster().getMoves().get(0));
                     }
 
                     @Override
@@ -124,9 +121,15 @@ public class BattleSimulationTest {
         initMonsterMocks();
         initBattleParticipantMocks();
         BattleSimulation battleSimulation = startBattle();
-        IBattleEvent event = battleSimulation.getNextBattleEvent();
+        IBattleEvent event = null;
+        while (event == null) {
+            event = battleSimulation.getNextBattleEvent();
+        }
         assertEquals("The opponent starts the battle", event.getText());
-        event = battleSimulation.getNextBattleEvent();
+        event = null;
+        while (event == null) {
+            event = battleSimulation.getNextBattleEvent();
+        }
         assertEquals("Opponent's Giraffe used basic attack", event.getText().substring(0, 36));
     }
 
@@ -168,12 +171,18 @@ public class BattleSimulationTest {
     @Test
     void playerMonsterShouldTakeDamage() {
         initMonsterMocks();
+        IMonster oldPlayerMonster = playerMonster; //save a reference to playerMonster so it is not garbage collected
         playerMonster = spy(playerMonster);
         when(playerMonster.getHitPoints()).thenReturn(50);
         initBattleParticipantMocks();
         BattleSimulation battleSimulation = startBattle();
-        while (!battleSimulation.getState().isPlayersTurn()) {
-            battleSimulation.getNextBattleEvent();
+        IBattleEvent event = null;
+        while (event==null) {
+            event = battleSimulation.getNextBattleEvent();
+        }
+        event = null;
+        while (event==null) {
+            event = battleSimulation.getNextBattleEvent();
         }
         verify(playerMonster).setHitPoints(40);
 
@@ -257,7 +266,10 @@ public class BattleSimulationTest {
         battleSimulation.switchMonster(player, newMonster);
         IBattleEvent event = battleSimulation.getNextBattleEvent();
         assertInstanceOf(ChangeMonsterBattleEvent.class, event);
-        event = battleSimulation.getNextBattleEvent();
+        event = null;
+        while (event==null) {
+            event = battleSimulation.getNextBattleEvent();
+        }
         assertInstanceOf(MoveBattleEvent.class, event, "It should be the enemy's turn, when the player has changed their monster");
         verify(player).setActiveMonster(newMonster);
     }
@@ -313,13 +325,25 @@ public class BattleSimulationTest {
         when(playerMonster.getHitPoints()).thenReturn(10);
         initBattleParticipantMocks();
         BattleSimulation battleSimulation = startBattle();
+        IBattleEvent event = null;
 
         //BattleStartEvent
-        assertInstanceOf(InfoBattleEvent.class, battleSimulation.getNextBattleEvent());
+        while (event==null) {
+            event = battleSimulation.getNextBattleEvent();
+        }
+        assertInstanceOf(InfoBattleEvent.class, event);
+        event = null;
         //EnemyMoveEvent
-        assertInstanceOf(MoveBattleEvent.class, battleSimulation.getNextBattleEvent());
+        while (event==null) {
+            event = battleSimulation.getNextBattleEvent();
+        }
+        assertInstanceOf(MoveBattleEvent.class, event);
+        event = null;
         //VictoryEvent
-        IBattleEvent event = battleSimulation.getNextBattleEvent();
+
+        while (event==null) {
+            event = battleSimulation.getNextBattleEvent();
+        }
         assertInstanceOf(VictoryBattleEvent.class, event);
         VictoryBattleEvent vEvent = (VictoryBattleEvent) event;
         assertEquals(enemy, vEvent.getWinner());
@@ -345,14 +369,30 @@ public class BattleSimulationTest {
         BattleSimulation battleSimulation = startBattle();
 
         //BattleStartEvent
-        assertInstanceOf(InfoBattleEvent.class, battleSimulation.getNextBattleEvent());
+        IBattleEvent event = null;
+        while (event==null) {
+            event = battleSimulation.getNextBattleEvent();
+        }
+        assertInstanceOf(InfoBattleEvent.class, event);
+        event = null;
         //EnemyMoveEvent
-        assertInstanceOf(MoveBattleEvent.class, battleSimulation.getNextBattleEvent());
+        while (event==null) {
+            event = battleSimulation.getNextBattleEvent();
+        }
+        assertInstanceOf(MoveBattleEvent.class, event);
+        event = null;
         //ChangeMonsterEvent
-        assertInstanceOf(ChangeMonsterBattleEvent.class, battleSimulation.getNextBattleEvent());
+        while (event==null) {
+            event = battleSimulation.getNextBattleEvent();
+        }
+        assertInstanceOf(ChangeMonsterBattleEvent.class, event);
+        event = null;
         battleSimulation.doMove(player, playerMonster.getMoves().get(0));
         //Player should do a move
-        assertInstanceOf(MoveBattleEvent.class, battleSimulation.getNextBattleEvent());
+        while (event==null) {
+            event = battleSimulation.getNextBattleEvent();
+        }
+        assertInstanceOf(MoveBattleEvent.class, event);
 
         verify(player).setActiveMonster(playerMonster2);
     }

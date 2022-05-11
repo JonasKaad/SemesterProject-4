@@ -18,7 +18,6 @@ public class BattleAI implements IBattleAI {
     private IBattleParticipant participantToControl;
     private IBattleParticipant opposingParticipant;
     private IBattleSimulation battleSimulation;
-    private IMonsterMove emptyMove = new EmptyMove();
     private boolean useAlphaBetaPruning = true;
     private long startTime;
     private int maxDepthReached = 0;
@@ -47,7 +46,7 @@ public class BattleAI implements IBattleAI {
     }
 
     public boolean outOfTime() {
-        return ((System.nanoTime()-startTime)/1000000)>timeLimitms;
+        return ((System.nanoTime()-startTime)/1000000)>=timeLimitms;
     }
 
     @Override

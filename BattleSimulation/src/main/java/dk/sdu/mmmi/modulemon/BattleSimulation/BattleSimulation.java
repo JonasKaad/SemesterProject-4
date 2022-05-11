@@ -6,6 +6,8 @@ import dk.sdu.mmmi.modulemon.CommonBattleSimulation.BattleEvents.*;
 import dk.sdu.mmmi.modulemon.CommonMonster.IMonster;
 import dk.sdu.mmmi.modulemon.CommonMonster.IMonsterMove;
 import java.util.Optional;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 public class BattleSimulation implements IBattleSimulation {
 
@@ -17,6 +19,8 @@ public class BattleSimulation implements IBattleSimulation {
     private IBattleAI AI;
     private IBattleAIFactory AIFactory;
     private IBattleMonsterProcessor monsterProcessor;
+
+    private ExecutorService AIExecutor = Executors.newFixedThreadPool(1);
 
     @Override
     public void StartBattle(IBattleParticipant player, IBattleParticipant enemy) {
@@ -50,12 +54,16 @@ public class BattleSimulation implements IBattleSimulation {
         this.battleState = new BattleState(player, enemy);
         this.battleState.setActiveParticipant(firstToTakeTurn);
 
+        this.AI = AIFactory.getBattleAI(this, enemy);
+
         if (!firstToTakeTurn.isPlayerControlled()) {
             nextEvent = new InfoBattleEvent("The opponent starts the battle", battleState.clone());
             onNextEvent = () -> {
                 battleState.setActiveParticipant(firstToTakeTurn);
                 if (getAI()!=null) {
-                    getAI().doAction(this);
+                    AIExecutor.execute(() -> {
+                        getAI().doAction(this);
+                    });
                 } else {
                     nextEvent = new InfoBattleEvent("Waiting for an AI module", battleState.clone());
                 }
@@ -73,7 +81,9 @@ public class BattleSimulation implements IBattleSimulation {
         if (battleState.isPlayersTurn()) {
             if (getAI()!=null) {
                 battleState.setActiveParticipant(battleState.getEnemy());
-                getAI().doAction(this);
+                AIExecutor.execute(() -> {
+                    getAI().doAction(this);
+                });
             } else {
                 nextEvent = new InfoBattleEvent("Waiting for an AI module", battleState.clone());
             }
@@ -93,7 +103,7 @@ public class BattleSimulation implements IBattleSimulation {
     }
 
     @Override
-    public void doMove(IBattleParticipant battleParticipant, IMonsterMove move) {
+    public synchronized void doMove(IBattleParticipant battleParticipant, IMonsterMove move) {
         if (monsterProcessor == null) {
             nextEvent = new VictoryBattleEvent("Monsters unloaded, it's a draw", battleParticipant, battleState.clone());
             onNextEvent = () -> {};
@@ -240,7 +250,7 @@ public class BattleSimulation implements IBattleSimulation {
     }
 
     @Override
-    public IBattleEvent getNextBattleEvent() {
+    public synchronized IBattleEvent getNextBattleEvent() {
         IBattleEvent event = nextEvent;
         if (event!=null && onNextEvent!=null) {
             nextEvent = null;
