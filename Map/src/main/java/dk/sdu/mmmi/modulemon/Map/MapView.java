@@ -11,21 +11,23 @@ import com.badlogic.gdx.maps.tiled.TiledMap;
 import com.badlogic.gdx.maps.tiled.TiledMapTileLayer;
 import com.badlogic.gdx.maps.tiled.renderers.BatchTiledMapRenderer;
 import com.badlogic.gdx.maps.tiled.renderers.OrthogonalTiledMapRenderer;
-import dk.sdu.mmmi.modulemon.CommonBattle.IBattleParticipant;
-import dk.sdu.mmmi.modulemon.CommonBattle.MonsterTeamPart;
+import dk.sdu.mmmi.modulemon.CommonMap.Data.Entity;
+import dk.sdu.mmmi.modulemon.CommonMap.Data.EntityType;
+import dk.sdu.mmmi.modulemon.CommonMap.Data.EntityParts.MonsterTeamPart;
 import dk.sdu.mmmi.modulemon.CommonBattleClient.IBattleCallback;
 import dk.sdu.mmmi.modulemon.CommonBattleClient.IBattleResult;
 import dk.sdu.mmmi.modulemon.CommonBattleClient.IBattleView;
+import dk.sdu.mmmi.modulemon.CommonMap.Data.World;
 import dk.sdu.mmmi.modulemon.CommonMap.IMapView;
 import dk.sdu.mmmi.modulemon.CommonMonster.IMonster;
 import dk.sdu.mmmi.modulemon.common.AssetLoader;
 import dk.sdu.mmmi.modulemon.common.data.*;
 import dk.sdu.mmmi.modulemon.common.drawing.Rectangle;
 import dk.sdu.mmmi.modulemon.common.drawing.TextUtils;
-import dk.sdu.mmmi.modulemon.common.services.IEntityProcessingService;
-import dk.sdu.mmmi.modulemon.common.services.IGamePluginService;
+import dk.sdu.mmmi.modulemon.CommonMap.Services.IEntityProcessingService;
+import dk.sdu.mmmi.modulemon.CommonMap.Services.IGamePluginService;
 import dk.sdu.mmmi.modulemon.common.services.IGameViewService;
-import dk.sdu.mmmi.modulemon.common.services.IPostEntityProcessingService;
+import dk.sdu.mmmi.modulemon.CommonMap.Services.IPostEntityProcessingService;
 
 import java.util.*;
 import java.util.concurrent.CopyOnWriteArrayList;
@@ -190,6 +192,11 @@ public class MapView implements IGameViewService, IMapView {
             for (Entity entity : world.getEntities()) {
                 if(entity.getType().equals(EntityType.PLAYER)){
                     mtp = entity.getPart(MonsterTeamPart.class);
+                    if (mtp == null) {
+                        showMonsterTeam = false;
+                        pauseMenu.setFillColor(Color.WHITE);
+                        break;
+                    }
                     monsterTeam = mtp.getMonsterTeam();
 
                     MonsterTeam.drawMonsterTeam(gameData, shapeRenderer, spriteBatch, textUtils, cam, showSwitchingText, monsterTeamMenu, monsterTeam, monsterRectangles);
@@ -535,16 +542,14 @@ public class MapView implements IGameViewService, IMapView {
     }
 
     @Override
-    public void startEncounter(Entity participant1, Entity participant2){
-        IBattleParticipant playerParticipant = ((MonsterTeamPart)  participant1.getPart(MonsterTeamPart.class))
-                .toBattleParticipant(true);
-        IBattleParticipant enemyParticipant = ((MonsterTeamPart)  participant2.getPart(MonsterTeamPart.class))
-                .toBattleParticipant(false);
+    public void startEncounter(Entity player, Entity enemy){
+        List<IMonster> playerMonsters = ((MonsterTeamPart)  player.getPart(MonsterTeamPart.class)).getMonsterTeam();
+        List<IMonster> enemyMonsters = ((MonsterTeamPart)  enemy.getPart(MonsterTeamPart.class)).getMonsterTeam();
 
         gameStateManager.setState((IGameViewService) battleView, false); // Do not dispose the map
         cam.position.set(cam.viewportWidth / 2, cam.viewportHeight / 2, 0);
         mapMusic.stop();
-        battleView.startBattle(playerParticipant, enemyParticipant, new IBattleCallback() {
+        battleView.startBattle(playerMonsters, enemyMonsters, new IBattleCallback() {
             @Override
             public void onBattleEnd(IBattleResult result) {
                 gameStateManager.setState(MapView.this);

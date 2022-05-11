@@ -20,9 +20,9 @@ public class BattleAI implements IBattleAI {
     private IBattleSimulation battleSimulation;
     private IMonsterMove emptyMove = new EmptyMove();
     private boolean useAlphaBetaPruning = true;
-    long startTime;
-    int maxDepthReached = 0;
-    int timeLimitms = 1000;
+    private long startTime;
+    private int maxDepthReached = 0;
+    private int timeLimitms = 1000;
 
 
     public BattleAI(IBattleSimulation battleSimulation, IBattleParticipant participantToControl) {
@@ -291,7 +291,7 @@ public class BattleAI implements IBattleAI {
 
         if (successors.isEmpty()) {
             // If we don't know any of the monsters moves, add an empty move dealing 0 damage;
-            successors.add(battleSimulation.simulateDoMove(activeParticipant, emptyMove, battleState));
+            successors.add(battleSimulation.simulateDoMove(activeParticipant, null, battleState));
         }
 
         for (IMonster monster : activeParticipant.getMonsterTeam()) {

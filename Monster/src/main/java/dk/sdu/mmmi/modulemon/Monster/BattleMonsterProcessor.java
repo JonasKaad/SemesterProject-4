@@ -15,19 +15,35 @@ public class BattleMonsterProcessor implements IBattleMonsterProcessor {
     }
 
     @Override
-    public int calculateDamage(IMonster iSource, IMonsterMove move, IMonster iTarget) {
+    public int calculateDamage(IMonster iSource, IMonsterMove iMove, IMonster iTarget) {
         Monster source = (Monster) iSource;
         Monster target = (Monster) iTarget;
+        MonsterMove move = (MonsterMove) iMove;
         float moveDamage = (float) move.getDamage();
         float sourceAttack = (float) source.getAttack();
         float targetDefence = (float) target.getDefence();
 
-        int damage = Math.round(moveDamage * (sourceAttack/targetDefence) * calculateTypeAdvantage(move.getType(), target.getMonsterType()));
+
+
+        // Same type attack bonus. Effectively the same as STAB in that other game
+        boolean same_attack_type = source.getMonsterType() == move.getType();
+        float attack_bonus = 1;
+
+        if(same_attack_type){
+            attack_bonus = 1.5f;
+        }
+
+
+        int damage =  Math.round( ( (0.2f * sourceAttack + 3 + 20 ) / (targetDefence + 50) ) * moveDamage * attack_bonus * calculateTypeAdvantage(move.getType(), target.getMonsterType()) );
         return damage;
     }
 
     public float calculateTypeAdvantage(MonsterType source, MonsterType target) {
         switch (source) {
+            case NORMAL:
+                switch (target) {
+                    default: return 1;
+                }
             case FIRE:
                 switch (target) {
                     case FIRE: return 0.5f;

@@ -3,7 +3,7 @@
     <implementation class="dk.sdu.mmmi.modulemon.Interaction.InteractProcessing"/>
 
     <service>
-        <provide interface="dk.sdu.mmmi.modulemon.common.services.IPostEntityProcessingService"/>
+        <provide interface="dk.sdu.mmmi.modulemon.CommonMap.Services.IPostEntityProcessingService"/>
     </service>
 
     <reference bind="setMapView" cardinality="0..1"

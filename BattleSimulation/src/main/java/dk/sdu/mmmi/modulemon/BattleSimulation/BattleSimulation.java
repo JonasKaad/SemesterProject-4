@@ -94,6 +94,11 @@ public class BattleSimulation implements IBattleSimulation {
 
     @Override
     public void doMove(IBattleParticipant battleParticipant, IMonsterMove move) {
+        if (monsterProcessor == null) {
+            nextEvent = new VictoryBattleEvent("Monsters unloaded, it's a draw", battleParticipant, battleState.clone());
+            onNextEvent = () -> {};
+            return;
+        }
         if (battleParticipant!=battleState.getActiveParticipant()) {
             throw new IllegalArgumentException("It is not that battle participants turn!");
         }
@@ -129,7 +134,7 @@ public class BattleSimulation implements IBattleSimulation {
         int newHitPoints = target.getHitPoints()-damage;
         target.setHitPoints(Math.max(newHitPoints, 0));
 
-        nextEvent = new MoveBattleEvent(participantTitle + " monster used " + move.getName() + " for " + damage + " damage", battleParticipant, move, damage, battleState.clone());
+        nextEvent = new MoveBattleEvent(participantTitle + "'s " + source.getName() + " used " + move.getName() + " for " + damage + " damage!", battleParticipant, move, damage, battleState.clone());
 
         onNextEvent = () -> {
             if (newHitPoints>0) {
@@ -154,7 +159,7 @@ public class BattleSimulation implements IBattleSimulation {
         if (battleState.getActiveParticipant()!=battleParticipant) {
             throw new IllegalArgumentException("It is not that battle participants turn!");
         }
-        IBattleParticipant participant = battleState.getPlayer();
+        IBattleParticipant participant = battleState.getActiveParticipant();
         if (monster.getHitPoints()<=0) throw new IllegalArgumentException("You can't change to a dead monster");
         if (participant.getMonsterTeam().contains(monster)) {
             participant.setActiveMonster(monster);
@@ -178,7 +183,6 @@ public class BattleSimulation implements IBattleSimulation {
 
     @Override
     public IBattleState simulateDoMove(IBattleParticipant battleParticipant, IMonsterMove move, IBattleState currentState) {
-
         //Maybe add a check, that the battleParticipant is actually the active participant
 
         BattleState newState = (BattleState) currentState.clone();
@@ -192,7 +196,10 @@ public class BattleSimulation implements IBattleSimulation {
         }
         IMonster target = opposingParticipant.getActiveMonster();
 
-        int damage = monsterProcessor.calculateDamage(source, move, target);
+        int damage = 0;
+        if (move != null) {
+            damage = monsterProcessor.calculateDamage(source, move, target);
+        }
 
         int newHitPoints = target.getHitPoints()-damage;
         if (newHitPoints>0) {
@@ -254,6 +261,10 @@ public class BattleSimulation implements IBattleSimulation {
 
     public void setMonsterProcessor(IBattleMonsterProcessor monsterProcessor) {
         this.monsterProcessor = monsterProcessor;
+    }
+
+    public void removeMonsterProcessor(IBattleMonsterProcessor monsterProcessor) {
+        this.monsterProcessor = null;
     }
 
     public void setAIFactory(IBattleAIFactory factory) {

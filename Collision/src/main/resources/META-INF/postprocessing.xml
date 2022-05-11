@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<scr:component xmlns:scr="http://www.osgi.org/xmlns/scr/v1.1.0" name="dk.sdu.mmmi.modulemon.Collision.CollisionProcessing">
+    <implementation class="dk.sdu.mmmi.modulemon.Collision.CollisionProcessing"/>
+
+    <service>
+        <provide interface="dk.sdu.mmmi.modulemon.CommonMap.Services.IPostEntityProcessingService"/>
+    </service>
+
+    <reference bind="setMapView" cardinality="0..1"
+               interface="dk.sdu.mmmi.modulemon.CommonMap.IMapView"
+               name="IMapView" policy="dynamic" unbind="removeMapView"/>
+
+
+</scr:component>

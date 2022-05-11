@@ -5,9 +5,9 @@ import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.utils.GdxRuntimeException;
+import dk.sdu.mmmi.modulemon.Battle.BattleParticipant;
 import dk.sdu.mmmi.modulemon.BattleScene.animations.*;
 import dk.sdu.mmmi.modulemon.BattleScene.scenes.BattleScene;
-import dk.sdu.mmmi.modulemon.BattleSceneMock.BattleParticipantMocks;
 import dk.sdu.mmmi.modulemon.CommonBattle.*;
 import dk.sdu.mmmi.modulemon.CommonBattleClient.IBattleCallback;
 import dk.sdu.mmmi.modulemon.CommonBattleClient.IBattleView;
@@ -15,6 +15,7 @@ import dk.sdu.mmmi.modulemon.CommonBattleSimulation.*;
 import dk.sdu.mmmi.modulemon.CommonBattleSimulation.BattleEvents.*;
 import dk.sdu.mmmi.modulemon.CommonMonster.IMonster;
 import dk.sdu.mmmi.modulemon.CommonMonster.IMonsterMove;
+import dk.sdu.mmmi.modulemon.CommonMonster.IMonsterRegistry;
 import dk.sdu.mmmi.modulemon.common.AssetLoader;
 import dk.sdu.mmmi.modulemon.common.animations.BaseAnimation;
 import dk.sdu.mmmi.modulemon.common.data.GameData;
@@ -25,9 +26,9 @@ import dk.sdu.mmmi.modulemon.common.drawing.Rectangle;
 import dk.sdu.mmmi.modulemon.common.drawing.TextUtils;
 import dk.sdu.mmmi.modulemon.common.services.IGameViewService;
 
-import java.io.IOException;
-import java.net.URISyntaxException;
+import java.util.ArrayList;
 import java.util.LinkedList;
+import java.util.List;
 import java.util.Queue;
 
 
@@ -41,9 +42,11 @@ public class BattleView implements IGameViewService, IBattleView {
     private BattleScene _battleScene;
     private Music _battleMusic;
     private Sound _winSound;
+    private Sound _loseSound;
     private MenuState menuState = MenuState.DEFAULT;
     private Queue<BaseAnimation> blockingAnimations;
     private Queue<BaseAnimation> backgroundAnimations;
+    private IMonsterRegistry monsterRegistry;
 
     private AssetLoader loader = AssetLoader.getInstance();
     private String[] defaultActions;
@@ -82,20 +85,33 @@ public class BattleView implements IGameViewService, IBattleView {
     /**
      * Initialize for IBattleView
      */
-    public void startBattle(IBattleParticipant player, IBattleParticipant enemy, IBattleCallback callback) {
-        if(player == null && enemy == null){
-            try {
-                player = BattleParticipantMocks.getPlayer();
-                enemy = BattleParticipantMocks.getOpponent();
-            } catch (IOException | URISyntaxException e){
-                System.out.println("Failed to get monster mocks");
-                e.printStackTrace();
+    public void startBattle(List<IMonster> playerMonsters, List<IMonster> enemyMonsters, IBattleCallback callback) {
+        if (playerMonsters == null) {
+            if (monsterRegistry == null) {
+                return;
             }
-
+            playerMonsters = new ArrayList<>();
+            playerMonsters.add(monsterRegistry.getMonster(0));
+            playerMonsters.add(monsterRegistry.getMonster(1));
+            playerMonsters.add(monsterRegistry.getMonster(2));
         }
+        if (enemyMonsters == null) {
+            if (monsterRegistry == null) {
+                return;
+            }
+            enemyMonsters = new ArrayList<>();
+            enemyMonsters.add(monsterRegistry.getMonster(3));
+            enemyMonsters.add(monsterRegistry.getMonster(4));
+            enemyMonsters.add(monsterRegistry.getMonster(5));
+        }
+
+        IBattleParticipant player = new BattleParticipant(playerMonsters, true);
+        IBattleParticipant enemy = new BattleParticipant(enemyMonsters, false);
+
         selectedAction = 0;
         _battleMusic = loader.getMusicAsset("/music/battle_music.ogg", this.getClass());
         _winSound = loader.getSoundAsset("/sounds/you_won.ogg", this.getClass());
+        _loseSound = loader.getSoundAsset("/sounds/you_lost.ogg", this.getClass());
         _battleSimulation.StartBattle(player, enemy);
         _currentBattleState = _battleSimulation.getState().clone(); // Set an initial battle-state
         _battleCallback = callback;
@@ -290,7 +306,8 @@ public class BattleView implements IGameViewService, IBattleView {
                 } else {
                     PlayerDieAnimation dieAnimation = new PlayerDieAnimation(_battleScene);
                     blockingAnimations.add(dieAnimation);
-
+                    this._battleMusic.stop();
+                    this._loseSound.play();
                     _battleScene.setTextToDisplay(battleEvent.getText());
 
                     EmptyAnimation e = new EmptyAnimation(2_000);
@@ -413,7 +430,7 @@ public class BattleView implements IGameViewService, IBattleView {
                 }
             } else if (selectedAction instanceof IMonsterMove) {
                 IMonsterMove move = ((IMonsterMove) selectedAction);
-                _battleScene.setTextToDisplay("Move: [" + move.getType() + "] " + move.getName() + ". Deals damage: " + move.getDamage());
+                _battleScene.setTextToDisplay(move.getBattleDescription());
                 if (keys.isPressed(GameKeys.ACTION)) {
                     _battleSimulation.doMove(_battleSimulation.getState().getPlayer(), move);
                     this.menuState = MenuState.DEFAULT;
@@ -495,5 +512,13 @@ public class BattleView implements IGameViewService, IBattleView {
         if (autoStart)
             emptyAnimation.start();
         blockingAnimations.add(emptyAnimation);
+    }
+
+    public void setMonsterRegistry(IMonsterRegistry monsterRegistry) {
+        this.monsterRegistry = monsterRegistry;
+    }
+
+    public void removeMonsterRegistry(IMonsterRegistry monsterRegistry) {
+        this.monsterRegistry = null;
     }
 }

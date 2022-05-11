@@ -1,13 +1,13 @@
 package dk.sdu.mmmi.modulemon.Interaction;
 
-import dk.sdu.mmmi.modulemon.CommonBattle.MonsterTeamPart;
+import dk.sdu.mmmi.modulemon.CommonMap.Data.EntityParts.MonsterTeamPart;
+import dk.sdu.mmmi.modulemon.CommonMap.Data.EntityType;
 import dk.sdu.mmmi.modulemon.CommonMap.IMapView;
-import dk.sdu.mmmi.modulemon.CommonMonster.IMonster;
-import dk.sdu.mmmi.modulemon.common.data.Entity;
+import dk.sdu.mmmi.modulemon.CommonMap.Data.Entity;
 import dk.sdu.mmmi.modulemon.common.data.GameData;
-import dk.sdu.mmmi.modulemon.common.data.World;
-import dk.sdu.mmmi.modulemon.common.data.entityparts.InteractPart;
-import dk.sdu.mmmi.modulemon.common.services.IPostEntityProcessingService;
+import dk.sdu.mmmi.modulemon.CommonMap.Data.World;
+import dk.sdu.mmmi.modulemon.CommonMap.Data.EntityParts.InteractPart;
+import dk.sdu.mmmi.modulemon.CommonMap.Services.IPostEntityProcessingService;
 
 public class InteractProcessing implements IPostEntityProcessingService {
     private IMapView mapView;
@@ -31,7 +31,12 @@ public class InteractProcessing implements IPostEntityProcessingService {
 
                     // This isn't great. Currently this relies on the NPC always initiating the battle.
                     // Could be nice to somehow check who is player, who is npc, and put them in the right spots.
-                    mapView.startEncounter(interactPart.getInteractWith(), entity);
+                    if (entity.getType() == EntityType.PLAYER) {
+                        mapView.startEncounter(entity, interactPart.getInteractWith());
+                    }
+                    else if (interactPart.getInteractWith().getType() == EntityType.PLAYER) {
+                        mapView.startEncounter(interactPart.getInteractWith(), entity);
+                    }
                 }
             }
         }
