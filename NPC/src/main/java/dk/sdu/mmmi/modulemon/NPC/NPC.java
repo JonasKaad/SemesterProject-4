@@ -12,6 +12,9 @@ import dk.sdu.mmmi.modulemon.CommonMap.Data.Entity;
  * @author Gorm Krings
  */
 public class NPC extends Entity {
+    public NPC(){
+        super(EntityType.GENERIC);
+    }
 
     
     public NPC(String name, SpritePart sprites, PositionPart position, MovingPart movement, InteractPart interact, AIControlPart control, MonsterTeamPart monsterTeamPart) {

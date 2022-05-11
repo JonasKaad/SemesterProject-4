@@ -1,6 +1,7 @@
 package dk.sdu.mmmi.modulemon.Interaction;
 
 import dk.sdu.mmmi.modulemon.CommonMap.Data.EntityParts.MonsterTeamPart;
+import dk.sdu.mmmi.modulemon.CommonMap.Data.EntityType;
 import dk.sdu.mmmi.modulemon.CommonMap.IMapView;
 import dk.sdu.mmmi.modulemon.CommonMap.Data.Entity;
 import dk.sdu.mmmi.modulemon.common.data.GameData;
@@ -30,7 +31,12 @@ public class InteractProcessing implements IPostEntityProcessingService {
 
                     // This isn't great. Currently this relies on the NPC always initiating the battle.
                     // Could be nice to somehow check who is player, who is npc, and put them in the right spots.
-                    mapView.startEncounter(interactPart.getInteractWith(), entity);
+                    if (entity.getType() == EntityType.PLAYER) {
+                        mapView.startEncounter(entity, interactPart.getInteractWith());
+                    }
+                    else if (interactPart.getInteractWith().getType() == EntityType.PLAYER) {
+                        mapView.startEncounter(interactPart.getInteractWith(), entity);
+                    }
                 }
             }
         }

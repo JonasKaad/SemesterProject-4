@@ -192,6 +192,11 @@ public class MapView implements IGameViewService, IMapView {
             for (Entity entity : world.getEntities()) {
                 if(entity.getType().equals(EntityType.PLAYER)){
                     mtp = entity.getPart(MonsterTeamPart.class);
+                    if (mtp == null) {
+                        showMonsterTeam = false;
+                        pauseMenu.setFillColor(Color.WHITE);
+                        break;
+                    }
                     monsterTeam = mtp.getMonsterTeam();
 
                     MonsterTeam.drawMonsterTeam(gameData, shapeRenderer, spriteBatch, textUtils, cam, showSwitchingText, monsterTeamMenu, monsterTeam, monsterRectangles);

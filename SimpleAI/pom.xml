@@ -9,28 +9,37 @@
   </parent>
 
   <properties>
-    <bundle.symbolicName>dk.sdu.mmmi.modulemon.BattleSimulation</bundle.symbolicName>
+    <bundle.symbolicName>dk.sdu.mmmi.modulemon.SimpleAI</bundle.symbolicName>
     <bundle.namespace>dk.sdu.mmmi.modulemon</bundle.namespace>
   </properties>
 
   <modelVersion>4.0.0</modelVersion>
-  <artifactId>BattleSimulation</artifactId>
+  <artifactId>SimpleAI</artifactId>
   <version>1.0-SNAPSHOT</version>
-  <name>BattleSimulation</name>
+
+  <name>Player</name>
+
   <packaging>bundle</packaging>
 
   <dependencies>
+    <!--
+     | uncomment to add all imported (non-local) bundles to your compilation classpath
+    <dependency>
+      <type>pom</type>
+      <groupId>${parent.groupId}</groupId>
+      <artifactId>provision</artifactId>
+      <optional>true</optional>
+    </dependency>
+    -->
     <dependency>
       <groupId>org.osgi</groupId>
-      <artifactId>org.osgi.core</artifactId>
-      <version>4.3.0</version>
-      <scope>provided</scope>
+      <artifactId>osgi_R4_core</artifactId>
+      <optional>true</optional>
     </dependency>
     <dependency>
-      <groupId>modulemon.build</groupId>
-      <artifactId>Common</artifactId>
-      <version>1.0-SNAPSHOT</version>
-      <scope>compile</scope>
+      <groupId>org.osgi</groupId>
+      <artifactId>osgi_R4_compendium</artifactId>
+      <optional>true</optional>
     </dependency>
     <dependency>
       <groupId>modulemon.build</groupId>
@@ -40,27 +49,9 @@
     </dependency>
     <dependency>
       <groupId>modulemon.build</groupId>
-      <artifactId>CommonMonster</artifactId>
-      <version>1.0-SNAPSHOT</version>
-      <scope>compile</scope>
-    </dependency>
-    <dependency>
-      <groupId>modulemon.build</groupId>
       <artifactId>CommonBattleSimulation</artifactId>
       <version>1.0-SNAPSHOT</version>
       <scope>compile</scope>
-    </dependency>
-    <dependency>
-      <groupId>org.junit.jupiter</groupId>
-      <artifactId>junit-jupiter-api</artifactId>
-      <version>5.8.2</version>
-      <scope>test</scope>
-    </dependency>
-    <dependency>
-      <groupId>org.mockito</groupId>
-      <artifactId>mockito-core</artifactId>
-      <version>4.4.0</version>
-      <scope>test</scope>
     </dependency>
   </dependencies>
 

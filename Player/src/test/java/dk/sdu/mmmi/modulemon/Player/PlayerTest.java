@@ -45,7 +45,7 @@ class PlayerTest {
         when(monsterRegistryMock.getMonster(3)).thenReturn(monsterMock);
         when(monsterRegistryMock.getMonster(4)).thenReturn(monsterMock);
         when(monsterRegistryMock.getMonster(5)).thenReturn(monsterMock);
-        playerPlugin.setMonsterRegistryList(Arrays.asList(monsterRegistryMock));
+        playerPlugin.setMonsterRegistryService(monsterRegistryMock);
 
         playerPlugin.start(gameData, world);
 
@@ -65,7 +65,7 @@ class PlayerTest {
         when(monsterRegistryMock.getMonster(3)).thenReturn(monsterMock);
         when(monsterRegistryMock.getMonster(4)).thenReturn(monsterMock);
         when(monsterRegistryMock.getMonster(5)).thenReturn(monsterMock);
-        playerPlugin.setMonsterRegistryList(Arrays.asList(monsterRegistryMock));
+        playerPlugin.setMonsterRegistryService(monsterRegistryMock);
 
         playerPlugin.start(gameData, world);
         Entity player = world.getEntities(Player.class).get(0); //There's only one entity
@@ -102,7 +102,7 @@ class PlayerTest {
         when(monsterRegistryMock.getMonster(3)).thenReturn(monsterMock);
         when(monsterRegistryMock.getMonster(4)).thenReturn(monsterMock);
         when(monsterRegistryMock.getMonster(5)).thenReturn(monsterMock);
-        playerPlugin.setMonsterRegistryList(Arrays.asList(monsterRegistryMock));
+        playerPlugin.setMonsterRegistryService(monsterRegistryMock);
 
         playerPlugin.start(gameData, world);
         Entity player = world.getEntities(Player.class).get(0); //There's only one entity
