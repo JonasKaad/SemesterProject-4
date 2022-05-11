@@ -2,7 +2,6 @@ package dk.sdu.mmmi.modulemon.Monster;
 
 import dk.sdu.mmmi.modulemon.CommonMonster.IMonster;
 import dk.sdu.mmmi.modulemon.CommonMonster.IMonsterMove;
-import dk.sdu.mmmi.modulemon.CommonMonster.MonsterType;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.*;

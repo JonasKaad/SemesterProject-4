@@ -3,7 +3,6 @@ package dk.sdu.mmmi.modulemon.Monster;
 import dk.sdu.mmmi.modulemon.CommonMonster.IMonster;
 import dk.sdu.mmmi.modulemon.CommonMonster.IMonsterMove;
 import dk.sdu.mmmi.modulemon.CommonMonster.IMonsterRegistry;
-import dk.sdu.mmmi.modulemon.CommonMonster.MonsterType;
 import org.junit.jupiter.api.*;
 
 import java.io.IOException;
