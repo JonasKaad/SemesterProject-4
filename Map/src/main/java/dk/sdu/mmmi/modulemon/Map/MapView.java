@@ -204,20 +204,12 @@ public class MapView implements IGameViewService, IMapView {
         tiledMapRenderer.getBatch().end();
 
         // Draw events
-
-        //BLablabla, check if there is events. if there is, run that events draw() method and then return.
         if(!mapEvents.isEmpty()){
             mapEvents.peek().draw(gameData, spriteBatch, shapeRenderer);
-            if(mapEvents.peek().isEventDone()){
-                mapEvents.poll();
-            } else {
-                return;
-            }
         }
 
 
         //DRAW MENU START
-
         if (showTeamOptions) {
             MonsterTeam.drawTeamOptions(gameData, shapeRenderer, spriteBatch, textUtils, teamActionMenu, monsterTeamMenu, teamActions);
         }
@@ -295,11 +287,6 @@ public class MapView implements IGameViewService, IMapView {
         //If map event, run handleInput() and return.
         if(!mapEvents.isEmpty()){
             mapEvents.peek().handleInput(gameData);
-            if(mapEvents.peek().isEventDone()){
-                mapEvents.poll();
-            } else {
-                return;
-            }
         }
 
         if (isPaused) {

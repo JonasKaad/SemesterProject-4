@@ -38,7 +38,6 @@ public class TextMapEvent implements IMapEvent {
 
     @Override
     public void update(GameData gameData) {
-        // Empty
         textBox.setHeight(100f);
         textBox.setWidth(gameData.getDisplayWidth() - 50);
     }
