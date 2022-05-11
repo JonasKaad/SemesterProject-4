@@ -54,103 +54,115 @@ public class InteractPartTest {
         InteractPart instance;
         boolean result;
         
-        //System.out.println("PositionPart: (" + positionPart.getX() + ", " + positionPart.getY() + ")");
+        System.out.println("PositionPart: (" + positionPart.getX() + ", " + positionPart.getY() + ")");
         
+        // Go through each range from 1 to max
         for (int range = 1; range <= maxRange; range++) {
-            //System.out.println("Range of InteractionPart: " + range);
+            System.out.println("Range of InteractionPart: " + range);
+            // The entity faces WEST
             positionPart.setDirection(WEST);
-            //System.out.println("Direction: " + positionPart.getDirection());
+            System.out.println("Direction: " + positionPart.getDirection());
             
+            // Test if each tile of 64 pixels in that range infront of the entity makes isInRange return true
             for (int i = -range; i < 0; i++) {
                 instance = new InteractPart(positionPart, Math.abs(i));
 
                 float x = X+i*64;
                 float y = Y;
                 result = instance.isInRange(x, y);
-                //System.out.println(buildDetails(x ,y, result, Math.abs(i)));
+                System.out.println(buildDetails(x ,y, result, Math.abs(i)));
                 assertEquals(true, result);
 
             }
+            // Test if each tile of 64 pixels in that range behind the entity makes isInRange return false
             for (int i = 1; i <= range; i++) {
                 instance = new InteractPart(positionPart, Math.abs(i));
 
                 float x = X+i*64;
                 float y = Y;
                 result = instance.isInRange(x, y);
-                //System.out.println(buildDetails(x ,y, result, Math.abs(i)));
+                System.out.println(buildDetails(x ,y, result, Math.abs(i)));
                 assertEquals(false, result);
 
             }
 
+            // Now the entity faces EAST
             positionPart.setDirection(EAST);
-            //System.out.println("Direction: " + positionPart.getDirection());
+            System.out.println("Direction: " + positionPart.getDirection());
 
-
+            // Test if each tile of 64 pixels in that range infront of the entity makes isInRange return true
             for (int i = -range; i < 0; i++) {
                 instance = new InteractPart(positionPart, Math.abs(i));
 
                 float x = X-i*64;
                 float y = Y;
                 result = instance.isInRange(x, y);
-                //System.out.println(buildDetails(x ,y, result, Math.abs(i)));
+                System.out.println(buildDetails(x ,y, result, Math.abs(i)));
                 assertEquals(true, result);
 
             }
+            // Test if each tile of 64 pixels in that range behind the entity makes isInRange return false
             for (int i = 1; i <= range; i++) {
                 instance = new InteractPart(positionPart, Math.abs(i));
 
                 float x = X-i*64;
                 float y = Y;
                 result = instance.isInRange(x, y);
-                //System.out.println(buildDetails(x ,y, result, Math.abs(i)));
+                System.out.println(buildDetails(x ,y, result, Math.abs(i)));
                 assertEquals(false, result);
 
             }
 
+            // Now the entity faces SOUTH
             positionPart.setDirection(SOUTH);
-            //System.out.println("Direction: " + positionPart.getDirection());
-
+            System.out.println("Direction: " + positionPart.getDirection());
+            
+            // Test if each tile of 64 pixels in that range infront of the entity makes isInRange return true
             for (int i = -range; i < 0; i++) {
                 instance = new InteractPart(positionPart, Math.abs(i));
 
                 float x = X;
                 float y = Y+i*64;
                 result = instance.isInRange(x, y);
-                //System.out.println(buildDetails(x ,y, result, Math.abs(i)));
+                System.out.println(buildDetails(x ,y, result, Math.abs(i)));
                 assertEquals(true, result);
 
             }
+            // Test if each tile of 64 pixels in that range behind the entity makes isInRange return false
             for (int i = 1; i <= range; i++) {
                 instance = new InteractPart(positionPart, Math.abs(i));
 
                 float x = X;
                 float y = Y+i*64;
                 result = instance.isInRange(x, y);
-                //System.out.println(buildDetails(x ,y, result, Math.abs(i)));
+                System.out.println(buildDetails(x ,y, result, Math.abs(i)));
                 assertEquals(false, result);
 
             }
 
+            // Now the entity faces NORTH
             positionPart.setDirection(NORTH);
-            //System.out.println("Direction: " + positionPart.getDirection());
+            System.out.println("Direction: " + positionPart.getDirection());
 
+            // Test if each tile of 64 pixels in that range infront of the entity makes isInRange return true
             for (int i = -range; i < 0; i++) {
                 instance = new InteractPart(positionPart, Math.abs(i));
 
                 float x = X;
                 float y = Y-i*64;
                 result = instance.isInRange(x, y);
-                //System.out.println(buildDetails(x ,y, result, Math.abs(i)));
+                System.out.println(buildDetails(x ,y, result, Math.abs(i)));
                 assertEquals(true, result);
 
             }
+            // Test if each tile of 64 pixels in that range behind the entity makes isInRange return false
             for (int i = 1; i <= range; i++) {
                 instance = new InteractPart(positionPart, Math.abs(i));
 
                 float x = X;
                 float y = Y-i*64;
                 result = instance.isInRange(x, y);
-                //System.out.println(buildDetails(x ,y, result, Math.abs(i)));
+                System.out.println(buildDetails(x ,y, result, Math.abs(i)));
                 assertEquals(false, result);
 
             }
@@ -171,15 +183,12 @@ public class InteractPartTest {
         System.out.println("Test successful");
     }
     
+    // A StringBuilder to build the details, x, y, the result of isInRange, of the loops.
     private StringBuilder buildDetails(float x, float y, boolean result, int range) {
         StringBuilder str_details = new StringBuilder();
         str_details.append("Other Entity: (").append(x).append(", ").append(y).append(")");
         str_details.append(", Interaction range: ").append(range);
         str_details.append(", isInRange(): ").append(result);
         return str_details;
-    }
-    
-    private void buildInteractionField() {
-        
     }
 }
