@@ -18,6 +18,11 @@ public class BattleAI implements IBattleAI {
     private IBattleParticipant participantToControl;
     private IBattleParticipant opposingParticipant;
     private IBattleSimulation battleSimulation;
+    private boolean useAlphaBetaPruning = true;
+    private long startTime;
+    private int maxDepthReached = 0;
+    private int timeLimitms = 1000;
+
 
     public BattleAI(IBattleSimulation battleSimulation, IBattleParticipant participantToControl) {
         knowledgeState = new KnowledgeState();
@@ -40,6 +45,10 @@ public class BattleAI implements IBattleAI {
         }
     }
 
+    public boolean outOfTime() {
+        return ((System.nanoTime()-startTime)/1000000)>=timeLimitms;
+    }
+
     @Override
     public void doAction(IBattleSimulation b) {
 
@@ -48,32 +57,70 @@ public class BattleAI implements IBattleAI {
             knowledgeState.getEnemyMonsters().add(opposingParticipant.getActiveMonster());
         }
 
-        int searchDepth = 5;
-
         // Try minmax on all available actions here
         IMonsterMove bestMove = null;
-        float bestMoveUtil = -Float.MAX_VALUE;
-        for (IMonsterMove move : participantToControl.getActiveMonster().getMoves()) {
-            IBattleState state = battleSimulation.simulateDoMove(participantToControl, move, battleSimulation.getState());
-            float util = minmaxSearch(state, 1, searchDepth);
-            if (util>bestMoveUtil) {
-                bestMove = move;
-                bestMoveUtil = util;
-            }
-        }
-
         IMonster bestSwitch = null;
+        float bestMoveUtil = -Float.MAX_VALUE;
         float bestSwitchUtil = -Float.MAX_VALUE;
-        for (IMonster monster : participantToControl.getMonsterTeam()) {
-            if (monster != participantToControl.getActiveMonster() && monster.getHitPoints()>0) {
-                IBattleState state = battleSimulation.simulateSwitchMonster(participantToControl, monster, battleSimulation.getState());
-                float util = minmaxSearch(state, 1, searchDepth);
-                if (util>bestSwitchUtil) {
-                    bestSwitch = monster;
-                    bestSwitchUtil = util;
+
+        int searchDepth = 1;
+        startTime = System.nanoTime();
+        maxDepthReached = 0;
+
+        while (!outOfTime()) {
+
+            IMonsterMove newBestMove = bestMove;
+            IMonster newBestSwitch = bestSwitch;
+            float newBestMoveUtil = bestMoveUtil;
+            float newBestSwitchUtil = bestSwitchUtil;
+
+            int oldMaxSearchDepth = maxDepthReached;
+
+            for (IMonsterMove move : participantToControl.getActiveMonster().getMoves()) {
+                IBattleState state = battleSimulation.simulateDoMove(participantToControl, move, battleSimulation.getState());
+
+                float util = useAlphaBetaPruning
+                        ? minDecision(state, 1, searchDepth, -Float.MAX_VALUE, Float.MAX_VALUE)
+                        : minmaxSearch(state, 1, searchDepth);
+
+                if (util > bestMoveUtil) {
+                    newBestMove = move;
+                    newBestMoveUtil = util;
                 }
             }
+
+
+            for (IMonster monster : participantToControl.getMonsterTeam()) {
+                if (monster != participantToControl.getActiveMonster() && monster.getHitPoints() > 0) {
+                    IBattleState state = battleSimulation.simulateSwitchMonster(participantToControl, monster, battleSimulation.getState());
+
+                    float util = useAlphaBetaPruning
+                            ? minDecision(state, 1, searchDepth, -Float.MAX_VALUE, Float.MAX_VALUE)
+                            : minmaxSearch(state, 1, searchDepth);
+
+                    if (util > bestSwitchUtil) {
+                        newBestSwitch = monster;
+                        newBestSwitchUtil = util;
+                    }
+                }
+            }
+
+            if (maxDepthReached==oldMaxSearchDepth) {
+                break;
+            }
+
+            if (!outOfTime()) {
+                bestMove = newBestMove;
+                bestSwitch = newBestSwitch;
+                bestMoveUtil = newBestMoveUtil;
+                bestSwitchUtil = newBestSwitchUtil;
+            }
+
+            searchDepth++;
         }
+
+        System.out.println("searchDepth: " + searchDepth);
+        System.out.println("time used: " + ((System.nanoTime()-startTime)/1000000));
 
         if (bestMoveUtil>=bestSwitchUtil) {
             battleSimulation.doMove(participantToControl, bestMove);
@@ -82,8 +129,41 @@ public class BattleAI implements IBattleAI {
         }
     }
 
-    private float minmaxSearch(IBattleState battleState, int currentDepth, int maxDepth) {
-        if (isTerminal(battleState) || currentDepth>=maxDepth) {
+    private float maxDecision(IBattleState battleState, int currentDepth, int maxDepth, float alpha, float beta) {
+
+        if (currentDepth>maxDepthReached) maxDepthReached=currentDepth;
+
+        if (isTerminal(battleState) || currentDepth>=maxDepth || outOfTime()) {
+            // dividing the utility of terminal states by the depth of that state in the search
+            // will make the AI prefer winning fast over more slowly. If the AI is bound to lose
+            // (negative utility) it will prefer doing so slowly
+            return utility(battleState)/currentDepth;
+            // Alternatively, the below formula would have the AI always prefer the fastest win/lose
+            // return utility(battleState)-((float) currentDepth/maxDepth);
+        }
+
+        // Save the highest and lowest value encountered until now
+        float max = -Float.MAX_VALUE;
+        // Search through all the successors of the current state, and find
+        // those yielding the highest and the lowest utility
+        for (IBattleState state : successorFunction(battleState)) {
+            float util = minDecision(state, currentDepth+1, maxDepth, alpha, beta);
+            if (util>max) max = util;
+            if (max>=beta) {
+                //System.out.println("skipped because of beta");
+                return max;
+            }
+            if (max>alpha) alpha = max;
+        }
+
+        return max;
+    }
+
+    private float minDecision(IBattleState battleState, int currentDepth, int maxDepth, float alpha, float beta) {
+
+        if (currentDepth>maxDepthReached) maxDepthReached=currentDepth;
+
+        if (isTerminal(battleState) || currentDepth>=maxDepth || outOfTime()) {
             // dividing the utility of terminal states by the depth of that state in the search
             // will make the AI prefer winning fast over more slowly. If the AI is bound to lose
             // (negative utility) it will prefer doing so slowly
@@ -94,7 +174,37 @@ public class BattleAI implements IBattleAI {
 
         // Save the highest and lowest value encountered until now
         float min = Float.MAX_VALUE;
-        float max = Float.MIN_VALUE;
+        // Search through all the successors of the current state, and find
+        // those yielding the highest and the lowest utility
+        for (IBattleState state : successorFunction(battleState)) {
+            float util = maxDecision(state, currentDepth+1, maxDepth, alpha, beta);
+            if (util<min) min = util;
+            if (min<=alpha) {
+                //System.out.println("Skipped because of alpha");
+                return min;
+            }
+            if (min<beta) beta = min;
+        }
+
+        return min;
+    }
+
+    private float minmaxSearch(IBattleState battleState, int currentDepth, int maxDepth) {
+
+        if (currentDepth>maxDepthReached) maxDepthReached=currentDepth;
+
+        if (isTerminal(battleState) || currentDepth>=maxDepth || outOfTime()) {
+            // dividing the utility of terminal states by the depth of that state in the search
+            // will make the AI prefer winning fast over more slowly. If the AI is bound to lose
+            // (negative utility) it will prefer doing so slowly
+            return utility(battleState)/currentDepth;
+            // Alternatively, the below formula would have the AI always prefer the fastest win/lose
+            // return utility(battleState)-((float) currentDepth/maxDepth);
+        }
+
+        // Save the highest and lowest value encountered until now
+        float min = Float.MAX_VALUE;
+        float max = -Float.MAX_VALUE;
         // Search through all the successors of the current state, and find
         // those yielding the highest and the lowest utility
         for (IBattleState state : successorFunction(battleState)) {
@@ -137,13 +247,13 @@ public class BattleAI implements IBattleAI {
     }
 
     private float utility(IBattleState battleState) {
-        IBattleParticipant participantToControl = battleState.getPlayer().equals(this.participantToControl)
+        /*IBattleParticipant participantToControl = battleState.getPlayer().equals(this.participantToControl)
                 ? battleState.getPlayer()
                 : battleState.getEnemy();
 
         IBattleParticipant opposingParticipant = battleState.getPlayer().equals(this.participantToControl)
                 ? battleState.getEnemy()
-                : battleState.getPlayer();
+                : battleState.getPlayer();*/
 
 
         int ownMonsterHPSum = 0;
