@@ -4,6 +4,7 @@ import dk.sdu.mmmi.modulemon.CommonMap.Data.Entity;
 import dk.sdu.mmmi.modulemon.CommonMap.Data.World;
 import dk.sdu.mmmi.modulemon.common.data.GameData;
 
+import java.util.LinkedList;
 import java.util.Queue;
 
 public class LinesPart implements EntityPart {
@@ -14,7 +15,11 @@ public class LinesPart implements EntityPart {
     }
 
     public Queue<String> getLines() {
-        return lines;
+        Queue linesCopy = new LinkedList();
+        for (String line : lines) {
+            linesCopy.add(line);
+        }
+        return linesCopy;
     }
 
     public void addLines(String line){

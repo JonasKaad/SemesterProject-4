@@ -37,7 +37,7 @@ public class InteractProcessing implements IPostEntityProcessingService {
                     // Could be nice to somehow check who is player, who is npc, and put them in the right spots.
                     if (entity.getType() == EntityType.PLAYER) {
                         if(entity.getPart(LinesPart.class) != null){
-                            Queue<String> lines = new LinkedList<>();
+                            Queue<String> lines;
                             lines = ((LinesPart) entity.getPart(LinesPart.class)).getLines();
                             BattleEvent battle = new BattleEvent(lines, entity, interactPart.getInteractWith(), mapView);
                             mapView.addMapEvent(battle);
@@ -47,7 +47,7 @@ public class InteractProcessing implements IPostEntityProcessingService {
                     }
                     else if (interactPart.getInteractWith().getType() == EntityType.PLAYER) {
                         if(entity.getPart(LinesPart.class) != null){
-                            Queue<String> lines = new LinkedList<>();
+                            Queue<String> lines;
                             lines = ((LinesPart) entity.getPart(LinesPart.class)).getLines();
                             BattleEvent battle = new BattleEvent(lines, interactPart.getInteractWith(), entity, mapView);
                             mapView.addMapEvent(battle);

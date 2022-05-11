@@ -22,6 +22,7 @@ public class BattleEvent implements IMapEvent {
     private Entity aggresor;
     private Entity victim;
     private IMapView mapView;
+    private boolean battleStarted;
 
     public BattleEvent(Queue<String> lines, Entity aggressor, Entity victim, IMapView map){
         if(lines == null || lines.isEmpty()){
@@ -60,6 +61,8 @@ public class BattleEvent implements IMapEvent {
 
     @Override
     public void draw(GameData gameData, SpriteBatch spriteBatch, ShapeRenderer shapeRenderer) {
+        if(battleStarted)
+            return;
         //Draw rectangle
         shapeRenderer.setColor(Color.WHITE);
         shapeRenderer.begin(ShapeRenderer.ShapeType.Filled);
@@ -94,6 +97,7 @@ public class BattleEvent implements IMapEvent {
             this.lines.poll();
             if(lines.isEmpty()){
                 mapView.startEncounter(aggresor, victim);
+                battleStarted = true;
             }
         }
     }
