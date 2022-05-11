@@ -204,6 +204,14 @@ public class MapView implements IGameViewService, IMapView {
         // Draw events
 
         //BLablabla, check if there is events. if there is, run that events draw() method and then return.
+        if(!mapEvents.isEmpty()){
+            mapEvents.peek().draw(gameData, spriteBatch, shapeRenderer);
+            if(mapEvents.peek().isEventDone()){
+                mapEvents.poll();
+            } else {
+                return;
+            }
+        }
 
 
         //DRAW MENU START
@@ -283,7 +291,14 @@ public class MapView implements IGameViewService, IMapView {
     @Override
     public void handleInput(GameData gameData, IGameStateManager gameStateManager) {
         //If map event, run handleInput() and return.
-
+        if(!mapEvents.isEmpty()){
+            mapEvents.peek().handleInput(gameData);
+            if(mapEvents.peek().isEventDone()){
+                mapEvents.poll();
+            } else {
+                return;
+            }
+        }
 
         if (isPaused) {
             if (gameData.getKeys().isPressed(GameKeys.DOWN)) {
@@ -581,5 +596,8 @@ public class MapView implements IGameViewService, IMapView {
         });
     }
 
-
+    @Override
+    public void addMapEvent(IMapEvent event) {
+        mapEvents.add(event);
+    }
 }
