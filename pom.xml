@@ -45,6 +45,9 @@
     <module>CommonTest</module>
     <module>CommonBattleSimulation</module>
     <module>CommonBattleClient</module>
+    <module>SimpleAI</module>
+    <module>Interaction</module>
+    <module>Collision</module>
   </modules>
 
   <build>

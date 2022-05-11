@@ -10,11 +10,8 @@ public interface IMonster {
     void setHitPoints(int hitPoint);
     String getFrontSprite();
     String getBackSprite();
-    MonsterType getMonsterType();
     List<IMonsterMove> getMoves();
-    // This function's purpose is to give the caller a good way to display whatever stats there are.
     List<String> getStats();
     IMonster clone();
     int getID();
-
 }

@@ -1,24 +1,19 @@
 package dk.sdu.mmmi.modulemon.Player;
 
-import com.badlogic.gdx.graphics.Pixmap;
-import com.badlogic.gdx.graphics.g2d.Gdx2DPixmap;
 import dk.sdu.mmmi.modulemon.CommonMap.IMapView;
 import dk.sdu.mmmi.modulemon.CommonMonster.IMonster;
 import dk.sdu.mmmi.modulemon.CommonMonster.IMonsterRegistry;
 import dk.sdu.mmmi.modulemon.CommonTest.GdxTestIntercepter;
-import dk.sdu.mmmi.modulemon.common.data.Entity;
+import dk.sdu.mmmi.modulemon.CommonMap.Data.Entity;
 import dk.sdu.mmmi.modulemon.common.data.GameData;
-import dk.sdu.mmmi.modulemon.common.data.GameKeys;
-import dk.sdu.mmmi.modulemon.common.data.World;
-import dk.sdu.mmmi.modulemon.common.data.entityparts.MovingPart;
-import dk.sdu.mmmi.modulemon.common.data.entityparts.PositionPart;
+import dk.sdu.mmmi.modulemon.CommonMap.Data.World;
+import dk.sdu.mmmi.modulemon.CommonMap.Data.EntityParts.MovingPart;
+import dk.sdu.mmmi.modulemon.CommonMap.Data.EntityParts.PositionPart;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 
-import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.List;
 
 import static dk.sdu.mmmi.modulemon.common.data.GameKeys.UP;
 import static org.junit.jupiter.api.Assertions.*;
@@ -50,7 +45,7 @@ class PlayerTest {
         when(monsterRegistryMock.getMonster(3)).thenReturn(monsterMock);
         when(monsterRegistryMock.getMonster(4)).thenReturn(monsterMock);
         when(monsterRegistryMock.getMonster(5)).thenReturn(monsterMock);
-        playerPlugin.setMonsterRegistryList(Arrays.asList(monsterRegistryMock));
+        playerPlugin.setMonsterRegistryService(monsterRegistryMock);
 
         playerPlugin.start(gameData, world);
 
@@ -61,6 +56,7 @@ class PlayerTest {
     void playerShouldMove() {
         PlayerPlugin playerPlugin = new PlayerPlugin();
 
+
         IMonsterRegistry monsterRegistryMock = mock(IMonsterRegistry.class);
         IMonster monsterMock = mock(IMonster.class);
         when(monsterRegistryMock.getMonster(0)).thenReturn(monsterMock);
@@ -69,7 +65,7 @@ class PlayerTest {
         when(monsterRegistryMock.getMonster(3)).thenReturn(monsterMock);
         when(monsterRegistryMock.getMonster(4)).thenReturn(monsterMock);
         when(monsterRegistryMock.getMonster(5)).thenReturn(monsterMock);
-        playerPlugin.setMonsterRegistryList(Arrays.asList(monsterRegistryMock));
+        playerPlugin.setMonsterRegistryService(monsterRegistryMock);
 
         playerPlugin.start(gameData, world);
         Entity player = world.getEntities(Player.class).get(0); //There's only one entity
@@ -77,20 +73,19 @@ class PlayerTest {
         PositionPart posPart = player.getPart(PositionPart.class);
         IMapView map = mock(IMapView.class);
         when(map.isCellBlocked(anyFloat(), anyFloat())).thenReturn(false);
-        when(map.getMapTop()).thenReturn(50000f);
-        when(map.getMapLeft()).thenReturn(50000f);
+        when(map.getMapTop()).thenReturn(0f);
+        when(map.getMapLeft()).thenReturn(0f);
         when(map.getMapRight()).thenReturn(50000f);
         when(map.getMapBottom()).thenReturn(50000f);
-        movPart.setMapView(map);
       
-        float beforeMoving = posPart.getY();
+        float beforeMoving = posPart.getTargetPos().y;
 
 
         gameData.getKeys().setKey(UP, true);
         movPart.setUp(gameData.getKeys().isDown(UP));
         movPart.process(gameData, world, player);
 
-        float afterMoving = posPart.getY();
+        float afterMoving = posPart.getTargetPos().y;
 
         assertNotEquals(beforeMoving, afterMoving);
     }
@@ -107,20 +102,20 @@ class PlayerTest {
         when(monsterRegistryMock.getMonster(3)).thenReturn(monsterMock);
         when(monsterRegistryMock.getMonster(4)).thenReturn(monsterMock);
         when(monsterRegistryMock.getMonster(5)).thenReturn(monsterMock);
-        playerPlugin.setMonsterRegistryList(Arrays.asList(monsterRegistryMock));
+        playerPlugin.setMonsterRegistryService(monsterRegistryMock);
 
         playerPlugin.start(gameData, world);
         Entity player = world.getEntities(Player.class).get(0); //There's only one entity
         MovingPart movPart = player.getPart(MovingPart.class);
         PositionPart posPart = player.getPart(PositionPart.class);
 
-        float beforeMoving = posPart.getY();
+        float beforeMoving = posPart.getTargetPos().y;
 
 
         movPart.setUp(gameData.getKeys().isDown(UP));
         movPart.process(gameData, world, player);
 
-        float afterMoving = posPart.getY();
+        float afterMoving = posPart.getTargetPos().y;
 
         assertEquals(beforeMoving, afterMoving);
     }

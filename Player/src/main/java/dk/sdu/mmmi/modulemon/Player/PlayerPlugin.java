@@ -1,15 +1,14 @@
 package dk.sdu.mmmi.modulemon.Player;
 
 import com.badlogic.gdx.graphics.Texture;
-import dk.sdu.mmmi.modulemon.CommonBattle.MonsterTeamPart;
+import dk.sdu.mmmi.modulemon.CommonMap.Data.EntityParts.*;
 import dk.sdu.mmmi.modulemon.CommonMonster.IMonster;
 import dk.sdu.mmmi.modulemon.CommonMonster.IMonsterRegistry;
 import dk.sdu.mmmi.modulemon.common.AssetLoader;
-import dk.sdu.mmmi.modulemon.common.data.Entity;
+import dk.sdu.mmmi.modulemon.CommonMap.Data.Entity;
 import dk.sdu.mmmi.modulemon.common.data.GameData;
-import dk.sdu.mmmi.modulemon.common.data.World;
-import dk.sdu.mmmi.modulemon.common.data.entityparts.*;
-import dk.sdu.mmmi.modulemon.common.services.IGamePluginService;
+import dk.sdu.mmmi.modulemon.CommonMap.Data.World;
+import dk.sdu.mmmi.modulemon.CommonMap.Services.IGamePluginService;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -18,7 +17,7 @@ import java.util.concurrent.CopyOnWriteArrayList;
 public class PlayerPlugin implements IGamePluginService {
 
     private Entity player;
-    private static List<IMonsterRegistry> monsterRegistryList = new CopyOnWriteArrayList<>();
+    private static IMonsterRegistry monsterRegistry;
 
     public PlayerPlugin() {
     }
@@ -46,8 +45,12 @@ public class PlayerPlugin implements IGamePluginService {
         Texture leftSprite = AssetLoader.getInstance().getTextureAsset("/assets/main-char-left5.png", Player.class);
         Texture rightSprite = AssetLoader.getInstance().getTextureAsset("/assets/main-char-right5.png", Player.class);
         player.add(new SpritePart(upSprite, downSprite, leftSprite, rightSprite));
-        IMonsterRegistry monsterRegistry = monsterRegistryList.get(0);
+        addMonsterTeam(player);
 
+        return player;
+    }
+
+    public void addMonsterTeam(Entity entity) {
         List<IMonster> monsterList = new ArrayList<>();
         monsterList.add(monsterRegistry.getMonster(0));
         monsterList.add(monsterRegistry.getMonster(1));
@@ -55,9 +58,7 @@ public class PlayerPlugin implements IGamePluginService {
         monsterList.add(monsterRegistry.getMonster(3));
         monsterList.add(monsterRegistry.getMonster(4));
         monsterList.add(monsterRegistry.getMonster(5));
-        player.add(new MonsterTeamPart(monsterList));
-
-        return player;
+        entity.add(new MonsterTeamPart(monsterList));
     }
 
     @Override
@@ -67,17 +68,16 @@ public class PlayerPlugin implements IGamePluginService {
     }
 
 
-    public void addMonsterRegistryService (IMonsterRegistry registry){
-        this.monsterRegistryList.add(registry);
+    public void setMonsterRegistryService (IMonsterRegistry registry){
+        this.monsterRegistry = registry;
+        if (player != null) {
+            addMonsterTeam(player);
+        }
     }
 
-    // Used for tests
-    public void setMonsterRegistryList(List<IMonsterRegistry> monsterRegistryList) {
-        this.monsterRegistryList = monsterRegistryList;
-    }
-
-    public void removeMonsterRegistryService (IMonsterRegistry registry){
-        this.monsterRegistryList.remove(registry);
+    public void removeMonsterRegistryService(IMonsterRegistry monsterRegistry) {
+        this.monsterRegistry = null;
+        player.remove(MonsterTeamPart.class);
     }
 
 }

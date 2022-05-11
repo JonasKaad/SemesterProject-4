@@ -3,6 +3,8 @@ package dk.sdu.mmmi.modulemon.Monster;
 import dk.sdu.mmmi.modulemon.CommonMonster.IMonsterMove;
 import dk.sdu.mmmi.modulemon.CommonMonster.MonsterType;
 
+import java.util.Locale;
+
 public class MonsterMove implements IMonsterMove {
 
     private String name;
@@ -29,12 +31,10 @@ public class MonsterMove implements IMonsterMove {
         return name;
     }
 
-    @Override
     public int getDamage() {
         return damage;
     }
 
-    @Override
     public MonsterType getType() {
         return type;
     }
@@ -42,6 +42,18 @@ public class MonsterMove implements IMonsterMove {
     @Override
     public String getSoundPath() {
         return soundPath;
+    }
+
+    @Override
+    public String getBattleDescription() {
+        return "Move: [" + this.getType() + "] " + this.getName() + ". Deals damage: " + this.getDamage();
+    }
+
+    @Override
+    public String getSummaryScreenDescription() {
+        String moveType = String.valueOf(getType()).toLowerCase(Locale.ROOT);
+        String upperCaseMoveType = moveType.substring(0, 1).toUpperCase() + moveType.substring(1);
+        return this.getName() + " - " + this.getDamage() + " - " + upperCaseMoveType;
     }
 
     @Override

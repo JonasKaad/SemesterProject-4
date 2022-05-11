@@ -1,4 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
+<!--<scr:component xmlns:scr="http://www.osgi.org/xmlns/scr/v1.1.0" name="dk.sdu.mmmi.modulemon.Map.MapView"
+               activate="registerMapView">-->
 <scr:component xmlns:scr="http://www.osgi.org/xmlns/scr/v1.1.0" name="dk.sdu.mmmi.modulemon.Map.MapView">
     <implementation class="dk.sdu.mmmi.modulemon.Map.MapView"/>
 
@@ -8,15 +10,21 @@
     </service>
 
     <reference bind="addEntityProcessingService" cardinality="0..n"
-               interface="dk.sdu.mmmi.modulemon.common.services.IEntityProcessingService"
+               interface="dk.sdu.mmmi.modulemon.CommonMap.Services.IEntityProcessingService"
                name="IEntityProcessingService" policy="dynamic" unbind="removeEntityProcessingService"/>
 
+    <reference bind="addPostProcessingService" cardinality="0..n"
+               interface="dk.sdu.mmmi.modulemon.CommonMap.Services.IPostEntityProcessingService"
+               name="IPostEntityProcessingService" policy="dynamic" unbind="removePostProcessingService"/>
+
     <reference bind="addGamePluginService" cardinality="0..n"
-               interface="dk.sdu.mmmi.modulemon.common.services.IGamePluginService"
+               interface="dk.sdu.mmmi.modulemon.CommonMap.Services.IGamePluginService"
                name="IGamePluginService" policy="dynamic" unbind="removeGamePluginService"/>
 
     <reference bind="setBattleView" cardinality="0..1"
                interface="dk.sdu.mmmi.modulemon.CommonBattleClient.IBattleView"
                name="IBattleView" policy="dynamic" unbind="removeBattleView"/>
+
+
 
 </scr:component>

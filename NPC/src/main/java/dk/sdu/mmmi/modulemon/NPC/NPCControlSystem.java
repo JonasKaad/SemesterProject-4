@@ -5,64 +5,60 @@
 package dk.sdu.mmmi.modulemon.NPC;
 
 import com.badlogic.gdx.graphics.Texture;
-import dk.sdu.mmmi.modulemon.common.data.Entity;
+import dk.sdu.mmmi.modulemon.CommonMap.Data.Entity;
+import dk.sdu.mmmi.modulemon.CommonMap.Data.EntityParts.*;
 import dk.sdu.mmmi.modulemon.common.data.GameData;
-import dk.sdu.mmmi.modulemon.common.data.World;
-import dk.sdu.mmmi.modulemon.common.data.entityparts.*;
-import dk.sdu.mmmi.modulemon.common.services.IEntityProcessingService;
+import dk.sdu.mmmi.modulemon.CommonMap.Data.World;
+import dk.sdu.mmmi.modulemon.CommonMap.Services.IEntityProcessingService;
+
+import java.util.Collection;
 
 /**
  *
  * @author Gorm Krings
  */
 public class NPCControlSystem implements IEntityProcessingService{
-    
-    private String current = "";
 
+    private String current = ""; // Save the current or it will be overrided to nothing.
+    
     @Override
     public void process(GameData gameData, World world) {
 
             for (Entity npc : world.getEntities(NPC.class)) {
-                PositionPart positionPart = npc.getPart(PositionPart.class);
                 MovingPart movingPart = npc.getPart(MovingPart.class);
-                SpritePart spritePart = npc.getPart(SpritePart.class);
                 AIControlPart controlPart = npc.getPart(AIControlPart.class);
-                InteractPart interactPart = npc.getPart(InteractPart.class);
-                
-                movingPart.setLeft(controlPart.goLeft());
-                movingPart.setRight(controlPart.goRight());
-                movingPart.setUp(controlPart.goUp());
-                movingPart.setDown(controlPart.goDown());
-                // else stand still
-                
-                if(controlPart.goLeft()){
-                    current = "left";
-                }
-                if(controlPart.goRight()){
-                    current = "right";
-                }
-                if(controlPart.goUp()){
-                    current = "up";
-                }
-                if(controlPart.goDown()){
-                    current = "down";
-                }
-                
-                movingPart.process(gameData, world, npc);
-                positionPart.process(gameData, world, npc);
-                spritePart.process(gameData, world, npc);
-                controlPart.process(gameData, world, npc);
-                interactPart.process(gameData, world, npc);
-                
-                if (interactPart.canInteract()) {
 
-                } 
+                if (movingPart != null && controlPart != null) {
+                    movingPart.setLeft(controlPart.shouldGoLeft());
+                    movingPart.setRight(controlPart.shouldGoRight());
+                    movingPart.setUp(controlPart.shouldGoUp());
+                    movingPart.setDown(controlPart.shouldGoDown());
 
-                updateShape(npc);
+                    // else stand still
+                    if(controlPart.shouldGoLeft()){
+                        current = "left";
+                    }
+                    if(controlPart.shouldGoRight()){
+                        current = "right";
+                    }
+                    if(controlPart.shouldGoUp()){
+                        current = "up";
+                    }
+                    if(controlPart.shouldGoDown()){
+                        current = "down";
+                    }
+                }
+
+                Collection<EntityPart> entityParts = npc.getParts();
+                for (EntityPart entityPart : entityParts) {
+                    entityPart.process(gameData, world, npc);
+                }
+
+                updateShape(npc, current);
         }
     }
 
-    private void updateShape(Entity entity) {
+    private void updateShape(Entity entity, String current) {
 
         PositionPart positionPart = entity.getPart(PositionPart.class);
         float x = positionPart.getX();
@@ -84,15 +80,13 @@ public class NPCControlSystem implements IEntityProcessingService{
             case "down":
                 result = spritePart.getDownSprite();
                 break;
-            default: System.out.println(("Did not match any direction"));
+            default: System.out.println(("The NPC sprite could not be loaded: Current did not match any direction"));
         }
         
 
         entity.setSpriteTexture(result);
         entity.setPosX(x);
         entity.setPosY(y);
-
-        //entity.setSprite(new Texture(new OSGiFileHandle("/assets/main-char-right.png")));
     }
     
 }

@@ -6,5 +6,6 @@ public enum MonsterType {
     GRASS,
     AIR,
     EARTH,
-    LIGHTNING
+    LIGHTNING,
+    NORMAL
 }

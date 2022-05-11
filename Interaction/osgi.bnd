@@ -1,0 +1,3 @@
+Bundle-SymbolicName: Interaction
+Service-Component: META-INF/postprocessing.xml
+Bundle-ActivationPolicy: lazy

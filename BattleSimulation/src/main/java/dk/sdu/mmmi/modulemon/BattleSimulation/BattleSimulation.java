@@ -6,6 +6,8 @@ import dk.sdu.mmmi.modulemon.CommonBattleSimulation.BattleEvents.*;
 import dk.sdu.mmmi.modulemon.CommonMonster.IMonster;
 import dk.sdu.mmmi.modulemon.CommonMonster.IMonsterMove;
 import java.util.Optional;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 public class BattleSimulation implements IBattleSimulation {
 
@@ -18,10 +20,30 @@ public class BattleSimulation implements IBattleSimulation {
     private IBattleAIFactory AIFactory;
     private IBattleMonsterProcessor monsterProcessor;
 
+    private ExecutorService AIExecutor = Executors.newFixedThreadPool(1);
+
     @Override
     public void StartBattle(IBattleParticipant player, IBattleParticipant enemy) {
 
-        if (player.getActiveMonster().getHitPoints()<=0 || enemy.getActiveMonster().getHitPoints()<=0){
+        if (player.getActiveMonster().getHitPoints()<=0){
+            for (IMonster monster : player.getMonsterTeam()) {
+                if (monster.getHitPoints() > 0){
+                    player.setActiveMonster(monster);
+                    break;
+                }
+            }
+        }
+
+        if (enemy.getActiveMonster().getHitPoints()<=0){
+            for (IMonster monster : enemy.getMonsterTeam()) {
+                if (monster.getHitPoints() > 0){
+                    enemy.setActiveMonster(monster);
+                    break;
+                }
+            }
+        }
+
+        if(player.getActiveMonster().getHitPoints()<=0 || enemy.getActiveMonster().getHitPoints()<=0){
             throw new RuntimeException("Active monsters should have at least 1 HP");
         }
 
@@ -32,13 +54,19 @@ public class BattleSimulation implements IBattleSimulation {
         this.battleState = new BattleState(player, enemy);
         this.battleState.setActiveParticipant(firstToTakeTurn);
 
-        this.AI = this.AIFactory.getBattleAI(this, enemy);
+        this.AI = AIFactory.getBattleAI(this, enemy);
 
         if (!firstToTakeTurn.isPlayerControlled()) {
             nextEvent = new InfoBattleEvent("The opponent starts the battle", battleState.clone());
             onNextEvent = () -> {
                 battleState.setActiveParticipant(firstToTakeTurn);
-                AI.doAction(this);
+                if (getAI()!=null) {
+                    AIExecutor.execute(() -> {
+                        getAI().doAction(this);
+                    });
+                } else {
+                    nextEvent = new InfoBattleEvent("Waiting for an AI module", battleState.clone());
+                }
             };
         } else {
             nextEvent = new InfoBattleEvent("Player starts the battle", battleState.clone());
@@ -51,8 +79,14 @@ public class BattleSimulation implements IBattleSimulation {
 
     private void switchTurns() {
         if (battleState.isPlayersTurn()) {
-            battleState.setActiveParticipant(battleState.getEnemy());
-            AI.doAction(this);
+            if (getAI()!=null) {
+                battleState.setActiveParticipant(battleState.getEnemy());
+                AIExecutor.execute(() -> {
+                    getAI().doAction(this);
+                });
+            } else {
+                nextEvent = new InfoBattleEvent("Waiting for an AI module", battleState.clone());
+            }
         } else {
             battleState.setActiveParticipant(battleState.getPlayer());
         }
@@ -69,7 +103,12 @@ public class BattleSimulation implements IBattleSimulation {
     }
 
     @Override
-    public void doMove(IBattleParticipant battleParticipant, IMonsterMove move) {
+    public synchronized void doMove(IBattleParticipant battleParticipant, IMonsterMove move) {
+        if (monsterProcessor == null) {
+            nextEvent = new VictoryBattleEvent("Monsters unloaded, it's a draw", battleParticipant, battleState.clone());
+            onNextEvent = () -> {};
+            return;
+        }
         if (battleParticipant!=battleState.getActiveParticipant()) {
             throw new IllegalArgumentException("It is not that battle participants turn!");
         }
@@ -84,7 +123,9 @@ public class BattleSimulation implements IBattleSimulation {
         IBattleParticipant opposingParticipant;
 
         if (battleParticipant.equals(battleState.getPlayer())) {
-            AI.opposingMonsterUsedMove(source, move);
+            if (getAI()!=null) {
+                getAI().opposingMonsterUsedMove(source, move);
+            }
         }
 
         if (battleParticipant.isPlayerControlled()) {
@@ -103,7 +144,7 @@ public class BattleSimulation implements IBattleSimulation {
         int newHitPoints = target.getHitPoints()-damage;
         target.setHitPoints(Math.max(newHitPoints, 0));
 
-        nextEvent = new MoveBattleEvent(participantTitle + " monster used " + move.getName() + " for " + damage + " damage", battleParticipant, move, damage, battleState.clone());
+        nextEvent = new MoveBattleEvent(participantTitle + "'s " + source.getName() + " used " + move.getName() + " for " + damage + " damage!", battleParticipant, move, damage, battleState.clone());
 
         onNextEvent = () -> {
             if (newHitPoints>0) {
@@ -128,7 +169,7 @@ public class BattleSimulation implements IBattleSimulation {
         if (battleState.getActiveParticipant()!=battleParticipant) {
             throw new IllegalArgumentException("It is not that battle participants turn!");
         }
-        IBattleParticipant participant = battleState.getPlayer();
+        IBattleParticipant participant = battleState.getActiveParticipant();
         if (monster.getHitPoints()<=0) throw new IllegalArgumentException("You can't change to a dead monster");
         if (participant.getMonsterTeam().contains(monster)) {
             participant.setActiveMonster(monster);
@@ -152,7 +193,6 @@ public class BattleSimulation implements IBattleSimulation {
 
     @Override
     public IBattleState simulateDoMove(IBattleParticipant battleParticipant, IMonsterMove move, IBattleState currentState) {
-
         //Maybe add a check, that the battleParticipant is actually the active participant
 
         BattleState newState = (BattleState) currentState.clone();
@@ -166,7 +206,10 @@ public class BattleSimulation implements IBattleSimulation {
         }
         IMonster target = opposingParticipant.getActiveMonster();
 
-        int damage = monsterProcessor.calculateDamage(source, move, target);
+        int damage = 0;
+        if (move != null) {
+            damage = monsterProcessor.calculateDamage(source, move, target);
+        }
 
         int newHitPoints = target.getHitPoints()-damage;
         if (newHitPoints>0) {
@@ -207,7 +250,7 @@ public class BattleSimulation implements IBattleSimulation {
     }
 
     @Override
-    public IBattleEvent getNextBattleEvent() {
+    public synchronized IBattleEvent getNextBattleEvent() {
         IBattleEvent event = nextEvent;
         if (event!=null && onNextEvent!=null) {
             nextEvent = null;
@@ -216,11 +259,31 @@ public class BattleSimulation implements IBattleSimulation {
         return event;
     }
 
+    private IBattleAI getAI() {
+        if (this.AI==null) {
+            if (this.AIFactory==null) {
+                return null;
+            }
+            this.AI = this.AIFactory.getBattleAI(this, battleState.getEnemy());
+        }
+        return this.AI;
+    }
+
     public void setMonsterProcessor(IBattleMonsterProcessor monsterProcessor) {
         this.monsterProcessor = monsterProcessor;
+    }
+
+    public void removeMonsterProcessor(IBattleMonsterProcessor monsterProcessor) {
+        this.monsterProcessor = null;
     }
 
     public void setAIFactory(IBattleAIFactory factory) {
         this.AIFactory = factory;
     }
+
+    public void removeAIFactory(IBattleAIFactory factory) {
+        this.AIFactory = null;
+        this.AI = null;
+    }
+
 }

@@ -6,6 +6,7 @@ import dk.sdu.mmmi.modulemon.CommonMonster.MonsterType;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 import java.util.UUID;
 
 public class Monster implements IMonster {
@@ -50,7 +51,6 @@ public class Monster implements IMonster {
         return name;
     }
 
-    @Override
     public MonsterType getMonsterType() {
         return type;
     }
@@ -73,6 +73,9 @@ public class Monster implements IMonster {
     @Override
     public List<String> getStats() {
         List<String> statList = new ArrayList<>();
+        String monsterType = String.valueOf(getMonsterType()).toLowerCase(Locale.ROOT);
+        String upperCaseMoveType = monsterType.substring(0, 1).toUpperCase() + monsterType.substring(1);
+        statList.add("Type: " + upperCaseMoveType);
         statList.add("Attack: " + this.getAttack());
         statList.add("Defence: " + this.getDefence());
         statList.add("Speed: " + this.getSpeed());
@@ -119,6 +122,10 @@ public class Monster implements IMonster {
     @Override
     public IMonster clone() {
         return new Monster(this.name, this.type, this.hitPoints, this.maxHitPoints, this.defence, this.attack, this.speed, this.moves, this.frontSprite, this.backSprite, this.ID, this.uuid);
+    }
+
+    public IMonster copy() {
+        return new Monster(this.name, this.type, this.hitPoints, this.maxHitPoints, this.defence, this.attack, this.speed, this.moves, this.frontSprite, this.backSprite, this.ID, UUID.randomUUID());
     }
 
     @Override
