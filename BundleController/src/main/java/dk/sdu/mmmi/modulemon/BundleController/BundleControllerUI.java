@@ -74,6 +74,7 @@ public class BundleControllerUI extends JFrame {
         yoloCheckbox.setToolTipText("You only live once...");
 
         JScrollPane scrollPane = new JScrollPane();
+        scrollPane.getVerticalScrollBar().setUnitIncrement(16);
         contentPane.add(scrollPane);
 
         bundlePanel = new JPanel();
