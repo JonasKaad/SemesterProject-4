@@ -19,6 +19,7 @@ import java.util.Queue;
 public class BattleEvent implements IMapEvent {
     private Queue<String> lines;
     private Rectangle textBox;
+    private Rectangle exlamationBox;
     private Entity aggresor;
     private Entity victim;
     private IMapView mapView;
@@ -36,6 +37,7 @@ public class BattleEvent implements IMapEvent {
         this.lines = lines;
         this.mapView = map;
         textBox = new Rectangle(20,20, -1, -1);
+        exlamationBox = new Rectangle(-1,-1, -1, -1);
     }
 
     public void addLine(String line){
@@ -54,9 +56,10 @@ public class BattleEvent implements IMapEvent {
 
     @Override
     public void update(GameData gameData) {
-        // Empty
         textBox.setHeight(100f);
         textBox.setWidth(gameData.getDisplayWidth() - 50);
+        exlamationBox.setHeight(28f);
+        exlamationBox.setWidth(12.5f);
     }
 
     @Override
@@ -64,16 +67,23 @@ public class BattleEvent implements IMapEvent {
         if(battleStarted)
             return;
         //Draw rectangle
+        Camera cam = gameData.getCamera();
         shapeRenderer.setColor(Color.WHITE);
         shapeRenderer.begin(ShapeRenderer.ShapeType.Filled);
+        
         textBox.draw(shapeRenderer, gameData.getDelta());
+
+        Vector3 exlamationBoxPos = cam.project(new Vector3(victim.getPosX(), victim.getPosY(), 0f));
+        exlamationBox.setY(exlamationBoxPos.y + 59);
+        exlamationBox.setX(exlamationBoxPos.x + 12.5f);
+        exlamationBox.draw(shapeRenderer, gameData.getDelta());
+
         shapeRenderer.end();
 
         //Animate triangle-thing
 
         //Draw text
         spriteBatch.setProjectionMatrix(gameData.getCamera().combined);
-        Camera cam = gameData.getCamera();
         spriteBatch.begin();
         if(victim.getType() == EntityType.GENERIC){
             TextUtils.getInstance().drawBigRoboto(spriteBatch,
