@@ -11,7 +11,9 @@ import dk.sdu.mmmi.modulemon.CommonMap.Data.World;
 import dk.sdu.mmmi.modulemon.CommonMap.Services.IGamePluginService;
 
 import java.util.ArrayList;
+import java.util.LinkedList;
 import java.util.List;
+import java.util.Queue;
 import java.util.concurrent.CopyOnWriteArrayList;
 
 public class PlayerPlugin implements IGamePluginService {
@@ -45,6 +47,9 @@ public class PlayerPlugin implements IGamePluginService {
         Texture leftSprite = AssetLoader.getInstance().getTextureAsset("/assets/main-char-left5.png", Player.class);
         Texture rightSprite = AssetLoader.getInstance().getTextureAsset("/assets/main-char-right5.png", Player.class);
         player.add(new SpritePart(upSprite, downSprite, leftSprite, rightSprite));
+        Queue<String> playerLines = new LinkedList<>();
+        playerLines.add("Alright, lets battle!");
+        player.add(new LinesPart(playerLines));
         addMonsterTeam(player);
 
         return player;

@@ -14,7 +14,9 @@ import dk.sdu.mmmi.modulemon.CommonMap.Data.World;
 import dk.sdu.mmmi.modulemon.common.OSGiFileHandle;
 import dk.sdu.mmmi.modulemon.CommonMap.Services.IGamePluginService;
 import java.util.ArrayList;
+import java.util.LinkedList;
 import java.util.List;
+import java.util.Queue;
 
 /**
  *
@@ -48,6 +50,10 @@ public class NPCPlugin implements IGamePluginService{
         npcs.get(0).add(new InteractPart(positionPart, 5));
         npcs.get(0).add(new AIControlPart(new Character[]{'R','R','L','L','L','L','R','R','U','U','D','D','D','D','U','U'}));
         npcs.get(0).add(new AIControlPart(new Character[]{'R','R','L','L','L','L','R','R','U','U','D','D','D','D','U','U'}));
+        Queue<String> npcLines = new LinkedList<>();
+        npcLines.add("Hey, you!");
+        npcLines.add("Wanna battle?");
+        npcs.get(0).add(new LinesPart(npcLines));
         if(monsterRegistry != null)
             addMonsterTeam(npcs);
     }

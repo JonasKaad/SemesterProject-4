@@ -600,4 +600,9 @@ public class MapView implements IGameViewService, IMapView {
     public void addMapEvent(IMapEvent event) {
         mapEvents.add(event);
     }
+
+    @Override
+    public String toString(){
+        return "Start the adventure!";
+    }
 }
