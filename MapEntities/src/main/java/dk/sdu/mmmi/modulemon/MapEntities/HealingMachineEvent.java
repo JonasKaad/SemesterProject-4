@@ -12,6 +12,7 @@ import java.util.Queue;
 
 public class HealingMachineEvent extends TextMapEvent {
     private Entity interactee;
+
     public HealingMachineEvent(Entity interactee) {
         super(new LinkedList<>(Arrays.asList("You use the healing machine to heal your monsters.")));
         if(interactee == null){

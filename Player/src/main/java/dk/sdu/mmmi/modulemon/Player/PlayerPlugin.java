@@ -60,14 +60,8 @@ public class PlayerPlugin implements IGamePluginService {
 
     private void addMonsterTeam(Entity entity, GameData gameData) {
         List<IMonster> monsterList = new ArrayList<>();
-        if(gameData.getKeys().isDown(GameKeys.LEFT_CTRL))
+        if(gameData != null && gameData.getKeys().isDown(GameKeys.LEFT_CTRL))
             monsterList.add(monsterRegistry.getMonster(6)); //God
-        else monsterList.add(monsterRegistry.getMonster(0));
-        monsterList.add(monsterRegistry.getMonster(1));
-        monsterList.add(monsterRegistry.getMonster(2));
-        monsterList.add(monsterRegistry.getMonster(3));
-        monsterList.add(monsterRegistry.getMonster(4));
-        monsterList.add(monsterRegistry.getMonster(5));
         entity.add(new MonsterTeamPart(monsterList));
     }
 

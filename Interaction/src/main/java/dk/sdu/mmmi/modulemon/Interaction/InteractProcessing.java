@@ -36,6 +36,8 @@ public class InteractProcessing implements IPostEntityProcessingService {
                             //If the interactor is the Player, don't interact if not holding either E or ACTION.
                             continue;
                         }
+                        gameData.getKeys().setKey(GameKeys.E, false);
+                        gameData.getKeys().setKey(GameKeys.ACTION, false);
                     }
 
                     wasAbleToInteract = true;
@@ -59,6 +61,11 @@ public class InteractProcessing implements IPostEntityProcessingService {
                     // Check if one of the entities does not have a monster team
                     if (monsterTeam1 == null || monsterTeam2 == null) {
                         continue;
+                    }
+
+                    if(monsterTeam1.getMonsterTeam().size() == 0 || monsterTeam2.getMonsterTeam().size() == 0){
+                        TextMapEvent event = new TextMapEvent(new LinkedList<>(Collections.singletonList("You have no monsters. Go get some from a vending machine")));
+                        mapView.addMapEvent(event);
                     }
 
                     if (!monsterTeam1.hasAliveMonsters() || !monsterTeam2.hasAliveMonsters()) {
