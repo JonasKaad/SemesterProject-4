@@ -6,6 +6,7 @@ import dk.sdu.mmmi.modulemon.CommonBattleSimulation.IBattleSimulation;
 import dk.sdu.mmmi.modulemon.CommonBattleSimulation.IBattleState;
 import dk.sdu.mmmi.modulemon.CommonMonster.IMonster;
 import dk.sdu.mmmi.modulemon.CommonMonster.IMonsterMove;
+import dk.sdu.mmmi.modulemon.common.services.IGameSettings;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -18,19 +19,21 @@ public class BattleAI implements IBattleAI {
     private IBattleParticipant participantToControl;
     private IBattleParticipant opposingParticipant;
     private IBattleSimulation battleSimulation;
-    private boolean useAlphaBetaPruning = true;
+    private boolean defaultUseAlphaBetaPruning = true;
     private long startTime;
     private int maxDepthReached = 0;
-    private int timeLimitms = 1000;
+    private int defaultTimeLimitms = 1000;
+    private IGameSettings settings = null;
 
 
-    public BattleAI(IBattleSimulation battleSimulation, IBattleParticipant participantToControl) {
+    public BattleAI(IBattleSimulation battleSimulation, IBattleParticipant participantToControl, IGameSettings settings) {
         knowledgeState = new KnowledgeState();
         this.participantToControl = participantToControl;
         this.opposingParticipant = participantToControl == battleSimulation.getState().getPlayer()
                 ? battleSimulation.getState().getEnemy()
                 : battleSimulation.getState().getPlayer();
         this.battleSimulation = battleSimulation;
+        this.settings = settings;
     }
 
     public void opposingMonsterUsedMove(IMonster monster, IMonsterMove move) {
@@ -46,7 +49,29 @@ public class BattleAI implements IBattleAI {
     }
 
     public boolean outOfTime() {
-        return ((System.nanoTime()-startTime)/1000000)>=timeLimitms;
+        return ((System.nanoTime()-startTime)/1000000)>=getTimeLimitms();
+    }
+
+    private long getTimeLimitms() {
+        if (settings==null) {
+            return defaultTimeLimitms;
+        }
+        Object limitObj = settings.getSetting("AI processing time");
+        if (!(limitObj instanceof Integer)) {
+            return defaultTimeLimitms;
+        }
+        return (int) limitObj;
+    }
+
+    private boolean getUseAlphaBetaPruning() {
+        if (settings==null) {
+            return defaultUseAlphaBetaPruning;
+        }
+        Object abObj = settings.getSetting("AI alpha-beta pruning");
+        if (!(abObj instanceof Integer)) {
+            return defaultUseAlphaBetaPruning;
+        }
+        return (boolean) abObj;
     }
 
     @Override
@@ -79,7 +104,7 @@ public class BattleAI implements IBattleAI {
             for (IMonsterMove move : participantToControl.getActiveMonster().getMoves()) {
                 IBattleState state = battleSimulation.simulateDoMove(participantToControl, move, battleSimulation.getState());
 
-                float util = useAlphaBetaPruning
+                float util = getUseAlphaBetaPruning()
                         ? minDecision(state, 1, searchDepth, -Float.MAX_VALUE, Float.MAX_VALUE)
                         : minmaxSearch(state, 1, searchDepth);
 
@@ -94,7 +119,7 @@ public class BattleAI implements IBattleAI {
                 if (monster != participantToControl.getActiveMonster() && monster.getHitPoints() > 0) {
                     IBattleState state = battleSimulation.simulateSwitchMonster(participantToControl, monster, battleSimulation.getState());
 
-                    float util = useAlphaBetaPruning
+                    float util = getUseAlphaBetaPruning()
                             ? minDecision(state, 1, searchDepth, -Float.MAX_VALUE, Float.MAX_VALUE)
                             : minmaxSearch(state, 1, searchDepth);
 
