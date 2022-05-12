@@ -5,15 +5,6 @@
 package dk.sdu.mmmi.modulemon.CommonMap.Data.EntityParts;
 
 import static dk.sdu.mmmi.modulemon.CommonMap.Data.Direction.*;
-import dk.sdu.mmmi.modulemon.CommonMap.Data.Entity;
-import dk.sdu.mmmi.modulemon.CommonMap.Data.World;
-import dk.sdu.mmmi.modulemon.common.data.GameData;
-import java.util.LinkedList;
-import java.util.List;
-import org.junit.jupiter.api.AfterEach;
-import org.junit.jupiter.api.AfterAll;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -22,37 +13,19 @@ import static org.junit.jupiter.api.Assertions.*;
  * @author Gorm
  */
 public class InteractPartTest {
-    
-    public InteractPartTest() {
-    }
-    
-    @BeforeAll
-    public static void setUpClass() {
-    }
-    
-    @AfterAll
-    public static void tearDownClass() {
-    }
-    
-    @BeforeEach
-    public void setUp() {
-    }
-    
-    @AfterEach
-    public void tearDown() {
-    }
 
     /**
      * Test of isInRange method, of class InteractPart.
      */
     @Test
     public void testIsInRange() {
-        final float X = 10.0F*64;
-        final float Y = 10.0F*64;
-        PositionPart positionPart = new PositionPart(X, Y);
+        final int TILE_SIZE = 64;
+        final float X = 10.0F*TILE_SIZE;   // X of the entity who is tested
+        final float Y = 10.0F*TILE_SIZE;   // Y of the entity who is tested
+        PositionPart positionPart = new PositionPart(X, Y);             // Making the entity's PositionPart
+        InteractPart interactPart = new InteractPart(positionPart, 0);  // Making the entity's InteractPart
         int maxRange = 5;
-        InteractPart instance;
-        boolean result;
+        boolean result; // The result of the isInRange check
         
         System.out.println("PositionPart: (" + positionPart.getX() + ", " + positionPart.getY() + ")");
         
@@ -65,24 +38,24 @@ public class InteractPartTest {
             
             // Test if each tile of 64 pixels in that range infront of the entity makes isInRange return true
             for (int i = -range; i < 0; i++) {
-                instance = new InteractPart(positionPart, Math.abs(i));
+                interactPart.setRange(Math.abs(i));
 
-                float x = X+i*64;
+                float x = X+i*TILE_SIZE;
                 float y = Y;
-                result = instance.isInRange(x, y);
+                result = interactPart.isInRange(x, y);
                 System.out.println(buildDetails(x ,y, result, Math.abs(i)));
-                assertEquals(true, result);
+                assertTrue(result);
 
             }
             // Test if each tile of 64 pixels in that range behind the entity makes isInRange return false
             for (int i = 1; i <= range; i++) {
-                instance = new InteractPart(positionPart, Math.abs(i));
+                interactPart.setRange(Math.abs(i));
 
-                float x = X+i*64;
+                float x = X+i*TILE_SIZE;
                 float y = Y;
-                result = instance.isInRange(x, y);
+                result = interactPart.isInRange(x, y);
                 System.out.println(buildDetails(x ,y, result, Math.abs(i)));
-                assertEquals(false, result);
+                assertFalse(result);
 
             }
 
@@ -92,24 +65,24 @@ public class InteractPartTest {
 
             // Test if each tile of 64 pixels in that range infront of the entity makes isInRange return true
             for (int i = -range; i < 0; i++) {
-                instance = new InteractPart(positionPart, Math.abs(i));
+                interactPart.setRange(Math.abs(i));
 
-                float x = X-i*64;
+                float x = X-i*TILE_SIZE;
                 float y = Y;
-                result = instance.isInRange(x, y);
+                result = interactPart.isInRange(x, y);
                 System.out.println(buildDetails(x ,y, result, Math.abs(i)));
-                assertEquals(true, result);
+                assertTrue(result);
 
             }
             // Test if each tile of 64 pixels in that range behind the entity makes isInRange return false
             for (int i = 1; i <= range; i++) {
-                instance = new InteractPart(positionPart, Math.abs(i));
+                interactPart.setRange(Math.abs(i));
 
-                float x = X-i*64;
+                float x = X-i*TILE_SIZE;
                 float y = Y;
-                result = instance.isInRange(x, y);
+                result = interactPart.isInRange(x, y);
                 System.out.println(buildDetails(x ,y, result, Math.abs(i)));
-                assertEquals(false, result);
+                assertFalse(result);
 
             }
 
@@ -119,24 +92,24 @@ public class InteractPartTest {
             
             // Test if each tile of 64 pixels in that range infront of the entity makes isInRange return true
             for (int i = -range; i < 0; i++) {
-                instance = new InteractPart(positionPart, Math.abs(i));
+                interactPart.setRange(Math.abs(i));
 
                 float x = X;
-                float y = Y+i*64;
-                result = instance.isInRange(x, y);
+                float y = Y+i*TILE_SIZE;
+                result = interactPart.isInRange(x, y);
                 System.out.println(buildDetails(x ,y, result, Math.abs(i)));
-                assertEquals(true, result);
+                assertTrue(result);
 
             }
             // Test if each tile of 64 pixels in that range behind the entity makes isInRange return false
             for (int i = 1; i <= range; i++) {
-                instance = new InteractPart(positionPart, Math.abs(i));
+                interactPart.setRange(Math.abs(i));
 
                 float x = X;
-                float y = Y+i*64;
-                result = instance.isInRange(x, y);
+                float y = Y+i*TILE_SIZE;
+                result = interactPart.isInRange(x, y);
                 System.out.println(buildDetails(x ,y, result, Math.abs(i)));
-                assertEquals(false, result);
+                assertFalse(result);
 
             }
 
@@ -146,37 +119,37 @@ public class InteractPartTest {
 
             // Test if each tile of 64 pixels in that range infront of the entity makes isInRange return true
             for (int i = -range; i < 0; i++) {
-                instance = new InteractPart(positionPart, Math.abs(i));
+                interactPart.setRange(Math.abs(i));
 
                 float x = X;
-                float y = Y-i*64;
-                result = instance.isInRange(x, y);
+                float y = Y-i*TILE_SIZE;
+                result = interactPart.isInRange(x, y);
                 System.out.println(buildDetails(x ,y, result, Math.abs(i)));
-                assertEquals(true, result);
+                assertTrue(result);
 
             }
             // Test if each tile of 64 pixels in that range behind the entity makes isInRange return false
             for (int i = 1; i <= range; i++) {
-                instance = new InteractPart(positionPart, Math.abs(i));
+                interactPart.setRange(Math.abs(i));
 
                 float x = X;
-                float y = Y-i*64;
-                result = instance.isInRange(x, y);
+                float y = Y-i*TILE_SIZE;
+                result = interactPart.isInRange(x, y);
                 System.out.println(buildDetails(x ,y, result, Math.abs(i)));
-                assertEquals(false, result);
+                assertFalse(result);
 
             }
             
-            //System.out.println("No Interaction when Entity is not in sight");
-            // Test that you can not interact when Entity is not in sight.
-            for (float x = X-2*range*64; x < X+2*range*64; x += 64) {
-                for (float y = Y-2*range*64; y < Y+2*range*64; y += 64) {
+            System.out.println("Testing that it does not interact when the position is not in sight");
+            // Assert that you can not interact when the position is not in sight.
+            for (float x = X-2*range*TILE_SIZE; x < X+2*range*TILE_SIZE; x += TILE_SIZE) {
+                for (float y = Y-2*range*TILE_SIZE; y < Y+2*range*TILE_SIZE; y += TILE_SIZE) {
                     if (X == x || Y == y) continue;
-                    instance = new InteractPart(positionPart, Math.abs(range));
+                    interactPart.setRange(Math.abs(range));
 
-                    result = instance.isInRange(x, y);
+                    result = interactPart.isInRange(x, y);
                     //System.out.println(buildDetails(x ,y, result, Math.abs(range)));
-                    assertEquals(false, result);
+                    assertFalse(result);
                 }
             }
         }
