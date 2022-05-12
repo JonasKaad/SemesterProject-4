@@ -1,11 +1,9 @@
 package dk.sdu.mmmi.modulemon.CommonMap.Data;
 
-import com.badlogic.gdx.graphics.Texture;
 import dk.sdu.mmmi.modulemon.CommonMap.Data.EntityParts.EntityPart;
 
 import java.io.Serializable;
 import java.util.Collection;
-import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
@@ -13,9 +11,6 @@ import java.util.concurrent.ConcurrentHashMap;
 public abstract class Entity implements Serializable {
     private final UUID ID = UUID.randomUUID();
     private EntityType type;
-    private float posX;
-    private float posY;
-    private Texture spriteTexture = null;
     private Map<Class, EntityPart> parts;
 
     public Entity(EntityType type) {
@@ -45,30 +40,6 @@ public abstract class Entity implements Serializable {
 
     public String getID() {
         return ID.toString();
-    }
-
-    public float getPosX() {
-        return posX;
-    }
-
-    public void setPosX(float posX) {
-        this.posX = posX;
-    }
-
-    public float getPosY() {
-        return posY;
-    }
-
-    public void setPosY(float posY) {
-        this.posY = posY;
-    }
-
-    public Texture getSpriteTexture() {
-        return spriteTexture;
-    }
-
-    public void setSpriteTexture(Texture spriteTexture) {
-        this.spriteTexture = spriteTexture;
     }
 
     public EntityType getType() {
