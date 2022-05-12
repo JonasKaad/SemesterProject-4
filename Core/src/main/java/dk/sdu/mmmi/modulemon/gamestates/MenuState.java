@@ -106,6 +106,7 @@ public class MenuState implements IGameViewService {
         menuOptions = defaultMenuOptions;
 
         if(settings != null) {
+            //TODO Use ints instead and do * 100 when getting it and / 100 when setting it
             musicVolume = Math.round((float) settings.getSetting("musicVolume") * 100) + "%";
             soundVolume = Math.round((float) settings.getSetting("soundVolume") * 100) + "%";
             settingsValue.add(musicVolume);
