@@ -355,7 +355,7 @@ public class BattleView implements IGameViewService, IBattleView {
 
     @Override
     public void handleInput(GameData gameData, IGameStateManager gameStateManager) {
-        if (!blockingAnimations.isEmpty() || !_isInitialized) {
+        if (!blockingAnimations.isEmpty() || !_isInitialized || (_battleSimulation!= null &&!_battleSimulation.getState().isPlayersTurn())) {
             //If any blocking animations, don't allow any input.
             _battleScene.setActionBoxAlpha(0.5f);
             return;

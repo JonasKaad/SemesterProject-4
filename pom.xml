@@ -48,6 +48,7 @@
     <module>Interaction</module>
     <module>Collision</module>
     <module>MapEntities</module>
+    <module>Settings</module>
   </modules>
 
   <build>
