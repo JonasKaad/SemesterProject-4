@@ -521,4 +521,9 @@ public class BattleView implements IGameViewService, IBattleView {
     public void removeMonsterRegistry(IMonsterRegistry monsterRegistry) {
         this.monsterRegistry = null;
     }
+
+    @Override
+    public String toString(){
+        return "Start a quick battle";
+    }
 }

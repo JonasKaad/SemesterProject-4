@@ -15,19 +15,13 @@ import dk.sdu.mmmi.modulemon.common.data.GameData;
 
 import java.util.ArrayList;
 
-public class MovingPart extends BaseAnimation implements EntityPart {
+public class MovingPart implements EntityPart {
 
     private boolean left, right, up, down;
     private float movingTimer = 0;
     private float animationTimer;
     private Vector2 newPosition = new Vector2();
 
-
-    public MovingPart() {
-        super();
-        Timeline = new int[]{0, 2000, 2500};
-        States = new ArrayList<>(Timeline.length);
-    }
     public void setLeft(boolean left) {
         this.left = left;
     }
@@ -66,7 +60,7 @@ public class MovingPart extends BaseAnimation implements EntityPart {
         }
 
         if(animationTimer < 0.5){
-            animationTimer += dt * 1.5;
+            animationTimer += dt * 3;
             animationTimer = Math.min(animationTimer, 1);
             Vector2 pos = currentPosition.lerp(newPosition, animationTimer);
 
@@ -122,11 +116,5 @@ public class MovingPart extends BaseAnimation implements EntityPart {
                 positionPart.setTargetPos(x,y);
             }
         }
-    }
-
-    @Override
-    public void update(GameData gameData) {
-        super.tick();
-        float[] states = getCurrentStates();
     }
 }

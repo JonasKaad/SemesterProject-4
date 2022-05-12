@@ -110,5 +110,12 @@
     "damage": 45,
     "type": "AIR",
     "sound": "/sounds/wind_gust.ogg"
+  },
+  {
+    "id": "DIE",
+    "name": "Die for me!",
+    "damage": 999999,
+    "type": "NORMAL",
+    "sound": "/sounds/dieforme.ogg"
   }
 ]
