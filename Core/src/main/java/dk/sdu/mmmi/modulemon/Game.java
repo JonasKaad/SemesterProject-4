@@ -31,6 +31,8 @@ public class Game implements ApplicationListener {
     private static IBundleControllerService bundleControllerService;
     private static Queue<Runnable> gdxThreadTasks = new LinkedList<>();
 
+    private IGameSettings settings = null;
+
     public Game(){
         init();
     }
@@ -143,6 +145,33 @@ public class Game implements ApplicationListener {
         bundleControllerService.closeController();
         Game.bundleControllerService = null;
     }
+
+    public void setSettingsService(IGameSettings settings){
+        this.settings = settings;
+        gdxThreadTasks.add(() -> {
+            if (settings.getSetting("musicVolume")==null) {
+                settings.setSetting("musicVolume", 0.1f);
+            }
+            if(settings.getSetting("musicVolume") instanceof Integer){
+                settings.setSetting("musicVolume", 0.01f);
+            }
+            if (settings.getSetting("soundVolume")==null) {
+                settings.setSetting("soundVolume", 0.6f);
+            }
+            if(settings.getSetting("soundVolume") instanceof Integer){
+                settings.setSetting("soundVolume", 0.01f);
+            }
+            if (settings.getSetting("personaRectangles")==null) {
+                settings.setSetting("personaRectangles", false);
+            }
+            gsm.setSettings(settings);
+        });
+    }
+
+    public void removeSettingsService(IGameSettings settings){
+        this.settings = null;
+    }
+
 
     private ByteBuffer[] hackIcon(String resourceName){
         ByteBuffer[] byteBuffer = new ByteBuffer[1];

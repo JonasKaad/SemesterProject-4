@@ -2,6 +2,8 @@ package dk.sdu.mmmi.modulemon.CommonMap;
 
 import dk.sdu.mmmi.modulemon.CommonMap.Data.Entity;
 
+import java.util.Queue;
+
 public interface IMapView {
     float getMapLeft();
     float getMapRight();
@@ -11,5 +13,6 @@ public interface IMapView {
     boolean isCellBlocked(float x, float y);
     boolean isPaused();
     void startEncounter(Entity player, Entity enemy);
+    void addMapEvent(IMapEvent event);
 }
 

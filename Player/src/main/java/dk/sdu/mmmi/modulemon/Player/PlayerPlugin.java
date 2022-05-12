@@ -9,10 +9,12 @@ import dk.sdu.mmmi.modulemon.CommonMap.Data.Entity;
 import dk.sdu.mmmi.modulemon.common.data.GameData;
 import dk.sdu.mmmi.modulemon.CommonMap.Data.World;
 import dk.sdu.mmmi.modulemon.CommonMap.Services.IGamePluginService;
+import dk.sdu.mmmi.modulemon.common.data.GameKeys;
 
 import java.util.ArrayList;
+import java.util.LinkedList;
 import java.util.List;
-import java.util.concurrent.CopyOnWriteArrayList;
+import java.util.Queue;
 
 public class PlayerPlugin implements IGamePluginService {
 
@@ -45,14 +47,19 @@ public class PlayerPlugin implements IGamePluginService {
         Texture leftSprite = AssetLoader.getInstance().getTextureAsset("/assets/main-char-left5.png", Player.class);
         Texture rightSprite = AssetLoader.getInstance().getTextureAsset("/assets/main-char-right5.png", Player.class);
         player.add(new SpritePart(upSprite, downSprite, leftSprite, rightSprite));
-        addMonsterTeam(player);
+        Queue<String> playerLines = new LinkedList<>();
+        playerLines.add("Alright, lets battle!");
+        player.add(new TextDisplayPart(playerLines));
+        addMonsterTeam(player, gameData);
 
         return player;
     }
 
-    public void addMonsterTeam(Entity entity) {
+    private void addMonsterTeam(Entity entity, GameData gameData) {
         List<IMonster> monsterList = new ArrayList<>();
-        monsterList.add(monsterRegistry.getMonster(0));
+        if(gameData.getKeys().isDown(GameKeys.LEFT_CTRL))
+            monsterList.add(monsterRegistry.getMonster(6)); //God
+        else monsterList.add(monsterRegistry.getMonster(0));
         monsterList.add(monsterRegistry.getMonster(1));
         monsterList.add(monsterRegistry.getMonster(2));
         monsterList.add(monsterRegistry.getMonster(3));
@@ -71,7 +78,7 @@ public class PlayerPlugin implements IGamePluginService {
     public void setMonsterRegistryService (IMonsterRegistry registry){
         this.monsterRegistry = registry;
         if (player != null) {
-            addMonsterTeam(player);
+            addMonsterTeam(player, null);
         }
     }
 

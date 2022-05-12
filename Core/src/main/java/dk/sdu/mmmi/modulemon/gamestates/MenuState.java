@@ -16,6 +16,7 @@ import dk.sdu.mmmi.modulemon.common.data.GameData;
 import dk.sdu.mmmi.modulemon.common.data.GameKeys;
 import dk.sdu.mmmi.modulemon.common.data.IGameStateManager;
 import dk.sdu.mmmi.modulemon.common.OSGiFileHandle;
+import dk.sdu.mmmi.modulemon.common.services.IGameSettings;
 import dk.sdu.mmmi.modulemon.common.services.IGameViewService;
 
 import java.util.ArrayList;
@@ -37,8 +38,8 @@ public class MenuState implements IGameViewService {
 
     private Texture logo;
 
-    String musicVolume = "%";
-    String soundVolume = "%";
+    private String musicVolume = "%";
+    private String soundVolume = "%";
 
     private String title = "";
 
@@ -55,7 +56,10 @@ public class MenuState implements IGameViewService {
 
     GameData gameData = new GameData();
 
-    public MenuState() {
+    private IGameSettings settings;
+
+    public MenuState(IGameSettings settings) {
+        this.settings = settings;
     }
 
     @Override
@@ -101,11 +105,13 @@ public class MenuState implements IGameViewService {
         // Sets the options for the menu
         menuOptions = defaultMenuOptions;
 
-        musicVolume = Math.round(gameData.getMusicVolume() * 100) + "%";
-        soundVolume = Math.round(gameData.getSoundVolume() * 100) + "%";
-        settingsValue.add(musicVolume);
-        settingsValue.add(soundVolume);
-        settingsValue.add(gameData.usePersonaSetting() ? "On" : "Off");
+        if(settings != null) {
+            musicVolume = Math.round((float) settings.getSetting("musicVolume") * 100) + "%";
+            soundVolume = Math.round((float) settings.getSetting("soundVolume") * 100) + "%";
+            settingsValue.add(musicVolume);
+            settingsValue.add(soundVolume);
+            settingsValue.add(gameData.usePersonaSetting() ? "On" : "Off");
+        }
     }
 
     @Override
@@ -116,7 +122,7 @@ public class MenuState implements IGameViewService {
             menuOptions = new String[gameViews.size() + 1];
             menuOptions[0] = "GO BACK";
             for (int i = 1; i <= gameViews.size(); i++) {
-                menuOptions[i] = gameViews.get(i - 1).getClass().getName();
+                menuOptions[i] = gameViews.get(i - 1).toString();
             }
 
         }
@@ -134,10 +140,10 @@ public class MenuState implements IGameViewService {
             title = "ModulémoN";
         }
         // Sets the value of the volume option to the correct value from GameData.
-        if(menuMusic.getVolume() != gameData.getMusicVolume()){
-            menuMusic.setVolume( gameData.getMusicVolume());
-            musicVolume = Math.round(gameData.getMusicVolume() * 100) + "%";
-            soundVolume = Math.round(gameData.getSoundVolume() * 100) + "%";
+        if(menuMusic.getVolume() != (float) settings.getSetting("musicVolume")){
+            menuMusic.setVolume( (float) settings.getSetting("musicVolume"));
+            musicVolume = Math.round((float) settings.getSetting("musicVolume") * 100) + "%";
+            soundVolume = Math.round((float) settings.getSetting("soundVolume") * 100) + "%";
             settingsValue.set(0,musicVolume);
             settingsValue.set(1,soundVolume);
         }
@@ -229,50 +235,50 @@ public class MenuState implements IGameViewService {
 
         if(gameData.getKeys().isPressed(GameKeys.LEFT)){
             if(menuOptions[currentOption].equalsIgnoreCase("Change Music Volume")){
-                if( (gameData.getMusicVolume() > 0) ) {
 
-                    gameData.setMusicVolume(gameData.getMusicVolume() - 0.1f);
-                    if(gameData.getMusicVolume() < 0.04f) {
-                        gameData.setMusicVolume(0);
+                if( ( (float) settings.getSetting("musicVolume") > 0) ) {
+                    float new_volume = (float) settings.getSetting("musicVolume") - 0.1f;
+                    settings.setSetting("musicVolume", new_volume);
+                    if((float) settings.getSetting("musicVolume") < 0.04f) {
+                        settings.setSetting("musicVolume", 0f);
                     }
 
-                    musicVolume = Math.round(gameData.getMusicVolume()*100) + "%";
+                    musicVolume = Math.round((float) settings.getSetting("musicVolume") * 100) + "%";
                     settingsValue.set(0, musicVolume);
                 }
             }
 
             if(menuOptions[currentOption].equalsIgnoreCase("Change Sound Volume")){
-                if( (gameData.getSoundVolume() > 0) ){
-                    gameData.setSoundVolume(gameData.getSoundVolume() - 0.1f);
-
-                    if(gameData.getSoundVolume() < 0.04) {
-                        gameData.setSoundVolume(0);
+                if( ( (float) settings.getSetting("soundVolume") > 0) ) {
+                    float new_volume = (float) settings.getSetting("soundVolume") - 0.1f;
+                    settings.setSetting("soundVolume", new_volume);
+                    if((float) settings.getSetting("soundVolume") < 0.04f) {
+                        settings.setSetting("soundVolume", 0f);
                     }
 
-                    soundVolume = Math.round(gameData.getSoundVolume()*100) + "%";
-                    settingsValue.set(1, soundVolume);
+                    soundVolume = Math.round((float) settings.getSetting("soundVolume") * 100) + "%";
+                    settingsValue.set(0, soundVolume);
                 }
             }
         }
         if(gameData.getKeys().isPressed(GameKeys.RIGHT)){
             if(menuOptions[currentOption].equalsIgnoreCase("Change Music Volume")){
-                if(! (gameData.getMusicVolume() >= 1f) ){
+                if( !( (float) settings.getSetting("musicVolume") > 1) ) {
+                    float new_volume = (float) settings.getSetting("musicVolume") + 0.1f;
+                    settings.setSetting("musicVolume", new_volume);
 
-                    gameData.setMusicVolume(gameData.getMusicVolume() + 0.1f);
-                    musicVolume = Math.round(gameData.getMusicVolume()*100) + "%";
-
+                    musicVolume = Math.round((float) settings.getSetting("musicVolume") * 100) + "%";
                     settingsValue.set(0, musicVolume);
-
                 }
             }
 
             if(menuOptions[currentOption].equalsIgnoreCase("Change Sound Volume")){
-                if(! (gameData.getSoundVolume() >= 1f) ){
+                if(! ( (float) settings.getSetting("soundVolume") > 1) ) {
+                    float new_volume = (float) settings.getSetting("soundVolume") + 0.1f;
+                    settings.setSetting("soundVolume", new_volume);
 
-                    gameData.setSoundVolume(gameData.getSoundVolume() + 0.1f);
-                    soundVolume = Math.round(gameData.getSoundVolume()*100) + "%";
-
-                    settingsValue.set(1, soundVolume);
+                    soundVolume = Math.round((float) settings.getSetting("soundVolume") * 100) + "%";
+                    settingsValue.set(0, soundVolume);
                 }
             }
         }
@@ -334,6 +340,8 @@ public class MenuState implements IGameViewService {
             }
         }
     }
+
+
 
     @Override
     public void dispose() {
