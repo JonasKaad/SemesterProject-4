@@ -6,6 +6,7 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.math.Vector3;
 import dk.sdu.mmmi.modulemon.CommonMap.Data.Entity;
+import dk.sdu.mmmi.modulemon.CommonMap.Data.EntityParts.PositionPart;
 import dk.sdu.mmmi.modulemon.CommonMap.Data.EntityType;
 import dk.sdu.mmmi.modulemon.CommonMap.IMapEvent;
 import dk.sdu.mmmi.modulemon.CommonMap.IMapView;
@@ -26,23 +27,23 @@ public class BattleEvent implements IMapEvent {
 
     private BattleState currentState;
 
-    public BattleEvent(Queue<String> lines, Entity aggressor, Entity victim, IMapView map){
-        if(lines == null || lines.isEmpty()){
+    public BattleEvent(Queue<String> lines, Entity aggressor, Entity victim, IMapView map) {
+        if (lines == null || lines.isEmpty()) {
             throw new IllegalArgumentException("Argument 'lines' is null or has no elements");
         }
-        if(aggressor == null || victim == null){
+        if (aggressor == null || victim == null) {
             throw new IllegalArgumentException("Missing one or more entities");
         }
         this.aggresor = aggressor;
         this.victim = victim;
         this.lines = lines;
         this.mapView = map;
-        textBox = new Rectangle(20,20, -1, -1);
-        exlamationBox = new Rectangle(-1,-1, -1, -1);
+        textBox = new Rectangle(20, 20, -1, -1);
+        exlamationBox = new Rectangle(-1, -1, -1, -1);
         currentState = BattleState.BEFORE_BATTLE;
     }
 
-    public void addLine(String line){
+    public void addLine(String line) {
         this.lines.add(line);
     }
 
@@ -66,19 +67,23 @@ public class BattleEvent implements IMapEvent {
 
     @Override
     public void draw(GameData gameData, SpriteBatch spriteBatch, ShapeRenderer shapeRenderer) {
-        if(currentState == BattleState.ONGOING_BATTLE)
+        if (currentState == BattleState.ONGOING_BATTLE)
             return;
         //Draw rectangle
         Camera cam = gameData.getCamera();
         shapeRenderer.setColor(Color.WHITE);
         shapeRenderer.begin(ShapeRenderer.ShapeType.Filled);
-        
+
         textBox.draw(shapeRenderer, gameData.getDelta());
 
-        Vector3 exlamationBoxPos = cam.project(new Vector3(victim.getPosX(), victim.getPosY(), 0f));
-        exlamationBox.setY(exlamationBoxPos.y + 59);
-        exlamationBox.setX(exlamationBoxPos.x + 12.5f);
-        exlamationBox.draw(shapeRenderer, gameData.getDelta());
+        PositionPart victimPosition = victim.getPart(PositionPart.class);
+
+        if (victimPosition != null) {
+            Vector3 exlamationBoxPos = cam.project(new Vector3(victimPosition.getX(), victimPosition.getY(), 0f));
+            exlamationBox.setY(exlamationBoxPos.y + 59);
+            exlamationBox.setX(exlamationBoxPos.x + 12.5f);
+            exlamationBox.draw(shapeRenderer, gameData.getDelta());
+        }
 
         shapeRenderer.end();
 
@@ -87,11 +92,12 @@ public class BattleEvent implements IMapEvent {
         spriteBatch.begin();
 
 
-        TextUtils.getInstance().drawBigRoboto(spriteBatch,
-                "!",
-                Color.BLACK,
-                victim.getPosX() + 16,
-                victim.getPosY() + 85);
+        if (victimPosition != null)
+            TextUtils.getInstance().drawBigRoboto(spriteBatch,
+                    "!",
+                    Color.BLACK,
+                    victimPosition.getX() + 16,
+                    victimPosition.getY() + 85);
 
         TextUtils.getInstance().drawNormalRoboto(spriteBatch,
                 lines.peek(),
@@ -111,16 +117,16 @@ public class BattleEvent implements IMapEvent {
 
     @Override
     public void handleInput(GameData gameData) {
-        if(gameData.getKeys().isPressed(GameKeys.ACTION)){
+        if (gameData.getKeys().isPressed(GameKeys.ACTION)) {
             this.lines.poll();
-            if(lines.isEmpty()){
+            if (lines.isEmpty()) {
                 mapView.startEncounter(aggresor, victim);
                 currentState = BattleState.ONGOING_BATTLE;
             }
         }
     }
 
-    private enum BattleState{
+    private enum BattleState {
         BEFORE_BATTLE,
         ONGOING_BATTLE
     }

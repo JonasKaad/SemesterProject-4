@@ -14,6 +14,8 @@ import com.badlogic.gdx.maps.tiled.renderers.OrthogonalTiledMapRenderer;
 import dk.sdu.mmmi.modulemon.CommonBattleClient.IBattleView;
 import dk.sdu.mmmi.modulemon.CommonMap.Data.Entity;
 import dk.sdu.mmmi.modulemon.CommonMap.Data.EntityParts.MonsterTeamPart;
+import dk.sdu.mmmi.modulemon.CommonMap.Data.EntityParts.PositionPart;
+import dk.sdu.mmmi.modulemon.CommonMap.Data.EntityParts.SpritePart;
 import dk.sdu.mmmi.modulemon.CommonMap.Data.EntityType;
 import dk.sdu.mmmi.modulemon.CommonMap.Data.World;
 import dk.sdu.mmmi.modulemon.CommonMap.IMapEvent;
@@ -171,17 +173,19 @@ public class MapView implements IGameViewService, IMapView {
         tiledMapRenderer.render();
 
         for (Entity entity : world.getEntities()) {
-            if (entity.getSpriteTexture() != null) {
-                Texture sprite = entity.getSpriteTexture();
+            SpritePart spritePart = entity.getPart(SpritePart.class);
+            if (spritePart.getCurrentSprite() != null) {
+                Texture sprite = spritePart.getCurrentSprite();
 
                 spriteBatch.setProjectionMatrix(cam.combined);
                 spriteBatch.begin();
-                spriteBatch.draw(sprite, entity.getPosX(), entity.getPosY());
+                PositionPart positionPart = entity.getPart(PositionPart.class);
+                spriteBatch.draw(sprite, positionPart.getX(), positionPart.getY());
                 spriteBatch.end();
 
                 if (entity.getType().equals(EntityType.PLAYER)) {
-                    playerPosX = entity.getPosX();
-                    playerPosY = entity.getPosY();
+                    playerPosX = positionPart.getX();
+                    playerPosY = positionPart.getY();
 
                     /*
                     The value of the leftmost position of the camera and the rightmost position of the camera

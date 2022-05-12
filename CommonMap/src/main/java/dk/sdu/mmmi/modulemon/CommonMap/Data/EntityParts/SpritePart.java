@@ -12,6 +12,8 @@ public class SpritePart implements EntityPart {
     private Texture leftSprite;
     private Texture rightSprite;
 
+    private Texture currentSprite;
+
     public SpritePart(Texture upSprite, Texture downSprite, Texture leftSprite, Texture rightSprite) {
         this.upSprite = upSprite;
         this.downSprite = downSprite;
@@ -50,6 +52,14 @@ public class SpritePart implements EntityPart {
 
     public void setRightSprite(Texture rightSprite) {
         this.rightSprite = rightSprite;
+    }
+
+    public Texture getCurrentSprite() {
+        return currentSprite;
+    }
+
+    public void setCurrentSprite(Texture currentSprite) {
+        this.currentSprite = currentSprite;
     }
 
     @Override
