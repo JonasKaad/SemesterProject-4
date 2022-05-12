@@ -56,7 +56,7 @@ public class InteractPart implements EntityPart {
         this.interactWith = null;
     }
     
-    private boolean isInRange(float x, float y) {
+    public boolean isInRange(float x, float y) {
         float thisX = this.positionPart.getX();
         float thisY = this.positionPart.getY();
         Direction direction = this.positionPart.getDirection();
