@@ -103,7 +103,7 @@ public class MenuState implements IGameViewService {
             menuOptions = new String[gameViews.size() + 1];
             menuOptions[0] = "GO BACK";
             for (int i = 1; i <= gameViews.size(); i++) {
-                menuOptions[i] = gameViews.get(i - 1).getClass().getName();
+                menuOptions[i] = gameViews.get(i - 1).toString();
             }
         } else {
             //Default

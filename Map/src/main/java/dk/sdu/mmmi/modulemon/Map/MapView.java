@@ -11,23 +11,27 @@ import com.badlogic.gdx.maps.tiled.TiledMap;
 import com.badlogic.gdx.maps.tiled.TiledMapTileLayer;
 import com.badlogic.gdx.maps.tiled.renderers.BatchTiledMapRenderer;
 import com.badlogic.gdx.maps.tiled.renderers.OrthogonalTiledMapRenderer;
-import dk.sdu.mmmi.modulemon.CommonMap.Data.Entity;
-import dk.sdu.mmmi.modulemon.CommonMap.Data.EntityType;
-import dk.sdu.mmmi.modulemon.CommonMap.Data.EntityParts.MonsterTeamPart;
-import dk.sdu.mmmi.modulemon.CommonBattleClient.IBattleCallback;
-import dk.sdu.mmmi.modulemon.CommonBattleClient.IBattleResult;
 import dk.sdu.mmmi.modulemon.CommonBattleClient.IBattleView;
+import dk.sdu.mmmi.modulemon.CommonMap.Data.Entity;
+import dk.sdu.mmmi.modulemon.CommonMap.Data.EntityParts.MonsterTeamPart;
+import dk.sdu.mmmi.modulemon.CommonMap.Data.EntityParts.PositionPart;
+import dk.sdu.mmmi.modulemon.CommonMap.Data.EntityParts.SpritePart;
+import dk.sdu.mmmi.modulemon.CommonMap.Data.EntityType;
 import dk.sdu.mmmi.modulemon.CommonMap.Data.World;
+import dk.sdu.mmmi.modulemon.CommonMap.IMapEvent;
 import dk.sdu.mmmi.modulemon.CommonMap.IMapView;
-import dk.sdu.mmmi.modulemon.CommonMonster.IMonster;
-import dk.sdu.mmmi.modulemon.common.AssetLoader;
-import dk.sdu.mmmi.modulemon.common.data.*;
-import dk.sdu.mmmi.modulemon.common.drawing.Rectangle;
-import dk.sdu.mmmi.modulemon.common.drawing.TextUtils;
 import dk.sdu.mmmi.modulemon.CommonMap.Services.IEntityProcessingService;
 import dk.sdu.mmmi.modulemon.CommonMap.Services.IGamePluginService;
-import dk.sdu.mmmi.modulemon.common.services.IGameViewService;
 import dk.sdu.mmmi.modulemon.CommonMap.Services.IPostEntityProcessingService;
+import dk.sdu.mmmi.modulemon.CommonMap.TextMapEvent;
+import dk.sdu.mmmi.modulemon.CommonMonster.IMonster;
+import dk.sdu.mmmi.modulemon.common.AssetLoader;
+import dk.sdu.mmmi.modulemon.common.data.GameData;
+import dk.sdu.mmmi.modulemon.common.data.GameKeys;
+import dk.sdu.mmmi.modulemon.common.data.IGameStateManager;
+import dk.sdu.mmmi.modulemon.common.drawing.Rectangle;
+import dk.sdu.mmmi.modulemon.common.drawing.TextUtils;
+import dk.sdu.mmmi.modulemon.common.services.IGameViewService;
 
 import java.util.*;
 import java.util.concurrent.CopyOnWriteArrayList;
@@ -79,6 +83,7 @@ public class MapView implements IGameViewService, IMapView {
     private static final List<IPostEntityProcessingService> postProcessingList = new CopyOnWriteArrayList<>();
     private static final List<IGamePluginService> gamePluginList = new CopyOnWriteArrayList<>();
     private static Queue<Runnable> gdxThreadTasks = new LinkedList<>();
+    private static Queue<IMapEvent> mapEvents = new LinkedList<>();
     private IGameStateManager gameStateManager;
     private IBattleView battleView;
     private Entity player;
@@ -87,7 +92,7 @@ public class MapView implements IGameViewService, IMapView {
     @Override
     public void init(IGameStateManager gameStateManager) {
         mapMusic = loader.getMusicAsset("/music/village_theme.ogg", MapView.class);
-        tiledMap = new OSGiTmxLoader().load("/maps/SeasonalOverworld.tmx");
+        tiledMap = new OSGiTmxLoader().load("/maps/ForestOverworld.tmx");
         overhangLayer = (TiledMapTileLayer) tiledMap.getLayers().get("Top");
         int scale = 4;
         tiledMapRenderer = new OrthogonalTiledMapRenderer(tiledMap, scale);
@@ -134,7 +139,6 @@ public class MapView implements IGameViewService, IMapView {
         mapBottom = 360;
         mapTop = mapBottom + mapHeight * tilePixelSize - (cam.viewportWidth / 2f) - 80;
         cam.position.set(mapRight / 2f, mapTop / 2f, 0);
-
     }
 
     @Override
@@ -142,6 +146,16 @@ public class MapView implements IGameViewService, IMapView {
         while (!gdxThreadTasks.isEmpty()) {
             gdxThreadTasks.poll().run();
         }
+
+        if (!mapEvents.isEmpty()) {
+            mapEvents.peek().update(gameData);
+            if (mapEvents.peek().isEventDone()) {
+                mapEvents.poll();
+            } else {
+                return; // Dont update anything else.
+            }
+        }
+
         for (IEntityProcessingService entityProcessorService : entityProcessorList) {
             entityProcessorService.process(gameData, world);
         }
@@ -151,33 +165,37 @@ public class MapView implements IGameViewService, IMapView {
         }
     }
 
-
     @Override
     public void draw(GameData gameData) {
         if (cam == null)
             initializeCameraDrawing(gameData);
         tiledMapRenderer.setView(cam);
         tiledMapRenderer.render();
+
         for (Entity entity : world.getEntities()) {
-            if (entity.getSpriteTexture() != null) {
-                Texture sprite = entity.getSpriteTexture();
+            SpritePart spritePart = entity.getPart(SpritePart.class);
+            if (spritePart.getCurrentSprite() != null) {
+                Texture sprite = spritePart.getCurrentSprite();
 
                 spriteBatch.setProjectionMatrix(cam.combined);
                 spriteBatch.begin();
-                spriteBatch.draw(sprite, entity.getPosX(), entity.getPosY());
+                PositionPart positionPart = entity.getPart(PositionPart.class);
+                spriteBatch.draw(sprite, positionPart.getX(), positionPart.getY());
                 spriteBatch.end();
 
                 if (entity.getType().equals(EntityType.PLAYER)) {
-                    playerPosX = entity.getPosX();
-                    playerPosY = entity.getPosY();
-                    if (playerPosY > mapBottom && playerPosY < mapTop) {
-                        cam.position.set(cam.position.x, playerPosY, 0);
-                        cam.update();
-                    }
-                    if (playerPosX > mapLeft && playerPosX < mapRight) {
-                        cam.position.set(playerPosX, cam.position.y, 0);
-                        cam.update();
-                    }
+                    playerPosX = positionPart.getX();
+                    playerPosY = positionPart.getY();
+
+                    /*
+                    The value of the leftmost position of the camera and the rightmost position of the camera
+                    gets compared to the player's position. If the player is too far to the left or the right,
+                    the camera will be "locked" in place at the leftmost or rightmost legal position,
+                    such that it does not go out of bounds. The same applies to the top and bottom positions.
+                     */
+                    cam.position.set(Math.min(Math.max(mapLeft, playerPosX), mapRight),
+                            Math.min(Math.max(mapBottom, playerPosY), mapTop), 0);
+                    cam.update();
                 }
             }
         }
@@ -185,12 +203,19 @@ public class MapView implements IGameViewService, IMapView {
         tiledMapRenderer.renderTileLayer(overhangLayer);
         tiledMapRenderer.getBatch().end();
 
+        // Draw events
+        if(!mapEvents.isEmpty()){
+            mapEvents.peek().draw(gameData, spriteBatch, shapeRenderer);
+        }
+
+
+        //DRAW MENU START
         if (showTeamOptions) {
             MonsterTeam.drawTeamOptions(gameData, shapeRenderer, spriteBatch, textUtils, teamActionMenu, monsterTeamMenu, teamActions);
         }
         if (showMonsterTeam) {
             for (Entity entity : world.getEntities()) {
-                if(entity.getType().equals(EntityType.PLAYER)){
+                if (entity.getType().equals(EntityType.PLAYER)) {
                     mtp = entity.getPart(MonsterTeamPart.class);
                     if (mtp == null) {
                         showMonsterTeam = false;
@@ -259,6 +284,11 @@ public class MapView implements IGameViewService, IMapView {
 
     @Override
     public void handleInput(GameData gameData, IGameStateManager gameStateManager) {
+        //If map event, run handleInput() and return.
+        if(!mapEvents.isEmpty()){
+            mapEvents.peek().handleInput(gameData);
+        }
+
         if (isPaused) {
             if (gameData.getKeys().isPressed(GameKeys.DOWN)) {
                 if (showTeamOptions && !showSummary) {
@@ -372,10 +402,7 @@ public class MapView implements IGameViewService, IMapView {
                             showTeamOptions = !showTeamOptions;
                             monsterRectangles[selectedOptionIndexMonsterTeam].setBorderColor(Color.BLACK);
                         }
-                    }
-
-
-                    else if (currentlySwitching) {
+                    } else if (currentlySwitching) {
                         if (secondSelected == -1) {
                             secondSelected = selectedOptionIndexMonsterTeam; // Select the second current monster
                         }
@@ -428,9 +455,9 @@ public class MapView implements IGameViewService, IMapView {
             //currentlySwitching = false;
             gameData.setPaused(isPaused);
         }
-        if(gameData.getKeys().isPressed(GameKeys.E)){
-            for(Entity entity: world.getEntities()){
-                if(entity.getType().equals(EntityType.PLAYER)){
+        if (gameData.getKeys().isPressed(GameKeys.E)) {
+            for (Entity entity : world.getEntities()) {
+                if (entity.getType().equals(EntityType.PLAYER)) {
                     player = entity;
                     break;
                 }
@@ -478,15 +505,15 @@ public class MapView implements IGameViewService, IMapView {
         this.entityProcessorList.remove(eps);
     }
 
-    public void addPostProcessingService (IPostEntityProcessingService pps){
+    public void addPostProcessingService(IPostEntityProcessingService pps) {
         this.postProcessingList.add(pps);
     }
 
-    public void removePostProcessingService (IPostEntityProcessingService pps){
+    public void removePostProcessingService(IPostEntityProcessingService pps) {
         this.postProcessingList.remove(pps);
     }
 
-    public void addGamePluginService (IGamePluginService plugin){
+    public void addGamePluginService(IGamePluginService plugin) {
         this.gamePluginList.add(plugin);
         gdxThreadTasks.add(() -> plugin.start(gameData, world));
     }
@@ -542,21 +569,38 @@ public class MapView implements IGameViewService, IMapView {
     }
 
     @Override
-    public void startEncounter(Entity player, Entity enemy){
-        List<IMonster> playerMonsters = ((MonsterTeamPart)  player.getPart(MonsterTeamPart.class)).getMonsterTeam();
-        List<IMonster> enemyMonsters = ((MonsterTeamPart)  enemy.getPart(MonsterTeamPart.class)).getMonsterTeam();
+    public void startEncounter(Entity player, Entity enemy) {
+        if(battleView == null){
+            return;
+        }
+
+        MonsterTeamPart playerMonsterTeamPart = player.getPart(MonsterTeamPart.class);
+        MonsterTeamPart enemyMonsterTeamPart = enemy.getPart(MonsterTeamPart.class);
+        List<IMonster> playerMonsters = playerMonsterTeamPart.getMonsterTeam();
+        List<IMonster> enemyMonsters = enemyMonsterTeamPart.getMonsterTeam();
 
         gameStateManager.setState((IGameViewService) battleView, false); // Do not dispose the map
         cam.position.set(cam.viewportWidth / 2, cam.viewportHeight / 2, 0);
         mapMusic.stop();
-        battleView.startBattle(playerMonsters, enemyMonsters, new IBattleCallback() {
-            @Override
-            public void onBattleEnd(IBattleResult result) {
-                gameStateManager.setState(MapView.this);
-                mapMusic.play();
+        battleView.startBattle(playerMonsters, enemyMonsters, result -> {
+            gameStateManager.setState(MapView.this);
+            mapMusic.play();
+            boolean playerWon = result.getWinner() == result.getPlayer();
+            String winnerName = playerWon ? "Player" : "Enemy";
+            addMapEvent(new TextMapEvent(new LinkedList<>(Arrays.asList(String.format("%s won the battle!", winnerName)))));
+            if(!playerWon){
+                enemyMonsterTeamPart.healAllMonsters();
             }
         });
     }
 
+    @Override
+    public void addMapEvent(IMapEvent event) {
+        mapEvents.add(event);
+    }
 
+    @Override
+    public String toString(){
+        return "Start the adventure!";
+    }
 }

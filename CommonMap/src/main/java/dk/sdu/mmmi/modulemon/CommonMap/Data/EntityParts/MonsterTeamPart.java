@@ -32,6 +32,9 @@ public class MonsterTeamPart implements EntityPart {
         return false;
     }
 
+    public void healAllMonsters(){
+        monsterTeam.forEach(x -> x.setHitPoints(x.getMaxHitPoints()));
+    }
 
     @Override
     public void process(GameData gameData, World world, Entity entity) {

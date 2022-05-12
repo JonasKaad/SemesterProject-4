@@ -4,20 +4,37 @@
  <tile id="621" probability="0.02"/>
  <tile id="622" probability="0.01"/>
  <tile id="623" probability="0.015"/>
+ <tile id="628" probability="0.02"/>
+ <tile id="629" probability="0.01"/>
+ <tile id="630" probability="0.015"/>
  <tile id="651" probability="0.01"/>
  <tile id="652" probability="0.01"/>
  <tile id="653" probability="0.125"/>
  <tile id="654" probability="0.01"/>
  <tile id="655" probability="0.01"/>
+ <tile id="658" probability="0.01"/>
+ <tile id="659" probability="0.01"/>
+ <tile id="660" probability="0.125"/>
+ <tile id="661" probability="0.01"/>
+ <tile id="662" probability="0.01"/>
  <tile id="683" probability="0.01"/>
  <tile id="684" probability="0.01"/>
  <tile id="685" probability="0.001"/>
  <tile id="686" probability="0.001"/>
  <tile id="687" probability="0.01"/>
+ <tile id="690" probability="0.01"/>
+ <tile id="691" probability="0.01"/>
+ <tile id="692" probability="0.001"/>
+ <tile id="693" probability="0.005"/>
+ <tile id="694" probability="0.01"/>
  <tile id="716" probability="0.001"/>
  <tile id="717" probability="0.01"/>
  <tile id="718" probability="0.001"/>
  <tile id="719" probability="0.01"/>
+ <tile id="723" probability="0.001"/>
+ <tile id="724" probability="0.01"/>
+ <tile id="725" probability="0.004"/>
+ <tile id="726" probability="0.01"/>
  <tile id="737">
   <properties>
    <property name="blocked" type="bool" value="true"/>
