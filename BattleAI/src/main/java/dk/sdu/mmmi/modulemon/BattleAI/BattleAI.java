@@ -21,7 +21,7 @@ public class BattleAI implements IBattleAI {
     private boolean useAlphaBetaPruning = true;
     private long startTime;
     private int maxDepthReached = 0;
-    private int timeLimitms = 1000;
+    private int timeLimitms = 100;
 
 
     public BattleAI(IBattleSimulation battleSimulation, IBattleParticipant participantToControl) {
@@ -137,7 +137,7 @@ public class BattleAI implements IBattleAI {
             // dividing the utility of terminal states by the depth of that state in the search
             // will make the AI prefer winning fast over more slowly. If the AI is bound to lose
             // (negative utility) it will prefer doing so slowly
-            return utility(battleState)/currentDepth;
+            return utility(battleState);//currentDepth;
             // Alternatively, the below formula would have the AI always prefer the fastest win/lose
             // return utility(battleState)-((float) currentDepth/maxDepth);
         }
