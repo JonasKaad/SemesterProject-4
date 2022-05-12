@@ -1,5 +1,6 @@
-package dk.sdu.mmmi.modulemon.Map;
+package dk.sdu.mmmi.modulemon.CommonMap;
 
+import com.badlogic.gdx.graphics.Camera;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
@@ -44,22 +45,33 @@ public class TextMapEvent implements IMapEvent {
 
     @Override
     public void draw(GameData gameData, SpriteBatch spriteBatch, ShapeRenderer shapeRenderer) {
+        if(this.lines.isEmpty()){
+            return;
+        }
         //Draw rectangle
         shapeRenderer.setColor(Color.WHITE);
         shapeRenderer.begin(ShapeRenderer.ShapeType.Filled);
         textBox.draw(shapeRenderer, gameData.getDelta());
         shapeRenderer.end();
 
-        //Animate triangle-thing
+        Camera cam = gameData.getCamera();
 
         //Draw text
         spriteBatch.begin();
         TextUtils.getInstance().drawNormalRoboto(spriteBatch,
                 lines.peek(),
                 Color.BLACK,
-                textBox.getX() + 20,
-                textBox.getY() + 80
+                (cam.position.x - cam.viewportWidth / 2f) + 25,
+                (cam.position.y - cam.viewportHeight / 2f) + 100
         );
+
+        TextUtils.getInstance().drawSmallRoboto(spriteBatch,
+                "Press [ENTER] to continue...",
+                Color.BLACK,
+                (cam.position.x - cam.viewportWidth / 2f) + cam.viewportWidth - 240,
+                (cam.position.y - cam.viewportHeight / 2f) + 40
+        );
+
         spriteBatch.end();
     }
 

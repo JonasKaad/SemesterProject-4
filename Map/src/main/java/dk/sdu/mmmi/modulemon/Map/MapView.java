@@ -11,8 +11,6 @@ import com.badlogic.gdx.maps.tiled.TiledMap;
 import com.badlogic.gdx.maps.tiled.TiledMapTileLayer;
 import com.badlogic.gdx.maps.tiled.renderers.BatchTiledMapRenderer;
 import com.badlogic.gdx.maps.tiled.renderers.OrthogonalTiledMapRenderer;
-import dk.sdu.mmmi.modulemon.CommonBattleClient.IBattleCallback;
-import dk.sdu.mmmi.modulemon.CommonBattleClient.IBattleResult;
 import dk.sdu.mmmi.modulemon.CommonBattleClient.IBattleView;
 import dk.sdu.mmmi.modulemon.CommonMap.Data.Entity;
 import dk.sdu.mmmi.modulemon.CommonMap.Data.EntityParts.MonsterTeamPart;
@@ -23,6 +21,7 @@ import dk.sdu.mmmi.modulemon.CommonMap.IMapView;
 import dk.sdu.mmmi.modulemon.CommonMap.Services.IEntityProcessingService;
 import dk.sdu.mmmi.modulemon.CommonMap.Services.IGamePluginService;
 import dk.sdu.mmmi.modulemon.CommonMap.Services.IPostEntityProcessingService;
+import dk.sdu.mmmi.modulemon.CommonMap.TextMapEvent;
 import dk.sdu.mmmi.modulemon.CommonMonster.IMonster;
 import dk.sdu.mmmi.modulemon.common.AssetLoader;
 import dk.sdu.mmmi.modulemon.common.data.GameData;
@@ -32,10 +31,7 @@ import dk.sdu.mmmi.modulemon.common.drawing.Rectangle;
 import dk.sdu.mmmi.modulemon.common.drawing.TextUtils;
 import dk.sdu.mmmi.modulemon.common.services.IGameViewService;
 
-import java.util.ArrayList;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Queue;
+import java.util.*;
 import java.util.concurrent.CopyOnWriteArrayList;
 
 
@@ -570,17 +566,26 @@ public class MapView implements IGameViewService, IMapView {
 
     @Override
     public void startEncounter(Entity player, Entity enemy) {
-        List<IMonster> playerMonsters = ((MonsterTeamPart) player.getPart(MonsterTeamPart.class)).getMonsterTeam();
-        List<IMonster> enemyMonsters = ((MonsterTeamPart) enemy.getPart(MonsterTeamPart.class)).getMonsterTeam();
+        if(battleView == null){
+            return;
+        }
+
+        MonsterTeamPart playerMonsterTeamPart = player.getPart(MonsterTeamPart.class);
+        MonsterTeamPart enemyMonsterTeamPart = enemy.getPart(MonsterTeamPart.class);
+        List<IMonster> playerMonsters = playerMonsterTeamPart.getMonsterTeam();
+        List<IMonster> enemyMonsters = enemyMonsterTeamPart.getMonsterTeam();
 
         gameStateManager.setState((IGameViewService) battleView, false); // Do not dispose the map
         cam.position.set(cam.viewportWidth / 2, cam.viewportHeight / 2, 0);
         mapMusic.stop();
-        battleView.startBattle(playerMonsters, enemyMonsters, new IBattleCallback() {
-            @Override
-            public void onBattleEnd(IBattleResult result) {
-                gameStateManager.setState(MapView.this);
-                mapMusic.play();
+        battleView.startBattle(playerMonsters, enemyMonsters, result -> {
+            gameStateManager.setState(MapView.this);
+            mapMusic.play();
+            boolean playerWon = result.getWinner() == result.getPlayer();
+            String winnerName = playerWon ? "Player" : "Enemy";
+            addMapEvent(new TextMapEvent(new LinkedList<>(Arrays.asList(String.format("%s won the battle!", winnerName)))));
+            if(!playerWon){
+                enemyMonsterTeamPart.healAllMonsters();
             }
         });
     }

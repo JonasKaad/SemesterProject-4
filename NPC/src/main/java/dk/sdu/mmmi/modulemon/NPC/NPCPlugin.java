@@ -49,7 +49,7 @@ public class NPCPlugin implements IGamePluginService{
         Queue<String> npc1Lines = new LinkedList<>();
         npc1Lines.add("Hey, you!");
         npc1Lines.add("Wanna battle?");
-        npcs.get(0).add(new LinesPart(npc1Lines));
+        npcs.get(0).add(new TextDisplayPart(npc1Lines));
 
         npcs.add(1, new NPC());
         PositionPart positionPart2 = new PositionPart((55)* 64 + 7, (64*63 - (31) * 64 ) + 20);
@@ -65,7 +65,7 @@ public class NPCPlugin implements IGamePluginService{
         npcs.get(1).add(new AIControlPart(new Character[]{'R','R','L','L','L','L','R','R','U','U','D','D','D','D','U','U'}));
         Queue<String> npc2Lines = new LinkedList<>();
         npc2Lines.add("Welcome to my swamp");
-        npcs.get(1).add(new LinesPart(npc2Lines));
+        npcs.get(1).add(new TextDisplayPart(npc2Lines));
 
         npcs.add(2, new NPC());
         PositionPart positionPart3 = new PositionPart((14)* 64 + 7, (64*63 - (14) * 64 ) + 20);
@@ -82,7 +82,7 @@ public class NPCPlugin implements IGamePluginService{
         Queue<String> npc3Lines = new LinkedList<>();
         npc3Lines.add("So, you made it all the way to me...");
         npc3Lines.add("Lets see if you can really battle");
-        npcs.get(2).add(new LinesPart(npc3Lines));
+        npcs.get(2).add(new TextDisplayPart(npc3Lines));
 
 
         if(monsterRegistry != null) {

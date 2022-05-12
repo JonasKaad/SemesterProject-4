@@ -7,10 +7,10 @@ import dk.sdu.mmmi.modulemon.common.data.GameData;
 import java.util.LinkedList;
 import java.util.Queue;
 
-public class LinesPart implements EntityPart {
+public class TextDisplayPart implements EntityPart {
     private Queue<String> lines;
 
-    public LinesPart(Queue<String> lines) {
+    public TextDisplayPart(Queue<String> lines) {
         this.lines = lines;
     }
 

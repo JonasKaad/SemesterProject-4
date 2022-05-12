@@ -23,7 +23,8 @@ public class BattleEvent implements IMapEvent {
     private Entity aggresor;
     private Entity victim;
     private IMapView mapView;
-    private boolean battleStarted;
+
+    private BattleState currentState;
 
     public BattleEvent(Queue<String> lines, Entity aggressor, Entity victim, IMapView map){
         if(lines == null || lines.isEmpty()){
@@ -38,6 +39,7 @@ public class BattleEvent implements IMapEvent {
         this.mapView = map;
         textBox = new Rectangle(20,20, -1, -1);
         exlamationBox = new Rectangle(-1,-1, -1, -1);
+        currentState = BattleState.BEFORE_BATTLE;
     }
 
     public void addLine(String line){
@@ -64,7 +66,7 @@ public class BattleEvent implements IMapEvent {
 
     @Override
     public void draw(GameData gameData, SpriteBatch spriteBatch, ShapeRenderer shapeRenderer) {
-        if(battleStarted)
+        if(currentState == BattleState.ONGOING_BATTLE)
             return;
         //Draw rectangle
         Camera cam = gameData.getCamera();
@@ -80,23 +82,29 @@ public class BattleEvent implements IMapEvent {
 
         shapeRenderer.end();
 
-        //Animate triangle-thing
-
         //Draw text
         spriteBatch.setProjectionMatrix(gameData.getCamera().combined);
         spriteBatch.begin();
-        if(victim.getType() == EntityType.GENERIC){
-            TextUtils.getInstance().drawBigRoboto(spriteBatch,
-                    "!",
-                    Color.BLACK,
-                    victim.getPosX() + 16,
-                    victim.getPosY() + 85);
-        }
+
+
+        TextUtils.getInstance().drawBigRoboto(spriteBatch,
+                "!",
+                Color.BLACK,
+                victim.getPosX() + 16,
+                victim.getPosY() + 85);
+
         TextUtils.getInstance().drawNormalRoboto(spriteBatch,
                 lines.peek(),
                 Color.BLACK,
                 (cam.position.x - cam.viewportWidth / 2f) + 25,
                 (cam.position.y - cam.viewportHeight / 2f) + 100
+        );
+
+        TextUtils.getInstance().drawSmallRoboto(spriteBatch,
+                "Press [ENTER] to continue...",
+                Color.BLACK,
+                (cam.position.x - cam.viewportWidth / 2f) + cam.viewportWidth - 240,
+                (cam.position.y - cam.viewportHeight / 2f) + 40
         );
         spriteBatch.end();
     }
@@ -107,8 +115,13 @@ public class BattleEvent implements IMapEvent {
             this.lines.poll();
             if(lines.isEmpty()){
                 mapView.startEncounter(aggresor, victim);
-                battleStarted = true;
+                currentState = BattleState.ONGOING_BATTLE;
             }
         }
+    }
+
+    private enum BattleState{
+        BEFORE_BATTLE,
+        ONGOING_BATTLE
     }
 }
