@@ -18,6 +18,7 @@ import dk.sdu.mmmi.modulemon.common.data.IGameStateManager;
 import dk.sdu.mmmi.modulemon.common.OSGiFileHandle;
 import dk.sdu.mmmi.modulemon.common.services.IGameViewService;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
@@ -30,10 +31,14 @@ public class MenuState implements IGameViewService {
     private SpriteBatch spriteBatch;
     private BitmapFont titleFont;
     private BitmapFont menuOptionsFont;
+    private BitmapFont soundOptionsFont;
     private BitmapFont smallMenuFont;
     private Music menuMusic;
 
     private Texture logo;
+
+    String musicVolume = "%";
+    String soundVolume = "%";
 
     private String title = "";
 
@@ -45,7 +50,8 @@ public class MenuState implements IGameViewService {
             "Settings",
             "Quit"
     };
-
+    private List<String> soundSettings = new ArrayList<>();
+    private boolean showSettings = false;
 
     GameData gameData = new GameData();
 
@@ -59,7 +65,7 @@ public class MenuState implements IGameViewService {
         spriteBatch = new SpriteBatch();
         glyphLayout = new GlyphLayout();
         menuMusic.play();
-        menuMusic.setVolume(0.6f);
+        menuMusic.setVolume(0);
         menuMusic.setLooping(true);
 
         /*
@@ -83,6 +89,7 @@ public class MenuState implements IGameViewService {
 
         // Sets the @menuOptionsFont to use our custom font file with the chosen font size
         menuOptionsFont = fontGenerator.generateFont(parameter);
+        soundOptionsFont = fontGenerator.generateFont(parameter);
 
         parameter.size = 20;
         smallMenuFont = fontGenerator.generateFont(parameter);
@@ -93,6 +100,11 @@ public class MenuState implements IGameViewService {
 
         // Sets the options for the menu
         menuOptions = defaultMenuOptions;
+
+        musicVolume = Math.round(gameData.getMusicVolume() * 100) + "%";
+        soundVolume = Math.round(gameData.getSoundVolume() * 100) + "%";
+        soundSettings.add(musicVolume);
+        soundSettings.add(soundVolume);
     }
 
     @Override
@@ -105,10 +117,26 @@ public class MenuState implements IGameViewService {
             for (int i = 1; i <= gameViews.size(); i++) {
                 menuOptions[i] = gameViews.get(i - 1).getClass().getName();
             }
-        } else {
+
+        }
+        else if (currentMenuState == MenuStates.SETTINGS) {
+            title = "Settings";
+            menuOptions = new String[3];
+            menuOptions[0] = "GO BACK";
+            menuOptions[1] = "Change Music Volume";
+            menuOptions[2] = "Change Sound Volume";
+        }
+        else {
             //Default
             menuOptions = defaultMenuOptions;
             title = "ModulémoN";
+        }
+        if(menuMusic.getVolume() != gameData.getMusicVolume()){
+            menuMusic.setVolume(gameData.getMusicVolume());
+            musicVolume = Math.round(gameData.getMusicVolume() * 100) + "%";
+            soundVolume = Math.round(gameData.getSoundVolume() * 100) + "%";
+            soundSettings.set(0,musicVolume);
+            soundSettings.set(1,soundVolume);
         }
     }
 
@@ -149,6 +177,18 @@ public class MenuState implements IGameViewService {
                     (Game.HEIGHT - 100 * i) / 2f
             );
         }
+        if(showSettings){
+            for (int i = 0; i < soundSettings.size(); i++) {
+                glyphLayout.setText(soundOptionsFont, soundSettings.get(i));
+                soundOptionsFont.draw(
+                        spriteBatch,
+                        soundSettings.get(i),
+                        (Game.WIDTH - glyphLayout.width) / 1.4f,
+                        (Game.HEIGHT - 100 * (1+i)) / 2f
+                );
+            }
+        }
+
 
         glyphLayout.setText(smallMenuFont, "Press CTRL+K to open the Bundle Controller (if loaded)");
         smallMenuFont.draw(
@@ -164,7 +204,7 @@ public class MenuState implements IGameViewService {
     @Override
     public void handleInput(GameData gameData, IGameStateManager gameStateManager) {
         // Moves up in the menu
-        if (gameData.getKeys().isPressed(GameKeys.UP) || gameData.getKeys().isPressed(GameKeys.LEFT)) {
+        if (gameData.getKeys().isPressed(GameKeys.UP)) {
             if (currentOption > 0) {
                 currentOption--;
             } else {
@@ -172,11 +212,48 @@ public class MenuState implements IGameViewService {
             }
         }
         // Moves down in the menu
-        if (gameData.getKeys().isPressed(GameKeys.DOWN) || gameData.getKeys().isPressed(GameKeys.RIGHT)) {
+        if (gameData.getKeys().isPressed(GameKeys.DOWN)) {
             if (currentOption < menuOptions.length - 1) {
                 currentOption++;
             } else {
                 currentOption = 0;
+            }
+        }
+
+        if(gameData.getKeys().isPressed(GameKeys.LEFT)){
+            if(menuOptions[currentOption].equalsIgnoreCase("Change Music Volume")){
+                if( (gameData.getMusicVolume() >= 0f) ){
+
+                    gameData.setMusicVolume(gameData.getMusicVolume() - 0.1f);
+                    musicVolume = Math.round(gameData.getMusicVolume()*100) + "%";
+                    soundSettings.set(0, musicVolume);
+                }
+            }
+
+            if(menuOptions[currentOption].equalsIgnoreCase("Change Sound Volume")){
+                if( (gameData.getSoundVolume() >= 0f) ){
+                    gameData.setSoundVolume(gameData.getSoundVolume() - 0.1f);
+                    soundVolume = Math.round(gameData.getSoundVolume()*100) + "%";
+                    soundSettings.set(1, soundVolume);
+                }
+            }
+        }
+        if(gameData.getKeys().isPressed(GameKeys.RIGHT)){
+            if(menuOptions[currentOption].equalsIgnoreCase("Change Music Volume")){
+                if(! (gameData.getMusicVolume() >= 1f) ){
+                    gameData.setMusicVolume(gameData.getMusicVolume() + 0.1f);
+                    musicVolume = Math.round(gameData.getMusicVolume()*100) + "%";
+                    soundSettings.set(0, musicVolume);
+
+                }
+            }
+
+            if(menuOptions[currentOption].equalsIgnoreCase("Change Sound Volume")){
+                if(! (gameData.getSoundVolume() >= 1f) ){
+                    gameData.setSoundVolume(gameData.getSoundVolume() + 0.1f);
+                    soundVolume = Math.round(gameData.getSoundVolume()*100) + "%";
+                    soundSettings.set(1, soundVolume);
+                }
             }
         }
         // Selects the current option
@@ -190,13 +267,13 @@ public class MenuState implements IGameViewService {
      * Based on what the currentOption is, it will execute the appertaining code.
      */
     private void selectOption(IGameStateManager gsm) {
+        if (menuOptions[currentOption].equalsIgnoreCase("GO BACK")) {
+            currentMenuState = MenuStates.DEFAULT;
+            currentOption = 0;
+            showSettings = false;
+            return;
+        }
         if (currentMenuState == MenuStates.SELECTING_GAMESTATE) {
-            if (menuOptions[currentOption].equalsIgnoreCase("GO BACK")) {
-                currentMenuState = MenuStates.DEFAULT;
-                currentOption = 0;
-                return;
-            }
-
             List<IGameViewService> views = Game.getGameViewServiceList();
             if (currentOption > views.size()) {
                 System.out.println("ERROR: Tried to set invalid view");
@@ -214,7 +291,8 @@ public class MenuState implements IGameViewService {
                 currentOption = 0;
             }
             if (Objects.equals(menuOptions[currentOption], "Settings")) {
-                System.out.println("No settings yet, but coming soon™!");
+                currentMenuState = MenuStates.SETTINGS;
+                showSettings = true;
             }
             if (Objects.equals(menuOptions[currentOption], "Quit")) {
                 Gdx.app.exit();
@@ -225,6 +303,8 @@ public class MenuState implements IGameViewService {
     @Override
     public void dispose() {
         menuMusic.stop();
+        menuMusic.dispose();
+        menuMusic = null;
     }
 
     private enum MenuStates {

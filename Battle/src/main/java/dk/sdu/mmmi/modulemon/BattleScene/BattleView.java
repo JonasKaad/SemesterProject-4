@@ -47,7 +47,6 @@ public class BattleView implements IGameViewService, IBattleView {
     private Queue<BaseAnimation> blockingAnimations;
     private Queue<BaseAnimation> backgroundAnimations;
     private IMonsterRegistry monsterRegistry;
-
     private AssetLoader loader = AssetLoader.getInstance();
     private String[] defaultActions;
     private int selectedAction = 0;
@@ -68,7 +67,6 @@ public class BattleView implements IGameViewService, IBattleView {
         }catch(GdxRuntimeException ex){
             System.out.println("[Warning] Failed to load attack sound for monster-move: " + monsterMove.getName());
         }
-
         return returnSound;
     }
 
@@ -116,7 +114,6 @@ public class BattleView implements IGameViewService, IBattleView {
         _currentBattleState = _battleSimulation.getState().clone(); // Set an initial battle-state
         _battleCallback = callback;
         _battleMusic.play();
-        _battleMusic.setVolume(0.1f);
         _battleMusic.setLooping(true);
         menuState = MenuState.DEFAULT;
         _battleScene.setActionTitle("Your actions:");
@@ -179,6 +176,10 @@ public class BattleView implements IGameViewService, IBattleView {
         if (!_isInitialized) {
             return;
         }
+        if(_battleMusic.getVolume() != gameData.getMusicVolume()) {
+            _battleMusic.setVolume(gameData.getMusicVolume());
+        }
+
 
         updateHasRunOnce = true;
 
@@ -301,13 +302,13 @@ public class BattleView implements IGameViewService, IBattleView {
                     });
                     enemyDieAnimation.start();
                     blockingAnimations.add(enemyDieAnimation);
-                    this._winSound.play();
+                    this._winSound.play(gameData.getSoundVolume());
                     this._battleScene.setTextToDisplay(battleEvent.getText());
                 } else {
                     PlayerDieAnimation dieAnimation = new PlayerDieAnimation(_battleScene);
                     blockingAnimations.add(dieAnimation);
                     this._battleMusic.stop();
-                    this._loseSound.play();
+                    this._loseSound.play(gameData.getSoundVolume());
                     _battleScene.setTextToDisplay(battleEvent.getText());
 
                     EmptyAnimation e = new EmptyAnimation(2_000);
@@ -504,6 +505,7 @@ public class BattleView implements IGameViewService, IBattleView {
     @Override
     public void dispose() {
         _battleMusic.stop();
+        _battleMusic.dispose();
         _battleMusic = null; //Unload Battle Music
     }
 

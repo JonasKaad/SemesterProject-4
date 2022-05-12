@@ -72,7 +72,8 @@ public class PlayerBattleAttackAnimation extends BaseAnimation {
         _battleScene.setHealthIndicatorColor(new Color(1,0,0, states[6]));
         if(states[7] > 0.9f){
             if(!_attackSoundPlayed && _attackSound != null) {
-                _attackSound.play();
+                _attackSound.play(gameData.getSoundVolume());
+                System.out.println(gameData.getSoundVolume());
                 _attackSoundPlayed = true;
             }
         }

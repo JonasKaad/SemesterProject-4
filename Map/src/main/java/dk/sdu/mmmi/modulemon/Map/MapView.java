@@ -94,7 +94,6 @@ public class MapView implements IGameViewService, IMapView {
         int scale = 4;
         tiledMapRenderer = new OrthogonalTiledMapRenderer(tiledMap, scale);
         mapMusic.play();
-        mapMusic.setVolume(0.1f);
         mapMusic.setLooping(true);
 
         // Pixel size
@@ -150,6 +149,9 @@ public class MapView implements IGameViewService, IMapView {
 
         for (IPostEntityProcessingService postProcessingService : postProcessingList) {
             postProcessingService.process(gameData, world);
+        }
+        if(mapMusic.getVolume() != gameData.getMusicVolume()) {
+            mapMusic.setVolume(gameData.getMusicVolume());
         }
     }
 
@@ -474,6 +476,8 @@ public class MapView implements IGameViewService, IMapView {
         if (cam != null)
             cam.position.set(cam.viewportWidth / 2, cam.viewportHeight / 2, 0);
         mapMusic.stop();
+        mapMusic.dispose();
+        mapMusic = null;
     }
 
     public void addEntityProcessingService(IEntityProcessingService eps) {

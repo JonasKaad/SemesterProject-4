@@ -15,6 +15,25 @@ public class GameData {
     private OrthographicCamera cam;
     private boolean isPaused;
 
+    private float soundVolume = 0.1f;
+    private float musicVolume = 0.1f;
+
+    public float getSoundVolume() {
+        return soundVolume;
+    }
+
+    public void setSoundVolume(float soundVolume) {
+        this.soundVolume = soundVolume;
+    }
+
+    public float getMusicVolume() {
+        return musicVolume;
+    }
+
+    public void setMusicVolume(float musicVolume) {
+        this.musicVolume = musicVolume;
+    }
+
     public GameKeys getKeys() {
         return keys;
     }
