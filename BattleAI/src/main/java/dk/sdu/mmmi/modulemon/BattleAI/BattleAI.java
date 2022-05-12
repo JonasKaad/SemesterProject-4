@@ -26,6 +26,7 @@ public class BattleAI implements IBattleAI {
     private IGameSettings settings = null;
 
 
+
     public BattleAI(IBattleSimulation battleSimulation, IBattleParticipant participantToControl, IGameSettings settings) {
         knowledgeState = new KnowledgeState();
         this.participantToControl = participantToControl;
@@ -162,7 +163,7 @@ public class BattleAI implements IBattleAI {
             // dividing the utility of terminal states by the depth of that state in the search
             // will make the AI prefer winning fast over more slowly. If the AI is bound to lose
             // (negative utility) it will prefer doing so slowly
-            return utility(battleState)/currentDepth;
+            return utility(battleState);
             // Alternatively, the below formula would have the AI always prefer the fastest win/lose
             // return utility(battleState)-((float) currentDepth/maxDepth);
         }
