@@ -31,7 +31,7 @@ public class VendingMachineEvent implements IMapEvent {
         }
         this.entity = entity;
         this.monsters = monsters;
-        this.monIndex = monsters.size()-1;
+        this.monIndex = 0;
         this.chooseMonMenu = new Rectangle(100, 100, 500, 250);
         this.machineUuid = machineUuid;
         eventDone = false;
@@ -98,13 +98,14 @@ public class VendingMachineEvent implements IMapEvent {
                     Color.BLACK,
                     chooseMonMenu.getX() + chooseMonMenu.getWidth()/4,
                     chooseMonMenu.getY() + chooseMonMenu.getHeight() - 50);
-            int monStartx = 150 * monAmount;
+            int distanceBetweenOptions = 40;
+            int monStartx = 150;
             for(int i = 0; i < monAmount; i++){
                 String monName = monsters.get(i).getName();
                 textUtils.drawSmallRoboto(spriteBatch,
                         monName,
                         Color.BLACK,
-                        chooseMonMenu.getX() + monStartx - (84 * i) - (monName.length()),
+                        chooseMonMenu.getX() + monStartx + (84 * i) - (monName.length()),
                         chooseMonMenu.getY()+ 50);
             }
 
@@ -114,12 +115,11 @@ public class VendingMachineEvent implements IMapEvent {
             shapeRenderer.setColor(Color.BLACK);
 
             int triangleHeight = 20;
-            int distanceBetweenOptions = 40;
 
             monIndex = monIndex % monAmount;
 
             //int renderHeight = chooseWidth - triangleHeight - normalTextHeight;
-            int renderHeight = monStartx + monIndex * -distanceBetweenOptions * 2;
+            int renderHeight = monStartx + monIndex * distanceBetweenOptions * 2;
 
             shapeRenderer.triangle(
                     chooseMonMenu.getX() + renderHeight, chooseMonMenu.getY() + 15,
@@ -138,13 +138,13 @@ public class VendingMachineEvent implements IMapEvent {
             }
         }
 
-        if(gameData.getKeys().isPressed(GameKeys.LEFT)){
+        if(gameData.getKeys().isPressed(GameKeys.RIGHT)){
             if(monIndex == monsters.size()){
                 monIndex = 0;
             } else {
                 monIndex++;
             }
-        } else if (gameData.getKeys().isPressed(GameKeys.RIGHT)){
+        } else if (gameData.getKeys().isPressed(GameKeys.LEFT)){
             if(monIndex == 0){
                 monIndex = monsters.size();
             } else {
