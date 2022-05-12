@@ -77,7 +77,7 @@ public class BattleView implements IGameViewService, IBattleView {
         backgroundAnimations = new LinkedList<>();
         menuState = MenuState.DEFAULT;
 
-        defaultActions = new String[]{"Fight", "Monsters", "Animate", "Style", "Quit"};
+        defaultActions = new String[]{"Fight", "Monsters", "Animate", "Quit"};
     }
 
     /**
@@ -179,6 +179,18 @@ public class BattleView implements IGameViewService, IBattleView {
         if(_battleMusic.getVolume() != gameData.getMusicVolume()) {
             _battleMusic.setVolume(gameData.getMusicVolume());
         }
+        if (gameData.usePersonaSetting() && ! (_battleScene.getEnemyBoxRect() instanceof PersonaRectangle)) {
+            _battleScene.setPlayerBoxRectStyle(PersonaRectangle.class);
+            _battleScene.setEnemyBoxRectStyle(PersonaRectangle.class);
+            _battleScene.setActionBoxRectStyle(PersonaRectangle.class);
+            _battleScene.setTextBoxRectStyle(PersonaRectangle.class);
+        } else if (!gameData.usePersonaSetting() && _battleScene.getEnemyBoxRect() == null){
+            _battleScene.setPlayerBoxRectStyle(Rectangle.class);
+            _battleScene.setEnemyBoxRectStyle(Rectangle.class);
+            _battleScene.setActionBoxRectStyle(Rectangle.class);
+            _battleScene.setTextBoxRectStyle(Rectangle.class);
+        }
+
 
 
         updateHasRunOnce = true;
@@ -388,22 +400,8 @@ public class BattleView implements IGameViewService, IBattleView {
                     openingAnimation.start();
                     blockingAnimations.add(openingAnimation);
                 }
-            } else if (selectedAction.equalsIgnoreCase("Style")) {
-                _battleScene.setTextToDisplay("Change box-styles");
-                if (keys.isPressed(GameKeys.ACTION)) {
-                    if (_battleScene.getPlayerBoxRect() instanceof PersonaRectangle) {
-                        _battleScene.setPlayerBoxRectStyle(Rectangle.class);
-                        _battleScene.setEnemyBoxRectStyle(Rectangle.class);
-                        _battleScene.setActionBoxRectStyle(Rectangle.class);
-                        _battleScene.setTextBoxRectStyle(Rectangle.class);
-                    } else {
-                        _battleScene.setPlayerBoxRectStyle(PersonaRectangle.class);
-                        _battleScene.setEnemyBoxRectStyle(PersonaRectangle.class);
-                        _battleScene.setActionBoxRectStyle(PersonaRectangle.class);
-                        _battleScene.setTextBoxRectStyle(PersonaRectangle.class);
-                    }
-                }
-            } else if (selectedAction.equalsIgnoreCase("Quit")) {
+            }
+             else if (selectedAction.equalsIgnoreCase("Quit")) {
                 _battleScene.setTextToDisplay("Ends the battle");
                 if (keys.isPressed(GameKeys.ACTION)) {
                     handleBattleEnd(new VictoryBattleEvent("Player runs away", _battleSimulation.getState().getEnemy(), null));

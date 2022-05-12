@@ -31,7 +31,7 @@ public class MenuState implements IGameViewService {
     private SpriteBatch spriteBatch;
     private BitmapFont titleFont;
     private BitmapFont menuOptionsFont;
-    private BitmapFont soundOptionsFont;
+    private BitmapFont settingsValueFont;
     private BitmapFont smallMenuFont;
     private Music menuMusic;
 
@@ -50,7 +50,7 @@ public class MenuState implements IGameViewService {
             "Settings",
             "Quit"
     };
-    private List<String> soundSettings = new ArrayList<>();
+    private List<String> settingsValue = new ArrayList<>();
     private boolean showSettings = false;
 
     GameData gameData = new GameData();
@@ -89,7 +89,7 @@ public class MenuState implements IGameViewService {
 
         // Sets the @menuOptionsFont to use our custom font file with the chosen font size
         menuOptionsFont = fontGenerator.generateFont(parameter);
-        soundOptionsFont = fontGenerator.generateFont(parameter);
+        settingsValueFont = fontGenerator.generateFont(parameter);
 
         parameter.size = 20;
         smallMenuFont = fontGenerator.generateFont(parameter);
@@ -103,8 +103,9 @@ public class MenuState implements IGameViewService {
 
         musicVolume = Math.round(gameData.getMusicVolume() * 100) + "%";
         soundVolume = Math.round(gameData.getSoundVolume() * 100) + "%";
-        soundSettings.add(musicVolume);
-        soundSettings.add(soundVolume);
+        settingsValue.add(musicVolume);
+        settingsValue.add(soundVolume);
+        settingsValue.add(gameData.usePersonaSetting() ? "On" : "Off");
     }
 
     @Override
@@ -121,22 +122,28 @@ public class MenuState implements IGameViewService {
         }
         else if (currentMenuState == MenuStates.SETTINGS) {
             title = "Settings";
-            menuOptions = new String[3];
+            menuOptions = new String[4];
             menuOptions[0] = "GO BACK";
             menuOptions[1] = "Change Music Volume";
             menuOptions[2] = "Change Sound Volume";
+            menuOptions[3] = "Use Persona Rectangles";
         }
         else {
             //Default
             menuOptions = defaultMenuOptions;
             title = "ModulémoN";
         }
+        // Sets the value of the volume option to the correct value from GameData.
         if(menuMusic.getVolume() != gameData.getMusicVolume()){
-            menuMusic.setVolume(gameData.getMusicVolume());
+            menuMusic.setVolume( gameData.getMusicVolume());
             musicVolume = Math.round(gameData.getMusicVolume() * 100) + "%";
             soundVolume = Math.round(gameData.getSoundVolume() * 100) + "%";
-            soundSettings.set(0,musicVolume);
-            soundSettings.set(1,soundVolume);
+            settingsValue.set(0,musicVolume);
+            settingsValue.set(1,soundVolume);
+        }
+        // Sets the value of the Persona option to on/off depending on the value of the boolean.
+        if(!Objects.equals(settingsValue.get(2), gameData.usePersonaSetting() ? "On" : "Off")) {
+            settingsValue.set(2, gameData.usePersonaSetting() ? "On" : "Off");
         }
     }
 
@@ -178,11 +185,11 @@ public class MenuState implements IGameViewService {
             );
         }
         if(showSettings){
-            for (int i = 0; i < soundSettings.size(); i++) {
-                glyphLayout.setText(soundOptionsFont, soundSettings.get(i));
-                soundOptionsFont.draw(
+            for (int i = 0; i < settingsValue.size(); i++) {
+                glyphLayout.setText(settingsValueFont, settingsValue.get(i));
+                settingsValueFont.draw(
                         spriteBatch,
-                        soundSettings.get(i),
+                        settingsValue.get(i),
                         (Game.WIDTH - glyphLayout.width) / 1.4f,
                         (Game.HEIGHT - 100 * (1+i)) / 2f
                 );
@@ -222,42 +229,68 @@ public class MenuState implements IGameViewService {
 
         if(gameData.getKeys().isPressed(GameKeys.LEFT)){
             if(menuOptions[currentOption].equalsIgnoreCase("Change Music Volume")){
-                if( (gameData.getMusicVolume() >= 0f) ){
+                if( (gameData.getMusicVolume() > 0) ) {
 
                     gameData.setMusicVolume(gameData.getMusicVolume() - 0.1f);
+                    if(gameData.getMusicVolume() < 0.04f) {
+                        gameData.setMusicVolume(0);
+                    }
+
                     musicVolume = Math.round(gameData.getMusicVolume()*100) + "%";
-                    soundSettings.set(0, musicVolume);
+                    settingsValue.set(0, musicVolume);
                 }
             }
 
             if(menuOptions[currentOption].equalsIgnoreCase("Change Sound Volume")){
-                if( (gameData.getSoundVolume() >= 0f) ){
+                if( (gameData.getSoundVolume() > 0) ){
                     gameData.setSoundVolume(gameData.getSoundVolume() - 0.1f);
+
+                    if(gameData.getSoundVolume() < 0.04) {
+                        gameData.setSoundVolume(0);
+                    }
+
                     soundVolume = Math.round(gameData.getSoundVolume()*100) + "%";
-                    soundSettings.set(1, soundVolume);
+                    settingsValue.set(1, soundVolume);
                 }
             }
         }
         if(gameData.getKeys().isPressed(GameKeys.RIGHT)){
             if(menuOptions[currentOption].equalsIgnoreCase("Change Music Volume")){
                 if(! (gameData.getMusicVolume() >= 1f) ){
+
                     gameData.setMusicVolume(gameData.getMusicVolume() + 0.1f);
                     musicVolume = Math.round(gameData.getMusicVolume()*100) + "%";
-                    soundSettings.set(0, musicVolume);
+
+                    settingsValue.set(0, musicVolume);
 
                 }
             }
 
             if(menuOptions[currentOption].equalsIgnoreCase("Change Sound Volume")){
                 if(! (gameData.getSoundVolume() >= 1f) ){
+
                     gameData.setSoundVolume(gameData.getSoundVolume() + 0.1f);
                     soundVolume = Math.round(gameData.getSoundVolume()*100) + "%";
-                    soundSettings.set(1, soundVolume);
+
+                    settingsValue.set(1, soundVolume);
                 }
             }
         }
         // Selects the current option
         if (gameData.getKeys().isPressed(GameKeys.ACTION) || gameData.getKeys().isPressed(GameKeys.E)) {
+            if (menuOptions[currentOption].equalsIgnoreCase("Use Persona Rectangles")) {
+                System.out.println("Before :" + gameData.usePersonaSetting());
+                if(!gameData.usePersonaSetting()){
+                    settingsValue.set(2, "On");
+                    gameData.setPersonaSetting(true);
+                    gameData.setPaused(true);
+                }
+                else{
+                    settingsValue.set(2, "Off");
+                    gameData.setPersonaSetting(false);
+                }
+                System.out.println("After :" + gameData.usePersonaSetting());
+            }
             selectOption(gameStateManager);
         }
     }
@@ -273,6 +306,8 @@ public class MenuState implements IGameViewService {
             showSettings = false;
             return;
         }
+
+
         if (currentMenuState == MenuStates.SELECTING_GAMESTATE) {
             List<IGameViewService> views = Game.getGameViewServiceList();
             if (currentOption > views.size()) {

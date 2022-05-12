@@ -15,8 +15,18 @@ public class GameData {
     private OrthographicCamera cam;
     private boolean isPaused;
 
-    private float soundVolume = 0.1f;
+    private boolean personaSetting;
+
+    private float soundVolume = 0.6f;
     private float musicVolume = 0.1f;
+
+    public boolean usePersonaSetting() {
+        return personaSetting;
+    }
+
+    public void setPersonaSetting(boolean personaSetting) {
+        this.personaSetting = personaSetting;
+    }
 
     public float getSoundVolume() {
         return soundVolume;

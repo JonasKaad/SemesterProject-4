@@ -24,6 +24,7 @@ import dk.sdu.mmmi.modulemon.CommonMap.IMapView;
 import dk.sdu.mmmi.modulemon.CommonMonster.IMonster;
 import dk.sdu.mmmi.modulemon.common.AssetLoader;
 import dk.sdu.mmmi.modulemon.common.data.*;
+import dk.sdu.mmmi.modulemon.common.drawing.PersonaRectangle;
 import dk.sdu.mmmi.modulemon.common.drawing.Rectangle;
 import dk.sdu.mmmi.modulemon.common.drawing.TextUtils;
 import dk.sdu.mmmi.modulemon.CommonMap.Services.IEntityProcessingService;
@@ -84,7 +85,7 @@ public class MapView implements IGameViewService, IMapView {
     private IGameStateManager gameStateManager;
     private IBattleView battleView;
     private Entity player;
-
+    Class<? extends Rectangle> rectToUse = Rectangle.class;
 
     @Override
     public void init(IGameStateManager gameStateManager) {
@@ -106,10 +107,6 @@ public class MapView implements IGameViewService, IMapView {
         isPaused = false;
         showMonsterTeam = false;
         showTeamOptions = false;
-        summaryMenu = new Rectangle(100, 100, 380, 300);
-        pauseMenu = new Rectangle(100, 100, 200, 250);
-        monsterTeamMenu = new Rectangle(100, 100, 400, 550);
-        teamActionMenu = new Rectangle(100, 100, 200, 200);
         for (int i = 0; i < monsterRectangles.length; i++) {
             Rectangle rect = new Rectangle(100, 100, 320, 70);
             monsterRectangles[i] = rect;
@@ -138,6 +135,17 @@ public class MapView implements IGameViewService, IMapView {
 
     }
 
+    private Rectangle createRectangle(Class<? extends Rectangle> clazz, float x, float y, float width, float height){
+        try {
+            return (Rectangle) clazz.getDeclaredConstructors()[0].newInstance(x, y, width, height);
+        } catch (Exception _) {
+            System.out.println("[WARNING] Failed to create rectangles of type: " + clazz.getName());
+        }
+        //Default to regular rectangle
+        return new Rectangle(x,y,width,height);
+    }
+
+
     @Override
     public void update(GameData gameData, IGameStateManager gameStateManager) {
         while (!gdxThreadTasks.isEmpty()) {
@@ -152,6 +160,23 @@ public class MapView implements IGameViewService, IMapView {
         }
         if(mapMusic.getVolume() != gameData.getMusicVolume()) {
             mapMusic.setVolume(gameData.getMusicVolume());
+        }
+
+        if (gameData.usePersonaSetting() && ! (teamActionMenu instanceof PersonaRectangle)) {
+            System.out.println("in persona");
+            rectToUse = PersonaRectangle.class;
+            summaryMenu = createRectangle(rectToUse, 100, 100, 380, 300);
+            pauseMenu = createRectangle(rectToUse,100, 100, 200, 250);
+            monsterTeamMenu = createRectangle(rectToUse,100, 100, 400, 550);
+            teamActionMenu = createRectangle(rectToUse,100, 100, 200, 200);
+            initializeCameraDrawing(gameData);
+        } else if (!gameData.usePersonaSetting() && teamActionMenu == null){
+            System.out.println("no persona");
+            rectToUse = Rectangle.class;
+            summaryMenu = createRectangle(rectToUse, 100, 100, 380, 300);
+            pauseMenu = createRectangle(rectToUse,100, 100, 200, 250);
+            monsterTeamMenu = createRectangle(rectToUse,100, 100, 400, 550);
+            teamActionMenu = createRectangle(rectToUse,100, 100, 200, 200);
         }
     }
 
