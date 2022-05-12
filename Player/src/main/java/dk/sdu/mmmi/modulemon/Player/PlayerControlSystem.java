@@ -77,9 +77,10 @@ public class PlayerControlSystem implements IEntityProcessingService {
             default: System.out.println(("Did not match any direction"));
         }
 
-        entity.setSpriteTexture(result);
-        entity.setPosX(x);
-        entity.setPosY(y);
+        spritePart.setCurrentSprite(result);
+        //entity.setSpriteTexture(result);
+        positionPart.setX(x);
+        positionPart.setY(y);
     }
 
 

@@ -82,11 +82,11 @@ public class NPCControlSystem implements IEntityProcessingService{
                 break;
             default: System.out.println(("The NPC sprite could not be loaded: Current did not match any direction"));
         }
-        
 
-        entity.setSpriteTexture(result);
-        entity.setPosX(x);
-        entity.setPosY(y);
+        spritePart.setCurrentSprite(result);
+        //entity.setSpriteTexture(result);
+        positionPart.setX(x);
+        positionPart.setY(y);
     }
     
 }
