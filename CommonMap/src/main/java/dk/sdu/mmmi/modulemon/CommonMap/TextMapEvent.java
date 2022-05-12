@@ -7,13 +7,14 @@ import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import dk.sdu.mmmi.modulemon.CommonMap.IMapEvent;
 import dk.sdu.mmmi.modulemon.common.data.GameData;
 import dk.sdu.mmmi.modulemon.common.data.GameKeys;
+import dk.sdu.mmmi.modulemon.common.drawing.Position;
 import dk.sdu.mmmi.modulemon.common.drawing.Rectangle;
 import dk.sdu.mmmi.modulemon.common.drawing.TextUtils;
 
 import java.util.Queue;
 
 public class TextMapEvent implements IMapEvent {
-    private Queue<String> lines;
+    protected Queue<String> lines;
     private Rectangle textBox;
     public TextMapEvent(Queue<String> lines){
         if(lines == null || lines.isEmpty()){

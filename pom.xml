@@ -47,6 +47,7 @@
     <module>SimpleAI</module>
     <module>Interaction</module>
     <module>Collision</module>
+    <module>MapEntities</module>
   </modules>
 
   <build>

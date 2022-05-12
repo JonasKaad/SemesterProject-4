@@ -1,8 +1,10 @@
 package dk.sdu.mmmi.modulemon.Interaction;
 
+import dk.sdu.mmmi.modulemon.CommonMap.Data.EntityParts.InteracteePart;
 import dk.sdu.mmmi.modulemon.CommonMap.Data.EntityParts.TextDisplayPart;
 import dk.sdu.mmmi.modulemon.CommonMap.Data.EntityParts.MonsterTeamPart;
 import dk.sdu.mmmi.modulemon.CommonMap.Data.EntityType;
+import dk.sdu.mmmi.modulemon.CommonMap.IMapEvent;
 import dk.sdu.mmmi.modulemon.CommonMap.IMapView;
 import dk.sdu.mmmi.modulemon.CommonMap.Data.Entity;
 import dk.sdu.mmmi.modulemon.CommonMap.TextMapEvent;
@@ -10,6 +12,8 @@ import dk.sdu.mmmi.modulemon.common.data.GameData;
 import dk.sdu.mmmi.modulemon.CommonMap.Data.World;
 import dk.sdu.mmmi.modulemon.CommonMap.Data.EntityParts.InteractPart;
 import dk.sdu.mmmi.modulemon.CommonMap.Services.IPostEntityProcessingService;
+import dk.sdu.mmmi.modulemon.common.data.GameKeys;
+
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.LinkedList;
@@ -27,12 +31,27 @@ public class InteractProcessing implements IPostEntityProcessingService {
             InteractPart interactPart = entity.getPart(InteractPart.class);
             if (interactPart != null) {
                 if (interactPart.canInteract()) {
+                    if(entity.getType() == EntityType.PLAYER){
+                        if(!gameData.getKeys().isDown(GameKeys.E) && !gameData.getKeys().isDown(GameKeys.ACTION)) {
+                            //If the interactor is the Player, don't interact if not holding either E or ACTION.
+                            continue;
+                        }
+                    }
+
                     wasAbleToInteract = true;
                     //Checking that we only interact with the same pair once.
                     if(this.previousInteractPair.isSamePair(entity, interactPart.getInteractWith())){
                         continue;
                     }
                     this.previousInteractPair.setNewPair(entity, interactPart.getInteractWith());
+
+                    //If there is an interactee part, we just that.
+                    InteracteePart interacteePart = interactPart.getInteractWith().getPart(InteracteePart.class);
+                    if(interacteePart != null){
+                        IMapEvent event = interacteePart.getEvent(entity);
+                        this.mapView.addMapEvent(event);
+                        continue;
+                    }
 
                     MonsterTeamPart monsterTeam1 = entity.getPart(MonsterTeamPart.class);
                     MonsterTeamPart monsterTeam2 = interactPart.getInteractWith().getPart(MonsterTeamPart.class);

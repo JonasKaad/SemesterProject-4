@@ -30,7 +30,8 @@ public class BundleControllerUI extends JFrame {
             "SimpleAI",
             "Monster",
             "Interaction",
-            "Collision"
+            "Collision",
+            "MapEntities"
     );
 
     public BundleControllerUI(BundleControllerService service) {
