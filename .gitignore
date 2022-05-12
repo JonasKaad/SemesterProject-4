@@ -143,7 +143,7 @@ buildNumber.properties
 **/nbproject/private/
 **/nbproject/Makefile-*.mk
 **/nbproject/Package-*.bash
-**/nbproject/project.properties
+**/nbproject
 build/
 nbbuild/
 dist/
