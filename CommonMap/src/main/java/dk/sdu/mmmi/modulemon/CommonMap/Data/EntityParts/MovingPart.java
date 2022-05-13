@@ -60,7 +60,7 @@ public class MovingPart implements EntityPart {
         }
 
         if(animationTimer < 0.5){
-            animationTimer += dt * 3;
+            animationTimer += dt * 1.5f;
             animationTimer = Math.min(animationTimer, 1);
             Vector2 pos = currentPosition.lerp(newPosition, animationTimer);
 

@@ -13,7 +13,7 @@ import static org.junit.jupiter.api.Assertions.*;
  * @author Gorm
  */
 public class InteractPartTest {
-
+    
     /**
      * Test of isInRange method, of class InteractPart.
      */

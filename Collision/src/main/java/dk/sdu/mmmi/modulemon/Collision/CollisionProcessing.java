@@ -19,7 +19,7 @@ public class CollisionProcessing implements IPostEntityProcessingService {
     public void process(GameData gameData, World world) {
         for (Entity entity : world.getEntities()) {
             PositionPart entityPosPart = entity.getPart(PositionPart.class);
-            if(mapView.isCellBlocked(entityPosPart.getTargetPos().x, entityPosPart.getTargetPos().y)) {
+            if(mapView.isCellBlocked(entityPosPart.getTargetPos().x, entityPosPart.getTargetPos().y) && !entityPosPart.getTargetPos().equals(new Vector2(0,0))) {
                 entityPosPart.setTargetPos(entityPosPart.getX(), entityPosPart.getY());
                 if (bonkCooldown <= 0 && entity.getType().equals(EntityType.PLAYER)) {
                     loader.getSoundAsset("/sounds/bonk.ogg", this.getClass()).play();
