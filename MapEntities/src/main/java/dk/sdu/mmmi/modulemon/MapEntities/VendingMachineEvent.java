@@ -1,12 +1,14 @@
 package dk.sdu.mmmi.modulemon.MapEntities;
 
 import com.badlogic.gdx.graphics.Color;
+import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import dk.sdu.mmmi.modulemon.CommonMap.Data.Entity;
 import dk.sdu.mmmi.modulemon.CommonMap.Data.EntityParts.MonsterTeamPart;
 import dk.sdu.mmmi.modulemon.CommonMap.IMapEvent;
 import dk.sdu.mmmi.modulemon.CommonMonster.IMonster;
+import dk.sdu.mmmi.modulemon.common.AssetLoader;
 import dk.sdu.mmmi.modulemon.common.data.GameData;
 import dk.sdu.mmmi.modulemon.common.data.GameKeys;
 import dk.sdu.mmmi.modulemon.common.drawing.Rectangle;
@@ -105,8 +107,13 @@ public class VendingMachineEvent implements IMapEvent {
                 textUtils.drawSmallRoboto(spriteBatch,
                         monName,
                         Color.BLACK,
-                        chooseMonMenu.getX() + monStartx + (84 * i) - (monName.length()),
-                        chooseMonMenu.getY()+ 50);
+                        chooseMonMenu.getX() + monStartx + (84 * i),
+                        chooseMonMenu.getY() + 50);
+                Texture currentSprite = AssetLoader.getInstance().getTextureAsset(monsters.get(i).getFrontSprite(), monsters.get(i).getClass());
+                spriteBatch.draw(currentSprite,
+                        chooseMonMenu.getX() + monStartx + (80 * i),
+                        chooseMonMenu.getY() + 60,
+                        50, 50);
             }
 
             spriteBatch.end();
