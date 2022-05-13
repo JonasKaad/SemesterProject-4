@@ -91,18 +91,18 @@ public class BattleView implements IGameViewService, IBattleView {
                 return;
             }
             playerMonsters = new ArrayList<>();
-            playerMonsters.add(monsterRegistry.getMonster(0));
-            playerMonsters.add(monsterRegistry.getMonster(1));
-            playerMonsters.add(monsterRegistry.getMonster(2));
+            playerMonsters.add(monsterRegistry.getMonster(0 % monsterRegistry.getMonsterAmount()));
+            playerMonsters.add(monsterRegistry.getMonster(1 % monsterRegistry.getMonsterAmount()));
+            playerMonsters.add(monsterRegistry.getMonster(2 % monsterRegistry.getMonsterAmount()));
         }
         if (enemyMonsters == null) {
             if (monsterRegistry == null) {
                 return;
             }
             enemyMonsters = new ArrayList<>();
-            enemyMonsters.add(monsterRegistry.getMonster(3));
-            enemyMonsters.add(monsterRegistry.getMonster(4));
-            enemyMonsters.add(monsterRegistry.getMonster(5));
+            enemyMonsters.add(monsterRegistry.getMonster(3 % monsterRegistry.getMonsterAmount()));
+            enemyMonsters.add(monsterRegistry.getMonster(4 % monsterRegistry.getMonsterAmount()));
+            enemyMonsters.add(monsterRegistry.getMonster(5 % monsterRegistry.getMonsterAmount()));
         }
 
         IBattleParticipant player = new BattleParticipant(playerMonsters, true);
