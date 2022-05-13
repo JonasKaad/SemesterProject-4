@@ -181,7 +181,6 @@ public class MapView implements IGameViewService, IMapView {
                 pauseMenu = createRectangle(rectToUse, 100, 100, 200, 250);
                 monsterTeamMenu = createRectangle(rectToUse, 100, 100, 400, 550);
                 teamActionMenu = createRectangle(rectToUse, 100, 100, 200, 200);
-                initializeCameraDrawing(gameData);
             } else if (!(Boolean) settings.getSetting("personaRectangles") && teamActionMenu == null) {
                 rectToUse = Rectangle.class;
                 summaryMenu = createRectangle(rectToUse, 100, 100, 380, 300);
@@ -454,8 +453,10 @@ public class MapView implements IGameViewService, IMapView {
                             teamOptionIndex = 0;
                         }
                     } else {
-                        showTeamOptions = true;
-                        monsterRectangles[selectedOptionIndexMonsterTeam].setBorderColor(Color.valueOf("ffcb05"));
+                        if(!monsterTeam.isEmpty()) {
+                            showTeamOptions = true;
+                            monsterRectangles[selectedOptionIndexMonsterTeam].setBorderColor(Color.valueOf("ffcb05"));
+                        }
                     }
 
                 }
