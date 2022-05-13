@@ -51,7 +51,7 @@ public class MenuState implements IGameViewService {
             "Settings",
             "Quit"
     };
-    private List<String> settingsValue = new ArrayList<>();
+    private List<String> settingsValueList = new ArrayList<>();
     private boolean showSettings = false;
 
     GameData gameData = new GameData();
@@ -107,11 +107,11 @@ public class MenuState implements IGameViewService {
 
         if(settings != null) {
             //TODO Use ints instead and do * 100 when getting it and / 100 when setting it
-            musicVolume = Math.round((float) settings.getSetting("musicVolume") * 100) + "%";
-            soundVolume = Math.round((float) settings.getSetting("soundVolume") * 100) + "%";
-            settingsValue.add(musicVolume);
-            settingsValue.add(soundVolume);
-            settingsValue.add(gameData.usePersonaSetting() ? "On" : "Off");
+            musicVolume = settings.getSetting("musicVolume") + "%";
+            soundVolume = settings.getSetting("soundVolume") + "%";
+            settingsValueList.add(musicVolume);
+            settingsValueList.add(soundVolume);
+            settingsValueList.add((Boolean) settings.getSetting("personaRectangles") ? "On" : "Off");
         }
     }
 
@@ -140,17 +140,18 @@ public class MenuState implements IGameViewService {
             menuOptions = defaultMenuOptions;
             title = "ModulémoN";
         }
-        // Sets the value of the volume option to the correct value from GameData.
-        if(menuMusic.getVolume() != (float) settings.getSetting("musicVolume")){
-            menuMusic.setVolume( (float) settings.getSetting("musicVolume"));
-            musicVolume = Math.round((float) settings.getSetting("musicVolume") * 100) + "%";
-            soundVolume = Math.round((float) settings.getSetting("soundVolume") * 100) + "%";
-            settingsValue.set(0,musicVolume);
-            settingsValue.set(1,soundVolume);
+        // Sets the value of the volume option to the correct value from the settings.json file
+
+        if(menuMusic.getVolume() !=  ((int) settings.getSetting("musicVolume") / 100f)){
+            menuMusic.setVolume((int) settings.getSetting("musicVolume") / 100f);
+            musicVolume = settings.getSetting("musicVolume") + "%";
+            soundVolume = settings.getSetting("soundVolume") + "%";
+            settingsValueList.set(0,musicVolume);
+            settingsValueList.set(1,soundVolume);
         }
         // Sets the value of the Persona option to on/off depending on the value of the boolean.
-        if(!Objects.equals(settingsValue.get(2), gameData.usePersonaSetting() ? "On" : "Off")) {
-            settingsValue.set(2, gameData.usePersonaSetting() ? "On" : "Off");
+        if(!Objects.equals(settingsValueList.get(2), (Boolean) settings.getSetting("personaRectangles") ? "On" : "Off")) {
+            settingsValueList.set(2,(Boolean) settings.getSetting("personaRectangles") ? "On" : "Off");
         }
     }
 
@@ -192,11 +193,11 @@ public class MenuState implements IGameViewService {
             );
         }
         if(showSettings){
-            for (int i = 0; i < settingsValue.size(); i++) {
-                glyphLayout.setText(settingsValueFont, settingsValue.get(i));
+            for (int i = 0; i < settingsValueList.size(); i++) {
+                glyphLayout.setText(settingsValueFont, settingsValueList.get(i));
                 settingsValueFont.draw(
                         spriteBatch,
-                        settingsValue.get(i),
+                        settingsValueList.get(i),
                         (Game.WIDTH - glyphLayout.width) / 1.4f,
                         (Game.HEIGHT - 100 * (1+i)) / 2f
                 );
@@ -236,50 +237,43 @@ public class MenuState implements IGameViewService {
 
         if(gameData.getKeys().isPressed(GameKeys.LEFT)){
             if(menuOptions[currentOption].equalsIgnoreCase("Change Music Volume")){
-
-                if( ( (float) settings.getSetting("musicVolume") > 0) ) {
-                    float new_volume = (float) settings.getSetting("musicVolume") - 0.1f;
+                if( ((int) settings.getSetting("musicVolume") > 0) ) {
+                    int new_volume = (int) settings.getSetting("musicVolume") - 10;
                     settings.setSetting("musicVolume", new_volume);
-                    if((float) settings.getSetting("musicVolume") < 0.04f) {
-                        settings.setSetting("musicVolume", 0f);
-                    }
 
-                    musicVolume = Math.round((float) settings.getSetting("musicVolume") * 100) + "%";
-                    settingsValue.set(0, musicVolume);
+                    musicVolume = (int) settings.getSetting("musicVolume") + "%";
+                    settingsValueList.set(0, musicVolume);
                 }
             }
 
             if(menuOptions[currentOption].equalsIgnoreCase("Change Sound Volume")){
-                if( ( (float) settings.getSetting("soundVolume") > 0) ) {
-                    float new_volume = (float) settings.getSetting("soundVolume") - 0.1f;
+                if( ((int) settings.getSetting("soundVolume") > 0) ) {
+                    int new_volume = (int) settings.getSetting("soundVolume") - 10;
                     settings.setSetting("soundVolume", new_volume);
-                    if((float) settings.getSetting("soundVolume") < 0.04f) {
-                        settings.setSetting("soundVolume", 0f);
-                    }
 
-                    soundVolume = Math.round((float) settings.getSetting("soundVolume") * 100) + "%";
-                    settingsValue.set(0, soundVolume);
+                    soundVolume = (int) settings.getSetting("soundVolume") + "%";
+                    settingsValueList.set(1, soundVolume);
                 }
             }
         }
         if(gameData.getKeys().isPressed(GameKeys.RIGHT)){
             if(menuOptions[currentOption].equalsIgnoreCase("Change Music Volume")){
-                if( !( (float) settings.getSetting("musicVolume") > 1) ) {
-                    float new_volume = (float) settings.getSetting("musicVolume") + 0.1f;
+                if( ! ((int) settings.getSetting("musicVolume") >= 100) ) {
+                    int new_volume = (int) settings.getSetting("musicVolume") + 10;
                     settings.setSetting("musicVolume", new_volume);
 
-                    musicVolume = Math.round((float) settings.getSetting("musicVolume") * 100) + "%";
-                    settingsValue.set(0, musicVolume);
+                    musicVolume = (int) settings.getSetting("musicVolume") + "%";
+                    settingsValueList.set(0, musicVolume);
                 }
             }
 
             if(menuOptions[currentOption].equalsIgnoreCase("Change Sound Volume")){
-                if(! ( (float) settings.getSetting("soundVolume") > 1) ) {
-                    float new_volume = (float) settings.getSetting("soundVolume") + 0.1f;
+                if(! ((int) settings.getSetting("soundVolume") >= 100) ) {
+                    int new_volume = (int) settings.getSetting("soundVolume") + 10;
                     settings.setSetting("soundVolume", new_volume);
 
-                    soundVolume = Math.round((float) settings.getSetting("soundVolume") * 100) + "%";
-                    settingsValue.set(0, soundVolume);
+                    soundVolume = (int) settings.getSetting("soundVolume") + "%";
+                    settingsValueList.set(1, soundVolume);
                 }
             }
         }
@@ -287,14 +281,13 @@ public class MenuState implements IGameViewService {
         if (gameData.getKeys().isPressed(GameKeys.ACTION) || gameData.getKeys().isPressed(GameKeys.E)) {
             if (menuOptions[currentOption].equalsIgnoreCase("Use Persona Rectangles")) {
                 System.out.println("Before :" + gameData.usePersonaSetting());
-                if(!gameData.usePersonaSetting()){
-                    settingsValue.set(2, "On");
-                    gameData.setPersonaSetting(true);
-                    gameData.setPaused(true);
+                if(! ((Boolean) settings.getSetting("personaRectangles"))){
+                    settingsValueList.set(2, "On");
+                    settings.setSetting("personaRectangles", true);
                 }
                 else{
-                    settingsValue.set(2, "Off");
-                    gameData.setPersonaSetting(false);
+                    settingsValueList.set(2, "Off");
+                    settings.setSetting("personaRectangles", false);
                 }
                 System.out.println("After :" + gameData.usePersonaSetting());
             }

@@ -150,16 +150,10 @@ public class Game implements ApplicationListener {
         this.settings = settings;
         gdxThreadTasks.add(() -> {
             if (settings.getSetting("musicVolume")==null) {
-                settings.setSetting("musicVolume", 0.1f);
-            }
-            if(settings.getSetting("musicVolume") instanceof Integer){
-                settings.setSetting("musicVolume", 0.01f);
+                settings.setSetting("musicVolume", 10);
             }
             if (settings.getSetting("soundVolume")==null) {
-                settings.setSetting("soundVolume", 0.6f);
-            }
-            if(settings.getSetting("soundVolume") instanceof Integer){
-                settings.setSetting("soundVolume", 0.01f);
+                settings.setSetting("soundVolume", 60);
             }
             if (settings.getSetting("personaRectangles")==null) {
                 settings.setSetting("personaRectangles", false);

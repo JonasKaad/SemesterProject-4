@@ -44,6 +44,9 @@ public class SettingsHandler {
     public Object getSetting(String key){
         return this.configCache.get(key);
     }
+    public Float getFloatSetting(String key){
+        return (Float) this.configCache.get(key);
+    }
 
     public void setSetting(String key, Object value){
         this.configCache.put(key, value);
