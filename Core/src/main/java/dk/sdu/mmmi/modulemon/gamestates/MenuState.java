@@ -34,15 +34,15 @@ public class MenuState implements IGameViewService {
     private SpriteBatch spriteBatch;
     private BitmapFont titleFont;
     private BitmapFont menuOptionsFont;
-    private BitmapFont smallmenuOptionsFont;
+    private BitmapFont smallMenuOptionsFont;
     private BitmapFont settingsValueFont;
     private BitmapFont smallMenuFont;
     private Music menuMusic;
 
     private Texture logo;
 
-    private String musicVolume = "%";
-    private String soundVolume = "%";
+    private String musicVolume = "";
+    private String soundVolume = "";
     private String aiTime = "";
     private String battleTheme = "";
     private int battleThemeIndex = 0;
@@ -57,6 +57,7 @@ public class MenuState implements IGameViewService {
             "Settings",
             "Quit"
     };
+    // The settings that will be shown under the "Settings" menu.
     private String[] settingOptions = new String[]{
             "Change Music Volume",
             "Change Sound Volume",
@@ -64,12 +65,12 @@ public class MenuState implements IGameViewService {
             "Use AI Alpha-beta pruning",
             "AI Processing Time",
             "Battle Music Theme",
-
     };
 
     private Sound selectSound;
     private Sound chooseSound;
 
+    // The 4 different themes available to choose from.
     private String[] musicThemes = new String[]{
             "Original",
             "Pop",
@@ -122,7 +123,7 @@ public class MenuState implements IGameViewService {
 
         parameter.size = 20;
         smallMenuFont = fontGenerator.generateFont(parameter);
-        smallmenuOptionsFont = fontGenerator.generateFont(parameter);
+        smallMenuOptionsFont = fontGenerator.generateFont(parameter);
         settingsValueFont = fontGenerator.generateFont(parameter);
 
         fontGenerator.dispose();
@@ -134,19 +135,7 @@ public class MenuState implements IGameViewService {
         // Sets the options for the menu
         menuOptions = defaultMenuOptions;
 
-        if(settings != null) {
-            musicVolume = settings.getSetting("musicVolume") + "%";
-            soundVolume = settings.getSetting("soundVolume") + "%";
-            aiTime = settings.getSetting("AI processing time") + " ms";
-            battleTheme = (String) settings.getSetting("battleMusicTheme");
-            settingsValueList.add(musicVolume);
-            settingsValueList.add(soundVolume);
-            settingsValueList.add((Boolean) settings.getSetting("personaRectangles") ? "On" : "Off");
-            settingsValueList.add((Boolean) settings.getSetting("AI alpha-beta pruning") ? "On" : "Off");
-            settingsValueList.add(aiTime);
-            settingsValueList.add(battleTheme);
-            battleThemeIndex = Arrays.asList(musicThemes).indexOf(battleTheme);
-        }
+        settingsInitializer();
     }
 
     @Override
@@ -174,32 +163,11 @@ public class MenuState implements IGameViewService {
             menuOptions = defaultMenuOptions;
             title = "ModulémoN";
         }
+
         // Sets the value of the volume option to the correct value from the settings.json file
-
-        if(menuMusic.getVolume() !=  (int) settings.getSetting("musicVolume") / 100f){
+        if(menuMusic.getVolume() !=  (int) settings.getSetting("musicVolume") / 100f) {
+            // Set the volume to the one found in the json file
             menuMusic.setVolume((int) settings.getSetting("musicVolume") / 100f);
-            musicVolume = settings.getSetting("musicVolume") + "%";
-            soundVolume = settings.getSetting("soundVolume") + "%";
-            settingsValueList.set(0,musicVolume);
-            settingsValueList.set(1,soundVolume);
-        }
-        // Sets the value of the Persona option to on/off depending on the value of the boolean.
-        if(!Objects.equals(settingsValueList.get(2), (Boolean) settings.getSetting("personaRectangles") ? "On" : "Off")) {
-            settingsValueList.set(2,(Boolean) settings.getSetting("personaRectangles") ? "On" : "Off");
-        }
-        // Sets the value of the AI Alpha-beta option to on/off depending on the value of the boolean.
-        if(!Objects.equals(settingsValueList.get(3), (Boolean) settings.getSetting("AI alpha-beta pruning") ? "On" : "Off")) {
-            settingsValueList.set(3,(Boolean) settings.getSetting("AI alpha-beta pruning") ? "On" : "Off");
-        }
-        if(!Objects.equals(settingsValueList.get(4), settings.getSetting("AI processing time") + " ms")) {
-            aiTime = settings.getSetting("AI processing time") + " ms";
-            settingsValueList.set(4, aiTime);
-        }
-
-        if(!Objects.equals(settingsValueList.get(5), settings.getSetting("battleMusicTheme"))) {
-            battleTheme = (String) settings.getSetting("battleMusicTheme");
-            settingsValueList.set(5, battleTheme );
-            battleThemeIndex = Arrays.asList(musicThemes).indexOf(battleTheme);
         }
     }
 
@@ -225,10 +193,8 @@ public class MenuState implements IGameViewService {
                 (Game.HEIGHT - glyphLayout.height) / 1.3f
         );
 
-        /*
-         * Runs through the entire menuOptions array and draws them all.
-         * Also sets the currently selected option to a custom color
-         */
+        // If showSettings is true, it should draw with a smaller font, i.e. smallMenuOptionsFont.
+        // And also draw the values of the appertaining settings (On / Off, volume level, etc.)
         if(showSettings) {
             for (int i = 0; i < settingsValueList.size(); i++) {
                 glyphLayout.setText(settingsValueFont, settingsValueList.get(i));
@@ -240,10 +206,10 @@ public class MenuState implements IGameViewService {
                 );
             }
             for (int i = 0; i < menuOptions.length; i++) {
-                glyphLayout.setText(smallmenuOptionsFont, menuOptions[i]);
-                if (currentOption == i) smallmenuOptionsFont.setColor(Color.valueOf("2a75bb"));
-                else smallmenuOptionsFont.setColor(Color.WHITE);
-                smallmenuOptionsFont.draw(
+                glyphLayout.setText(smallMenuOptionsFont, menuOptions[i]);
+                if (currentOption == i) smallMenuOptionsFont.setColor(Color.valueOf("2a75bb"));
+                else smallMenuOptionsFont.setColor(Color.WHITE);
+                smallMenuOptionsFont.draw(
                         spriteBatch,
                         menuOptions[i],
                         (Game.WIDTH - glyphLayout.width) / 2f,
@@ -251,6 +217,10 @@ public class MenuState implements IGameViewService {
                 );
             }
         }
+        /*
+         * Runs through the entire menuOptions array and draws them all.
+         * Also sets the currently selected option to a custom color
+         */
         else {
             for (int i = 0; i < menuOptions.length; i++) {
                 glyphLayout.setText(menuOptionsFont, menuOptions[i]);
@@ -365,7 +335,9 @@ public class MenuState implements IGameViewService {
         switch(keyInput){
             case "RIGHT": {
                 if (menuOptions[currentOption].equalsIgnoreCase("Change Music Volume")) {
+                    // Max volume is 100, which is 1f, since that's the max volume libgdx music and sound can use.
                     if (!((int) settings.getSetting("musicVolume") >= 100)) {
+                        // Increases volume by 10 (0.1f)
                         int new_volume = (int) settings.getSetting("musicVolume") + 10;
                         settings.setSetting("musicVolume", new_volume);
 
@@ -377,7 +349,9 @@ public class MenuState implements IGameViewService {
                 }
 
                 if (menuOptions[currentOption].equalsIgnoreCase("Change Sound Volume")) {
+                    // Max volume is 100, which is 1f, since that's the max volume libgdx music and sound can use.
                     if (!((int) settings.getSetting("soundVolume") >= 100)) {
+                        // Increases volume by 10 (0.1f)
                         int new_volume = (int) settings.getSetting("soundVolume") + 10;
                         settings.setSetting("soundVolume", new_volume);
 
@@ -389,9 +363,11 @@ public class MenuState implements IGameViewService {
                 }
 
                 if (menuOptions[currentOption].equalsIgnoreCase("AI Processing Time")) {
+                    // Sets the max processing time to 10 seconds
                     if (!((int) settings.getSetting("AI processing time") >= 10000)) {
-                        int new_volume = (int) settings.getSetting("AI processing time") + 500;
-                        settings.setSetting("AI processing time", new_volume);
+                        // Increases the processing time by 500 ms
+                        int ai_processing_time = (int) settings.getSetting("AI processing time") + 500;
+                        settings.setSetting("AI processing time", ai_processing_time);
 
                         aiTime = (int) settings.getSetting("AI processing time") + " ms";
                         settingsValueList.set(4, aiTime);
@@ -402,11 +378,16 @@ public class MenuState implements IGameViewService {
 
                 if (menuOptions[currentOption].equalsIgnoreCase("Battle Music Theme")) {
                     battleThemeIndex++;
+
+                    //Circular Array to ensure it loops over the full list indefinitely
                     battleThemeIndex = battleThemeIndex % musicThemes.length;
+                    // Sets the theme setting to be the one selected from the musicThemes array, based on the current index
                     settings.setSetting("battleMusicTheme", musicThemes[battleThemeIndex]);
 
+                    // Updates the name of the theme to the newly selected one
                     battleTheme = (String) settings.getSetting("battleMusicTheme");
                     settingsValueList.set(5, battleTheme);
+
                     chooseSound.play((int) settings.getSetting("soundVolume") / 100f);
                     break;
                 }
@@ -416,7 +397,9 @@ public class MenuState implements IGameViewService {
             case "LEFT":
             {
                 if (menuOptions[currentOption].equalsIgnoreCase("Change Music Volume")) {
+                    // Min volume is 0, which essentially mutes all the music.
                     if (((int) settings.getSetting("musicVolume") > 0)) {
+                        // Decreases volume by 10 (0.1f)
                         int new_volume = (int) settings.getSetting("musicVolume") - 10;
                         settings.setSetting("musicVolume", new_volume);
 
@@ -428,7 +411,9 @@ public class MenuState implements IGameViewService {
                 }
 
                 if (menuOptions[currentOption].equalsIgnoreCase("Change Sound Volume")) {
+                    // Min volume is 0, which essentially mutes all the sound.
                     if (((int) settings.getSetting("soundVolume") > 0)) {
+                        // Decreases volume by 10 (0.1f)
                         int new_volume = (int) settings.getSetting("soundVolume") - 10;
                         settings.setSetting("soundVolume", new_volume);
 
@@ -440,9 +425,11 @@ public class MenuState implements IGameViewService {
                 }
 
                 if (menuOptions[currentOption].equalsIgnoreCase("AI Processing Time")) {
+                    // Sets the minimum processing time to 500 ms
                     if (((int) settings.getSetting("AI processing time") > 500)) {
-                        int new_volume = (int) settings.getSetting("AI processing time") - 500;
-                        settings.setSetting("AI processing time", new_volume);
+                        // Decreases the processing time by 500 ms
+                        int ai_processing_time = (int) settings.getSetting("AI processing time") - 500;
+                        settings.setSetting("AI processing time", ai_processing_time);
 
                         aiTime = (int) settings.getSetting("AI processing time") + " ms";
                         settingsValueList.set(4, aiTime);
@@ -452,17 +439,20 @@ public class MenuState implements IGameViewService {
                 }
 
                 if (menuOptions[currentOption].equalsIgnoreCase("Battle Music Theme")) {
+                    // If the index is at the start, go to the back of the array, ensuring it can loop indefinitely
                     if(battleThemeIndex == 0){
                         battleThemeIndex = musicThemes.length-1;
                     }
                     else{
                         battleThemeIndex--;
                     }
-                    battleThemeIndex = battleThemeIndex % musicThemes.length;
+                    // Sets the theme setting to be the one selected from the musicThemes array, based on the current index
                     settings.setSetting("battleMusicTheme", musicThemes[battleThemeIndex]);
 
+                    // Updates the name of the theme to the newly selected one
                     battleTheme = (String) settings.getSetting("battleMusicTheme");
                     settingsValueList.set(5, battleTheme);
+
                     chooseSound.play((int) settings.getSetting("soundVolume") / 100f);
                     break;
                 }
@@ -486,6 +476,10 @@ public class MenuState implements IGameViewService {
     private void boolean_settings_switch_on_off() {
         // Checks if the currently selected/hovered setting is the option for Persona Rectangles
         if (menuOptions[currentOption].equalsIgnoreCase("Use Persona Rectangles")) {
+            /*
+            If setting for using PersonaRectangles is currently true, change it to false
+            Otherwise change it to true.
+             */
             if(((Boolean) settings.getSetting("personaRectangles"))){
                 settingsValueList.set(2, "Off");
                 settings.setSetting("personaRectangles", false);
@@ -497,6 +491,10 @@ public class MenuState implements IGameViewService {
             chooseSound.play((int) settings.getSetting("soundVolume") / 100f);
         }
         else if (menuOptions[currentOption].equalsIgnoreCase("Use AI Alpha-beta pruning")) {
+            /*
+            If setting for using Alpha-beta pruning is currently true, change it to false
+            Otherwise change it to true.
+             */
             if(((Boolean) settings.getSetting("AI alpha-beta pruning"))){
                 settingsValueList.set(3, "Off");
                 settings.setSetting("AI alpha-beta pruning", false);
@@ -506,6 +504,29 @@ public class MenuState implements IGameViewService {
                 settings.setSetting("AI alpha-beta pruning", true);
             }
             chooseSound.play((int) settings.getSetting("soundVolume") / 100f);
+        }
+    }
+
+    /**
+     * This method gets called when this state is first loaded. It initializes the settings menu values with
+     * those found in the settings.json file.
+     */
+    public void settingsInitializer(){
+        if(settings != null) {
+            musicVolume = settings.getSetting("musicVolume") + "%";
+            soundVolume = settings.getSetting("soundVolume") + "%";
+            settingsValueList.add(musicVolume);
+            settingsValueList.add(soundVolume);
+
+            settingsValueList.add((Boolean) settings.getSetting("personaRectangles") ? "On" : "Off");
+            settingsValueList.add((Boolean) settings.getSetting("AI alpha-beta pruning") ? "On" : "Off");
+
+            aiTime = settings.getSetting("AI processing time") + " ms";
+            settingsValueList.add(aiTime);
+
+            battleTheme = (String) settings.getSetting("battleMusicTheme");
+            settingsValueList.add(battleTheme);
+            battleThemeIndex = Arrays.asList(musicThemes).indexOf(battleTheme); // Sets the music theme index to the position of the currently selected theme found in the settings file
         }
     }
 

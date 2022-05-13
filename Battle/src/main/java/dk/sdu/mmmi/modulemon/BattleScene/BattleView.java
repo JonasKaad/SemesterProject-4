@@ -109,7 +109,13 @@ public class BattleView implements IGameViewService, IBattleView {
         IBattleParticipant enemy = new BattleParticipant(enemyMonsters, false);
 
         selectedAction = 0;
-        String battleMusic_type = (String) settings.getSetting("battleMusicTheme");
+        String battleMusic_type;
+        if(settings != null) {
+            battleMusic_type= (String) settings.getSetting("battleMusicTheme");
+        }
+        else{
+            battleMusic_type = "Original";
+        }
         _battleMusic = loader.getMusicAsset("/music/battle_music_" + battleMusic_type.toLowerCase() + ".ogg", this.getClass());
         _winSound = loader.getSoundAsset("/sounds/you_won.ogg", this.getClass());
         _loseSound = loader.getSoundAsset("/sounds/you_lost.ogg", this.getClass());

@@ -81,7 +81,9 @@ public class PlayerPlugin implements IGamePluginService {
 
     public void removeMonsterRegistryService(IMonsterRegistry monsterRegistry) {
         this.monsterRegistry = null;
-        player.remove(MonsterTeamPart.class);
+        if (player != null) {
+            player.remove(MonsterTeamPart.class);
+        }
     }
 
 }
