@@ -9,11 +9,13 @@ import dk.sdu.mmmi.modulemon.common.data.GameData;
 import dk.sdu.mmmi.modulemon.CommonMap.Data.World;
 import dk.sdu.mmmi.modulemon.CommonMap.Data.EntityParts.PositionPart;
 import dk.sdu.mmmi.modulemon.CommonMap.Services.IPostEntityProcessingService;
+import dk.sdu.mmmi.modulemon.common.services.IGameSettings;
 
 public class CollisionProcessing implements IPostEntityProcessingService {
     private IMapView mapView;
     private AssetLoader loader = AssetLoader.getInstance();
     private float bonkCooldown;
+    private IGameSettings settings;
 
     @Override
     public void process(GameData gameData, World world) {
@@ -22,7 +24,7 @@ public class CollisionProcessing implements IPostEntityProcessingService {
             if(mapView.isCellBlocked(entityPosPart.getTargetPos().x, entityPosPart.getTargetPos().y)) {
                 entityPosPart.setTargetPos(entityPosPart.getX(), entityPosPart.getY());
                 if (bonkCooldown <= 0 && entity.getType().equals(EntityType.PLAYER)) {
-                    loader.getSoundAsset("/sounds/bonk.ogg", this.getClass()).play(gameData.getSoundVolume());
+                    loader.getSoundAsset("/sounds/bonk.ogg", this.getClass()).play( (int) settings.getSetting("soundVolume") / 100f);
                     bonkCooldown = 0.5f;
                 }
             }
@@ -58,5 +60,17 @@ public class CollisionProcessing implements IPostEntityProcessingService {
 
     public void removeMapView(IMapView mapView){
         this.mapView = null;
+    }
+    
+    public void setSettingsService(IGameSettings settings){
+        this.settings = settings;
+        if (settings.getSetting("soundVolume")==null) {
+            settings.setSetting("soundVolume", 60);
+        }
+
+    }
+
+    public void removeSettingsService(IGameSettings settings){
+        this.settings = null;
     }
 }
