@@ -178,21 +178,29 @@ public class BattleView implements IGameViewService, IBattleView {
         if (!_isInitialized) {
             return;
         }
-        if(_battleMusic.getVolume() != (int) settings.getSetting("musicVolume") / 100f) {
-            _battleMusic.setVolume((int) settings.getSetting("musicVolume") / 100f);
+        if(settings != null){
+            if(_battleMusic.getVolume() != (int) settings.getSetting("musicVolume") / 100f) {
+                _battleMusic.setVolume((int) settings.getSetting("musicVolume") / 100f);
+            }
+            if ((Boolean) settings.getSetting("personaRectangles") && ! (_battleScene.getEnemyBoxRect() instanceof PersonaRectangle)) {
+                _battleScene.setPlayerBoxRectStyle(PersonaRectangle.class);
+                _battleScene.setEnemyBoxRectStyle(PersonaRectangle.class);
+                _battleScene.setActionBoxRectStyle(PersonaRectangle.class);
+                _battleScene.setTextBoxRectStyle(PersonaRectangle.class);
+            }
+            else if (!(Boolean) settings.getSetting("personaRectangles") && _battleScene.getEnemyBoxRect() == null){
+                _battleScene.setPlayerBoxRectStyle(Rectangle.class);
+                _battleScene.setEnemyBoxRectStyle(Rectangle.class);
+                _battleScene.setActionBoxRectStyle(Rectangle.class);
+                _battleScene.setTextBoxRectStyle(Rectangle.class);
+            }
         }
-        if ((Boolean) settings.getSetting("personaRectangles") && ! (_battleScene.getEnemyBoxRect() instanceof PersonaRectangle)) {
-            _battleScene.setPlayerBoxRectStyle(PersonaRectangle.class);
-            _battleScene.setEnemyBoxRectStyle(PersonaRectangle.class);
-            _battleScene.setActionBoxRectStyle(PersonaRectangle.class);
-            _battleScene.setTextBoxRectStyle(PersonaRectangle.class);
-        } else if (!(Boolean) settings.getSetting("personaRectangles") && _battleScene.getEnemyBoxRect() == null){
+        else{
             _battleScene.setPlayerBoxRectStyle(Rectangle.class);
             _battleScene.setEnemyBoxRectStyle(Rectangle.class);
             _battleScene.setActionBoxRectStyle(Rectangle.class);
             _battleScene.setTextBoxRectStyle(Rectangle.class);
         }
-
 
 
         updateHasRunOnce = true;

@@ -170,23 +170,31 @@ public class MapView implements IGameViewService, IMapView {
         for (IPostEntityProcessingService postProcessingService : postProcessingList) {
             postProcessingService.process(gameData, world);
         }
-        if(mapMusic.getVolume() != (int) settings.getSetting("musicVolume") / 100f) {
-            mapMusic.setVolume((int) settings.getSetting("musicVolume") / 100f);
-        }
+        if(settings != null) {
+            if (mapMusic.getVolume() != (int) settings.getSetting("musicVolume") / 100f) {
+                mapMusic.setVolume((int) settings.getSetting("musicVolume") / 100f);
+            }
 
-        if ((Boolean) settings.getSetting("personaRectangles") && ! (teamActionMenu instanceof PersonaRectangle)) {
-            rectToUse = PersonaRectangle.class;
-            summaryMenu = createRectangle(rectToUse, 100, 100, 380, 300);
-            pauseMenu = createRectangle(rectToUse,100, 100, 200, 250);
-            monsterTeamMenu = createRectangle(rectToUse,100, 100, 400, 550);
-            teamActionMenu = createRectangle(rectToUse,100, 100, 200, 200);
-            initializeCameraDrawing(gameData);
-        } else if (! (Boolean) settings.getSetting("personaRectangles") && teamActionMenu == null){
-            rectToUse = Rectangle.class;
-            summaryMenu = createRectangle(rectToUse, 100, 100, 380, 300);
-            pauseMenu = createRectangle(rectToUse,100, 100, 200, 250);
-            monsterTeamMenu = createRectangle(rectToUse,100, 100, 400, 550);
-            teamActionMenu = createRectangle(rectToUse,100, 100, 200, 200);
+            if ((Boolean) settings.getSetting("personaRectangles") && !(teamActionMenu instanceof PersonaRectangle)) {
+                rectToUse = PersonaRectangle.class;
+                summaryMenu = createRectangle(rectToUse, 100, 100, 380, 300);
+                pauseMenu = createRectangle(rectToUse, 100, 100, 200, 250);
+                monsterTeamMenu = createRectangle(rectToUse, 100, 100, 400, 550);
+                teamActionMenu = createRectangle(rectToUse, 100, 100, 200, 200);
+                initializeCameraDrawing(gameData);
+            } else if (!(Boolean) settings.getSetting("personaRectangles") && teamActionMenu == null) {
+                rectToUse = Rectangle.class;
+                summaryMenu = createRectangle(rectToUse, 100, 100, 380, 300);
+                pauseMenu = createRectangle(rectToUse, 100, 100, 200, 250);
+                monsterTeamMenu = createRectangle(rectToUse, 100, 100, 400, 550);
+                teamActionMenu = createRectangle(rectToUse, 100, 100, 200, 200);
+            }
+        }
+        else{
+            summaryMenu = createRectangle(Rectangle.class, 100, 100, 380, 300);
+            pauseMenu = createRectangle(Rectangle.class, 100, 100, 200, 250);
+            monsterTeamMenu = createRectangle(Rectangle.class, 100, 100, 400, 550);
+            teamActionMenu = createRectangle(Rectangle.class, 100, 100, 200, 200);
         }
     }
 

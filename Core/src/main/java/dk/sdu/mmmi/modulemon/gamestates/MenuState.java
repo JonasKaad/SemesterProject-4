@@ -41,6 +41,7 @@ public class MenuState implements IGameViewService {
 
     private String musicVolume = "%";
     private String soundVolume = "%";
+    private String aiTime = "";
 
     private String title = "";
 
@@ -56,6 +57,9 @@ public class MenuState implements IGameViewService {
             "Change Music Volume",
             "Change Sound Volume",
             "Use Persona Rectangles",
+            "Use AI Alpha-beta pruning",
+            "AI Processing Time",
+
     };
     private List<String> settingsValueList = new ArrayList<>();
     private boolean showSettings = false;
@@ -117,9 +121,12 @@ public class MenuState implements IGameViewService {
         if(settings != null) {
             musicVolume = settings.getSetting("musicVolume") + "%";
             soundVolume = settings.getSetting("soundVolume") + "%";
+            aiTime = settings.getSetting("AI processing time") + " ms";
             settingsValueList.add(musicVolume);
             settingsValueList.add(soundVolume);
             settingsValueList.add((Boolean) settings.getSetting("personaRectangles") ? "On" : "Off");
+            settingsValueList.add((Boolean) settings.getSetting("AI alpha-beta pruning") ? "On" : "Off");
+            settingsValueList.add(aiTime);
         }
     }
 
@@ -156,10 +163,15 @@ public class MenuState implements IGameViewService {
             soundVolume = settings.getSetting("soundVolume") + "%";
             settingsValueList.set(0,musicVolume);
             settingsValueList.set(1,soundVolume);
+            aiTime = settings.getSetting("AI processing time") + " ms";
         }
         // Sets the value of the Persona option to on/off depending on the value of the boolean.
         if(!Objects.equals(settingsValueList.get(2), (Boolean) settings.getSetting("personaRectangles") ? "On" : "Off")) {
             settingsValueList.set(2,(Boolean) settings.getSetting("personaRectangles") ? "On" : "Off");
+        }
+        // Sets the value of the AI Alpha-beta option to on/off depending on the value of the boolean.
+        if(!Objects.equals(settingsValueList.get(3), (Boolean) settings.getSetting("AI alpha-beta pruning") ? "On" : "Off")) {
+            settingsValueList.set(3,(Boolean) settings.getSetting("AI alpha-beta pruning") ? "On" : "Off");
         }
     }
 
@@ -339,6 +351,17 @@ public class MenuState implements IGameViewService {
                     }
                     break;
                 }
+
+                if (menuOptions[currentOption].equalsIgnoreCase("AI Processing Time")) {
+                    if (!((int) settings.getSetting("AI processing time") >= 10000)) {
+                        int new_volume = (int) settings.getSetting("AI processing time") + 500;
+                        settings.setSetting("AI processing time", new_volume);
+
+                        aiTime = (int) settings.getSetting("AI processing time") + " ms";
+                        settingsValueList.set(4, aiTime);
+                    }
+                    break;
+                }
                 boolean_settings_switch_on_off();
                 break;
             }
@@ -365,12 +388,27 @@ public class MenuState implements IGameViewService {
                     }
                     break;
                 }
+
+                if (menuOptions[currentOption].equalsIgnoreCase("AI Processing Time")) {
+                    if (((int) settings.getSetting("AI processing time") > 500)) {
+                        int new_volume = (int) settings.getSetting("AI processing time") - 500;
+                        settings.setSetting("AI processing time", new_volume);
+
+                        aiTime = (int) settings.getSetting("AI processing time") + " ms";
+                        settingsValueList.set(4, aiTime);
+                    }
+                    break;
+                }
+
+
+
                 boolean_settings_switch_on_off();
                 break;
             }
             case "ACTION":
             {
                 boolean_settings_switch_on_off();
+                break;
             }
         }
     }
@@ -382,14 +420,27 @@ public class MenuState implements IGameViewService {
     private void boolean_settings_switch_on_off() {
         // Checks if the currently selected/hovered setting is the option for Persona Rectangles
         if (menuOptions[currentOption].equalsIgnoreCase("Use Persona Rectangles")) {
-            if(! ((Boolean) settings.getSetting("personaRectangles"))){
+            if(((Boolean) settings.getSetting("personaRectangles"))){
+                settingsValueList.set(2, "Off");
+                settings.setSetting("personaRectangles", false);
+                return;
+            }
+            else{
                 settingsValueList.set(2, "On");
                 settings.setSetting("personaRectangles", true);
                 return;
             }
+
+        }
+        else if (menuOptions[currentOption].equalsIgnoreCase("Use AI Alpha-beta pruning")) {
+            if(((Boolean) settings.getSetting("AI alpha-beta pruning"))){
+                settingsValueList.set(3, "Off");
+                settings.setSetting("AI alpha-beta pruning", false);
+                return;
+            }
             else{
-                settingsValueList.set(2, "Off");
-                settings.setSetting("personaRectangles", false);
+                settingsValueList.set(3, "On");
+                settings.setSetting("AI alpha-beta pruning", true);
                 return;
             }
         }

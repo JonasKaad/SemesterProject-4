@@ -158,6 +158,12 @@ public class Game implements ApplicationListener {
             if (settings.getSetting("personaRectangles")==null) {
                 settings.setSetting("personaRectangles", false);
             }
+            if (settings.getSetting("AI processing time")==null) {
+                settings.setSetting("AI processing time", 1000);
+            }
+            if (settings.getSetting("AI alpha-beta pruning")==null) {
+                settings.setSetting("AI alpha-beta pruning", true);
+            }
             gsm.setSettings(settings);
         });
     }
