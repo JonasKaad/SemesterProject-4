@@ -20,6 +20,7 @@ import dk.sdu.mmmi.modulemon.common.services.IGameSettings;
 import dk.sdu.mmmi.modulemon.common.services.IGameViewService;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
 
@@ -42,6 +43,8 @@ public class MenuState implements IGameViewService {
     private String musicVolume = "%";
     private String soundVolume = "%";
     private String aiTime = "";
+    private String battleTheme = "";
+    private int battleThemeIndex = 0;
 
     private String title = "";
 
@@ -59,8 +62,17 @@ public class MenuState implements IGameViewService {
             "Use Persona Rectangles",
             "Use AI Alpha-beta pruning",
             "AI Processing Time",
+            "Battle Music Theme",
 
     };
+
+    private String[] musicThemes = new String[]{
+            "Original",
+            "Pop",
+            "Victory",
+            "Orchestral",
+    };
+
     private List<String> settingsValueList = new ArrayList<>();
     private boolean showSettings = false;
 
@@ -122,11 +134,14 @@ public class MenuState implements IGameViewService {
             musicVolume = settings.getSetting("musicVolume") + "%";
             soundVolume = settings.getSetting("soundVolume") + "%";
             aiTime = settings.getSetting("AI processing time") + " ms";
+            battleTheme = (String) settings.getSetting("battleMusicTheme");
             settingsValueList.add(musicVolume);
             settingsValueList.add(soundVolume);
             settingsValueList.add((Boolean) settings.getSetting("personaRectangles") ? "On" : "Off");
             settingsValueList.add((Boolean) settings.getSetting("AI alpha-beta pruning") ? "On" : "Off");
             settingsValueList.add(aiTime);
+            settingsValueList.add(battleTheme);
+            battleThemeIndex = Arrays.asList(musicThemes).indexOf(battleTheme);
         }
     }
 
@@ -163,7 +178,6 @@ public class MenuState implements IGameViewService {
             soundVolume = settings.getSetting("soundVolume") + "%";
             settingsValueList.set(0,musicVolume);
             settingsValueList.set(1,soundVolume);
-            aiTime = settings.getSetting("AI processing time") + " ms";
         }
         // Sets the value of the Persona option to on/off depending on the value of the boolean.
         if(!Objects.equals(settingsValueList.get(2), (Boolean) settings.getSetting("personaRectangles") ? "On" : "Off")) {
@@ -172,6 +186,16 @@ public class MenuState implements IGameViewService {
         // Sets the value of the AI Alpha-beta option to on/off depending on the value of the boolean.
         if(!Objects.equals(settingsValueList.get(3), (Boolean) settings.getSetting("AI alpha-beta pruning") ? "On" : "Off")) {
             settingsValueList.set(3,(Boolean) settings.getSetting("AI alpha-beta pruning") ? "On" : "Off");
+        }
+        if(!Objects.equals(settingsValueList.get(4), settings.getSetting("AI processing time") + " ms")) {
+            aiTime = settings.getSetting("AI processing time") + " ms";
+            settingsValueList.set(4, aiTime);
+        }
+
+        if(!Objects.equals(settingsValueList.get(5), settings.getSetting("battleMusicTheme"))) {
+            battleTheme = (String) settings.getSetting("battleMusicTheme");
+            settingsValueList.set(5, battleTheme );
+            battleThemeIndex = Arrays.asList(musicThemes).indexOf(battleTheme);
         }
     }
 
@@ -362,6 +386,16 @@ public class MenuState implements IGameViewService {
                     }
                     break;
                 }
+
+                if (menuOptions[currentOption].equalsIgnoreCase("Battle Music Theme")) {
+                    battleThemeIndex++;
+                    battleThemeIndex = battleThemeIndex % musicThemes.length;
+                    settings.setSetting("battleMusicTheme", musicThemes[battleThemeIndex]);
+
+                    battleTheme = (String) settings.getSetting("battleMusicTheme");
+                    settingsValueList.set(5, battleTheme);
+                    break;
+                }
                 boolean_settings_switch_on_off();
                 break;
             }
@@ -400,6 +434,20 @@ public class MenuState implements IGameViewService {
                     break;
                 }
 
+                if (menuOptions[currentOption].equalsIgnoreCase("Battle Music Theme")) {
+                    if(battleThemeIndex == 0){
+                        battleThemeIndex = musicThemes.length-1;
+                    }
+                    else{
+                        battleThemeIndex--;
+                    }
+                    battleThemeIndex = battleThemeIndex % musicThemes.length;
+                    settings.setSetting("battleMusicTheme", musicThemes[battleThemeIndex]);
+
+                    battleTheme = (String) settings.getSetting("battleMusicTheme");
+                    settingsValueList.set(5, battleTheme);
+                    break;
+                }
 
 
                 boolean_settings_switch_on_off();

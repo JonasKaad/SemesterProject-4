@@ -164,6 +164,9 @@ public class Game implements ApplicationListener {
             if (settings.getSetting("AI alpha-beta pruning")==null) {
                 settings.setSetting("AI alpha-beta pruning", true);
             }
+            if (settings.getSetting("battleMusicTheme")==null) {
+                settings.setSetting("battleMusicTheme", "Original");
+            }
             gsm.setSettings(settings);
         });
     }
