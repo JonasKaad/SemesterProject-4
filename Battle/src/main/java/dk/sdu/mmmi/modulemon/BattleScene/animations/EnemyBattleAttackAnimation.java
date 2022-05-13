@@ -8,6 +8,7 @@ import dk.sdu.mmmi.modulemon.BattleScene.scenes.BattleScene;
 import dk.sdu.mmmi.modulemon.BattleScene.scenes.BattleSceneDefaults;
 import dk.sdu.mmmi.modulemon.common.animations.BaseAnimation;
 import dk.sdu.mmmi.modulemon.common.data.GameData;
+import dk.sdu.mmmi.modulemon.common.services.IGameSettings;
 
 import java.util.ArrayList;
 
@@ -16,12 +17,14 @@ public class EnemyBattleAttackAnimation extends BaseAnimation {
     private BattleScene _battleScene;
     private Sound _attackSound;
     private boolean _attackSoundPlayed = false;
+    private IGameSettings settings;
 
-    public EnemyBattleAttackAnimation(BattleScene battleScene, Sound attackSound) {
+    public EnemyBattleAttackAnimation(BattleScene battleScene, Sound attackSound, IGameSettings settings) {
         super();
         super.animationCurve = AnimationCurves.EaseIn();
         Timeline = new int[]{0, 300, 450, 730};
         States = new ArrayList<>(Timeline.length);
+        this.settings = settings;
 
         //Initial state
         States.add(new float[]{
@@ -73,7 +76,7 @@ public class EnemyBattleAttackAnimation extends BaseAnimation {
         if(states[7] > 0.9f){
             if(!_attackSoundPlayed && _attackSound != null) {
                 //_attackSound.play(gameData.getSoundVolume());
-                _attackSound.play(gameData.getSoundVolume());
+                _attackSound.play((int) settings.getSetting("soundVolume") / 100f);
                 _attackSoundPlayed = true;
             }
         }

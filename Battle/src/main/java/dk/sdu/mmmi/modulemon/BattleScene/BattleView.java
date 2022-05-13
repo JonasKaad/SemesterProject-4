@@ -181,12 +181,12 @@ public class BattleView implements IGameViewService, IBattleView {
         if(_battleMusic.getVolume() != (int) settings.getSetting("musicVolume") / 100f) {
             _battleMusic.setVolume((int) settings.getSetting("musicVolume") / 100f);
         }
-        if (gameData.usePersonaSetting() && ! (_battleScene.getEnemyBoxRect() instanceof PersonaRectangle)) {
+        if ((Boolean) settings.getSetting("personaRectangles") && ! (_battleScene.getEnemyBoxRect() instanceof PersonaRectangle)) {
             _battleScene.setPlayerBoxRectStyle(PersonaRectangle.class);
             _battleScene.setEnemyBoxRectStyle(PersonaRectangle.class);
             _battleScene.setActionBoxRectStyle(PersonaRectangle.class);
             _battleScene.setTextBoxRectStyle(PersonaRectangle.class);
-        } else if (!gameData.usePersonaSetting() && _battleScene.getEnemyBoxRect() == null){
+        } else if (!(Boolean) settings.getSetting("personaRectangles") && _battleScene.getEnemyBoxRect() == null){
             _battleScene.setPlayerBoxRectStyle(Rectangle.class);
             _battleScene.setEnemyBoxRectStyle(Rectangle.class);
             _battleScene.setActionBoxRectStyle(Rectangle.class);
@@ -241,7 +241,7 @@ public class BattleView implements IGameViewService, IBattleView {
                 MoveBattleEvent event = (MoveBattleEvent) battleEvent;
                 if (event.getUsingParticipant().isPlayerControlled()) {
                     //Player attacked
-                    PlayerBattleAttackAnimation battleAnimation = new PlayerBattleAttackAnimation(_battleScene, getAttackSound(event.getMove()));
+                    PlayerBattleAttackAnimation battleAnimation = new PlayerBattleAttackAnimation(_battleScene, getAttackSound(event.getMove()), settings);
                     battleAnimation.setOnEventDone(() -> {
                         addEmptyAnimation(1000, true);
                         _battleScene.setTextToDisplay("...");
@@ -251,7 +251,7 @@ public class BattleView implements IGameViewService, IBattleView {
                     _battleScene.setHealthIndicatorText(String.format("-%d HP", event.getDamage()));
                 } else {
                     //Enemy attacked
-                    EnemyBattleAttackAnimation battleAnimation = new EnemyBattleAttackAnimation(_battleScene, getAttackSound(event.getMove()));
+                    EnemyBattleAttackAnimation battleAnimation = new EnemyBattleAttackAnimation(_battleScene, getAttackSound(event.getMove()), settings);
                     battleAnimation.start();
                     blockingAnimations.add(battleAnimation);
                     _battleScene.setHealthIndicatorText(String.format("-%d HP", event.getDamage()));
@@ -316,13 +316,13 @@ public class BattleView implements IGameViewService, IBattleView {
                     });
                     enemyDieAnimation.start();
                     blockingAnimations.add(enemyDieAnimation);
-                    this._winSound.play(gameData.getSoundVolume());
+                    this._winSound.play( (int) settings.getSetting("soundVolume") / 100f);
                     this._battleScene.setTextToDisplay(battleEvent.getText());
                 } else {
                     PlayerDieAnimation dieAnimation = new PlayerDieAnimation(_battleScene);
                     blockingAnimations.add(dieAnimation);
                     this._battleMusic.stop();
-                    this._loseSound.play(gameData.getSoundVolume());
+                    this._loseSound.play((int) settings.getSetting("soundVolume") / 100f);
                     _battleScene.setTextToDisplay(battleEvent.getText());
 
                     EmptyAnimation e = new EmptyAnimation(2_000);

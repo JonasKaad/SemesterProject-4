@@ -280,7 +280,6 @@ public class MenuState implements IGameViewService {
         // Selects the current option
         if (gameData.getKeys().isPressed(GameKeys.ACTION) || gameData.getKeys().isPressed(GameKeys.E)) {
             if (menuOptions[currentOption].equalsIgnoreCase("Use Persona Rectangles")) {
-                System.out.println("Before :" + gameData.usePersonaSetting());
                 if(! ((Boolean) settings.getSetting("personaRectangles"))){
                     settingsValueList.set(2, "On");
                     settings.setSetting("personaRectangles", true);
@@ -289,7 +288,6 @@ public class MenuState implements IGameViewService {
                     settingsValueList.set(2, "Off");
                     settings.setSetting("personaRectangles", false);
                 }
-                System.out.println("After :" + gameData.usePersonaSetting());
             }
             selectOption(gameStateManager);
         }
