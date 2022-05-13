@@ -9,6 +9,4 @@
                interface="dk.sdu.mmmi.modulemon.common.services.IGameSettings"
                name="IGameSettings" policy="dynamic" unbind="removeSettingsService"/>
 
-
-
 </scr:component>

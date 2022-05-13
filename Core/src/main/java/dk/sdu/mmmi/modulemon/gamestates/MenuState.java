@@ -164,9 +164,9 @@ public class MenuState implements IGameViewService {
             title = "ModulémoN";
         }
 
-        // Sets the value of the volume option to the correct value from the settings.json file
+        // Compares the value of the volume option to the correct value in the settings.json file
         if(menuMusic.getVolume() !=  (int) settings.getSetting("musicVolume") / 100f) {
-            // Set the volume to the one found in the json file
+            // Sets the volume to the one found in the json file
             menuMusic.setVolume((int) settings.getSetting("musicVolume") / 100f);
         }
     }
