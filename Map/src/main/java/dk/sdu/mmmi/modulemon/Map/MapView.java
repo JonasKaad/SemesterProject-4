@@ -207,7 +207,7 @@ public class MapView implements IGameViewService, IMapView {
 
         for (Entity entity : world.getEntities()) {
             SpritePart spritePart = entity.getPart(SpritePart.class);
-            if (spritePart.getCurrentSprite() != null) {
+            if (spritePart != null && spritePart.getCurrentSprite() != null) {
                 Texture sprite = spritePart.getCurrentSprite();
 
                 spriteBatch.setProjectionMatrix(cam.combined);
@@ -487,15 +487,6 @@ public class MapView implements IGameViewService, IMapView {
             isPaused = true;
             //currentlySwitching = false;
             gameData.setPaused(isPaused);
-        }
-        if (gameData.getKeys().isPressed(GameKeys.E)) {
-            for (Entity entity : world.getEntities()) {
-                if (entity.getType().equals(EntityType.PLAYER)) {
-                    player = entity;
-                    break;
-                }
-            }
-            startEncounter(player, player);
         }
     }
 

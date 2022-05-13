@@ -7,13 +7,14 @@ import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import dk.sdu.mmmi.modulemon.CommonMap.IMapEvent;
 import dk.sdu.mmmi.modulemon.common.data.GameData;
 import dk.sdu.mmmi.modulemon.common.data.GameKeys;
+import dk.sdu.mmmi.modulemon.common.drawing.Position;
 import dk.sdu.mmmi.modulemon.common.drawing.Rectangle;
 import dk.sdu.mmmi.modulemon.common.drawing.TextUtils;
 
 import java.util.Queue;
 
 public class TextMapEvent implements IMapEvent {
-    private Queue<String> lines;
+    protected Queue<String> lines;
     private Rectangle textBox;
     public TextMapEvent(Queue<String> lines){
         if(lines == null || lines.isEmpty()){
@@ -39,6 +40,9 @@ public class TextMapEvent implements IMapEvent {
 
     @Override
     public void update(GameData gameData) {
+        Camera cam = gameData.getCamera();
+        textBox.setY((cam.position.y - cam.viewportHeight / 2f) + 20);
+        textBox.setX((cam.position.x - cam.viewportWidth / 2f) + 20);
         textBox.setHeight(100f);
         textBox.setWidth(gameData.getDisplayWidth() - 50);
     }
@@ -48,15 +52,17 @@ public class TextMapEvent implements IMapEvent {
         if(this.lines.isEmpty()){
             return;
         }
+        Camera cam = gameData.getCamera();
         //Draw rectangle
         shapeRenderer.setColor(Color.WHITE);
         shapeRenderer.begin(ShapeRenderer.ShapeType.Filled);
+        shapeRenderer.setProjectionMatrix(cam.combined);
         textBox.draw(shapeRenderer, gameData.getDelta());
         shapeRenderer.end();
 
-        Camera cam = gameData.getCamera();
 
         //Draw text
+        spriteBatch.setProjectionMatrix(cam.combined);
         spriteBatch.begin();
         TextUtils.getInstance().drawNormalRoboto(spriteBatch,
                 lines.peek(),

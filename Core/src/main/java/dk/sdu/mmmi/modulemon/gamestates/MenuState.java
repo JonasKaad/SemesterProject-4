@@ -2,6 +2,7 @@ package dk.sdu.mmmi.modulemon.gamestates;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.audio.Music;
+import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.Texture;
@@ -66,6 +67,9 @@ public class MenuState implements IGameViewService {
 
     };
 
+    private Sound selectSound;
+    private Sound chooseSound;
+
     private String[] musicThemes = new String[]{
             "Original",
             "Pop",
@@ -116,8 +120,6 @@ public class MenuState implements IGameViewService {
         // Sets the @menuOptionsFont to use our custom font file with the chosen font size
         menuOptionsFont = fontGenerator.generateFont(parameter);
 
-
-
         parameter.size = 20;
         smallMenuFont = fontGenerator.generateFont(parameter);
         smallmenuOptionsFont = fontGenerator.generateFont(parameter);
@@ -126,6 +128,8 @@ public class MenuState implements IGameViewService {
         fontGenerator.dispose();
 
         logo = AssetLoader.getInstance().getTextureAsset("/icons/cat-logo.png", this.getClass());
+        selectSound = AssetLoader.getInstance().getSoundAsset("/sounds/select.ogg", this.getClass());
+        chooseSound = AssetLoader.getInstance().getSoundAsset("/sounds/choose.ogg", this.getClass());
 
         // Sets the options for the menu
         menuOptions = defaultMenuOptions;
@@ -261,7 +265,6 @@ public class MenuState implements IGameViewService {
             }
         }
 
-
         glyphLayout.setText(smallMenuFont, "Press CTRL+K to open the Bundle Controller (if loaded)");
         smallMenuFont.draw(
                 spriteBatch,
@@ -282,6 +285,7 @@ public class MenuState implements IGameViewService {
             } else {
                 currentOption = menuOptions.length - 1;
             }
+            selectSound.play();
         }
         // Moves down in the menu
         if (gameData.getKeys().isPressed(GameKeys.DOWN)) {
@@ -290,6 +294,7 @@ public class MenuState implements IGameViewService {
             } else {
                 currentOption = 0;
             }
+            selectSound.play();
         }
 
         if(gameData.getKeys().isPressed(GameKeys.LEFT)){
@@ -302,6 +307,7 @@ public class MenuState implements IGameViewService {
         if (gameData.getKeys().isPressed(GameKeys.ACTION) || gameData.getKeys().isPressed(GameKeys.E)) {
             handleSettings("ACTION");
             selectOption(gameStateManager);
+            chooseSound.play();
         }
     }
 
@@ -324,7 +330,7 @@ public class MenuState implements IGameViewService {
                 System.out.println("ERROR: Tried to set invalid view");
                 currentOption = 0;
             }
-            IGameViewService selectedView = views.get(currentOption );
+            IGameViewService selectedView = views.get(currentOption);
             gsm.setState(selectedView);
             if(selectedView instanceof IBattleView){
                 ((IBattleView)selectedView).startBattle(null, null, null);

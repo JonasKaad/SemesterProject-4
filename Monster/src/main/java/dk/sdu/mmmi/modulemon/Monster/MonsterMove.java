@@ -45,7 +45,7 @@ public class MonsterMove implements IMonsterMove {
 
     @Override
     public String getBattleDescription() {
-        return "Move: [" + this.getType() + "] " + this.getName() + ". Deals damage: " + this.getDamage();
+        return "Move: [" + this.getType() + "] " + this.getName() + ". Base damage: " + this.getDamage();
     }
 
     @Override
