@@ -78,6 +78,8 @@ public class BattleAI implements IBattleAI {
     @Override
     public void doAction(IBattleSimulation b) {
 
+        System.out.println("alpha-beta pruning?: " + getUseAlphaBetaPruning());
+
         // Update state, should the enemy have changed their monster
         if (!knowledgeState.getEnemyMonsters().contains(opposingParticipant.getActiveMonster())) {
             knowledgeState.getEnemyMonsters().add(opposingParticipant.getActiveMonster());
@@ -160,12 +162,7 @@ public class BattleAI implements IBattleAI {
         if (currentDepth>maxDepthReached) maxDepthReached=currentDepth;
 
         if (isTerminal(battleState) || currentDepth>=maxDepth || outOfTime()) {
-            // dividing the utility of terminal states by the depth of that state in the search
-            // will make the AI prefer winning fast over more slowly. If the AI is bound to lose
-            // (negative utility) it will prefer doing so slowly
             return utility(battleState);
-            // Alternatively, the below formula would have the AI always prefer the fastest win/lose
-            // return utility(battleState)-((float) currentDepth/maxDepth);
         }
 
         // Save the highest and lowest value encountered until now
@@ -176,7 +173,6 @@ public class BattleAI implements IBattleAI {
             float util = minDecision(state, currentDepth+1, maxDepth, alpha, beta);
             if (util>max) max = util;
             if (max>=beta) {
-                //System.out.println("skipped because of beta");
                 return max;
             }
             if (max>alpha) alpha = max;
@@ -190,12 +186,7 @@ public class BattleAI implements IBattleAI {
         if (currentDepth>maxDepthReached) maxDepthReached=currentDepth;
 
         if (isTerminal(battleState) || currentDepth>=maxDepth || outOfTime()) {
-            // dividing the utility of terminal states by the depth of that state in the search
-            // will make the AI prefer winning fast over more slowly. If the AI is bound to lose
-            // (negative utility) it will prefer doing so slowly
             return utility(battleState)/currentDepth;
-            // Alternatively, the below formula would have the AI always prefer the fastest win/lose
-            // return utility(battleState)-((float) currentDepth/maxDepth);
         }
 
         // Save the highest and lowest value encountered until now
@@ -206,7 +197,6 @@ public class BattleAI implements IBattleAI {
             float util = maxDecision(state, currentDepth+1, maxDepth, alpha, beta);
             if (util<min) min = util;
             if (min<=alpha) {
-                //System.out.println("Skipped because of alpha");
                 return min;
             }
             if (min<beta) beta = min;
@@ -220,12 +210,7 @@ public class BattleAI implements IBattleAI {
         if (currentDepth>maxDepthReached) maxDepthReached=currentDepth;
 
         if (isTerminal(battleState) || currentDepth>=maxDepth || outOfTime()) {
-            // dividing the utility of terminal states by the depth of that state in the search
-            // will make the AI prefer winning fast over more slowly. If the AI is bound to lose
-            // (negative utility) it will prefer doing so slowly
             return utility(battleState)/currentDepth;
-            // Alternatively, the below formula would have the AI always prefer the fastest win/lose
-            // return utility(battleState)-((float) currentDepth/maxDepth);
         }
 
         // Save the highest and lowest value encountered until now
@@ -273,14 +258,13 @@ public class BattleAI implements IBattleAI {
     }
 
     private float utility(IBattleState battleState) {
-        /*IBattleParticipant participantToControl = battleState.getPlayer().equals(this.participantToControl)
+        IBattleParticipant participantToControl = battleState.getPlayer().equals(this.participantToControl)
                 ? battleState.getPlayer()
                 : battleState.getEnemy();
 
         IBattleParticipant opposingParticipant = battleState.getPlayer().equals(this.participantToControl)
                 ? battleState.getEnemy()
-                : battleState.getPlayer();*/
-
+                : battleState.getPlayer();
 
         int ownMonsterHPSum = 0;
         for(IMonster monster : participantToControl.getMonsterTeam()) {
@@ -289,7 +273,9 @@ public class BattleAI implements IBattleAI {
 
         int enemyMonsterHPSum = 0;
         for(IMonster monster : opposingParticipant.getMonsterTeam()) {
-            if (monster.getHitPoints()>0) enemyMonsterHPSum += monster.getHitPoints();
+            if (knowledgeState.getEnemyMonsters().contains(monster)) {
+                if (monster.getHitPoints()>0) enemyMonsterHPSum += monster.getHitPoints();
+            }
         }
 
         // This will return 1 if all the enemy's monsters are dead, 0 if all the AI's monster

@@ -243,9 +243,9 @@ public class BattleSimulation implements IBattleSimulation {
 
     private void switchTurns(BattleState state) {
         if (state.isPlayersTurn()) {
-            state.setActiveParticipant(battleState.getEnemy());
+            state.setActiveParticipant(state.getEnemy());
         } else {
-            state.setActiveParticipant(battleState.getPlayer());
+            state.setActiveParticipant(state.getPlayer());
         }
     }
 
