@@ -169,14 +169,17 @@ public class MonsterTeam {
         spriteBatch.end();
     }
     public static void drawMonsterTeamTriangle(ShapeRenderer shapeRenderer, Color switchIndicatorColor, Rectangle monsterTeamMenu, int selectedOptionIndexMonsterTeam, List<IMonster> monsterTeam){
-        shapeRenderer.begin(ShapeRenderer.ShapeType.Filled);
-        shapeRenderer.setColor(switchIndicatorColor);
 
         int triangleHeight = 20;
         int heightBetweenOptions = 40;
         int normalTextHeight = 24;
         int actionTopTextHeight = (int) (monsterTeamMenu.getHeight() * 2 / 2.6f) + 80;
         int offsetFromActionHeadToFirstAction = 8;
+
+        if (monsterTeam.size()==0) return;
+
+        shapeRenderer.begin(ShapeRenderer.ShapeType.Filled);
+        shapeRenderer.setColor(switchIndicatorColor);
 
         selectedOptionIndexMonsterTeam = selectedOptionIndexMonsterTeam % monsterTeam.size();
 
