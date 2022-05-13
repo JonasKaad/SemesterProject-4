@@ -285,7 +285,7 @@ public class MenuState implements IGameViewService {
             } else {
                 currentOption = menuOptions.length - 1;
             }
-            selectSound.play();
+            selectSound.play((int) settings.getSetting("soundVolume") / 100f);
         }
         // Moves down in the menu
         if (gameData.getKeys().isPressed(GameKeys.DOWN)) {
@@ -294,7 +294,7 @@ public class MenuState implements IGameViewService {
             } else {
                 currentOption = 0;
             }
-            selectSound.play();
+            selectSound.play((int) settings.getSetting("soundVolume") / 100f);
         }
 
         if(gameData.getKeys().isPressed(GameKeys.LEFT)){
@@ -307,7 +307,6 @@ public class MenuState implements IGameViewService {
         if (gameData.getKeys().isPressed(GameKeys.ACTION) || gameData.getKeys().isPressed(GameKeys.E)) {
             handleSettings("ACTION");
             selectOption(gameStateManager);
-            chooseSound.play();
         }
     }
 
@@ -320,6 +319,7 @@ public class MenuState implements IGameViewService {
             currentMenuState = MenuStates.DEFAULT;
             currentOption = 0;
             showSettings = false;
+            chooseSound.play((int) settings.getSetting("soundVolume") / 100f);
             return;
         }
 
@@ -333,6 +333,7 @@ public class MenuState implements IGameViewService {
             IGameViewService selectedView = views.get(currentOption);
             gsm.setState(selectedView);
             if(selectedView instanceof IBattleView){
+                chooseSound.play((int) settings.getSetting("soundVolume") / 100f);
                 ((IBattleView)selectedView).startBattle(null, null, null);
             }
         } else {
@@ -340,12 +341,15 @@ public class MenuState implements IGameViewService {
                 //gsm.setState(GameStateManager.PLAY);
                 currentMenuState = MenuStates.SELECTING_GAMESTATE;
                 currentOption = 0;
+                chooseSound.play((int) settings.getSetting("soundVolume") / 100f);
             }
             if (Objects.equals(menuOptions[currentOption], "Settings")) {
                 currentMenuState = MenuStates.SETTINGS;
                 showSettings = true;
+                chooseSound.play((int) settings.getSetting("soundVolume") / 100f);
             }
             if (Objects.equals(menuOptions[currentOption], "Quit")) {
+                chooseSound.play((int) settings.getSetting("soundVolume") / 100f);
                 Gdx.app.exit();
             }
         }
@@ -367,6 +371,7 @@ public class MenuState implements IGameViewService {
 
                         musicVolume = (int) settings.getSetting("musicVolume") + "%";
                         settingsValueList.set(0, musicVolume);
+                        chooseSound.play((int) settings.getSetting("soundVolume") / 100f);
                     }
                     break;
                 }
@@ -378,6 +383,7 @@ public class MenuState implements IGameViewService {
 
                         soundVolume = (int) settings.getSetting("soundVolume") + "%";
                         settingsValueList.set(1, soundVolume);
+                        chooseSound.play((int) settings.getSetting("soundVolume") / 100f);
                     }
                     break;
                 }
@@ -389,6 +395,7 @@ public class MenuState implements IGameViewService {
 
                         aiTime = (int) settings.getSetting("AI processing time") + " ms";
                         settingsValueList.set(4, aiTime);
+                        chooseSound.play((int) settings.getSetting("soundVolume") / 100f);
                     }
                     break;
                 }
@@ -400,6 +407,7 @@ public class MenuState implements IGameViewService {
 
                     battleTheme = (String) settings.getSetting("battleMusicTheme");
                     settingsValueList.set(5, battleTheme);
+                    chooseSound.play((int) settings.getSetting("soundVolume") / 100f);
                     break;
                 }
                 boolean_settings_switch_on_off();
@@ -414,6 +422,7 @@ public class MenuState implements IGameViewService {
 
                         musicVolume = (int) settings.getSetting("musicVolume") + "%";
                         settingsValueList.set(0, musicVolume);
+                        chooseSound.play((int) settings.getSetting("soundVolume") / 100f);
                     }
                     break;
                 }
@@ -425,6 +434,7 @@ public class MenuState implements IGameViewService {
 
                         soundVolume = (int) settings.getSetting("soundVolume") + "%";
                         settingsValueList.set(1, soundVolume);
+                        chooseSound.play((int) settings.getSetting("soundVolume") / 100f);
                     }
                     break;
                 }
@@ -436,6 +446,7 @@ public class MenuState implements IGameViewService {
 
                         aiTime = (int) settings.getSetting("AI processing time") + " ms";
                         settingsValueList.set(4, aiTime);
+                        chooseSound.play((int) settings.getSetting("soundVolume") / 100f);
                     }
                     break;
                 }
@@ -452,6 +463,7 @@ public class MenuState implements IGameViewService {
 
                     battleTheme = (String) settings.getSetting("battleMusicTheme");
                     settingsValueList.set(5, battleTheme);
+                    chooseSound.play((int) settings.getSetting("soundVolume") / 100f);
                     break;
                 }
 
@@ -477,26 +489,23 @@ public class MenuState implements IGameViewService {
             if(((Boolean) settings.getSetting("personaRectangles"))){
                 settingsValueList.set(2, "Off");
                 settings.setSetting("personaRectangles", false);
-                return;
             }
             else{
                 settingsValueList.set(2, "On");
                 settings.setSetting("personaRectangles", true);
-                return;
             }
-
+            chooseSound.play((int) settings.getSetting("soundVolume") / 100f);
         }
         else if (menuOptions[currentOption].equalsIgnoreCase("Use AI Alpha-beta pruning")) {
             if(((Boolean) settings.getSetting("AI alpha-beta pruning"))){
                 settingsValueList.set(3, "Off");
                 settings.setSetting("AI alpha-beta pruning", false);
-                return;
             }
             else{
                 settingsValueList.set(3, "On");
                 settings.setSetting("AI alpha-beta pruning", true);
-                return;
             }
+            chooseSound.play((int) settings.getSetting("soundVolume") / 100f);
         }
     }
 

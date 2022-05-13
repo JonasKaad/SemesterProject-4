@@ -87,7 +87,7 @@ public class NPCPlugin implements IGamePluginService{
         if(monsterRegistry != null) {
             addMonsterTeam(npcs.get(0), new int[]{0,2});
             addMonsterTeam(npcs.get(1), new int[]{3,4,5});
-            addMonsterTeam(npcs.get(2), new int[]{3, 2, 3, 5, 1});
+            addMonsterTeam(npcs.get(2), new int[]{3, 2, 4, 5, 1});
         }
     }
     public void addMonsterTeam(Entity entity, int[] ints) {

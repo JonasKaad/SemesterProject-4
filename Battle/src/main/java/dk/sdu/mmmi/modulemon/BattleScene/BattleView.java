@@ -535,7 +535,9 @@ public class BattleView implements IGameViewService, IBattleView {
         if (settings.getSetting("personaRectangles")==null) {
             settings.setSetting("personaRectangles", false);
         }
-
+        if (settings.getSetting("battleMusicTheme")==null) {
+            settings.setSetting("battleMusicTheme", "Original");
+        }
     }
 
     public void removeSettingsService(IGameSettings settings){
