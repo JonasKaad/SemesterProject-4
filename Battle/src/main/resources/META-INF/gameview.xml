@@ -17,4 +17,8 @@
     <reference bind="setMonsterRegistry" cardinality="0..1"
                interface="dk.sdu.mmmi.modulemon.CommonMonster.IMonsterRegistry"
                name="MonsterRegistry" policy="dynamic" unbind="removeMonsterRegistry" />
+
+    <reference bind="setSettingsService" cardinality="0..1"
+               interface="dk.sdu.mmmi.modulemon.common.services.IGameSettings"
+               name="IGameSettings" policy="dynamic" unbind="removeSettingsService"/>
 </scr:component>

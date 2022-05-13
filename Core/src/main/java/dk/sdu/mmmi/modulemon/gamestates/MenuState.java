@@ -142,7 +142,7 @@ public class MenuState implements IGameViewService {
         }
         // Sets the value of the volume option to the correct value from the settings.json file
 
-        if(menuMusic.getVolume() !=  ((int) settings.getSetting("musicVolume") / 100f)){
+        if(menuMusic.getVolume() !=  (int) settings.getSetting("musicVolume") / 100f){
             menuMusic.setVolume((int) settings.getSetting("musicVolume") / 100f);
             musicVolume = settings.getSetting("musicVolume") + "%";
             soundVolume = settings.getSetting("soundVolume") + "%";

@@ -24,6 +24,7 @@ import dk.sdu.mmmi.modulemon.common.data.IGameStateManager;
 import dk.sdu.mmmi.modulemon.common.drawing.PersonaRectangle;
 import dk.sdu.mmmi.modulemon.common.drawing.Rectangle;
 import dk.sdu.mmmi.modulemon.common.drawing.TextUtils;
+import dk.sdu.mmmi.modulemon.common.services.IGameSettings;
 import dk.sdu.mmmi.modulemon.common.services.IGameViewService;
 
 import java.util.ArrayList;
@@ -58,6 +59,7 @@ public class BattleView implements IGameViewService, IBattleView {
      * Creates the necessary variables used for custom fonts.
      */
     private SpriteBatch spriteBatch;
+    private IGameSettings settings;
 
     public Sound getAttackSound(IMonsterMove monsterMove){
         Sound returnSound = null;
@@ -176,8 +178,8 @@ public class BattleView implements IGameViewService, IBattleView {
         if (!_isInitialized) {
             return;
         }
-        if(_battleMusic.getVolume() != gameData.getMusicVolume()) {
-            _battleMusic.setVolume(gameData.getMusicVolume());
+        if(_battleMusic.getVolume() != (int) settings.getSetting("musicVolume") / 100f) {
+            _battleMusic.setVolume((int) settings.getSetting("musicVolume") / 100f);
         }
         if (gameData.usePersonaSetting() && ! (_battleScene.getEnemyBoxRect() instanceof PersonaRectangle)) {
             _battleScene.setPlayerBoxRectStyle(PersonaRectangle.class);
@@ -512,6 +514,23 @@ public class BattleView implements IGameViewService, IBattleView {
         if (autoStart)
             emptyAnimation.start();
         blockingAnimations.add(emptyAnimation);
+    }
+    public void setSettingsService(IGameSettings settings){
+        this.settings = settings;
+        if (settings.getSetting("musicVolume")==null) {
+            settings.setSetting("musicVolume", 10);
+        }
+        if (settings.getSetting("soundVolume")==null) {
+            settings.setSetting("soundVolume", 60);
+        }
+        if (settings.getSetting("personaRectangles")==null) {
+            settings.setSetting("personaRectangles", false);
+        }
+
+    }
+
+    public void removeSettingsService(IGameSettings settings){
+        this.settings = null;
     }
 
     public void setMonsterRegistry(IMonsterRegistry monsterRegistry) {
