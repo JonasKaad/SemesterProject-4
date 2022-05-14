@@ -10,5 +10,8 @@
                interface="dk.sdu.mmmi.modulemon.CommonMap.IMapView"
                name="IMapView" policy="dynamic" unbind="removeMapView"/>
 
+    <reference bind="setSettingsService" cardinality="0..1"
+               interface="dk.sdu.mmmi.modulemon.common.services.IGameSettings"
+               name="IGameSettings" policy="dynamic" unbind="removeSettingsService"/>
 
 </scr:component>

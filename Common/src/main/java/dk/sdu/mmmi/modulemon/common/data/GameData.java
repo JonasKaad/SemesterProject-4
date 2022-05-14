@@ -2,10 +2,6 @@ package dk.sdu.mmmi.modulemon.common.data;
 
 import com.badlogic.gdx.graphics.OrthographicCamera;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.concurrent.CopyOnWriteArrayList;
-
 public class GameData {
 
     private float delta;

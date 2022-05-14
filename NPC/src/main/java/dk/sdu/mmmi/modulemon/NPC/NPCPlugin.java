@@ -43,8 +43,7 @@ public class NPCPlugin implements IGamePluginService{
         npcs.get(0).add(positionPart1);
         npcs.get(0).add(new MovingPart());
         npcs.get(0).add(new InteractPart(positionPart1, 5));
-        npcs.get(0).add(new AIControlPart(new Character[]{'R','R','L','L','L','L','R','R','U','U','D','D','D','D','U','U'}));
-        npcs.get(0).add(new AIControlPart(new Character[]{'R','R','L','L','L','L','R','R','U','U','D','D','D','D','U','U'}));
+        npcs.get(0).add(new AIControlPart(new Character[]{'U','U','U','D','D','D','D','D','D','U','U','U','L','U','U','U','D','D','D','D','D','D','U','U','U','R'}));
         Queue<String> npc1Lines = new LinkedList<>();
         npc1Lines.add("Hey, you!");
         npc1Lines.add("Wanna battle?");
@@ -60,10 +59,10 @@ public class NPCPlugin implements IGamePluginService{
         npcs.get(1).add(positionPart2);
         npcs.get(1).add(new MovingPart());
         npcs.get(1).add(new InteractPart(positionPart2, 7));
-        npcs.get(1).add(new AIControlPart(new Character[]{'R','R','L','L','L','L','R','R','U','U','D','D','D','D','U','U'}));
-        npcs.get(1).add(new AIControlPart(new Character[]{'R','R','L','L','L','L','R','R','U','U','D','D','D','D','U','U'}));
+        npcs.get(1).add(new AIControlPart(new Character[]{'L','L','L','D','D','R','R','R','R','R','R','U','U','U','U','L','L','L','D','D'}));
         Queue<String> npc2Lines = new LinkedList<>();
-        npc2Lines.add("Welcome to my swamp");
+        npc2Lines.add("Welcome to my swamp.");
+        npc2Lines.add("Prepare to get put in the mud!");
         npcs.get(1).add(new TextDisplayPart(npc2Lines));
 
         npcs.add(2, new NPC());
@@ -77,17 +76,16 @@ public class NPCPlugin implements IGamePluginService{
         npcs.get(2).add(new MovingPart());
         npcs.get(2).add(new InteractPart(positionPart3, 5));
         npcs.get(2).add(new AIControlPart(new Character[]{'R','R','L','L','L','L','R','R','U','U','D','D','D','D','U','U'}));
-        npcs.get(2).add(new AIControlPart(new Character[]{'R','R','L','L','L','L','R','R','U','U','D','D','D','D','U','U'}));
         Queue<String> npc3Lines = new LinkedList<>();
         npc3Lines.add("So, you made it all the way to me...");
-        npc3Lines.add("Lets see if you can really battle");
+        npc3Lines.add("Lets see if you can really battle!");
         npcs.get(2).add(new TextDisplayPart(npc3Lines));
 
 
         if(monsterRegistry != null) {
-            addMonsterTeam(npcs.get(0), new int[]{0,2});
-            addMonsterTeam(npcs.get(1), new int[]{3,4,5});
-            addMonsterTeam(npcs.get(2), new int[]{3, 2, 3, 5, 1});
+            addMonsterTeam(npcs.get(0), new int[]{0, 2});
+            addMonsterTeam(npcs.get(1), new int[]{3, 4, 5});
+            addMonsterTeam(npcs.get(2), new int[]{3, 2, 4, 5, 1});
         }
     }
     public void addMonsterTeam(Entity entity, int[] ints) {

@@ -17,6 +17,7 @@ import dk.sdu.mmmi.modulemon.CommonMonster.IMonster;
 import dk.sdu.mmmi.modulemon.CommonMonster.IMonsterMove;
 import dk.sdu.mmmi.modulemon.CommonMonster.IMonsterRegistry;
 import dk.sdu.mmmi.modulemon.common.AssetLoader;
+import dk.sdu.mmmi.modulemon.common.SettingsRegistry;
 import dk.sdu.mmmi.modulemon.common.animations.BaseAnimation;
 import dk.sdu.mmmi.modulemon.common.data.GameData;
 import dk.sdu.mmmi.modulemon.common.data.GameKeys;
@@ -24,6 +25,7 @@ import dk.sdu.mmmi.modulemon.common.data.IGameStateManager;
 import dk.sdu.mmmi.modulemon.common.drawing.PersonaRectangle;
 import dk.sdu.mmmi.modulemon.common.drawing.Rectangle;
 import dk.sdu.mmmi.modulemon.common.drawing.TextUtils;
+import dk.sdu.mmmi.modulemon.common.services.IGameSettings;
 import dk.sdu.mmmi.modulemon.common.services.IGameViewService;
 
 import java.util.ArrayList;
@@ -47,7 +49,6 @@ public class BattleView implements IGameViewService, IBattleView {
     private Queue<BaseAnimation> blockingAnimations;
     private Queue<BaseAnimation> backgroundAnimations;
     private IMonsterRegistry monsterRegistry;
-
     private AssetLoader loader = AssetLoader.getInstance();
     private String[] defaultActions;
     private int selectedAction = 0;
@@ -59,6 +60,7 @@ public class BattleView implements IGameViewService, IBattleView {
      * Creates the necessary variables used for custom fonts.
      */
     private SpriteBatch spriteBatch;
+    private IGameSettings settings;
 
     public Sound getAttackSound(IMonsterMove monsterMove){
         Sound returnSound = null;
@@ -68,7 +70,6 @@ public class BattleView implements IGameViewService, IBattleView {
         }catch(GdxRuntimeException ex){
             System.out.println("[Warning] Failed to load attack sound for monster-move: " + monsterMove.getName());
         }
-
         return returnSound;
     }
 
@@ -79,7 +80,7 @@ public class BattleView implements IGameViewService, IBattleView {
         backgroundAnimations = new LinkedList<>();
         menuState = MenuState.DEFAULT;
 
-        defaultActions = new String[]{"Fight", "Monsters", "Animate", "Style", "Quit"};
+        defaultActions = new String[]{"Fight", "Monsters", "Animate", "Quit"};
     }
 
     /**
@@ -109,14 +110,20 @@ public class BattleView implements IGameViewService, IBattleView {
         IBattleParticipant enemy = new BattleParticipant(enemyMonsters, false);
 
         selectedAction = 0;
-        _battleMusic = loader.getMusicAsset("/music/battle_music.ogg", this.getClass());
+        String battleMusic_type;
+        if(settings != null) {
+            battleMusic_type= (String) settings.getSetting(SettingsRegistry.getInstance().getBattleMusicThemeSetting());
+        }
+        else{
+            battleMusic_type = "Original";
+        }
+        _battleMusic = loader.getMusicAsset("/music/battle_music_" + battleMusic_type.toLowerCase() + ".ogg", this.getClass());
         _winSound = loader.getSoundAsset("/sounds/you_won.ogg", this.getClass());
         _loseSound = loader.getSoundAsset("/sounds/you_lost.ogg", this.getClass());
         _battleSimulation.StartBattle(player, enemy);
         _currentBattleState = _battleSimulation.getState().clone(); // Set an initial battle-state
         _battleCallback = callback;
         _battleMusic.play();
-        _battleMusic.setVolume(0.1f);
         _battleMusic.setLooping(true);
         menuState = MenuState.DEFAULT;
         _battleScene.setActionTitle("Your actions:");
@@ -179,6 +186,31 @@ public class BattleView implements IGameViewService, IBattleView {
         if (!_isInitialized) {
             return;
         }
+        if(settings != null){
+            if(_battleMusic.getVolume() != (int) settings.getSetting(SettingsRegistry.getInstance().getMusicVolumeSetting()) / 100f) {
+                _battleMusic.setVolume((int) settings.getSetting(SettingsRegistry.getInstance().getMusicVolumeSetting()) / 100f);
+            }
+            if ((Boolean) settings.getSetting(SettingsRegistry.getInstance().getRectangleStyleSetting()) && ! (_battleScene.getEnemyBoxRect() instanceof PersonaRectangle)) {
+                _battleScene.setPlayerBoxRectStyle(PersonaRectangle.class);
+                _battleScene.setEnemyBoxRectStyle(PersonaRectangle.class);
+                _battleScene.setActionBoxRectStyle(PersonaRectangle.class);
+                _battleScene.setTextBoxRectStyle(PersonaRectangle.class);
+            }
+            else if (!(Boolean) settings.getSetting(SettingsRegistry.getInstance().getRectangleStyleSetting()) && _battleScene.getEnemyBoxRect() instanceof PersonaRectangle || _battleScene.getEnemyBoxRect() == null){
+                _battleScene.setPlayerBoxRectStyle(Rectangle.class);
+                _battleScene.setEnemyBoxRectStyle(Rectangle.class);
+                _battleScene.setActionBoxRectStyle(Rectangle.class);
+                _battleScene.setTextBoxRectStyle(Rectangle.class);
+            }
+        }
+        else{
+            _battleMusic.setVolume(0.3f);
+            _battleScene.setPlayerBoxRectStyle(Rectangle.class);
+            _battleScene.setEnemyBoxRectStyle(Rectangle.class);
+            _battleScene.setActionBoxRectStyle(Rectangle.class);
+            _battleScene.setTextBoxRectStyle(Rectangle.class);
+        }
+
 
         updateHasRunOnce = true;
 
@@ -226,7 +258,7 @@ public class BattleView implements IGameViewService, IBattleView {
                 MoveBattleEvent event = (MoveBattleEvent) battleEvent;
                 if (event.getUsingParticipant().isPlayerControlled()) {
                     //Player attacked
-                    PlayerBattleAttackAnimation battleAnimation = new PlayerBattleAttackAnimation(_battleScene, getAttackSound(event.getMove()));
+                    PlayerBattleAttackAnimation battleAnimation = new PlayerBattleAttackAnimation(_battleScene, getAttackSound(event.getMove()), settings);
                     battleAnimation.setOnEventDone(() -> {
                         addEmptyAnimation(1000, true);
                         _battleScene.setTextToDisplay("...");
@@ -236,7 +268,7 @@ public class BattleView implements IGameViewService, IBattleView {
                     _battleScene.setHealthIndicatorText(String.format("-%d HP", event.getDamage()));
                 } else {
                     //Enemy attacked
-                    EnemyBattleAttackAnimation battleAnimation = new EnemyBattleAttackAnimation(_battleScene, getAttackSound(event.getMove()));
+                    EnemyBattleAttackAnimation battleAnimation = new EnemyBattleAttackAnimation(_battleScene, getAttackSound(event.getMove()), settings);
                     battleAnimation.start();
                     blockingAnimations.add(battleAnimation);
                     _battleScene.setHealthIndicatorText(String.format("-%d HP", event.getDamage()));
@@ -301,13 +333,13 @@ public class BattleView implements IGameViewService, IBattleView {
                     });
                     enemyDieAnimation.start();
                     blockingAnimations.add(enemyDieAnimation);
-                    this._winSound.play();
+                    this._winSound.play( (int) settings.getSetting(SettingsRegistry.getInstance().getSoundVolumeSetting()) / 100f);
                     this._battleScene.setTextToDisplay(battleEvent.getText());
                 } else {
                     PlayerDieAnimation dieAnimation = new PlayerDieAnimation(_battleScene);
                     blockingAnimations.add(dieAnimation);
                     this._battleMusic.stop();
-                    this._loseSound.play();
+                    this._loseSound.play((int) settings.getSetting(SettingsRegistry.getInstance().getSoundVolumeSetting()) / 100f);
                     _battleScene.setTextToDisplay(battleEvent.getText());
 
                     EmptyAnimation e = new EmptyAnimation(2_000);
@@ -387,22 +419,8 @@ public class BattleView implements IGameViewService, IBattleView {
                     openingAnimation.start();
                     blockingAnimations.add(openingAnimation);
                 }
-            } else if (selectedAction.equalsIgnoreCase("Style")) {
-                _battleScene.setTextToDisplay("Change box-styles");
-                if (keys.isPressed(GameKeys.ACTION)) {
-                    if (_battleScene.getPlayerBoxRect() instanceof PersonaRectangle) {
-                        _battleScene.setPlayerBoxRectStyle(Rectangle.class);
-                        _battleScene.setEnemyBoxRectStyle(Rectangle.class);
-                        _battleScene.setActionBoxRectStyle(Rectangle.class);
-                        _battleScene.setTextBoxRectStyle(Rectangle.class);
-                    } else {
-                        _battleScene.setPlayerBoxRectStyle(PersonaRectangle.class);
-                        _battleScene.setEnemyBoxRectStyle(PersonaRectangle.class);
-                        _battleScene.setActionBoxRectStyle(PersonaRectangle.class);
-                        _battleScene.setTextBoxRectStyle(PersonaRectangle.class);
-                    }
-                }
-            } else if (selectedAction.equalsIgnoreCase("Quit")) {
+            }
+             else if (selectedAction.equalsIgnoreCase("Quit")) {
                 _battleScene.setTextToDisplay("Ends the battle");
                 if (keys.isPressed(GameKeys.ACTION)) {
                     handleBattleEnd(new VictoryBattleEvent("Player runs away", _battleSimulation.getState().getEnemy(), null));
@@ -504,6 +522,7 @@ public class BattleView implements IGameViewService, IBattleView {
     @Override
     public void dispose() {
         _battleMusic.stop();
+        _battleMusic.dispose();
         _battleMusic = null; //Unload Battle Music
     }
 
@@ -512,6 +531,25 @@ public class BattleView implements IGameViewService, IBattleView {
         if (autoStart)
             emptyAnimation.start();
         blockingAnimations.add(emptyAnimation);
+    }
+    public void setSettingsService(IGameSettings settings){
+        this.settings = settings;
+        if (settings.getSetting(SettingsRegistry.getInstance().getMusicVolumeSetting())==null) {
+            settings.setSetting(SettingsRegistry.getInstance().getMusicVolumeSetting(), 30);
+        }
+        if (settings.getSetting(SettingsRegistry.getInstance().getSoundVolumeSetting())==null) {
+            settings.setSetting(SettingsRegistry.getInstance().getSoundVolumeSetting(), 60);
+        }
+        if (settings.getSetting(SettingsRegistry.getInstance().getRectangleStyleSetting())==null) {
+            settings.setSetting(SettingsRegistry.getInstance().getRectangleStyleSetting(), false);
+        }
+        if (settings.getSetting(SettingsRegistry.getInstance().getBattleMusicThemeSetting())==null) {
+            settings.setSetting(SettingsRegistry.getInstance().getBattleMusicThemeSetting(), "Original");
+        }
+    }
+
+    public void removeSettingsService(IGameSettings settings){
+        this.settings = null;
     }
 
     public void setMonsterRegistry(IMonsterRegistry monsterRegistry) {

@@ -8,6 +8,7 @@ import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Pixmap;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
+import dk.sdu.mmmi.modulemon.common.SettingsRegistry;
 import dk.sdu.mmmi.modulemon.common.data.GameData;
 import dk.sdu.mmmi.modulemon.common.data.GameKeys;
 import dk.sdu.mmmi.modulemon.common.OSGiFileHandleByteReader;
@@ -30,6 +31,8 @@ public class Game implements ApplicationListener {
     private static List<IGameViewService> gameViewServiceList = new CopyOnWriteArrayList<>();
     private static IBundleControllerService bundleControllerService;
     private static Queue<Runnable> gdxThreadTasks = new LinkedList<>();
+
+    private IGameSettings settings = null;
 
     public Game(){
         init();
@@ -143,6 +146,36 @@ public class Game implements ApplicationListener {
         bundleControllerService.closeController();
         Game.bundleControllerService = null;
     }
+
+    public void setSettingsService(IGameSettings settings){
+        this.settings = settings;
+        gdxThreadTasks.add(() -> {
+            if (settings.getSetting(SettingsRegistry.getInstance().getMusicVolumeSetting())==null) {
+                settings.setSetting(SettingsRegistry.getInstance().getMusicVolumeSetting(), 30);
+            }
+            if (settings.getSetting(SettingsRegistry.getInstance().getSoundVolumeSetting())==null) {
+                settings.setSetting(SettingsRegistry.getInstance().getSoundVolumeSetting(), 60);
+            }
+            if (settings.getSetting(SettingsRegistry.getInstance().getRectangleStyleSetting())==null) {
+                settings.setSetting(SettingsRegistry.getInstance().getRectangleStyleSetting(), false);
+            }
+            if (settings.getSetting(SettingsRegistry.getInstance().getAIProcessingTimeSetting())==null) {
+                settings.setSetting(SettingsRegistry.getInstance().getAIProcessingTimeSetting(), 1000);
+            }
+            if (settings.getSetting(SettingsRegistry.getInstance().getAIAlphaBetaSetting())==null) {
+                settings.setSetting(SettingsRegistry.getInstance().getAIAlphaBetaSetting(), true);
+            }
+            if (settings.getSetting(SettingsRegistry.getInstance().getBattleMusicThemeSetting())==null) {
+                settings.setSetting(SettingsRegistry.getInstance().getBattleMusicThemeSetting(), "Original");
+            }
+            gsm.setSettings(settings);
+        });
+    }
+
+    public void removeSettingsService(IGameSettings settings){
+        this.settings = null;
+    }
+
 
     private ByteBuffer[] hackIcon(String resourceName){
         ByteBuffer[] byteBuffer = new ByteBuffer[1];

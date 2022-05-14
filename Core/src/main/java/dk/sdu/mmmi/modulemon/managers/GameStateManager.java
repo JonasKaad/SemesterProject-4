@@ -5,11 +5,13 @@ import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.utils.ScreenUtils;
 import dk.sdu.mmmi.modulemon.common.data.GameData;
 import dk.sdu.mmmi.modulemon.common.data.IGameStateManager;
+import dk.sdu.mmmi.modulemon.common.services.IGameSettings;
 import dk.sdu.mmmi.modulemon.common.services.IGameViewService;
 import dk.sdu.mmmi.modulemon.gamestates.MenuState;
 
 public class GameStateManager implements IGameStateManager {
 	private IGameViewService currentGameState;
+	private IGameSettings settings;
 	private SpriteBatch spriteBatch;
 	private Image lastScreenBeforeChange;
 
@@ -17,7 +19,12 @@ public class GameStateManager implements IGameStateManager {
 		setDefaultState();
 		spriteBatch = new SpriteBatch();
 	}
-	
+
+	public void setSettings(IGameSettings settings) {
+		this.settings = settings;
+		setDefaultState();
+	}
+
 	public void setState(IGameViewService state, boolean disposeCurrent) {
 		//Take screenshot in order to not have flicking background, when new scene has transperant backgrounds.
 		lastScreenBeforeChange = new Image(ScreenUtils.getFrameBufferTexture());
@@ -52,7 +59,7 @@ public class GameStateManager implements IGameStateManager {
 
 	@Override
 	public void setDefaultState() {
-		setState(new MenuState());
+		setState(new MenuState(this.settings));
 	}
 }
 

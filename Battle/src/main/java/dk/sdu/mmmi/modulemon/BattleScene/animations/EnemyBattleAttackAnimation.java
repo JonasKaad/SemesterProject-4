@@ -2,12 +2,14 @@ package dk.sdu.mmmi.modulemon.BattleScene.animations;
 
 import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.Color;
+import dk.sdu.mmmi.modulemon.common.SettingsRegistry;
 import dk.sdu.mmmi.modulemon.common.animations.AnimationCurves;
 import dk.sdu.mmmi.modulemon.common.drawing.Position;
 import dk.sdu.mmmi.modulemon.BattleScene.scenes.BattleScene;
 import dk.sdu.mmmi.modulemon.BattleScene.scenes.BattleSceneDefaults;
 import dk.sdu.mmmi.modulemon.common.animations.BaseAnimation;
 import dk.sdu.mmmi.modulemon.common.data.GameData;
+import dk.sdu.mmmi.modulemon.common.services.IGameSettings;
 
 import java.util.ArrayList;
 
@@ -16,12 +18,14 @@ public class EnemyBattleAttackAnimation extends BaseAnimation {
     private BattleScene _battleScene;
     private Sound _attackSound;
     private boolean _attackSoundPlayed = false;
+    private IGameSettings settings;
 
-    public EnemyBattleAttackAnimation(BattleScene battleScene, Sound attackSound) {
+    public EnemyBattleAttackAnimation(BattleScene battleScene, Sound attackSound, IGameSettings settings) {
         super();
         super.animationCurve = AnimationCurves.EaseIn();
         Timeline = new int[]{0, 300, 450, 730};
         States = new ArrayList<>(Timeline.length);
+        this.settings = settings;
 
         //Initial state
         States.add(new float[]{
@@ -72,7 +76,10 @@ public class EnemyBattleAttackAnimation extends BaseAnimation {
         _battleScene.setHealthIndicatorColor(new Color(1,0,0, states[6]));
         if(states[7] > 0.9f){
             if(!_attackSoundPlayed && _attackSound != null) {
-                _attackSound.play();
+                if (settings!=null) {
+                    _attackSound.play((int) settings.getSetting(SettingsRegistry.getInstance().getSoundVolumeSetting()) / 100f);
+                }
+                else _attackSound.play();
                 _attackSoundPlayed = true;
             }
         }

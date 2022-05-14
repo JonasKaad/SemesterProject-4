@@ -4,6 +4,7 @@ import dk.sdu.mmmi.modulemon.CommonBattleSimulation.IBattleAI;
 import dk.sdu.mmmi.modulemon.CommonBattleSimulation.IBattleAIFactory;
 import dk.sdu.mmmi.modulemon.CommonBattle.IBattleParticipant;
 import dk.sdu.mmmi.modulemon.CommonBattleSimulation.IBattleSimulation;
+import dk.sdu.mmmi.modulemon.common.SettingsRegistry;
 import dk.sdu.mmmi.modulemon.common.services.IGameSettings;
 
 public class BattleAIFactory implements IBattleAIFactory {
@@ -22,11 +23,11 @@ public class BattleAIFactory implements IBattleAIFactory {
     public void setSettingsService(IGameSettings settings) {
         System.out.println("Settings injected into AIFactory");
         this.settings = settings;
-        if (settings.getSetting("AI processing time")==null) {
-            settings.setSetting("AI processing time", 1000);
+        if (settings.getSetting(SettingsRegistry.getInstance().getAIProcessingTimeSetting())==null) {
+            settings.setSetting(SettingsRegistry.getInstance().getAIProcessingTimeSetting(), 1000);
         }
-        if (settings.getSetting("AI alpha-beta pruning")==null) {
-            settings.setSetting("AI alpha-beta pruning", true);
+        if (settings.getSetting(SettingsRegistry.getInstance().getAIAlphaBetaSetting())==null) {
+            settings.setSetting(SettingsRegistry.getInstance().getAIAlphaBetaSetting(), true);
         }
     }
 
