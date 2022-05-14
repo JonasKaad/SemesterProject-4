@@ -6,6 +6,7 @@ import dk.sdu.mmmi.modulemon.CommonBattleSimulation.IBattleSimulation;
 import dk.sdu.mmmi.modulemon.CommonBattleSimulation.IBattleState;
 import dk.sdu.mmmi.modulemon.CommonMonster.IMonster;
 import dk.sdu.mmmi.modulemon.CommonMonster.IMonsterMove;
+import dk.sdu.mmmi.modulemon.common.SettingsRegistry;
 import dk.sdu.mmmi.modulemon.common.services.IGameSettings;
 
 import java.util.ArrayList;
@@ -57,7 +58,7 @@ public class BattleAI implements IBattleAI {
         if (settings==null) {
             return defaultTimeLimitms;
         }
-        Object limitObj = settings.getSetting("AI processing time");
+        Object limitObj = settings.getSetting(SettingsRegistry.getInstance().getAIProcessingTimeSetting());
         if (!(limitObj instanceof Integer)) {
             return defaultTimeLimitms;
         }
@@ -68,7 +69,7 @@ public class BattleAI implements IBattleAI {
         if (settings==null) {
             return defaultUseAlphaBetaPruning;
         }
-        Object abObj = settings.getSetting("AI alpha-beta pruning");
+        Object abObj = settings.getSetting(SettingsRegistry.getInstance().getAIAlphaBetaSetting());
         if (!(abObj instanceof Integer)) {
             return defaultUseAlphaBetaPruning;
         }

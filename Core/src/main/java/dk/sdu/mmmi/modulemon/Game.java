@@ -8,6 +8,7 @@ import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Pixmap;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
+import dk.sdu.mmmi.modulemon.common.SettingsRegistry;
 import dk.sdu.mmmi.modulemon.common.data.GameData;
 import dk.sdu.mmmi.modulemon.common.data.GameKeys;
 import dk.sdu.mmmi.modulemon.common.OSGiFileHandleByteReader;
@@ -149,23 +150,23 @@ public class Game implements ApplicationListener {
     public void setSettingsService(IGameSettings settings){
         this.settings = settings;
         gdxThreadTasks.add(() -> {
-            if (settings.getSetting("musicVolume")==null) {
-                settings.setSetting("musicVolume", 30);
+            if (settings.getSetting(SettingsRegistry.getInstance().getMusicVolumeSetting())==null) {
+                settings.setSetting(SettingsRegistry.getInstance().getMusicVolumeSetting(), 30);
             }
-            if (settings.getSetting("soundVolume")==null) {
-                settings.setSetting("soundVolume", 60);
+            if (settings.getSetting(SettingsRegistry.getInstance().getSoundVolumeSetting())==null) {
+                settings.setSetting(SettingsRegistry.getInstance().getSoundVolumeSetting(), 60);
             }
-            if (settings.getSetting("personaRectangles")==null) {
-                settings.setSetting("personaRectangles", false);
+            if (settings.getSetting(SettingsRegistry.getInstance().getRectangleStyleSetting())==null) {
+                settings.setSetting(SettingsRegistry.getInstance().getRectangleStyleSetting(), false);
             }
-            if (settings.getSetting("AI processing time")==null) {
-                settings.setSetting("AI processing time", 1000);
+            if (settings.getSetting(SettingsRegistry.getInstance().getAIProcessingTimeSetting())==null) {
+                settings.setSetting(SettingsRegistry.getInstance().getAIProcessingTimeSetting(), 1000);
             }
-            if (settings.getSetting("AI alpha-beta pruning")==null) {
-                settings.setSetting("AI alpha-beta pruning", true);
+            if (settings.getSetting(SettingsRegistry.getInstance().getAIAlphaBetaSetting())==null) {
+                settings.setSetting(SettingsRegistry.getInstance().getAIAlphaBetaSetting(), true);
             }
-            if (settings.getSetting("battleMusicTheme")==null) {
-                settings.setSetting("battleMusicTheme", "Original");
+            if (settings.getSetting(SettingsRegistry.getInstance().getBattleMusicThemeSetting())==null) {
+                settings.setSetting(SettingsRegistry.getInstance().getBattleMusicThemeSetting(), "Original");
             }
             gsm.setSettings(settings);
         });

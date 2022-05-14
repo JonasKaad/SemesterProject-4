@@ -2,6 +2,7 @@ package dk.sdu.mmmi.modulemon.BattleScene.animations;
 
 import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.Color;
+import dk.sdu.mmmi.modulemon.common.SettingsRegistry;
 import dk.sdu.mmmi.modulemon.common.animations.AnimationCurves;
 import dk.sdu.mmmi.modulemon.common.drawing.Position;
 import dk.sdu.mmmi.modulemon.BattleScene.scenes.BattleScene;
@@ -76,7 +77,7 @@ public class PlayerBattleAttackAnimation extends BaseAnimation {
         if(states[7] > 0.9f){
             if(!_attackSoundPlayed && _attackSound != null) {
                 if (settings!=null) {
-                    _attackSound.play((int) settings.getSetting("soundVolume") / 100f);
+                    _attackSound.play((int) settings.getSetting(SettingsRegistry.getInstance().getSoundVolumeSetting()) / 100f);
                 }
                 else _attackSound.play();
                 _attackSoundPlayed = true;

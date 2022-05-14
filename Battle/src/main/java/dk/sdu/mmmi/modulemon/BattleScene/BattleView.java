@@ -17,6 +17,7 @@ import dk.sdu.mmmi.modulemon.CommonMonster.IMonster;
 import dk.sdu.mmmi.modulemon.CommonMonster.IMonsterMove;
 import dk.sdu.mmmi.modulemon.CommonMonster.IMonsterRegistry;
 import dk.sdu.mmmi.modulemon.common.AssetLoader;
+import dk.sdu.mmmi.modulemon.common.SettingsRegistry;
 import dk.sdu.mmmi.modulemon.common.animations.BaseAnimation;
 import dk.sdu.mmmi.modulemon.common.data.GameData;
 import dk.sdu.mmmi.modulemon.common.data.GameKeys;
@@ -111,7 +112,7 @@ public class BattleView implements IGameViewService, IBattleView {
         selectedAction = 0;
         String battleMusic_type;
         if(settings != null) {
-            battleMusic_type= (String) settings.getSetting("battleMusicTheme");
+            battleMusic_type= (String) settings.getSetting(SettingsRegistry.getInstance().getBattleMusicThemeSetting());
         }
         else{
             battleMusic_type = "Original";
@@ -186,16 +187,16 @@ public class BattleView implements IGameViewService, IBattleView {
             return;
         }
         if(settings != null){
-            if(_battleMusic.getVolume() != (int) settings.getSetting("musicVolume") / 100f) {
-                _battleMusic.setVolume((int) settings.getSetting("musicVolume") / 100f);
+            if(_battleMusic.getVolume() != (int) settings.getSetting(SettingsRegistry.getInstance().getMusicVolumeSetting()) / 100f) {
+                _battleMusic.setVolume((int) settings.getSetting(SettingsRegistry.getInstance().getMusicVolumeSetting()) / 100f);
             }
-            if ((Boolean) settings.getSetting("personaRectangles") && ! (_battleScene.getEnemyBoxRect() instanceof PersonaRectangle)) {
+            if ((Boolean) settings.getSetting(SettingsRegistry.getInstance().getRectangleStyleSetting()) && ! (_battleScene.getEnemyBoxRect() instanceof PersonaRectangle)) {
                 _battleScene.setPlayerBoxRectStyle(PersonaRectangle.class);
                 _battleScene.setEnemyBoxRectStyle(PersonaRectangle.class);
                 _battleScene.setActionBoxRectStyle(PersonaRectangle.class);
                 _battleScene.setTextBoxRectStyle(PersonaRectangle.class);
             }
-            else if (!(Boolean) settings.getSetting("personaRectangles") && _battleScene.getEnemyBoxRect() == null){
+            else if (!(Boolean) settings.getSetting(SettingsRegistry.getInstance().getRectangleStyleSetting()) && _battleScene.getEnemyBoxRect() == null){
                 _battleScene.setPlayerBoxRectStyle(Rectangle.class);
                 _battleScene.setEnemyBoxRectStyle(Rectangle.class);
                 _battleScene.setActionBoxRectStyle(Rectangle.class);
@@ -332,13 +333,13 @@ public class BattleView implements IGameViewService, IBattleView {
                     });
                     enemyDieAnimation.start();
                     blockingAnimations.add(enemyDieAnimation);
-                    this._winSound.play( (int) settings.getSetting("soundVolume") / 100f);
+                    this._winSound.play( (int) settings.getSetting(SettingsRegistry.getInstance().getSoundVolumeSetting()) / 100f);
                     this._battleScene.setTextToDisplay(battleEvent.getText());
                 } else {
                     PlayerDieAnimation dieAnimation = new PlayerDieAnimation(_battleScene);
                     blockingAnimations.add(dieAnimation);
                     this._battleMusic.stop();
-                    this._loseSound.play((int) settings.getSetting("soundVolume") / 100f);
+                    this._loseSound.play((int) settings.getSetting(SettingsRegistry.getInstance().getSoundVolumeSetting()) / 100f);
                     _battleScene.setTextToDisplay(battleEvent.getText());
 
                     EmptyAnimation e = new EmptyAnimation(2_000);
@@ -533,17 +534,17 @@ public class BattleView implements IGameViewService, IBattleView {
     }
     public void setSettingsService(IGameSettings settings){
         this.settings = settings;
-        if (settings.getSetting("musicVolume")==null) {
-            settings.setSetting("musicVolume", 30);
+        if (settings.getSetting(SettingsRegistry.getInstance().getMusicVolumeSetting())==null) {
+            settings.setSetting(SettingsRegistry.getInstance().getMusicVolumeSetting(), 30);
         }
-        if (settings.getSetting("soundVolume")==null) {
-            settings.setSetting("soundVolume", 60);
+        if (settings.getSetting(SettingsRegistry.getInstance().getSoundVolumeSetting())==null) {
+            settings.setSetting(SettingsRegistry.getInstance().getSoundVolumeSetting(), 60);
         }
-        if (settings.getSetting("personaRectangles")==null) {
-            settings.setSetting("personaRectangles", false);
+        if (settings.getSetting(SettingsRegistry.getInstance().getRectangleStyleSetting())==null) {
+            settings.setSetting(SettingsRegistry.getInstance().getRectangleStyleSetting(), false);
         }
-        if (settings.getSetting("battleMusicTheme")==null) {
-            settings.setSetting("battleMusicTheme", "Original");
+        if (settings.getSetting(SettingsRegistry.getInstance().getBattleMusicThemeSetting())==null) {
+            settings.setSetting(SettingsRegistry.getInstance().getBattleMusicThemeSetting(), "Original");
         }
     }
 

@@ -26,6 +26,7 @@ import dk.sdu.mmmi.modulemon.CommonMap.Services.IPostEntityProcessingService;
 import dk.sdu.mmmi.modulemon.CommonMap.TextMapEvent;
 import dk.sdu.mmmi.modulemon.CommonMonster.IMonster;
 import dk.sdu.mmmi.modulemon.common.AssetLoader;
+import dk.sdu.mmmi.modulemon.common.SettingsRegistry;
 import dk.sdu.mmmi.modulemon.common.data.*;
 import dk.sdu.mmmi.modulemon.common.drawing.PersonaRectangle;
 import dk.sdu.mmmi.modulemon.common.drawing.Rectangle;
@@ -77,6 +78,7 @@ public class MapView implements IGameViewService, IMapView {
     private MonsterTeamPart mtp;
     private SpriteBatch spriteBatch;
     private AssetLoader loader = AssetLoader.getInstance();
+    private SettingsRegistry settingsRegistry = SettingsRegistry.getInstance();
     private static World world = new World();
     private final GameData gameData = new GameData();
     private static final List<IEntityProcessingService> entityProcessorList = new CopyOnWriteArrayList<>();
@@ -171,17 +173,17 @@ public class MapView implements IGameViewService, IMapView {
             postProcessingService.process(gameData, world);
         }
         if(settings != null) {
-            if (mapMusic.getVolume() != (int) settings.getSetting("musicVolume") / 100f) {
-                mapMusic.setVolume((int) settings.getSetting("musicVolume") / 100f);
+            if (mapMusic.getVolume() != (int) settings.getSetting(SettingsRegistry.getInstance().getMusicVolumeSetting()) / 100f) {
+                mapMusic.setVolume((int) settings.getSetting(SettingsRegistry.getInstance().getMusicVolumeSetting()) / 100f);
             }
 
-            if ((Boolean) settings.getSetting("personaRectangles") && !(teamActionMenu instanceof PersonaRectangle)) {
+            if ((Boolean) settings.getSetting(SettingsRegistry.getInstance().getRectangleStyleSetting()) && !(teamActionMenu instanceof PersonaRectangle)) {
                 rectToUse = PersonaRectangle.class;
                 summaryMenu = createRectangle(rectToUse, 100, 100, 380, 300);
                 pauseMenu = createRectangle(rectToUse, 100, 100, 200, 250);
                 monsterTeamMenu = createRectangle(rectToUse, 100, 100, 400, 550);
                 teamActionMenu = createRectangle(rectToUse, 100, 100, 200, 200);
-            } else if (!(Boolean) settings.getSetting("personaRectangles") && teamActionMenu == null) {
+            } else if (!(Boolean) settings.getSetting(SettingsRegistry.getInstance().getRectangleStyleSetting()) && teamActionMenu == null) {
                 rectToUse = Rectangle.class;
                 summaryMenu = createRectangle(rectToUse, 100, 100, 380, 300);
                 pauseMenu = createRectangle(rectToUse, 100, 100, 200, 250);
@@ -527,16 +529,15 @@ public class MapView implements IGameViewService, IMapView {
 
     public void setSettingsService(IGameSettings settings){
         this.settings = settings;
-        if (settings.getSetting("musicVolume")==null) {
-            settings.setSetting("musicVolume", 30);
+        if (settings.getSetting(SettingsRegistry.getInstance().getMusicVolumeSetting())==null) {
+            settings.setSetting(SettingsRegistry.getInstance().getMusicVolumeSetting(), 30);
         }
-        if (settings.getSetting("soundVolume")==null) {
-            settings.setSetting("soundVolume", 60);
+        if (settings.getSetting(SettingsRegistry.getInstance().getSoundVolumeSetting())==null) {
+            settings.setSetting(SettingsRegistry.getInstance().getSoundVolumeSetting(), 60);
         }
-        if (settings.getSetting("personaRectangles")==null) {
-            settings.setSetting("personaRectangles", false);
+        if (settings.getSetting(SettingsRegistry.getInstance().getRectangleStyleSetting())==null) {
+            settings.setSetting(SettingsRegistry.getInstance().getRectangleStyleSetting(), false);
         }
-
     }
 
     public void removeSettingsService(IGameSettings settings){

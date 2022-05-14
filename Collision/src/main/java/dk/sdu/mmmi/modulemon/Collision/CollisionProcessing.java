@@ -5,6 +5,7 @@ import dk.sdu.mmmi.modulemon.CommonMap.IMapView;
 import dk.sdu.mmmi.modulemon.common.AssetLoader;
 import dk.sdu.mmmi.modulemon.CommonMap.Data.Entity;
 import dk.sdu.mmmi.modulemon.CommonMap.Data.EntityType;
+import dk.sdu.mmmi.modulemon.common.SettingsRegistry;
 import dk.sdu.mmmi.modulemon.common.data.GameData;
 import dk.sdu.mmmi.modulemon.CommonMap.Data.World;
 import dk.sdu.mmmi.modulemon.CommonMap.Data.EntityParts.PositionPart;
@@ -25,7 +26,7 @@ public class CollisionProcessing implements IPostEntityProcessingService {
                 entityPosPart.setTargetPos(entityPosPart.getX(), entityPosPart.getY());
                 if (bonkCooldown <= 0 && entity.getType().equals(EntityType.PLAYER)) {
                     if(settings != null){
-                        loader.getSoundAsset("/sounds/bonk.ogg", this.getClass()).play( ((int) settings.getSetting("soundVolume") / 100f) / 2f);
+                        loader.getSoundAsset("/sounds/bonk.ogg", this.getClass()).play( ((int) settings.getSetting(SettingsRegistry.getInstance().getSoundVolumeSetting()) / 100f) / 2f);
                     }
                     else loader.getSoundAsset("/sounds/bonk.ogg", this.getClass()).play( );
                     bonkCooldown = 0.5f;
@@ -67,8 +68,8 @@ public class CollisionProcessing implements IPostEntityProcessingService {
     
     public void setSettingsService(IGameSettings settings){
         this.settings = settings;
-        if (settings.getSetting("soundVolume")==null) {
-            settings.setSetting("soundVolume", 60);
+        if (settings.getSetting(SettingsRegistry.getInstance().getSoundVolumeSetting())==null) {
+            settings.setSetting(SettingsRegistry.getInstance().getSoundVolumeSetting(), 60);
         }
 
     }
