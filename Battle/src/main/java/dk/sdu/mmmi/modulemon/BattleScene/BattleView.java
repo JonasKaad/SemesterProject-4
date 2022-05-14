@@ -196,7 +196,7 @@ public class BattleView implements IGameViewService, IBattleView {
                 _battleScene.setActionBoxRectStyle(PersonaRectangle.class);
                 _battleScene.setTextBoxRectStyle(PersonaRectangle.class);
             }
-            else if (!(Boolean) settings.getSetting(SettingsRegistry.getInstance().getRectangleStyleSetting()) && _battleScene.getEnemyBoxRect() == null){
+            else if (!(Boolean) settings.getSetting(SettingsRegistry.getInstance().getRectangleStyleSetting()) && _battleScene.getEnemyBoxRect() instanceof PersonaRectangle || _battleScene.getEnemyBoxRect() == null){
                 _battleScene.setPlayerBoxRectStyle(Rectangle.class);
                 _battleScene.setEnemyBoxRectStyle(Rectangle.class);
                 _battleScene.setActionBoxRectStyle(Rectangle.class);
