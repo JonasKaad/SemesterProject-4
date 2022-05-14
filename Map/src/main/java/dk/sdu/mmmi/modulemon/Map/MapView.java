@@ -190,6 +190,7 @@ public class MapView implements IGameViewService, IMapView {
             }
         }
         else{
+            mapMusic.setVolume(0.3f);
             summaryMenu = createRectangle(Rectangle.class, 100, 100, 380, 300);
             pauseMenu = createRectangle(Rectangle.class, 100, 100, 200, 250);
             monsterTeamMenu = createRectangle(Rectangle.class, 100, 100, 400, 550);
@@ -527,7 +528,7 @@ public class MapView implements IGameViewService, IMapView {
     public void setSettingsService(IGameSettings settings){
         this.settings = settings;
         if (settings.getSetting("musicVolume")==null) {
-            settings.setSetting("musicVolume", 10);
+            settings.setSetting("musicVolume", 30);
         }
         if (settings.getSetting("soundVolume")==null) {
             settings.setSetting("soundVolume", 60);

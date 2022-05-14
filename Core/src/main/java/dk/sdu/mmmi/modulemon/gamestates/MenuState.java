@@ -163,11 +163,10 @@ public class MenuState implements IGameViewService {
             menuOptions = defaultMenuOptions;
             title = "ModulémoN";
         }
-
         // Compares the value of the volume option to the correct value in the settings.json file
-        if(menuMusic.getVolume() !=  (int) settings.getSetting("musicVolume") / 100f) {
+        if(menuMusic.getVolume() !=  getMusicVolumeAsFloat()) {
             // Sets the volume to the one found in the json file
-            menuMusic.setVolume((int) settings.getSetting("musicVolume") / 100f);
+            menuMusic.setVolume(getMusicVolumeAsFloat());
         }
     }
 
@@ -255,7 +254,7 @@ public class MenuState implements IGameViewService {
             } else {
                 currentOption = menuOptions.length - 1;
             }
-            selectSound.play((int) settings.getSetting("soundVolume") / 100f);
+            selectSound.play(getSoundVolumeAsFloat());
         }
         // Moves down in the menu
         if (gameData.getKeys().isPressed(GameKeys.DOWN)) {
@@ -264,7 +263,7 @@ public class MenuState implements IGameViewService {
             } else {
                 currentOption = 0;
             }
-            selectSound.play((int) settings.getSetting("soundVolume") / 100f);
+            selectSound.play(getSoundVolumeAsFloat());
         }
 
         if(gameData.getKeys().isPressed(GameKeys.LEFT)){
@@ -289,7 +288,7 @@ public class MenuState implements IGameViewService {
             currentMenuState = MenuStates.DEFAULT;
             currentOption = 0;
             showSettings = false;
-            chooseSound.play((int) settings.getSetting("soundVolume") / 100f);
+            chooseSound.play(getSoundVolumeAsFloat());
             return;
         }
 
@@ -303,7 +302,7 @@ public class MenuState implements IGameViewService {
             IGameViewService selectedView = views.get(currentOption);
             gsm.setState(selectedView);
             if(selectedView instanceof IBattleView){
-                chooseSound.play((int) settings.getSetting("soundVolume") / 100f);
+                chooseSound.play(getSoundVolumeAsFloat());
                 ((IBattleView)selectedView).startBattle(null, null, null);
             }
         } else {
@@ -311,15 +310,15 @@ public class MenuState implements IGameViewService {
                 //gsm.setState(GameStateManager.PLAY);
                 currentMenuState = MenuStates.SELECTING_GAMESTATE;
                 currentOption = 0;
-                chooseSound.play((int) settings.getSetting("soundVolume") / 100f);
+                chooseSound.play(getSoundVolumeAsFloat());
             }
             if (Objects.equals(menuOptions[currentOption], "Settings")) {
                 currentMenuState = MenuStates.SETTINGS;
                 showSettings = true;
-                chooseSound.play((int) settings.getSetting("soundVolume") / 100f);
+                chooseSound.play(getSoundVolumeAsFloat());
             }
             if (Objects.equals(menuOptions[currentOption], "Quit")) {
-                chooseSound.play((int) settings.getSetting("soundVolume") / 100f);
+                chooseSound.play(getSoundVolumeAsFloat());
                 Gdx.app.exit();
             }
         }
@@ -332,139 +331,138 @@ public class MenuState implements IGameViewService {
      *                want to increase something when pressing right and decrease when pressing left.
      */
     private void handleSettings(String keyInput){
-        switch(keyInput){
-            case "RIGHT": {
-                if (menuOptions[currentOption].equalsIgnoreCase("Change Music Volume")) {
-                    // Max volume is 100, which is 1f, since that's the max volume libgdx music and sound can use.
-                    if (!((int) settings.getSetting("musicVolume") >= 100)) {
-                        // Increases volume by 10 (0.1f)
-                        int new_volume = (int) settings.getSetting("musicVolume") + 10;
-                        settings.setSetting("musicVolume", new_volume);
+        if(settings != null) {
+            switch (keyInput) {
+                case "RIGHT": {
+                    if (menuOptions[currentOption].equalsIgnoreCase("Change Music Volume")) {
+                        // Max volume is 100, which is 1f, since that's the max volume libgdx music and sound can use.
+                        if (!((int) settings.getSetting("musicVolume") >= 100)) {
+                            // Increases volume by 10 (0.1f)
+                            int new_volume = (int) settings.getSetting("musicVolume") + 10;
+                            settings.setSetting("musicVolume", new_volume);
 
-                        musicVolume = (int) settings.getSetting("musicVolume") + "%";
-                        settingsValueList.set(0, musicVolume);
-                        chooseSound.play((int) settings.getSetting("soundVolume") / 100f);
+                            musicVolume = (int) settings.getSetting("musicVolume") + "%";
+                            settingsValueList.set(0, musicVolume);
+                            chooseSound.play(getSoundVolumeAsFloat());
+                        }
+                        break;
                     }
+
+                    if (menuOptions[currentOption].equalsIgnoreCase("Change Sound Volume")) {
+                        // Max volume is 100, which is 1f, since that's the max volume libgdx music and sound can use.
+                        if (!((int) settings.getSetting("soundVolume") >= 100)) {
+                            // Increases volume by 10 (0.1f)
+                            int new_volume = (int) settings.getSetting("soundVolume") + 10;
+                            settings.setSetting("soundVolume", new_volume);
+
+                            soundVolume = (int) settings.getSetting("soundVolume") + "%";
+                            settingsValueList.set(1, soundVolume);
+                            chooseSound.play(getSoundVolumeAsFloat());
+                        }
+                        break;
+                    }
+
+                    if (menuOptions[currentOption].equalsIgnoreCase("AI Processing Time")) {
+                        // Sets the max processing time to 10 seconds
+                        if (!((int) settings.getSetting("AI processing time") >= 10000)) {
+                            // Increases the processing time by 100 ms
+                            int ai_processing_time = (int) settings.getSetting("AI processing time") + 100;
+                            settings.setSetting("AI processing time", ai_processing_time);
+
+                            aiTime = (int) settings.getSetting("AI processing time") + " ms";
+                            settingsValueList.set(4, aiTime);
+                            chooseSound.play(getSoundVolumeAsFloat());
+                        }
+                        break;
+                    }
+
+                    if (menuOptions[currentOption].equalsIgnoreCase("Battle Music Theme")) {
+                        battleThemeIndex++;
+
+                        //Circular Array to ensure it loops over the full list indefinitely
+                        battleThemeIndex = battleThemeIndex % musicThemes.length;
+                        // Sets the theme setting to be the one selected from the musicThemes array, based on the current index
+                        settings.setSetting("battleMusicTheme", musicThemes[battleThemeIndex]);
+
+                        // Updates the name of the theme to the newly selected one
+                        battleTheme = (String) settings.getSetting("battleMusicTheme");
+                        settingsValueList.set(5, battleTheme);
+
+                        chooseSound.play(getSoundVolumeAsFloat());
+                        break;
+                    }
+                    boolean_settings_switch_on_off();
                     break;
                 }
+                case "LEFT": {
+                    if (menuOptions[currentOption].equalsIgnoreCase("Change Music Volume")) {
+                        // Min volume is 0, which essentially mutes all the music.
+                        if (((int) settings.getSetting("musicVolume") > 0)) {
+                            // Decreases volume by 10 (0.1f)
+                            int new_volume = (int) settings.getSetting("musicVolume") - 10;
+                            settings.setSetting("musicVolume", new_volume);
 
-                if (menuOptions[currentOption].equalsIgnoreCase("Change Sound Volume")) {
-                    // Max volume is 100, which is 1f, since that's the max volume libgdx music and sound can use.
-                    if (!((int) settings.getSetting("soundVolume") >= 100)) {
-                        // Increases volume by 10 (0.1f)
-                        int new_volume = (int) settings.getSetting("soundVolume") + 10;
-                        settings.setSetting("soundVolume", new_volume);
-
-                        soundVolume = (int) settings.getSetting("soundVolume") + "%";
-                        settingsValueList.set(1, soundVolume);
-                        chooseSound.play((int) settings.getSetting("soundVolume") / 100f);
+                            musicVolume = (int) settings.getSetting("musicVolume") + "%";
+                            settingsValueList.set(0, musicVolume);
+                            chooseSound.play(getSoundVolumeAsFloat());
+                        }
+                        break;
                     }
+
+                    if (menuOptions[currentOption].equalsIgnoreCase("Change Sound Volume")) {
+                        // Min volume is 0, which essentially mutes all the sound.
+                        if (((int) settings.getSetting("soundVolume") > 0)) {
+                            // Decreases volume by 10 (0.1f)
+                            int new_volume = (int) settings.getSetting("soundVolume") - 10;
+                            settings.setSetting("soundVolume", new_volume);
+
+                            soundVolume = (int) settings.getSetting("soundVolume") + "%";
+                            settingsValueList.set(1, soundVolume);
+                            chooseSound.play(getSoundVolumeAsFloat());
+                        }
+                        break;
+                    }
+
+                    if (menuOptions[currentOption].equalsIgnoreCase("AI Processing Time")) {
+                        // Sets the minimum processing time to 500 ms
+                        if (((int) settings.getSetting("AI processing time") > 500)) {
+                            // Decreases the processing time by 100 ms
+                            int ai_processing_time = (int) settings.getSetting("AI processing time") - 100;
+                            settings.setSetting("AI processing time", ai_processing_time);
+
+                            aiTime = (int) settings.getSetting("AI processing time") + " ms";
+                            settingsValueList.set(4, aiTime);
+                            chooseSound.play(getSoundVolumeAsFloat());
+                        }
+                        break;
+                    }
+
+                    if (menuOptions[currentOption].equalsIgnoreCase("Battle Music Theme")) {
+                        // If the index is at the start, go to the back of the array, ensuring it can loop indefinitely
+                        if (battleThemeIndex == 0) {
+                            battleThemeIndex = musicThemes.length - 1;
+                        } else {
+                            battleThemeIndex--;
+                        }
+                        // Sets the theme setting to be the one selected from the musicThemes array, based on the current index
+                        settings.setSetting("battleMusicTheme", musicThemes[battleThemeIndex]);
+
+                        // Updates the name of the theme to the newly selected one
+                        battleTheme = (String) settings.getSetting("battleMusicTheme");
+                        settingsValueList.set(5, battleTheme);
+
+                        chooseSound.play(getSoundVolumeAsFloat());
+                        break;
+                    }
+
+
+                    boolean_settings_switch_on_off();
                     break;
                 }
-
-                if (menuOptions[currentOption].equalsIgnoreCase("AI Processing Time")) {
-                    // Sets the max processing time to 10 seconds
-                    if (!((int) settings.getSetting("AI processing time") >= 10000)) {
-                        // Increases the processing time by 500 ms
-                        int ai_processing_time = (int) settings.getSetting("AI processing time") + 500;
-                        settings.setSetting("AI processing time", ai_processing_time);
-
-                        aiTime = (int) settings.getSetting("AI processing time") + " ms";
-                        settingsValueList.set(4, aiTime);
-                        chooseSound.play((int) settings.getSetting("soundVolume") / 100f);
-                    }
+                case "ACTION": {
+                    boolean_settings_switch_on_off();
                     break;
                 }
-
-                if (menuOptions[currentOption].equalsIgnoreCase("Battle Music Theme")) {
-                    battleThemeIndex++;
-
-                    //Circular Array to ensure it loops over the full list indefinitely
-                    battleThemeIndex = battleThemeIndex % musicThemes.length;
-                    // Sets the theme setting to be the one selected from the musicThemes array, based on the current index
-                    settings.setSetting("battleMusicTheme", musicThemes[battleThemeIndex]);
-
-                    // Updates the name of the theme to the newly selected one
-                    battleTheme = (String) settings.getSetting("battleMusicTheme");
-                    settingsValueList.set(5, battleTheme);
-
-                    chooseSound.play((int) settings.getSetting("soundVolume") / 100f);
-                    break;
-                }
-                boolean_settings_switch_on_off();
-                break;
-            }
-            case "LEFT":
-            {
-                if (menuOptions[currentOption].equalsIgnoreCase("Change Music Volume")) {
-                    // Min volume is 0, which essentially mutes all the music.
-                    if (((int) settings.getSetting("musicVolume") > 0)) {
-                        // Decreases volume by 10 (0.1f)
-                        int new_volume = (int) settings.getSetting("musicVolume") - 10;
-                        settings.setSetting("musicVolume", new_volume);
-
-                        musicVolume = (int) settings.getSetting("musicVolume") + "%";
-                        settingsValueList.set(0, musicVolume);
-                        chooseSound.play((int) settings.getSetting("soundVolume") / 100f);
-                    }
-                    break;
-                }
-
-                if (menuOptions[currentOption].equalsIgnoreCase("Change Sound Volume")) {
-                    // Min volume is 0, which essentially mutes all the sound.
-                    if (((int) settings.getSetting("soundVolume") > 0)) {
-                        // Decreases volume by 10 (0.1f)
-                        int new_volume = (int) settings.getSetting("soundVolume") - 10;
-                        settings.setSetting("soundVolume", new_volume);
-
-                        soundVolume = (int) settings.getSetting("soundVolume") + "%";
-                        settingsValueList.set(1, soundVolume);
-                        chooseSound.play((int) settings.getSetting("soundVolume") / 100f);
-                    }
-                    break;
-                }
-
-                if (menuOptions[currentOption].equalsIgnoreCase("AI Processing Time")) {
-                    // Sets the minimum processing time to 500 ms
-                    if (((int) settings.getSetting("AI processing time") > 500)) {
-                        // Decreases the processing time by 500 ms
-                        int ai_processing_time = (int) settings.getSetting("AI processing time") - 500;
-                        settings.setSetting("AI processing time", ai_processing_time);
-
-                        aiTime = (int) settings.getSetting("AI processing time") + " ms";
-                        settingsValueList.set(4, aiTime);
-                        chooseSound.play((int) settings.getSetting("soundVolume") / 100f);
-                    }
-                    break;
-                }
-
-                if (menuOptions[currentOption].equalsIgnoreCase("Battle Music Theme")) {
-                    // If the index is at the start, go to the back of the array, ensuring it can loop indefinitely
-                    if(battleThemeIndex == 0){
-                        battleThemeIndex = musicThemes.length-1;
-                    }
-                    else{
-                        battleThemeIndex--;
-                    }
-                    // Sets the theme setting to be the one selected from the musicThemes array, based on the current index
-                    settings.setSetting("battleMusicTheme", musicThemes[battleThemeIndex]);
-
-                    // Updates the name of the theme to the newly selected one
-                    battleTheme = (String) settings.getSetting("battleMusicTheme");
-                    settingsValueList.set(5, battleTheme);
-
-                    chooseSound.play((int) settings.getSetting("soundVolume") / 100f);
-                    break;
-                }
-
-
-                boolean_settings_switch_on_off();
-                break;
-            }
-            case "ACTION":
-            {
-                boolean_settings_switch_on_off();
-                break;
             }
         }
     }
@@ -474,36 +472,35 @@ public class MenuState implements IGameViewService {
      * displayed on screen to either "On" or "Off".
      */
     private void boolean_settings_switch_on_off() {
-        // Checks if the currently selected/hovered setting is the option for Persona Rectangles
-        if (menuOptions[currentOption].equalsIgnoreCase("Use Persona Rectangles")) {
+        if(settings != null) {
+            // Checks if the currently selected/hovered setting is the option for Persona Rectangles
+            if (menuOptions[currentOption].equalsIgnoreCase("Use Persona Rectangles")) {
             /*
             If setting for using PersonaRectangles is currently true, change it to false
             Otherwise change it to true.
              */
-            if(((Boolean) settings.getSetting("personaRectangles"))){
-                settingsValueList.set(2, "Off");
-                settings.setSetting("personaRectangles", false);
-            }
-            else{
-                settingsValueList.set(2, "On");
-                settings.setSetting("personaRectangles", true);
-            }
-            chooseSound.play((int) settings.getSetting("soundVolume") / 100f);
-        }
-        else if (menuOptions[currentOption].equalsIgnoreCase("Use AI Alpha-beta pruning")) {
+                if (((Boolean) settings.getSetting("personaRectangles"))) {
+                    settingsValueList.set(2, "Off");
+                    settings.setSetting("personaRectangles", false);
+                } else {
+                    settingsValueList.set(2, "On");
+                    settings.setSetting("personaRectangles", true);
+                }
+                chooseSound.play(getSoundVolumeAsFloat());
+            } else if (menuOptions[currentOption].equalsIgnoreCase("Use AI Alpha-beta pruning")) {
             /*
             If setting for using Alpha-beta pruning is currently true, change it to false
             Otherwise change it to true.
              */
-            if(((Boolean) settings.getSetting("AI alpha-beta pruning"))){
-                settingsValueList.set(3, "Off");
-                settings.setSetting("AI alpha-beta pruning", false);
+                if (((Boolean) settings.getSetting("AI alpha-beta pruning"))) {
+                    settingsValueList.set(3, "Off");
+                    settings.setSetting("AI alpha-beta pruning", false);
+                } else {
+                    settingsValueList.set(3, "On");
+                    settings.setSetting("AI alpha-beta pruning", true);
+                }
+                chooseSound.play(getSoundVolumeAsFloat());
             }
-            else{
-                settingsValueList.set(3, "On");
-                settings.setSetting("AI alpha-beta pruning", true);
-            }
-            chooseSound.play((int) settings.getSetting("soundVolume") / 100f);
         }
     }
 
@@ -511,7 +508,7 @@ public class MenuState implements IGameViewService {
      * This method gets called when this state is first loaded. It initializes the settings menu values with
      * those found in the settings.json file.
      */
-    public void settingsInitializer(){
+    private void settingsInitializer(){
         if(settings != null) {
             musicVolume = settings.getSetting("musicVolume") + "%";
             soundVolume = settings.getSetting("soundVolume") + "%";
@@ -530,6 +527,21 @@ public class MenuState implements IGameViewService {
         }
     }
 
+    // Gets the sound volume from the settings file and returns it as a float
+    private float getSoundVolumeAsFloat(){
+        if(settings != null) {
+            return (int) settings.getSetting("soundVolume") / 100f;
+        }
+        else return 0.6f;
+    }
+
+    // Gets the music volume from the settings file and returns it as a float
+    private float getMusicVolumeAsFloat(){
+        if(settings != null) {
+            return (int) settings.getSetting("musicVolume") / 100f;
+        }
+        else return 0.3f;
+    }
 
     @Override
     public void dispose() {

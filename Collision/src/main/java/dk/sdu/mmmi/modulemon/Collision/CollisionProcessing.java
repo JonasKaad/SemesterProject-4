@@ -24,7 +24,10 @@ public class CollisionProcessing implements IPostEntityProcessingService {
             if(mapView.isCellBlocked(entityPosPart.getTargetPos().x, entityPosPart.getTargetPos().y) && !entityPosPart.getTargetPos().equals(new Vector2(0,0))) {
                 entityPosPart.setTargetPos(entityPosPart.getX(), entityPosPart.getY());
                 if (bonkCooldown <= 0 && entity.getType().equals(EntityType.PLAYER)) {
-                    loader.getSoundAsset("/sounds/bonk.ogg", this.getClass()).play( ((int) settings.getSetting("soundVolume") / 100f) / 2f);
+                    if(settings != null){
+                        loader.getSoundAsset("/sounds/bonk.ogg", this.getClass()).play( ((int) settings.getSetting("soundVolume") / 100f) / 2f);
+                    }
+                    else loader.getSoundAsset("/sounds/bonk.ogg", this.getClass()).play( );
                     bonkCooldown = 0.5f;
                 }
             }

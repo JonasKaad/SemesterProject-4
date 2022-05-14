@@ -203,6 +203,7 @@ public class BattleView implements IGameViewService, IBattleView {
             }
         }
         else{
+            _battleMusic.setVolume(0.3f);
             _battleScene.setPlayerBoxRectStyle(Rectangle.class);
             _battleScene.setEnemyBoxRectStyle(Rectangle.class);
             _battleScene.setActionBoxRectStyle(Rectangle.class);
@@ -533,7 +534,7 @@ public class BattleView implements IGameViewService, IBattleView {
     public void setSettingsService(IGameSettings settings){
         this.settings = settings;
         if (settings.getSetting("musicVolume")==null) {
-            settings.setSetting("musicVolume", 10);
+            settings.setSetting("musicVolume", 30);
         }
         if (settings.getSetting("soundVolume")==null) {
             settings.setSetting("soundVolume", 60);
