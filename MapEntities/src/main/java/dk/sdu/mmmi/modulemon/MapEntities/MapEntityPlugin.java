@@ -27,29 +27,29 @@ public class MapEntityPlugin implements IGamePluginService {
         entities = new ArrayList<>();
         ArrayList<IMonster> monstersInVending1 = new ArrayList<>();
         // Fugl Eel
-        monstersInVending1.add(monsterRegistry.getMonster(2));
-        monstersInVending1.add(monsterRegistry.getMonster(1));
+        monstersInVending1.add(monsterRegistry.getMonster(2 % monsterRegistry.getMonsterAmount()));
+        monstersInVending1.add(monsterRegistry.getMonster(1 % monsterRegistry.getMonsterAmount()));
         Entity vendingMachine1 = createVendingMachine(gameData, 17, 39, monstersInVending1);
         Entity healingMachine1 = createHealingMachine(gameData, 17, 53);
 
         // Dog Cat
         ArrayList<IMonster> monstersInVending2 = new ArrayList<>();
-        monstersInVending2.add(monsterRegistry.getMonster(5));
-        monstersInVending2.add(monsterRegistry.getMonster(4));
+        monstersInVending2.add(monsterRegistry.getMonster(5 % monsterRegistry.getMonsterAmount()));
+        monstersInVending2.add(monsterRegistry.getMonster(4 % monsterRegistry.getMonsterAmount()));
         Entity vendingMachine2 = createVendingMachine(gameData, 35, 42, monstersInVending2);
         Entity healingMachine2 = createHealingMachine(gameData, 35, 50);
 
         // Alpaca Eel Cat
         ArrayList<IMonster> monstersInVending3 = new ArrayList<>();
-        monstersInVending3.add(monsterRegistry.getMonster(0));
-        monstersInVending3.add(monsterRegistry.getMonster(1));
-        monstersInVending3.add(monsterRegistry.getMonster(4));
+        monstersInVending3.add(monsterRegistry.getMonster(0 % monsterRegistry.getMonsterAmount()));
+        monstersInVending3.add(monsterRegistry.getMonster(1 % monsterRegistry.getMonsterAmount()));
+        monstersInVending3.add(monsterRegistry.getMonster(4 % monsterRegistry.getMonsterAmount()));
         Entity vendingMachine3 = createVendingMachine(gameData, 50, 21, monstersInVending3);
         Entity healingMachine3 = createHealingMachine(gameData, 60, 21);
 
         // Mole Secret SHH! id: 3
         ArrayList<IMonster> monstersInSecretVending = new ArrayList<>();
-        monstersInSecretVending.add(monsterRegistry.getMonster(3));
+        monstersInSecretVending.add(monsterRegistry.getMonster(3 % monsterRegistry.getMonsterAmount()));
         Entity secretVendingMachine = createVendingMachine(gameData, 37, 21, monstersInSecretVending);
 
         world.addEntity(vendingMachine1);

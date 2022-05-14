@@ -93,7 +93,7 @@ public class NPCPlugin implements IGamePluginService{
     public void addMonsterTeam(Entity entity, int[] ints) {
         List<IMonster> monsterList = new ArrayList<>();
         for (int i = 0; i < ints.length; i++) {
-            monsterList.add(monsterRegistry.getMonster(ints[i]));
+            monsterList.add(monsterRegistry.getMonster(ints[i] % monsterRegistry.getMonsterAmount()));
         }
         entity.add(new MonsterTeamPart(monsterList));
     }
