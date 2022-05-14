@@ -23,12 +23,13 @@ public class PositionPart implements EntityPart {
     private float x;
     private float y;
     private Direction direction; // facing direction in comparison to the unit circle
-    private Vector2 currentPos = new Vector2();
+    private Vector2 currentPos;
     private Vector2 targetPos = new Vector2();
 
     public PositionPart(float x, float y) {
         this.x = x;
         this.y = y;
+        currentPos = new Vector2(x,y);
         this.direction = SOUTH;
     }
 

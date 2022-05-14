@@ -17,7 +17,7 @@ import java.util.List;
 import java.util.Queue;
 
 public class PlayerPlugin implements IGamePluginService {
-
+    private static final int TILE_SIZE = 64;
     private Entity player;
     private static IMonsterRegistry monsterRegistry;
 
@@ -26,16 +26,19 @@ public class PlayerPlugin implements IGamePluginService {
 
     @Override
     public void start(GameData gameData, World world) {
-        
         // Add entities to the world
         player = createPlayer(gameData);
         world.addEntity(player);
     }
 
     private Entity createPlayer(GameData gameData) {
+        int xOffsetCorrection = 7;
+        int yOffsetCorrection = 20;
+        int tilemapXPos = 5;
+        int tilemapYPos = 44;
 
-        float x = ( 5 )* 64 + 7;
-        float y =  (64*63 - (44) * 64 ) + 20;
+        float x = (tilemapXPos)* TILE_SIZE + xOffsetCorrection;
+        float y =  (TILE_SIZE*(TILE_SIZE-1) - (tilemapYPos) * TILE_SIZE ) + yOffsetCorrection;
 
         Entity player = new Player();
         PositionPart positionPart = new PositionPart(x, y);
@@ -57,14 +60,8 @@ public class PlayerPlugin implements IGamePluginService {
 
     private void addMonsterTeam(Entity entity, GameData gameData) {
         List<IMonster> monsterList = new ArrayList<>();
-        if(gameData.getKeys().isDown(GameKeys.LEFT_CTRL))
-            monsterList.add(monsterRegistry.getMonster(6 % monsterRegistry.getMonsterAmount())); //God
-        else monsterList.add(monsterRegistry.getMonster(0 % monsterRegistry.getMonsterAmount()));
-        monsterList.add(monsterRegistry.getMonster(1 % monsterRegistry.getMonsterAmount()));
-        monsterList.add(monsterRegistry.getMonster(2 % monsterRegistry.getMonsterAmount()));
-        monsterList.add(monsterRegistry.getMonster(3 % monsterRegistry.getMonsterAmount()));
-        monsterList.add(monsterRegistry.getMonster(4 % monsterRegistry.getMonsterAmount()));
-        monsterList.add(monsterRegistry.getMonster(5 % monsterRegistry.getMonsterAmount()));
+        if(gameData != null && gameData.getKeys().isDown(GameKeys.LEFT_CTRL))
+            monsterList.add(monsterRegistry.getMonster(6)); //God
         entity.add(new MonsterTeamPart(monsterList));
     }
 

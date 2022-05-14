@@ -59,8 +59,13 @@ public class BattleEvent implements IMapEvent {
 
     @Override
     public void update(GameData gameData) {
+        Camera cam = gameData.getCamera();
+
         textBox.setHeight(100f);
         textBox.setWidth(gameData.getDisplayWidth() - 50);
+        textBox.setX((cam.position.x - cam.viewportWidth / 2f) + 20);
+        textBox.setY((cam.position.y - cam.viewportHeight / 2f) + 20);
+
         exlamationBox.setHeight(28f);
         exlamationBox.setWidth(12.5f);
     }
@@ -71,6 +76,7 @@ public class BattleEvent implements IMapEvent {
             return;
         //Draw rectangle
         Camera cam = gameData.getCamera();
+        shapeRenderer.setProjectionMatrix(cam.combined);
         shapeRenderer.setColor(Color.WHITE);
         shapeRenderer.begin(ShapeRenderer.ShapeType.Filled);
 
@@ -79,16 +85,15 @@ public class BattleEvent implements IMapEvent {
         PositionPart victimPosition = victim.getPart(PositionPart.class);
 
         if (victimPosition != null) {
-            Vector3 exlamationBoxPos = cam.project(new Vector3(victimPosition.getX(), victimPosition.getY(), 0f));
-            exlamationBox.setY(exlamationBoxPos.y + 59);
-            exlamationBox.setX(exlamationBoxPos.x + 12.5f);
+            exlamationBox.setY(victimPosition.getY() + 59);
+            exlamationBox.setX(victimPosition.getX() + 12.5f);
             exlamationBox.draw(shapeRenderer, gameData.getDelta());
         }
 
         shapeRenderer.end();
 
         //Draw text
-        spriteBatch.setProjectionMatrix(gameData.getCamera().combined);
+        spriteBatch.setProjectionMatrix(cam.combined);
         spriteBatch.begin();
 
 

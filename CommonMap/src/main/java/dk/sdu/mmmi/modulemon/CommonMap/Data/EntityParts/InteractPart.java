@@ -10,6 +10,7 @@ import dk.sdu.mmmi.modulemon.CommonMap.Data.Direction;
 import dk.sdu.mmmi.modulemon.CommonMap.Data.Entity;
 import dk.sdu.mmmi.modulemon.CommonMap.Data.World;
 import dk.sdu.mmmi.modulemon.common.data.GameData;
+import dk.sdu.mmmi.modulemon.common.drawing.Position;
 
 /**
  *
@@ -40,12 +41,25 @@ public class InteractPart implements EntityPart {
     @Override
     public void process(GameData gameData, World world, Entity entity) {
         for (Entity e : world.getEntities()){
-            InteractPart interactPart = e.getPart(InteractPart.class);
-            if(interactPart == null || interactPart == this){
+            if(e == entity){ //You cannot interact with yourself.
                 continue;
             }
 
-            boolean canInteract = this.isInRange(interactPart.positionPart.getX(), interactPart.positionPart.getY());
+            InteractPart interactPart = e.getPart(InteractPart.class);
+            float x;
+            float y;
+            if(interactPart != null){
+                x = interactPart.positionPart.getX();
+                y = interactPart.positionPart.getY();
+            }else if(e.getPart(PositionPart.class) != null){
+                PositionPart pos = e.getPart(PositionPart.class);
+                x = pos.getX();
+                y = pos.getY();
+            }else{
+                continue;
+            }
+
+            boolean canInteract = this.isInRange(x, y);
             if(canInteract){
                 this.interactWith = e;
                 return;

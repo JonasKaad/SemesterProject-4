@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<scr:component xmlns:scr="http://www.osgi.org/xmlns/scr/v1.1.0" name="dk.sdu.mmmi.modulemon.MapEntities.MapEntityPlugin">
+    <implementation class="dk.sdu.mmmi.modulemon.MapEntities.MapEntityPlugin"/>
+    <service>
+        <provide interface="dk.sdu.mmmi.modulemon.CommonMap.Services.IGamePluginService"/>
+    </service>
+
+    <reference bind="setMonsterRegistryService" cardinality="0..1"
+               interface="dk.sdu.mmmi.modulemon.CommonMonster.IMonsterRegistry"
+               name="IMonsterRegistry" policy="dynamic" unbind="removeMonsterRegistryService"/>
+</scr:component>

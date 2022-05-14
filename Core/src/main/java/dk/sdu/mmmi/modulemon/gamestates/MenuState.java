@@ -2,6 +2,7 @@ package dk.sdu.mmmi.modulemon.gamestates;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.audio.Music;
+import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.Texture;
@@ -45,6 +46,9 @@ public class MenuState implements IGameViewService {
             "Settings",
             "Quit"
     };
+
+    private Sound selectSound;
+    private Sound chooseSound;
 
 
     GameData gameData = new GameData();
@@ -90,6 +94,8 @@ public class MenuState implements IGameViewService {
         fontGenerator.dispose();
 
         logo = AssetLoader.getInstance().getTextureAsset("/icons/cat-logo.png", this.getClass());
+        selectSound = AssetLoader.getInstance().getSoundAsset("/sounds/select.ogg", this.getClass());
+        chooseSound = AssetLoader.getInstance().getSoundAsset("/sounds/choose.ogg", this.getClass());
 
         // Sets the options for the menu
         menuOptions = defaultMenuOptions;
@@ -101,9 +107,9 @@ public class MenuState implements IGameViewService {
             title = "Select GaméstatE";
             List<IGameViewService> gameViews = Game.getGameViewServiceList();
             menuOptions = new String[gameViews.size() + 1];
-            menuOptions[0] = "GO BACK";
-            for (int i = 1; i <= gameViews.size(); i++) {
-                menuOptions[i] = gameViews.get(i - 1).toString();
+            menuOptions[menuOptions.length-1] = "GO BACK";
+            for (int i = 0; i < gameViews.size(); i++) {
+                menuOptions[i] = gameViews.get(i).toString();
             }
         } else {
             //Default
@@ -170,6 +176,7 @@ public class MenuState implements IGameViewService {
             } else {
                 currentOption = menuOptions.length - 1;
             }
+            selectSound.play();
         }
         // Moves down in the menu
         if (gameData.getKeys().isPressed(GameKeys.DOWN) || gameData.getKeys().isPressed(GameKeys.RIGHT)) {
@@ -178,10 +185,12 @@ public class MenuState implements IGameViewService {
             } else {
                 currentOption = 0;
             }
+            selectSound.play();
         }
         // Selects the current option
         if (gameData.getKeys().isPressed(GameKeys.ACTION) || gameData.getKeys().isPressed(GameKeys.E)) {
             selectOption(gameStateManager);
+            chooseSound.play();
         }
     }
 
@@ -202,7 +211,7 @@ public class MenuState implements IGameViewService {
                 System.out.println("ERROR: Tried to set invalid view");
                 currentOption = 0;
             }
-            IGameViewService selectedView = views.get(currentOption - 1);
+            IGameViewService selectedView = views.get(currentOption);
             gsm.setState(selectedView);
             if(selectedView instanceof IBattleView){
                 ((IBattleView)selectedView).startBattle(null, null, null);
