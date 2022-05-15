@@ -54,11 +54,11 @@ public class NPCControlSystem implements IEntityProcessingService{
                     entityPart.process(gameData, world, npc);
                 }
 
-                updateShape(npc, current);
+                updateShape(npc);
         }
     }
 
-    private void updateShape(Entity entity, String current) {
+    private void updateShape(Entity entity) {
 
         PositionPart positionPart = entity.getPart(PositionPart.class);
         float x = positionPart.getX();
