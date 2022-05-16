@@ -70,9 +70,6 @@ public class BattleAI implements IBattleAI {
             return defaultUseAlphaBetaPruning;
         }
         Object abObj = settings.getSetting(SettingsRegistry.getInstance().getAIAlphaBetaSetting());
-        if (!(abObj instanceof Integer)) {
-            return defaultUseAlphaBetaPruning;
-        }
         return (boolean) abObj;
     }
 

@@ -21,6 +21,9 @@ public class NPCPlugin implements IGamePluginService{
     
     List<Entity> npcs;
     IMonsterRegistry monsterRegistry;
+    int[] team0 = new int[]{0, 2};
+    int[] team1 = new int[]{3, 4, 5};
+    int[] team2 = new int[]{3, 2, 4, 5, 1};
 
     @Override
     public void start(GameData gameData, World world) {
@@ -83,9 +86,9 @@ public class NPCPlugin implements IGamePluginService{
 
 
         if(monsterRegistry != null) {
-            addMonsterTeam(npcs.get(0), new int[]{0, 2});
-            addMonsterTeam(npcs.get(1), new int[]{3, 4, 5});
-            addMonsterTeam(npcs.get(2), new int[]{3, 2, 4, 5, 1});
+            addMonsterTeam(npcs.get(0), team0);
+            addMonsterTeam(npcs.get(1), team1);
+            addMonsterTeam(npcs.get(2), team2);
         }
     }
     public void addMonsterTeam(Entity entity, int[] ints) {
@@ -94,6 +97,22 @@ public class NPCPlugin implements IGamePluginService{
             monsterList.add(monsterRegistry.getMonster(ints[i] % monsterRegistry.getMonsterAmount()));
         }
         entity.add(new MonsterTeamPart(monsterList));
+    }
+
+    public int[] getTeam(String team){
+        int[] real_team = new int[]{0};
+        switch (team) {
+            case "team0":
+                real_team = team0;
+                break;
+            case "team1":
+                real_team = team1;
+                break;
+            case "team2":
+                real_team = team2;
+                break;
+        }
+        return real_team;
     }
 
     @Override
@@ -110,7 +129,7 @@ public class NPCPlugin implements IGamePluginService{
         this.monsterRegistry = monsterRegistry;
         if (npcs != null) {
             for (int i = 0; i < npcs.size(); i++) {
-                addMonsterTeam(npcs.get(i), new int[]{i});
+                addMonsterTeam(npcs.get(i), getTeam("team" + i));
             }
         }
     }
