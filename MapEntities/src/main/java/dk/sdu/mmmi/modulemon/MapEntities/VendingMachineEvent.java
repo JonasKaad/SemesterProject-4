@@ -94,7 +94,7 @@ public class VendingMachineEvent implements IMapEvent {
                     chooseMonMenu.getX() + 40, chooseMonMenu.getY() + 45,
                     chooseMonMenu.getX() + 25, chooseMonMenu.getY() + 55);
             shapeRenderer.end();
-        }else if(monsters.isEmpty()){
+        }else if(monsters.isEmpty() || entity.getPart(MonsterTeamPart.class) == null){ //Null check on monsterteampart, as that would happen if monsters are unloaded on map
             textUtils.drawNormalRoboto(
                     spriteBatch,
                     "This machine contains no monsters.",
@@ -181,6 +181,11 @@ public class VendingMachineEvent implements IMapEvent {
                 return;
 
             MonsterTeamPart mtp = entity.getPart(MonsterTeamPart.class);
+            if(mtp == null){
+                eventDone = true;
+                System.out.println("[Warning] Player does not have a monsterTeamPart");
+                return;
+            }
             mtp.getMonsterTeam().add(monsters.get(monIndex));
             visitedPart.addUuid(this.machineUuid);
             eventDone = true;
