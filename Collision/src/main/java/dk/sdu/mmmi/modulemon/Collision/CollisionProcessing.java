@@ -20,7 +20,7 @@ public class CollisionProcessing implements IPostEntityProcessingService {
 
     @Override
     public void process(GameData gameData, World world) {
-        if(mapView == null){
+        if(mapView == null || gameData.isPaused()){
             return;
         }
         for (Entity entity : world.getEntities()) {
@@ -34,6 +34,7 @@ public class CollisionProcessing implements IPostEntityProcessingService {
                     else loader.getSoundAsset("/sounds/bonk.ogg", this.getClass()).play( );
                     bonkCooldown = 0.5f;
                 }
+                return;
             }
 
             for (Entity checking : world.getEntities()) {

@@ -53,8 +53,8 @@ public class BattleSimulation implements IBattleSimulation {
 
         this.battleState = new BattleState(player, enemy);
         this.battleState.setActiveParticipant(firstToTakeTurn);
-
-        //this.AI = AIFactory.getBattleAI(this, enemy);
+        if(AIFactory != null)
+            this.AI = AIFactory.getBattleAI(this, enemy);
 
         if (!firstToTakeTurn.isPlayerControlled()) {
             nextEvent = new InfoBattleEvent("The opponent starts the battle", battleState.clone());
