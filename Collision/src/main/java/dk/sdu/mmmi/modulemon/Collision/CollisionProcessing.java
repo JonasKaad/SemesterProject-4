@@ -20,6 +20,9 @@ public class CollisionProcessing implements IPostEntityProcessingService {
 
     @Override
     public void process(GameData gameData, World world) {
+        if(mapView == null){
+            return;
+        }
         for (Entity entity : world.getEntities()) {
             PositionPart entityPosPart = entity.getPart(PositionPart.class);
             if(mapView.isCellBlocked(entityPosPart.getTargetPos().x, entityPosPart.getTargetPos().y) && !entityPosPart.getTargetPos().equals(new Vector2(0,0))) {
