@@ -636,11 +636,6 @@ public class MapView implements IGameViewService, IMapView {
     }
 
     @Override
-    public boolean isPaused() {
-        return isPaused;
-    }
-
-    @Override
     public void startEncounter(Entity player, Entity enemy) {
         if (battleView == null) {
             return;
