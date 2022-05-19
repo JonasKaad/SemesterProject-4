@@ -1,4 +1,4 @@
-package dk.sdu.mmmi.modulemon.gamestates;
+package dk.sdu.mmmi.modulemon.gameviews;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.audio.Music;
@@ -13,11 +13,11 @@ import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGenerator;
 import dk.sdu.mmmi.modulemon.CommonBattleClient.IBattleView;
 import dk.sdu.mmmi.modulemon.Game;
 import dk.sdu.mmmi.modulemon.common.AssetLoader;
+import dk.sdu.mmmi.modulemon.common.OSGiFileHandle;
 import dk.sdu.mmmi.modulemon.common.SettingsRegistry;
 import dk.sdu.mmmi.modulemon.common.data.GameData;
 import dk.sdu.mmmi.modulemon.common.data.GameKeys;
-import dk.sdu.mmmi.modulemon.common.data.IGameStateManager;
-import dk.sdu.mmmi.modulemon.common.OSGiFileHandle;
+import dk.sdu.mmmi.modulemon.common.data.IGameViewManager;
 import dk.sdu.mmmi.modulemon.common.services.IGameSettings;
 import dk.sdu.mmmi.modulemon.common.services.IGameViewService;
 
@@ -26,7 +26,7 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
 
-public class MenuState implements IGameViewService {
+public class MenuView implements IGameViewService {
 
     /**
      * Creates the necessary variables used for custom fonts.
@@ -87,13 +87,13 @@ public class MenuState implements IGameViewService {
     private IGameSettings settings;
     SettingsRegistry settingsRegistry = SettingsRegistry.getInstance();
 
-    public MenuState(IGameSettings settings) {
+    public MenuView(IGameSettings settings) {
         this.settings = settings;
     }
 
     @Override
-    public void init(IGameStateManager gameStateManager) {
-        menuMusic = AssetLoader.getInstance().getMusicAsset("/music/menu.ogg", MenuState.class);
+    public void init(IGameViewManager gameViewManager) {
+        menuMusic = AssetLoader.getInstance().getMusicAsset("/music/menu.ogg", MenuView.class);
         // Instantiates the variables
         spriteBatch = new SpriteBatch();
         glyphLayout = new GlyphLayout();
@@ -141,32 +141,30 @@ public class MenuState implements IGameViewService {
     }
 
     @Override
-    public void update(GameData gameData, IGameStateManager gameStateManager) {
-        if (currentMenuState == MenuStates.SELECTING_GAMESTATE) {
-            title = "Select GaméstatE";
+    public void update(GameData gameData, IGameViewManager gameViewManager) {
+        if (currentMenuState == MenuStates.SELECTING_GAMEVIEW) {
+            title = "Select GamévieW";
             List<IGameViewService> gameViews = Game.getGameViewServiceList();
             menuOptions = new String[gameViews.size() + 1];
 
             for (int i = 0; i < gameViews.size(); i++) {
                 menuOptions[i] = gameViews.get(i).toString();
             }
-            menuOptions[menuOptions.length-1] = "GO BACK";
-        }
-        else if (currentMenuState == MenuStates.SETTINGS) {
+            menuOptions[menuOptions.length - 1] = "GO BACK";
+        } else if (currentMenuState == MenuStates.SETTINGS) {
             title = "Settings";
-            menuOptions = new String[settingOptions.length+1];
+            menuOptions = new String[settingOptions.length + 1];
             for (int i = 0; i < settingOptions.length; i++) {
                 menuOptions[i] = settingOptions[i];
             }
             menuOptions[settingOptions.length] = "GO BACK";
-        }
-        else {
+        } else {
             //Default
             menuOptions = defaultMenuOptions;
             title = "ModulémoN";
         }
         // Compares the value of the volume option to the correct value in the settings.json file
-        if(menuMusic.getVolume() !=  getMusicVolumeAsFloat()) {
+        if (menuMusic.getVolume() != getMusicVolumeAsFloat()) {
             // Sets the volume to the one found in the json file
             menuMusic.setVolume(getMusicVolumeAsFloat());
         }
@@ -196,7 +194,7 @@ public class MenuState implements IGameViewService {
 
         // If showSettings is true, it should draw with a smaller font, i.e. smallMenuOptionsFont.
         // And also draw the values of the appertaining settings (On / Off, volume level, etc.)
-        if(showSettings) {
+        if (showSettings) {
             for (int i = 0; i < settingsValueList.size(); i++) {
                 glyphLayout.setText(settingsValueFont, settingsValueList.get(i));
                 settingsValueFont.draw(
@@ -248,7 +246,7 @@ public class MenuState implements IGameViewService {
     }
 
     @Override
-    public void handleInput(GameData gameData, IGameStateManager gameStateManager) {
+    public void handleInput(GameData gameData, IGameViewManager gameViewManager) {
         // Moves up in the menu
         if (gameData.getKeys().isPressed(GameKeys.UP)) {
             if (currentOption > 0) {
@@ -268,16 +266,16 @@ public class MenuState implements IGameViewService {
             selectSound.play(getSoundVolumeAsFloat());
         }
 
-        if(gameData.getKeys().isPressed(GameKeys.LEFT)){
+        if (gameData.getKeys().isPressed(GameKeys.LEFT)) {
             handleSettings("LEFT");
         }
-        if(gameData.getKeys().isPressed(GameKeys.RIGHT)){
+        if (gameData.getKeys().isPressed(GameKeys.RIGHT)) {
             handleSettings("RIGHT");
         }
         // Selects the current option
         if (gameData.getKeys().isPressed(GameKeys.ACTION) || gameData.getKeys().isPressed(GameKeys.E)) {
             handleSettings("ACTION");
-            selectOption(gameStateManager);
+            selectOption(gameViewManager);
         }
     }
 
@@ -285,7 +283,7 @@ public class MenuState implements IGameViewService {
      * Handler for when an option is selected.
      * Based on what the currentOption is, it will execute the appertaining code.
      */
-    private void selectOption(IGameStateManager gsm) {
+    private void selectOption(IGameViewManager gvm) {
         if (menuOptions[currentOption].equalsIgnoreCase("GO BACK")) {
             currentMenuState = MenuStates.DEFAULT;
             currentOption = 0;
@@ -295,22 +293,21 @@ public class MenuState implements IGameViewService {
         }
 
 
-        if (currentMenuState == MenuStates.SELECTING_GAMESTATE) {
+        if (currentMenuState == MenuStates.SELECTING_GAMEVIEW) {
             List<IGameViewService> views = Game.getGameViewServiceList();
             if (currentOption > views.size()) {
                 System.out.println("ERROR: Tried to set invalid view");
                 currentOption = 0;
             }
             IGameViewService selectedView = views.get(currentOption);
-            gsm.setState(selectedView);
-            if(selectedView instanceof IBattleView){
+            gvm.setState(selectedView);
+            if (selectedView instanceof IBattleView) {
                 chooseSound.play(getSoundVolumeAsFloat());
-                ((IBattleView)selectedView).startBattle(null, null, null);
+                ((IBattleView) selectedView).startBattle(null, null, null);
             }
         } else {
             if (Objects.equals(menuOptions[currentOption], "Play")) {
-                //gsm.setState(GameStateManager.PLAY);
-                currentMenuState = MenuStates.SELECTING_GAMESTATE;
+                currentMenuState = MenuStates.SELECTING_GAMEVIEW;
                 currentOption = 0;
                 chooseSound.play(getSoundVolumeAsFloat());
             }
@@ -329,11 +326,12 @@ public class MenuState implements IGameViewService {
     /**
      * Method to handle what logic should happen in the Settings menu. It checks the currently selected/hovered setting
      * and executes the code relevant to that. It takes the parameter keyInput.
+     *
      * @param keyInput declares what kind of key was pressed such that relevant logic can be applied. For instance, if you
-     *                want to increase something when pressing right and decrease when pressing left.
+     *                 want to increase something when pressing right and decrease when pressing left.
      */
-    private void handleSettings(String keyInput){
-        if(settings != null) {
+    private void handleSettings(String keyInput) {
+        if (settings != null) {
             switch (keyInput) {
                 case "RIGHT": {
                     if (menuOptions[currentOption].equalsIgnoreCase("Change Music Volume")) {
@@ -474,7 +472,7 @@ public class MenuState implements IGameViewService {
      * displayed on screen to either "On" or "Off".
      */
     private void boolean_settings_switch_on_off() {
-        if(settings != null) {
+        if (settings != null) {
             // Checks if the currently selected/hovered setting is the option for Persona Rectangles
             if (menuOptions[currentOption].equalsIgnoreCase("Use Persona Rectangles")) {
             /*
@@ -510,8 +508,8 @@ public class MenuState implements IGameViewService {
      * This method gets called when this state is first loaded. It initializes the settings menu values with
      * those found in the settings.json file.
      */
-    private void settingsInitializer(){
-        if(settings != null) {
+    private void settingsInitializer() {
+        if (settings != null) {
             musicVolume = settings.getSetting(settingsRegistry.getMusicVolumeSetting()) + "%";
             soundVolume = settings.getSetting(settingsRegistry.getSoundVolumeSetting()) + "%";
             settingsValueList.add(musicVolume);
@@ -530,22 +528,19 @@ public class MenuState implements IGameViewService {
     }
 
 
-
     // Gets the sound volume from the settings file and returns it as a float
-    private float getSoundVolumeAsFloat(){
+    private float getSoundVolumeAsFloat() {
 
-        if(settings != null) {
+        if (settings != null) {
             return (int) settings.getSetting(settingsRegistry.getSoundVolumeSetting()) / 100f;
-        }
-        else return 0.6f;
+        } else return 0.6f;
     }
 
     // Gets the music volume from the settings file and returns it as a float
-    private float getMusicVolumeAsFloat(){
-        if(settings != null) {
+    private float getMusicVolumeAsFloat() {
+        if (settings != null) {
             return (int) settings.getSetting(settingsRegistry.getMusicVolumeSetting()) / 100f;
-        }
-        else return 0.3f;
+        } else return 0.3f;
     }
 
     @Override
@@ -557,7 +552,7 @@ public class MenuState implements IGameViewService {
 
     private enum MenuStates {
         DEFAULT,
-        SELECTING_GAMESTATE,
+        SELECTING_GAMEVIEW,
         SETTINGS
     }
 }

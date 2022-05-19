@@ -26,6 +26,9 @@ public class InteractProcessing implements IPostEntityProcessingService {
 
     @Override
     public void process(GameData gameData, World world) {
+        if(gameData.isPaused()){
+            return;
+        }
         boolean wasAbleToInteract = false;
         for (Entity entity : world.getEntities()) {
             InteractPart interactPart = entity.getPart(InteractPart.class);
@@ -52,7 +55,7 @@ public class InteractProcessing implements IPostEntityProcessingService {
                     if(interacteePart != null){
                         IMapEvent event = interacteePart.getEvent(entity);
                         this.mapView.addMapEvent(event);
-                        continue;
+                        break;
                     }
 
                     MonsterTeamPart monsterTeam1 = entity.getPart(MonsterTeamPart.class);

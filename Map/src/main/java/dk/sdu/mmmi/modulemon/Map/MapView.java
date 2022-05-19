@@ -27,7 +27,9 @@ import dk.sdu.mmmi.modulemon.CommonMap.TextMapEvent;
 import dk.sdu.mmmi.modulemon.CommonMonster.IMonster;
 import dk.sdu.mmmi.modulemon.common.AssetLoader;
 import dk.sdu.mmmi.modulemon.common.SettingsRegistry;
-import dk.sdu.mmmi.modulemon.common.data.*;
+import dk.sdu.mmmi.modulemon.common.data.GameData;
+import dk.sdu.mmmi.modulemon.common.data.GameKeys;
+import dk.sdu.mmmi.modulemon.common.data.IGameViewManager;
 import dk.sdu.mmmi.modulemon.common.drawing.PersonaRectangle;
 import dk.sdu.mmmi.modulemon.common.drawing.Rectangle;
 import dk.sdu.mmmi.modulemon.common.drawing.TextUtils;
@@ -86,14 +88,14 @@ public class MapView implements IGameViewService, IMapView {
     private static final List<IGamePluginService> gamePluginList = new CopyOnWriteArrayList<>();
     private static Queue<Runnable> gdxThreadTasks = new LinkedList<>();
     private static Queue<IMapEvent> mapEvents = new LinkedList<>();
-    private IGameStateManager gameStateManager;
+    private IGameViewManager gameViewManager;
     private IBattleView battleView;
     private Entity player;
     Class<? extends Rectangle> rectToUse = Rectangle.class;
     private IGameSettings settings;
 
     @Override
-    public void init(IGameStateManager gameStateManager) {
+    public void init(IGameViewManager gameViewManager) {
         mapMusic = loader.getMusicAsset("/music/village_theme.ogg", MapView.class);
         tiledMap = new OSGiTmxLoader().load("/maps/ForestOverworld.tmx");
         overhangLayer = (TiledMapTileLayer) tiledMap.getLayers().get("Top");
@@ -119,10 +121,8 @@ public class MapView implements IGameViewService, IMapView {
         shapeRenderer = new ShapeRenderer();
         gdxThreadTasks.add(() -> textUtils = TextUtils.getInstance());
 
-
         // Battle
-        this.gameStateManager = gameStateManager;
-
+        this.gameViewManager = gameViewManager;
     }
 
     private void initializeCameraDrawing(GameData gameData) {
@@ -139,19 +139,19 @@ public class MapView implements IGameViewService, IMapView {
         cam.position.set(mapRight / 2f, mapTop / 2f, 0);
     }
 
-    private Rectangle createRectangle(Class<? extends Rectangle> clazz, float x, float y, float width, float height){
+    private Rectangle createRectangle(Class<? extends Rectangle> clazz, float x, float y, float width, float height) {
         try {
             return (Rectangle) clazz.getDeclaredConstructors()[0].newInstance(x, y, width, height);
         } catch (Exception _) {
             System.out.println("[WARNING] Failed to create rectangles of type: " + clazz.getName());
         }
         //Default to regular rectangle
-        return new Rectangle(x,y,width,height);
+        return new Rectangle(x, y, width, height);
     }
 
 
     @Override
-    public void update(GameData gameData, IGameStateManager gameStateManager) {
+    public void update(GameData gameData, IGameViewManager gameViewManager) {
         while (!gdxThreadTasks.isEmpty()) {
             gdxThreadTasks.poll().run();
         }
@@ -172,7 +172,7 @@ public class MapView implements IGameViewService, IMapView {
         for (IPostEntityProcessingService postProcessingService : postProcessingList) {
             postProcessingService.process(gameData, world);
         }
-        if(settings != null) {
+        if (settings != null) {
             if (mapMusic.getVolume() != (int) settings.getSetting(SettingsRegistry.getInstance().getMusicVolumeSetting()) / 100f) {
                 mapMusic.setVolume((int) settings.getSetting(SettingsRegistry.getInstance().getMusicVolumeSetting()) / 100f);
             }
@@ -190,8 +190,7 @@ public class MapView implements IGameViewService, IMapView {
                 monsterTeamMenu = createRectangle(rectToUse, 100, 100, 400, 550);
                 teamActionMenu = createRectangle(rectToUse, 100, 100, 200, 200);
             }
-        }
-        else{
+        } else {
             mapMusic.setVolume(0.3f);
             summaryMenu = createRectangle(Rectangle.class, 100, 100, 380, 300);
             pauseMenu = createRectangle(Rectangle.class, 100, 100, 200, 250);
@@ -239,7 +238,7 @@ public class MapView implements IGameViewService, IMapView {
         tiledMapRenderer.getBatch().end();
 
         // Draw events
-        if(!mapEvents.isEmpty()){
+        if (!mapEvents.isEmpty()) {
             mapEvents.peek().draw(gameData, spriteBatch, shapeRenderer);
         }
 
@@ -271,8 +270,7 @@ public class MapView implements IGameViewService, IMapView {
                     monsterRectangle.setBorderColor(Color.BLACK);
                 }
                 teamOptionIndex = 0;
-            }
-            else {
+            } else {
                 MonsterTeam.drawTeamOptions(gameData, shapeRenderer, spriteBatch, textUtils, teamActionMenu, monsterTeamMenu, teamActions);
             }
         }
@@ -288,8 +286,7 @@ public class MapView implements IGameViewService, IMapView {
                 teamActionMenu.setFillColor(Color.WHITE);
                 pauseMenu.setFillColor(Color.WHITE);
                 teamOptionIndex = 0;
-            }
-            else {
+            } else {
                 MonsterTeam.drawSummary(gameData, shapeRenderer, spriteBatch, textUtils, summaryMenu, monsterTeamMenu, mtp, selectedOptionIndexMonsterTeam);
             }
         }
@@ -343,12 +340,13 @@ public class MapView implements IGameViewService, IMapView {
     }
 
     @Override
-    public void handleInput(GameData gameData, IGameStateManager gameStateManager) {
+    public void handleInput(GameData gameData, IGameViewManager gameViewManager) {
         //If map event, run handleInput() and return.
-        if(!mapEvents.isEmpty()){
+        if (!mapEvents.isEmpty()) {
             mapEvents.peek().handleInput(gameData);
         }
 
+        gameData.setPaused(isPaused);
         if (isPaused) {
             if (gameData.getKeys().isPressed(GameKeys.DOWN)) {
                 if (showTeamOptions && !showSummary) {
@@ -373,7 +371,7 @@ public class MapView implements IGameViewService, IMapView {
                         monsterRectangles[temporarySecondSelected].setBorderColor(Color.valueOf("29d4ff"));
                     }
                 } else {
-                    if (selectedOptionIndex < pauseActions.length-1)
+                    if (selectedOptionIndex < pauseActions.length - 1)
                         selectedOptionIndex++;
                     else
                         selectedOptionIndex = 0;
@@ -431,7 +429,8 @@ public class MapView implements IGameViewService, IMapView {
                     pauseMenu.setFillColor(Color.WHITE);
                 } else {
                     isPaused = false;
-                    gameData.setPaused(isPaused);
+                    gameData.getKeys().setKey(GameKeys.ACTION, false);
+                    return;
                 }
             }
             if (gameData.getKeys().isPressed(GameKeys.ACTION)) {
@@ -481,7 +480,7 @@ public class MapView implements IGameViewService, IMapView {
                             teamOptionIndex = 0;
                         }
                     } else {
-                        if(!monsterTeam.isEmpty()) {
+                        if (!monsterTeam.isEmpty()) {
                             showTeamOptions = true;
                             monsterRectangles[selectedOptionIndexMonsterTeam].setBorderColor(Color.valueOf("ffcb05"));
                         }
@@ -491,7 +490,8 @@ public class MapView implements IGameViewService, IMapView {
                 if (!showMonsterTeam) {
                     if (pauseActions[selectedOptionIndex].equals("Resume")) {
                         isPaused = false;
-                        gameData.setPaused(isPaused);
+                        gameData.getKeys().setKey(GameKeys.ACTION, false);
+                        return;
                     }
                     if (pauseActions[selectedOptionIndex].equals("Team")) {
                         showMonsterTeam = true;
@@ -506,7 +506,7 @@ public class MapView implements IGameViewService, IMapView {
                         gameData.setPaused(isPaused);
                         if (cam != null)
                             cam.position.set(gameData.getDisplayWidth() / 2, gameData.getDisplayHeight() / 2, 0);
-                        gameStateManager.setDefaultState();
+                        gameViewManager.setDefaultState();
                     }
                 }
             }
@@ -552,20 +552,20 @@ public class MapView implements IGameViewService, IMapView {
         mapMusic = null;
     }
 
-    public void setSettingsService(IGameSettings settings){
+    public void setSettingsService(IGameSettings settings) {
         this.settings = settings;
-        if (settings.getSetting(SettingsRegistry.getInstance().getMusicVolumeSetting())==null) {
+        if (settings.getSetting(SettingsRegistry.getInstance().getMusicVolumeSetting()) == null) {
             settings.setSetting(SettingsRegistry.getInstance().getMusicVolumeSetting(), 30);
         }
-        if (settings.getSetting(SettingsRegistry.getInstance().getSoundVolumeSetting())==null) {
+        if (settings.getSetting(SettingsRegistry.getInstance().getSoundVolumeSetting()) == null) {
             settings.setSetting(SettingsRegistry.getInstance().getSoundVolumeSetting(), 60);
         }
-        if (settings.getSetting(SettingsRegistry.getInstance().getRectangleStyleSetting())==null) {
+        if (settings.getSetting(SettingsRegistry.getInstance().getRectangleStyleSetting()) == null) {
             settings.setSetting(SettingsRegistry.getInstance().getRectangleStyleSetting(), false);
         }
     }
 
-    public void removeSettingsService(IGameSettings settings){
+    public void removeSettingsService(IGameSettings settings) {
         this.settings = null;
     }
 
@@ -636,13 +636,8 @@ public class MapView implements IGameViewService, IMapView {
     }
 
     @Override
-    public boolean isPaused() {
-        return isPaused;
-    }
-
-    @Override
     public void startEncounter(Entity player, Entity enemy) {
-        if(battleView == null){
+        if (battleView == null) {
             return;
         }
 
@@ -651,16 +646,16 @@ public class MapView implements IGameViewService, IMapView {
         List<IMonster> playerMonsters = playerMonsterTeamPart.getMonsterTeam();
         List<IMonster> enemyMonsters = enemyMonsterTeamPart.getMonsterTeam();
 
-        gameStateManager.setState((IGameViewService) battleView, false); // Do not dispose the map
+        gameViewManager.setState((IGameViewService) battleView, false); // Do not dispose the map
         cam.position.set(cam.viewportWidth / 2, cam.viewportHeight / 2, 0);
         mapMusic.stop();
         battleView.startBattle(playerMonsters, enemyMonsters, result -> {
-            gameStateManager.setState(MapView.this);
+            gameViewManager.setState(MapView.this);
             mapMusic.play();
             boolean playerWon = result.getWinner() == result.getPlayer();
             String winnerName = playerWon ? "Player" : "Enemy";
             addMapEvent(new TextMapEvent(new LinkedList<>(Arrays.asList(String.format("%s won the battle!", winnerName)))));
-            if(!playerWon){
+            if (!playerWon) {
                 enemyMonsterTeamPart.healAllMonsters();
             }
         });
@@ -672,7 +667,7 @@ public class MapView implements IGameViewService, IMapView {
     }
 
     @Override
-    public String toString(){
+    public String toString() {
         return "Start the adventure!";
     }
 }
