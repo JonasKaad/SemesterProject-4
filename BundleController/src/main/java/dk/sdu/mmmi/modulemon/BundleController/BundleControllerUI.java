@@ -23,6 +23,7 @@ public class BundleControllerUI extends JFrame {
 
     private java.util.List<String> dynamicallyLoadUnloadBundles = Arrays.asList(
             "Battle",
+            "Map",
             "Player",
             "NPC",
             "BattleAI",
