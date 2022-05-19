@@ -43,6 +43,7 @@ public class BattleView implements IGameViewService, IBattleView {
     private long stuckSince = 0; // Used to check if stuck trying to load monsters..
     private final long stuckThreshold = 5000; // How many millis we can be stuck for.
     private boolean _isInitialized;
+    private boolean _battleStarted;
     private IBattleCallback _battleCallback;
     private IBattleSimulation _battleSimulation;
     private IBattleState _currentBattleState;
@@ -138,6 +139,7 @@ public class BattleView implements IGameViewService, IBattleView {
 
         BaseAnimation openingAnimation = new BattleSceneOpenAnimation(_battleScene);
         blockingAnimations.add(openingAnimation);
+        _battleStarted = true;
     }
 
     @Override
@@ -169,6 +171,7 @@ public class BattleView implements IGameViewService, IBattleView {
         stuckSince = 0;
         updateHasRunOnce = false;
         _isInitialized = true;
+        _battleStarted = false;
         this.gameViewManager = gameViewManager;
     }
 
@@ -189,7 +192,7 @@ public class BattleView implements IGameViewService, IBattleView {
 
     @Override
     public void update(GameData gameData, IGameViewManager gameViewManager) {
-        if (!_isInitialized || _battleSimulation == null || _battleMusic == null) {
+        if (!_isInitialized || _battleSimulation == null || !_battleStarted) {
             if(stuckSince <= 0){
                 stuckSince = TimeUtils.millis();
             }
@@ -217,7 +220,8 @@ public class BattleView implements IGameViewService, IBattleView {
                 _battleScene.setTextBoxRectStyle(Rectangle.class);
             }
         } else {
-            _battleMusic.setVolume(0.3f);
+            if(_battleMusic != null)
+                _battleMusic.setVolume(0.3f);
             _battleScene.setPlayerBoxRectStyle(Rectangle.class);
             _battleScene.setEnemyBoxRectStyle(Rectangle.class);
             _battleScene.setActionBoxRectStyle(Rectangle.class);
@@ -362,10 +366,7 @@ public class BattleView implements IGameViewService, IBattleView {
 
     @Override
     public void draw(GameData gameData) {
-        if (_battleSimulation == null || _battleMusic == null) {
-            //Checking _battleMusic == null, makes sure that startBattle() has been called.
-            if(Gdx.gl != null)
-                Gdx.gl.glClearColor(0,0,0,0); //Clear to black
+        if (_battleSimulation == null || !_battleStarted) {
             spriteBatch.begin();
             TextUtils.getInstance().drawBigRoboto(spriteBatch, "Waiting for battle participants or monsters..\nIf none found after "+this.stuckThreshold+" ms, will abort.", Color.WHITE, 100, 200);
             spriteBatch.end();
@@ -578,6 +579,10 @@ public class BattleView implements IGameViewService, IBattleView {
 
     public void removeMonsterRegistry(IMonsterRegistry monsterRegistry) {
         this.monsterRegistry = null;
+    }
+
+    public void mockBattleStarted(){
+        this._battleStarted = true;
     }
 
     @Override

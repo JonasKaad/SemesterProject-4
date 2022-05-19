@@ -90,12 +90,14 @@ public class BattleViewTest {
         // Arrange
         BattleView battleView = new BattleView();
         battleView.init(mock(IGameViewManager.class));
+        battleView.mockBattleStarted();
         GameData gameData = new GameData();
         gameData.setDisplayHeight(120);
         gameData.setDisplayWidth(100);
 
         BattleScene scene = new BattleScene();
         battleView.setBattleScene(scene);
+        battleView.setBattleSimulation(mock(IBattleSimulation.class));
 
         // Act / Assert
         battleView.update(gameData, null);
@@ -138,6 +140,7 @@ public class BattleViewTest {
         // Arrange
         BattleView battleView = new BattleView();
         battleView.init(mock(IGameViewManager.class));
+        battleView.mockBattleStarted();
         GameData gameData = new GameData();
         BattleScene scene = new BattleScene();
 
