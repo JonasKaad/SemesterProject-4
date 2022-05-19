@@ -8,13 +8,16 @@ import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Pixmap;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
+import dk.sdu.mmmi.modulemon.common.OSGiFileHandleByteReader;
 import dk.sdu.mmmi.modulemon.common.SettingsRegistry;
 import dk.sdu.mmmi.modulemon.common.data.GameData;
 import dk.sdu.mmmi.modulemon.common.data.GameKeys;
-import dk.sdu.mmmi.modulemon.common.OSGiFileHandleByteReader;
-import dk.sdu.mmmi.modulemon.common.services.*;
+import dk.sdu.mmmi.modulemon.common.services.IBundleControllerService;
+import dk.sdu.mmmi.modulemon.common.services.IGameSettings;
+import dk.sdu.mmmi.modulemon.common.services.IGameViewService;
 import dk.sdu.mmmi.modulemon.managers.GameInputManager;
-import dk.sdu.mmmi.modulemon.managers.GameStateManager;
+import dk.sdu.mmmi.modulemon.managers.GameViewManager;
+
 import java.nio.ByteBuffer;
 import java.util.LinkedList;
 import java.util.List;
@@ -27,19 +30,19 @@ public class Game implements ApplicationListener {
     public static OrthographicCamera cam;
     private static Viewport viewport;
     private final GameData gameData = new GameData();
-    private static GameStateManager gsm;
+    private static GameViewManager gvm;
     private static List<IGameViewService> gameViewServiceList = new CopyOnWriteArrayList<>();
     private static IBundleControllerService bundleControllerService;
     private static Queue<Runnable> gdxThreadTasks = new LinkedList<>();
 
     private IGameSettings settings = null;
 
-    public Game(){
+    public Game() {
         init();
     }
 
 
-    public void init(){
+    public void init() {
         LwjglApplicationConfiguration cfg = new LwjglApplicationConfiguration();
 
         WIDTH = 1280;
@@ -69,7 +72,7 @@ public class Game implements ApplicationListener {
         viewport.apply();
 
         gameData.setCamera(cam);
-        gsm = new GameStateManager();
+        gvm = new GameViewManager();
     }
 
     @Override
@@ -81,12 +84,12 @@ public class Game implements ApplicationListener {
         gameData.setDelta(Gdx.graphics.getDeltaTime());
 
         //Run tasks on the LibGDX thread for OSGi
-        while(!gdxThreadTasks.isEmpty()){
+        while (!gdxThreadTasks.isEmpty()) {
             gdxThreadTasks.poll().run();
         }
 
-        gsm.update(gameData);
-        gsm.draw(gameData);
+        gvm.update(gameData);
+        gvm.draw(gameData);
 
         gameData.getKeys().update();
 
@@ -95,9 +98,9 @@ public class Game implements ApplicationListener {
 
     private void update() {
         // Update
-        if(gameData.getKeys().isDown(GameKeys.K)
+        if (gameData.getKeys().isDown(GameKeys.K)
                 && gameData.getKeys().isDown(GameKeys.LEFT_CTRL)
-                && bundleControllerService != null){
+                && bundleControllerService != null) {
             Game.bundleControllerService.openController();
         }
 
@@ -108,26 +111,31 @@ public class Game implements ApplicationListener {
     public void resize(int width, int height) {
         viewport.update(width, height);
     }
+
     @Override
-    public void pause() {}
+    public void pause() {
+    }
+
     @Override
-    public void resume() {}
+    public void resume() {
+    }
+
     @Override
     public void dispose() {
-        if(Game.bundleControllerService != null){
+        if (Game.bundleControllerService != null) {
             Game.bundleControllerService.closeController();
         }
     }
 
 
-    public void addGameViewServiceList(IGameViewService gameViewService){
+    public void addGameViewServiceList(IGameViewService gameViewService) {
         System.out.println("WOOT, GAMEVIEWSERVICE LOADED: " + gameViewService.getClass().getName());
         gameViewServiceList.add(gameViewService);
     }
 
-    public void removeGameViewServiceList(IGameViewService gameViewService){
-        if(gsm.getCurrentGameState().equals(gameViewService)){
-            gdxThreadTasks.add(() -> gsm.setDefaultState());
+    public void removeGameViewServiceList(IGameViewService gameViewService) {
+        if (gvm.getCurrentGameState().equals(gameViewService)) {
+            gdxThreadTasks.add(() -> gvm.setDefaultState());
             System.out.println("Threw player out of scene because it was unloaded!");
         }
         gameViewServiceList.remove(gameViewService);
@@ -137,47 +145,47 @@ public class Game implements ApplicationListener {
         return gameViewServiceList;
     }
 
-    public void addBundleController(IBundleControllerService bundleControllerService){
+    public void addBundleController(IBundleControllerService bundleControllerService) {
         System.out.println("A bundle controller was injected.");
         Game.bundleControllerService = bundleControllerService;
     }
 
-    public void removeBundleController(IBundleControllerService bundleControllerService){
+    public void removeBundleController(IBundleControllerService bundleControllerService) {
         bundleControllerService.closeController();
         Game.bundleControllerService = null;
     }
 
-    public void setSettingsService(IGameSettings settings){
+    public void setSettingsService(IGameSettings settings) {
         this.settings = settings;
         gdxThreadTasks.add(() -> {
-            if (settings.getSetting(SettingsRegistry.getInstance().getMusicVolumeSetting())==null) {
+            if (settings.getSetting(SettingsRegistry.getInstance().getMusicVolumeSetting()) == null) {
                 settings.setSetting(SettingsRegistry.getInstance().getMusicVolumeSetting(), 30);
             }
-            if (settings.getSetting(SettingsRegistry.getInstance().getSoundVolumeSetting())==null) {
+            if (settings.getSetting(SettingsRegistry.getInstance().getSoundVolumeSetting()) == null) {
                 settings.setSetting(SettingsRegistry.getInstance().getSoundVolumeSetting(), 60);
             }
-            if (settings.getSetting(SettingsRegistry.getInstance().getRectangleStyleSetting())==null) {
+            if (settings.getSetting(SettingsRegistry.getInstance().getRectangleStyleSetting()) == null) {
                 settings.setSetting(SettingsRegistry.getInstance().getRectangleStyleSetting(), false);
             }
-            if (settings.getSetting(SettingsRegistry.getInstance().getAIProcessingTimeSetting())==null) {
+            if (settings.getSetting(SettingsRegistry.getInstance().getAIProcessingTimeSetting()) == null) {
                 settings.setSetting(SettingsRegistry.getInstance().getAIProcessingTimeSetting(), 1000);
             }
-            if (settings.getSetting(SettingsRegistry.getInstance().getAIAlphaBetaSetting())==null) {
+            if (settings.getSetting(SettingsRegistry.getInstance().getAIAlphaBetaSetting()) == null) {
                 settings.setSetting(SettingsRegistry.getInstance().getAIAlphaBetaSetting(), true);
             }
-            if (settings.getSetting(SettingsRegistry.getInstance().getBattleMusicThemeSetting())==null) {
+            if (settings.getSetting(SettingsRegistry.getInstance().getBattleMusicThemeSetting()) == null) {
                 settings.setSetting(SettingsRegistry.getInstance().getBattleMusicThemeSetting(), "Original");
             }
-            gsm.setSettings(settings);
+            gvm.setSettings(settings);
         });
     }
 
-    public void removeSettingsService(IGameSettings settings){
+    public void removeSettingsService(IGameSettings settings) {
         this.settings = null;
     }
 
 
-    private ByteBuffer[] hackIcon(String resourceName){
+    private ByteBuffer[] hackIcon(String resourceName) {
         ByteBuffer[] byteBuffer = new ByteBuffer[1];
         Pixmap pixmap = new Pixmap(new OSGiFileHandleByteReader(resourceName, this.getClass()));
         if (pixmap.getFormat() != Pixmap.Format.RGBA8888) {

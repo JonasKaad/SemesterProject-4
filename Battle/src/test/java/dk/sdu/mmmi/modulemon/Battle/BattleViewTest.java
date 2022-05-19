@@ -2,14 +2,14 @@ package dk.sdu.mmmi.modulemon.Battle;
 
 import dk.sdu.mmmi.modulemon.BattleScene.BattleView;
 import dk.sdu.mmmi.modulemon.BattleScene.scenes.BattleScene;
-import dk.sdu.mmmi.modulemon.CommonBattleSimulation.BattleEvents.InfoBattleEvent;
 import dk.sdu.mmmi.modulemon.CommonBattle.IBattleParticipant;
+import dk.sdu.mmmi.modulemon.CommonBattleSimulation.BattleEvents.InfoBattleEvent;
 import dk.sdu.mmmi.modulemon.CommonBattleSimulation.IBattleSimulation;
 import dk.sdu.mmmi.modulemon.CommonBattleSimulation.IBattleState;
 import dk.sdu.mmmi.modulemon.CommonMonster.IMonster;
 import dk.sdu.mmmi.modulemon.CommonTest.GdxTestIntercepter;
 import dk.sdu.mmmi.modulemon.common.data.GameData;
-import dk.sdu.mmmi.modulemon.common.data.IGameStateManager;
+import dk.sdu.mmmi.modulemon.common.data.IGameViewManager;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.junit.jupiter.api.function.Executable;
@@ -40,7 +40,7 @@ public class BattleViewTest {
     public void BattleView_EmptyBattleSimulation_ShouldNotThrow() {
         // Arrange
         BattleView bw = new BattleView();
-        bw.init(mock(IGameStateManager.class));
+        bw.init(mock(IGameViewManager.class));
         GameData gameData = new GameData();
 
         // Act
@@ -58,7 +58,7 @@ public class BattleViewTest {
     public void BattleView_UnloadingBattleSimulationOnRuntime_ShouldNotThrow() throws IOException, URISyntaxException {
         // Arrange
         BattleView battleView = new BattleView();
-        battleView.init(mock(IGameStateManager.class));
+        battleView.init(mock(IGameViewManager.class));
         GameData gameData = new GameData();
         IBattleSimulation simulation = mock(IBattleSimulation.class);
         IBattleState battleState = mock(IBattleState.class);
@@ -89,7 +89,7 @@ public class BattleViewTest {
     public void BattleView_DrawWidthHeight_ShouldBeUpdatedByGameData() {
         // Arrange
         BattleView battleView = new BattleView();
-        battleView.init(mock(IGameStateManager.class));
+        battleView.init(mock(IGameViewManager.class));
         GameData gameData = new GameData();
         gameData.setDisplayHeight(120);
         gameData.setDisplayWidth(100);
@@ -115,7 +115,7 @@ public class BattleViewTest {
     public void BattleView_Init_ShouldStartBattle() {
         // Arrange
         BattleView battleView = new BattleView();
-        battleView.init(mock(IGameStateManager.class));
+        battleView.init(mock(IGameViewManager.class));
         List<IMonster> playerMonsters = new ArrayList<>();
         List<IMonster> enemyMonsters = new ArrayList<>();
 
@@ -137,7 +137,7 @@ public class BattleViewTest {
     public void BattleView_TextEvent_ShouldWriteToScene() throws IOException, URISyntaxException {
         // Arrange
         BattleView battleView = new BattleView();
-        battleView.init(mock(IGameStateManager.class));
+        battleView.init(mock(IGameViewManager.class));
         GameData gameData = new GameData();
         BattleScene scene = new BattleScene();
 

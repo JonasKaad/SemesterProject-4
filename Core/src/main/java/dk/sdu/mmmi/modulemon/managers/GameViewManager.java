@@ -4,18 +4,18 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.utils.ScreenUtils;
 import dk.sdu.mmmi.modulemon.common.data.GameData;
-import dk.sdu.mmmi.modulemon.common.data.IGameStateManager;
+import dk.sdu.mmmi.modulemon.common.data.IGameViewManager;
 import dk.sdu.mmmi.modulemon.common.services.IGameSettings;
 import dk.sdu.mmmi.modulemon.common.services.IGameViewService;
 import dk.sdu.mmmi.modulemon.gamestates.MenuState;
 
-public class GameStateManager implements IGameStateManager {
+public class GameViewManager implements IGameViewManager {
 	private IGameViewService currentGameState;
 	private IGameSettings settings;
 	private SpriteBatch spriteBatch;
 	private Image lastScreenBeforeChange;
 
-	public GameStateManager() {
+	public GameViewManager() {
 		setDefaultState();
 		spriteBatch = new SpriteBatch();
 	}
