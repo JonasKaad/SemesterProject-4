@@ -121,10 +121,8 @@ public class MapView implements IGameViewService, IMapView {
         shapeRenderer = new ShapeRenderer();
         gdxThreadTasks.add(() -> textUtils = TextUtils.getInstance());
 
-
         // Battle
         this.gameViewManager = gameViewManager;
-
     }
 
     private void initializeCameraDrawing(GameData gameData) {
@@ -348,6 +346,7 @@ public class MapView implements IGameViewService, IMapView {
             mapEvents.peek().handleInput(gameData);
         }
 
+        gameData.setPaused(isPaused);
         if (isPaused) {
             if (gameData.getKeys().isPressed(GameKeys.DOWN)) {
                 if (showTeamOptions && !showSummary) {
@@ -430,7 +429,8 @@ public class MapView implements IGameViewService, IMapView {
                     pauseMenu.setFillColor(Color.WHITE);
                 } else {
                     isPaused = false;
-                    gameData.setPaused(isPaused);
+                    gameData.getKeys().setKey(GameKeys.ACTION, false);
+                    return;
                 }
             }
             if (gameData.getKeys().isPressed(GameKeys.ACTION)) {
@@ -490,7 +490,8 @@ public class MapView implements IGameViewService, IMapView {
                 if (!showMonsterTeam) {
                     if (pauseActions[selectedOptionIndex].equals("Resume")) {
                         isPaused = false;
-                        gameData.setPaused(isPaused);
+                        gameData.getKeys().setKey(GameKeys.ACTION, false);
+                        return;
                     }
                     if (pauseActions[selectedOptionIndex].equals("Team")) {
                         showMonsterTeam = true;
