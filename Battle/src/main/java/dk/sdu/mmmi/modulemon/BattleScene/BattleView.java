@@ -193,10 +193,10 @@ public class BattleView implements IGameViewService, IBattleView {
     @Override
     public void update(GameData gameData, IGameViewManager gameViewManager) {
         if (!_isInitialized || _battleSimulation == null || !_battleStarted) {
-            if(stuckSince <= 0){
+            if (stuckSince <= 0) {
                 stuckSince = TimeUtils.millis();
             }
-            if(TimeUtils.timeSinceMillis(stuckSince) > stuckThreshold) {
+            if (TimeUtils.timeSinceMillis(stuckSince) > stuckThreshold) {
                 gameViewManager.setDefaultState();
                 System.out.println("Aborted battleview. Was stuck. Probably waiting for monsters..");
             }
@@ -220,7 +220,7 @@ public class BattleView implements IGameViewService, IBattleView {
                 _battleScene.setTextBoxRectStyle(Rectangle.class);
             }
         } else {
-            if(_battleMusic != null)
+            if (_battleMusic != null)
                 _battleMusic.setVolume(0.3f);
             _battleScene.setPlayerBoxRectStyle(Rectangle.class);
             _battleScene.setEnemyBoxRectStyle(Rectangle.class);
@@ -285,10 +285,6 @@ public class BattleView implements IGameViewService, IBattleView {
                 }
 
                 this._battleScene.setTextToDisplay(event.getText());
-            } else if (battleEvent instanceof InfoBattleEvent) {
-                _currentBattleState = eventState;
-                addEmptyAnimation(2000, true);
-                this._battleScene.setTextToDisplay(battleEvent.getText());
             } else if (battleEvent instanceof ChangeMonsterBattleEvent) {
                 ChangeMonsterBattleEvent event = (ChangeMonsterBattleEvent) battleEvent;
                 boolean causedByFaintingMonster = event instanceof MonsterFaintChangeBattleEvent;
@@ -357,10 +353,12 @@ public class BattleView implements IGameViewService, IBattleView {
                     e.start();
                     blockingAnimations.add(e);
                 }
+            } else {
+                //Unknown event (Or TextEvent)
+                _currentBattleState = eventState;
+                addEmptyAnimation(2000, true);
+                this._battleScene.setTextToDisplay(battleEvent.getText());
             }
-        } else {
-            //There is not an active battle-event. Get the latest one
-            // _currentBattleState = _battleSimulation.getState();
         }
     }
 
@@ -368,7 +366,7 @@ public class BattleView implements IGameViewService, IBattleView {
     public void draw(GameData gameData) {
         if (_battleSimulation == null || !_battleStarted) {
             spriteBatch.begin();
-            TextUtils.getInstance().drawBigRoboto(spriteBatch, "Waiting for battle participants or monsters..\nIf none found after "+this.stuckThreshold+" ms, will abort.", Color.WHITE, 100, 200);
+            TextUtils.getInstance().drawBigRoboto(spriteBatch, "Waiting for battle participants or monsters..\nIf none found after " + this.stuckThreshold + " ms, will abort.", Color.WHITE, 100, 200);
             spriteBatch.end();
             return;
         }
@@ -405,7 +403,7 @@ public class BattleView implements IGameViewService, IBattleView {
 
     @Override
     public void handleInput(GameData gameData, IGameViewManager gameViewManager) {
-        if (!blockingAnimations.isEmpty() || !_isInitialized || (_battleSimulation != null && _battleSimulation.getState() != null  && !_battleSimulation.getState().isPlayersTurn())) {
+        if (!blockingAnimations.isEmpty() || !_isInitialized || (_battleSimulation != null && _battleSimulation.getState() != null && !_battleSimulation.getState().isPlayersTurn())) {
             //If any blocking animations, don't allow any input.
             _battleScene.setActionBoxAlpha(0.5f);
             return;
@@ -538,7 +536,7 @@ public class BattleView implements IGameViewService, IBattleView {
 
     @Override
     public void dispose() {
-        if(_battleMusic != null) {
+        if (_battleMusic != null) {
             _battleMusic.stop();
             _battleMusic.dispose();
             _battleMusic = null; //Unload Battle Music
@@ -581,7 +579,7 @@ public class BattleView implements IGameViewService, IBattleView {
         this.monsterRegistry = null;
     }
 
-    public void mockBattleStarted(){
+    public void mockBattleStarted() {
         this._battleStarted = true;
     }
 
