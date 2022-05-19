@@ -73,12 +73,12 @@ public class VendingMachineEvent implements IMapEvent {
         // Drawing text
         spriteBatch.setProjectionMatrix(gameData.getCamera().combined);
         spriteBatch.begin();
-        if(hasChosenMonster){
+        if(hasChosenMonster) {
             textUtils.drawNormalRoboto(
                     spriteBatch,
                     "You have already chosen a MoN",
                     Color.BLACK,
-                    chooseMonMenu.getX() + chooseMonMenu.getWidth()/6,
+                    chooseMonMenu.getX() + chooseMonMenu.getWidth() / 6,
                     chooseMonMenu.getY() + chooseMonMenu.getHeight() - 100
             );
             textUtils.drawSmallRoboto(spriteBatch,
@@ -94,6 +94,15 @@ public class VendingMachineEvent implements IMapEvent {
                     chooseMonMenu.getX() + 40, chooseMonMenu.getY() + 45,
                     chooseMonMenu.getX() + 25, chooseMonMenu.getY() + 55);
             shapeRenderer.end();
+        }else if(monsters.isEmpty()){
+            textUtils.drawNormalRoboto(
+                    spriteBatch,
+                    "This machine contains no monsters.",
+                    Color.BLACK,
+                    chooseMonMenu.getX() + chooseMonMenu.getWidth() / 6.5f,
+                    chooseMonMenu.getY() + chooseMonMenu.getHeight() - 100
+            );
+            spriteBatch.end();
         } else {
             textUtils.drawBigRoboto(spriteBatch,
                     "Choose Your MoN",
@@ -158,6 +167,11 @@ public class VendingMachineEvent implements IMapEvent {
                 monIndex--;
             }
         } else if (gameData.getKeys().isDown(GameKeys.ACTION)){
+            if(monsters.isEmpty()){
+                eventDone = true;
+                return;
+            }
+
             VendingMachineVisitedPart visitedPart = entity.getPart(VendingMachineVisitedPart.class);
             if(visitedPart == null) {
                 visitedPart = new VendingMachineVisitedPart();
@@ -165,6 +179,7 @@ public class VendingMachineEvent implements IMapEvent {
             }
             if(visitedPart.getUuids().contains(this.machineUuid))
                 return;
+
             MonsterTeamPart mtp = entity.getPart(MonsterTeamPart.class);
             mtp.getMonsterTeam().add(monsters.get(monIndex));
             visitedPart.addUuid(this.machineUuid);

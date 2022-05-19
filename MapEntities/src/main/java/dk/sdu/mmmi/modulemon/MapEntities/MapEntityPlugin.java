@@ -25,31 +25,43 @@ public class MapEntityPlugin implements IGamePluginService {
     @Override
     public void start(GameData gameData, World world) {
         entities = new ArrayList<>();
+        addVendingMachines(gameData, world);
+    }
+
+    private void addVendingMachines(GameData gameData, World world) {
         ArrayList<IMonster> monstersInVending1 = new ArrayList<>();
         // Fugl Eel
-        monstersInVending1.add(monsterRegistry.getMonster(2 % monsterRegistry.getMonsterAmount()));
-        monstersInVending1.add(monsterRegistry.getMonster(1 % monsterRegistry.getMonsterAmount()));
+        if (monsterRegistry != null) {
+            monstersInVending1.add(monsterRegistry.getMonster(2 % monsterRegistry.getMonsterAmount()));
+            monstersInVending1.add(monsterRegistry.getMonster(1 % monsterRegistry.getMonsterAmount()));
+        }
         Entity vendingMachine1 = createVendingMachine(gameData, 17, 39, monstersInVending1);
         Entity healingMachine1 = createHealingMachine(gameData, 17, 53);
 
         // Dog Cat
         ArrayList<IMonster> monstersInVending2 = new ArrayList<>();
-        monstersInVending2.add(monsterRegistry.getMonster(5 % monsterRegistry.getMonsterAmount()));
-        monstersInVending2.add(monsterRegistry.getMonster(4 % monsterRegistry.getMonsterAmount()));
+        if (monsterRegistry != null) {
+            monstersInVending2.add(monsterRegistry.getMonster(5 % monsterRegistry.getMonsterAmount()));
+            monstersInVending2.add(monsterRegistry.getMonster(4 % monsterRegistry.getMonsterAmount()));
+        }
         Entity vendingMachine2 = createVendingMachine(gameData, 35, 42, monstersInVending2);
         Entity healingMachine2 = createHealingMachine(gameData, 35, 50);
 
         // Alpaca Eel Cat
         ArrayList<IMonster> monstersInVending3 = new ArrayList<>();
-        monstersInVending3.add(monsterRegistry.getMonster(0 % monsterRegistry.getMonsterAmount()));
-        monstersInVending3.add(monsterRegistry.getMonster(1 % monsterRegistry.getMonsterAmount()));
-        monstersInVending3.add(monsterRegistry.getMonster(4 % monsterRegistry.getMonsterAmount()));
+        if (monsterRegistry != null) {
+            monstersInVending3.add(monsterRegistry.getMonster(0 % monsterRegistry.getMonsterAmount()));
+            monstersInVending3.add(monsterRegistry.getMonster(1 % monsterRegistry.getMonsterAmount()));
+            monstersInVending3.add(monsterRegistry.getMonster(4 % monsterRegistry.getMonsterAmount()));
+        }
         Entity vendingMachine3 = createVendingMachine(gameData, 50, 21, monstersInVending3);
         Entity healingMachine3 = createHealingMachine(gameData, 60, 21);
 
         // Mole Secret SHH! id: 3
         ArrayList<IMonster> monstersInSecretVending = new ArrayList<>();
-        monstersInSecretVending.add(monsterRegistry.getMonster(3 % monsterRegistry.getMonsterAmount()));
+        if (monsterRegistry != null) {
+            monstersInSecretVending.add(monsterRegistry.getMonster(3 % monsterRegistry.getMonsterAmount()));
+        }
         Entity secretVendingMachine = createVendingMachine(gameData, 37, 21, monstersInSecretVending);
         Entity healingMachine4 = createHealingMachine(gameData, 22, 15);
 
@@ -76,21 +88,20 @@ public class MapEntityPlugin implements IGamePluginService {
         int yOffsetCorrection = 20;
         int tilemapXPos = x;
         int tilemapYPos = y;
-        float actualX = (tilemapXPos)* TILE_SIZE + xOffsetCorrection;
-        float actualY =  (TILE_SIZE*(TILE_SIZE-1) - (tilemapYPos) * TILE_SIZE ) + yOffsetCorrection;
+        float actualX = (tilemapXPos) * TILE_SIZE + xOffsetCorrection;
+        float actualY = (TILE_SIZE * (TILE_SIZE - 1) - (tilemapYPos) * TILE_SIZE) + yOffsetCorrection;
 
         Entity vendingMachine = new VendingMachine();
         PositionPart positionPart = new PositionPart(actualX, actualY);
         Texture texture = AssetLoader.getInstance().getTextureAsset("/Textures/vendingmachine.png", getClass());
         SpritePart spritePart = new SpritePart(texture, texture, texture, texture);
         spritePart.setCurrentSprite(texture);
-        UUID machineUuid =  UUID.randomUUID();
+        UUID machineUuid = UUID.randomUUID();
         InteracteePart interacteePart = new InteracteePart((e) -> new VendingMachineEvent(e, monsters, machineUuid));
 
         vendingMachine.add(positionPart);
         vendingMachine.add(spritePart);
         vendingMachine.add(interacteePart);
-
 
         return vendingMachine;
     }
@@ -101,8 +112,8 @@ public class MapEntityPlugin implements IGamePluginService {
         int tilemapXPos = x;
         int tilemapYPos = y;
 
-        float actualX = (tilemapXPos)* TILE_SIZE + xOffsetCorrection;
-        float actualY =  (TILE_SIZE*(TILE_SIZE-1) - (tilemapYPos) * TILE_SIZE ) + yOffsetCorrection;
+        float actualX = (tilemapXPos) * TILE_SIZE + xOffsetCorrection;
+        float actualY = (TILE_SIZE * (TILE_SIZE - 1) - (tilemapYPos) * TILE_SIZE) + yOffsetCorrection;
 
         Entity healingMachine = new HealingMachine();
         PositionPart positionPart = new PositionPart(actualX, actualY);
@@ -121,9 +132,10 @@ public class MapEntityPlugin implements IGamePluginService {
     public void stop(GameData gameData, World world) {
         // Remove entities
         entities.forEach(world::removeEntity);
+        entities.clear();
     }
 
-    public void setMonsterRegistryService (IMonsterRegistry registry){
+    public void setMonsterRegistryService(IMonsterRegistry registry) {
         this.monsterRegistry = registry;
     }
 

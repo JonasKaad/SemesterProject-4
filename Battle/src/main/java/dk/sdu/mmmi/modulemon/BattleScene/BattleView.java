@@ -1,10 +1,12 @@
 package dk.sdu.mmmi.modulemon.BattleScene;
 
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.audio.Music;
 import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.utils.GdxRuntimeException;
+import com.badlogic.gdx.utils.TimeUtils;
 import dk.sdu.mmmi.modulemon.Battle.BattleParticipant;
 import dk.sdu.mmmi.modulemon.BattleScene.animations.*;
 import dk.sdu.mmmi.modulemon.BattleScene.scenes.BattleScene;
@@ -38,6 +40,8 @@ import java.util.Queue;
 public class BattleView implements IGameViewService, IBattleView {
 
     private boolean updateHasRunOnce;
+    private long stuckSince = 0; // Used to check if stuck trying to load monsters..
+    private final long stuckThreshold = 5000; // How many millis we can be stuck for.
     private boolean _isInitialized;
     private IBattleCallback _battleCallback;
     private IBattleSimulation _battleSimulation;
@@ -155,13 +159,14 @@ public class BattleView implements IGameViewService, IBattleView {
     }
 
     /**
-     * Initialize for GameState
+     * Initialize for GameView
      */
     @Override
     public void init(IGameViewManager gameViewManager) {
         spriteBatch = new SpriteBatch();
         _battleScene = new BattleScene();
 
+        stuckSince = 0;
         updateHasRunOnce = false;
         _isInitialized = true;
         this.gameViewManager = gameViewManager;
@@ -181,11 +186,21 @@ public class BattleView implements IGameViewService, IBattleView {
         this._battleScene = battleScene;
     }
 
+
     @Override
     public void update(GameData gameData, IGameViewManager gameViewManager) {
-        if (!_isInitialized) {
+        if (!_isInitialized || _battleSimulation == null || _battleMusic == null) {
+            if(stuckSince <= 0){
+                stuckSince = TimeUtils.millis();
+            }
+            if(TimeUtils.timeSinceMillis(stuckSince) > stuckThreshold) {
+                gameViewManager.setDefaultState();
+                System.out.println("Aborted battleview. Was stuck. Probably waiting for monsters..");
+            }
             return;
         }
+        stuckSince = 0; // No longer stuck.
+
         if (settings != null) {
             if (_battleMusic.getVolume() != (int) settings.getSetting(SettingsRegistry.getInstance().getMusicVolumeSetting()) / 100f) {
                 _battleMusic.setVolume((int) settings.getSetting(SettingsRegistry.getInstance().getMusicVolumeSetting()) / 100f);
@@ -211,13 +226,6 @@ public class BattleView implements IGameViewService, IBattleView {
 
 
         updateHasRunOnce = true;
-
-        if (_battleSimulation == null) {
-            spriteBatch.begin();
-            TextUtils.getInstance().drawBigRoboto(spriteBatch, "Waiting for battle participants", Color.WHITE, 100, gameData.getDisplayHeight() / 2f);
-            spriteBatch.end();
-            return;
-        }
 
         //Is there any animations active?
         if (!blockingAnimations.isEmpty()) {
@@ -354,12 +362,23 @@ public class BattleView implements IGameViewService, IBattleView {
 
     @Override
     public void draw(GameData gameData) {
+        if (_battleSimulation == null || _battleMusic == null) {
+            //Checking _battleMusic == null, makes sure that startBattle() has been called.
+            if(Gdx.gl != null)
+                Gdx.gl.glClearColor(0,0,0,0); //Clear to black
+            spriteBatch.begin();
+            TextUtils.getInstance().drawBigRoboto(spriteBatch, "Waiting for battle participants or monsters..\nIf none found after "+this.stuckThreshold+" ms, will abort.", Color.WHITE, 100, 200);
+            spriteBatch.end();
+            return;
+        }
+
         if (!updateHasRunOnce) {
             // In order to not draw before the Opening Animation has moved things out of the way, we wait till update() has been called once.
             // This is because we induce a race-condition when changing game-states in the GameViewManager.
             // This usually dosn't mean a lot, but because of the way this class is written, it's important that update() is called before draw(), otherwise we would have a ghost frame in the beginning.
             return;
         }
+
         //Game data
         _battleScene.setGameHeight(gameData.getDisplayHeight());
         _battleScene.setGameWidth(gameData.getDisplayWidth());
@@ -385,7 +404,7 @@ public class BattleView implements IGameViewService, IBattleView {
 
     @Override
     public void handleInput(GameData gameData, IGameViewManager gameViewManager) {
-        if (!blockingAnimations.isEmpty() || !_isInitialized || (_battleSimulation != null && !_battleSimulation.getState().isPlayersTurn())) {
+        if (!blockingAnimations.isEmpty() || !_isInitialized || (_battleSimulation != null && _battleSimulation.getState() != null  && !_battleSimulation.getState().isPlayersTurn())) {
             //If any blocking animations, don't allow any input.
             _battleScene.setActionBoxAlpha(0.5f);
             return;
@@ -518,9 +537,12 @@ public class BattleView implements IGameViewService, IBattleView {
 
     @Override
     public void dispose() {
-        _battleMusic.stop();
-        _battleMusic.dispose();
-        _battleMusic = null; //Unload Battle Music
+        if(_battleMusic != null) {
+            _battleMusic.stop();
+            _battleMusic.dispose();
+            _battleMusic = null; //Unload Battle Music
+        }
+        this._isInitialized = false;
     }
 
     private void addEmptyAnimation(int duration, boolean autoStart) {
