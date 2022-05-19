@@ -1,4 +1,4 @@
-package dk.sdu.mmmi.modulemon.gamestates;
+package dk.sdu.mmmi.modulemon.gameviews;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.audio.Music;
@@ -26,7 +26,7 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
 
-public class MenuState implements IGameViewService {
+public class MenuView implements IGameViewService {
 
     /**
      * Creates the necessary variables used for custom fonts.
@@ -87,13 +87,13 @@ public class MenuState implements IGameViewService {
     private IGameSettings settings;
     SettingsRegistry settingsRegistry = SettingsRegistry.getInstance();
 
-    public MenuState(IGameSettings settings) {
+    public MenuView(IGameSettings settings) {
         this.settings = settings;
     }
 
     @Override
     public void init(IGameViewManager gameViewManager) {
-        menuMusic = AssetLoader.getInstance().getMusicAsset("/music/menu.ogg", MenuState.class);
+        menuMusic = AssetLoader.getInstance().getMusicAsset("/music/menu.ogg", MenuView.class);
         // Instantiates the variables
         spriteBatch = new SpriteBatch();
         glyphLayout = new GlyphLayout();
@@ -142,8 +142,8 @@ public class MenuState implements IGameViewService {
 
     @Override
     public void update(GameData gameData, IGameViewManager gameViewManager) {
-        if (currentMenuState == MenuStates.SELECTING_GAMESTATE) {
-            title = "Select GaméstatE";
+        if (currentMenuState == MenuStates.SELECTING_GAMEVIEW) {
+            title = "Select GamévieW";
             List<IGameViewService> gameViews = Game.getGameViewServiceList();
             menuOptions = new String[gameViews.size() + 1];
 
@@ -283,7 +283,7 @@ public class MenuState implements IGameViewService {
      * Handler for when an option is selected.
      * Based on what the currentOption is, it will execute the appertaining code.
      */
-    private void selectOption(IGameViewManager gsm) {
+    private void selectOption(IGameViewManager gvm) {
         if (menuOptions[currentOption].equalsIgnoreCase("GO BACK")) {
             currentMenuState = MenuStates.DEFAULT;
             currentOption = 0;
@@ -293,21 +293,21 @@ public class MenuState implements IGameViewService {
         }
 
 
-        if (currentMenuState == MenuStates.SELECTING_GAMESTATE) {
+        if (currentMenuState == MenuStates.SELECTING_GAMEVIEW) {
             List<IGameViewService> views = Game.getGameViewServiceList();
             if (currentOption > views.size()) {
                 System.out.println("ERROR: Tried to set invalid view");
                 currentOption = 0;
             }
             IGameViewService selectedView = views.get(currentOption);
-            gsm.setState(selectedView);
+            gvm.setState(selectedView);
             if (selectedView instanceof IBattleView) {
                 chooseSound.play(getSoundVolumeAsFloat());
                 ((IBattleView) selectedView).startBattle(null, null, null);
             }
         } else {
             if (Objects.equals(menuOptions[currentOption], "Play")) {
-                currentMenuState = MenuStates.SELECTING_GAMESTATE;
+                currentMenuState = MenuStates.SELECTING_GAMEVIEW;
                 currentOption = 0;
                 chooseSound.play(getSoundVolumeAsFloat());
             }
@@ -552,7 +552,7 @@ public class MenuState implements IGameViewService {
 
     private enum MenuStates {
         DEFAULT,
-        SELECTING_GAMESTATE,
+        SELECTING_GAMEVIEW,
         SETTINGS
     }
 }
