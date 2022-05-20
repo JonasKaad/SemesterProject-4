@@ -94,8 +94,7 @@ public class BattleAI implements IBattleAI {
         maxDepthReached = 0;
 
         while (!outOfTime()) {
-            if(searchDepth >= 10)
-                break;
+
             IMonsterMove newBestMove = bestMove;
             IMonster newBestSwitch = bestSwitch;
             float newBestMoveUtil = bestMoveUtil;
