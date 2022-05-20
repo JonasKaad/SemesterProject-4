@@ -26,9 +26,6 @@ public class InteractProcessing implements IPostEntityProcessingService {
 
     @Override
     public void process(GameData gameData, World world) {
-        if(gameData.isPaused()){
-            return;
-        }
         boolean wasAbleToInteract = false;
         for (Entity entity : world.getEntities()) {
             InteractPart interactPart = entity.getPart(InteractPart.class);

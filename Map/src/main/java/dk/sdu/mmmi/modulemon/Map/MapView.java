@@ -164,14 +164,16 @@ public class MapView implements IGameViewService, IMapView {
                 return; // Dont update anything else.
             }
         }
+        if(!gameData.isPaused()){
+            for (IEntityProcessingService entityProcessorService : entityProcessorList) {
+                entityProcessorService.process(gameData, world);
+            }
 
-        for (IEntityProcessingService entityProcessorService : entityProcessorList) {
-            entityProcessorService.process(gameData, world);
+            for (IPostEntityProcessingService postProcessingService : postProcessingList) {
+                postProcessingService.process(gameData, world);
+            }
         }
 
-        for (IPostEntityProcessingService postProcessingService : postProcessingList) {
-            postProcessingService.process(gameData, world);
-        }
         if (settings != null) {
             if (mapMusic.getVolume() != (int) settings.getSetting(SettingsRegistry.getInstance().getMusicVolumeSetting()) / 100f) {
                 mapMusic.setVolume((int) settings.getSetting(SettingsRegistry.getInstance().getMusicVolumeSetting()) / 100f);

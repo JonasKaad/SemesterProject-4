@@ -20,7 +20,7 @@ public class CollisionProcessing implements IPostEntityProcessingService {
 
     @Override
     public void process(GameData gameData, World world) {
-        if(mapView == null || gameData.isPaused()){
+        if(mapView == null){
             return;
         }
         for (Entity entity : world.getEntities()) {
