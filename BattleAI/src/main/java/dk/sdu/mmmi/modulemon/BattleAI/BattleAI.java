@@ -74,7 +74,7 @@ public class BattleAI implements IBattleAI {
     }
 
     @Override
-    public void doAction(IBattleSimulation b) {
+    public void doAction() {
 
         System.out.println("alpha-beta pruning?: " + getUseAlphaBetaPruning());
 
@@ -109,7 +109,7 @@ public class BattleAI implements IBattleAI {
                         ? minDecision(state, 1, searchDepth, -Float.MAX_VALUE, Float.MAX_VALUE)
                         : minmaxSearch(state, 1, searchDepth);
 
-                if (util > bestMoveUtil) {
+                if (util > newBestMoveUtil) {
                     newBestMove = move;
                     newBestMoveUtil = util;
                 }
@@ -124,7 +124,7 @@ public class BattleAI implements IBattleAI {
                             ? minDecision(state, 1, searchDepth, -Float.MAX_VALUE, Float.MAX_VALUE)
                             : minmaxSearch(state, 1, searchDepth);
 
-                    if (util > bestSwitchUtil) {
+                    if (util > newBestSwitchUtil) {
                         newBestSwitch = monster;
                         newBestSwitchUtil = util;
                     }
@@ -184,7 +184,7 @@ public class BattleAI implements IBattleAI {
         if (currentDepth>maxDepthReached) maxDepthReached=currentDepth;
 
         if (isTerminal(battleState) || currentDepth>=maxDepth || outOfTime()) {
-            return utility(battleState)/currentDepth;
+            return utility(battleState);
         }
 
         // Save the highest and lowest value encountered until now
@@ -208,7 +208,7 @@ public class BattleAI implements IBattleAI {
         if (currentDepth>maxDepthReached) maxDepthReached=currentDepth;
 
         if (isTerminal(battleState) || currentDepth>=maxDepth || outOfTime()) {
-            return utility(battleState)/currentDepth;
+            return utility(battleState);
         }
 
         // Save the highest and lowest value encountered until now

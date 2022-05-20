@@ -53,8 +53,8 @@ public class BattleSimulation implements IBattleSimulation {
 
         this.battleState = new BattleState(player, enemy);
         this.battleState.setActiveParticipant(firstToTakeTurn);
-
-        //this.AI = AIFactory.getBattleAI(this, enemy);
+        if(AIFactory != null)
+            this.AI = AIFactory.getBattleAI(this, enemy);
 
         if (!firstToTakeTurn.isPlayerControlled()) {
             nextEvent = new InfoBattleEvent("The opponent starts the battle", battleState.clone());
@@ -62,7 +62,7 @@ public class BattleSimulation implements IBattleSimulation {
                 battleState.setActiveParticipant(firstToTakeTurn);
                 if (getAI()!=null) {
                     AIExecutor.execute(() -> {
-                        getAI().doAction(this);
+                        getAI().doAction();
                     });
                 } else {
                     nextEvent = new InfoBattleEvent("Waiting for an AI module", battleState.clone());
@@ -82,7 +82,7 @@ public class BattleSimulation implements IBattleSimulation {
             if (getAI()!=null) {
                 battleState.setActiveParticipant(battleState.getEnemy());
                 AIExecutor.execute(() -> {
-                    getAI().doAction(this);
+                    getAI().doAction();
                 });
             } else {
                 nextEvent = new InfoBattleEvent("Waiting for an AI module", battleState.clone());
@@ -165,7 +165,7 @@ public class BattleSimulation implements IBattleSimulation {
     }
 
     @Override
-    public void switchMonster(IBattleParticipant battleParticipant, IMonster monster) {
+    public synchronized void switchMonster(IBattleParticipant battleParticipant, IMonster monster) {
         if (battleState.getActiveParticipant()!=battleParticipant) {
             throw new IllegalArgumentException("It is not that battle participants turn!");
         }
@@ -181,7 +181,7 @@ public class BattleSimulation implements IBattleSimulation {
     }
 
     @Override
-    public void runAway(IBattleParticipant battleParticipant) {
+    public synchronized void runAway(IBattleParticipant battleParticipant) {
         if (battleParticipant!=battleState.getActiveParticipant()) {
             throw new IllegalArgumentException("It is not that battle participants turn!");
         }

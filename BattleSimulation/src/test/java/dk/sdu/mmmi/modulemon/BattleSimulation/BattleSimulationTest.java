@@ -84,7 +84,7 @@ public class BattleSimulationTest {
                 return new IBattleAI() {
 
                     @Override
-                    public void doAction(IBattleSimulation battleSimulation) {
+                    public void doAction() {
                         battleSimulation.doMove(participantToControl, participantToControl.getActiveMonster().getMoves().get(0));
                     }
 

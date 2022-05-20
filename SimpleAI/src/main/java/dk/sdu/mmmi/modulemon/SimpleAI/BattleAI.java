@@ -3,25 +3,21 @@ package dk.sdu.mmmi.modulemon.SimpleAI;
 import dk.sdu.mmmi.modulemon.CommonBattle.IBattleParticipant;
 import dk.sdu.mmmi.modulemon.CommonBattleSimulation.IBattleAI;
 import dk.sdu.mmmi.modulemon.CommonBattleSimulation.IBattleSimulation;
-import dk.sdu.mmmi.modulemon.CommonBattleSimulation.IBattleState;
 import dk.sdu.mmmi.modulemon.CommonMonster.IMonster;
 import dk.sdu.mmmi.modulemon.CommonMonster.IMonsterMove;
-
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
 
 public class BattleAI implements IBattleAI {
 
     private IBattleParticipant participantToControl;
+    private IBattleSimulation battleSimulation;
 
-    public BattleAI(IBattleParticipant participantToControl) {
+    public BattleAI(IBattleSimulation battleSimulation, IBattleParticipant participantToControl) {
         this.participantToControl = participantToControl;
+        this.battleSimulation = battleSimulation;
     }
 
     @Override
-    public void doAction(IBattleSimulation battleSimulation) {
+    public void doAction() {
         battleSimulation.doMove(participantToControl, participantToControl.getActiveMonster().getMoves().get(0));
     }
 

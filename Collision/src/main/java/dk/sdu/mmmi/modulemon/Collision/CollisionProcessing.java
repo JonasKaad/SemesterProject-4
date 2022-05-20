@@ -34,6 +34,7 @@ public class CollisionProcessing implements IPostEntityProcessingService {
                     else loader.getSoundAsset("/sounds/bonk.ogg", this.getClass()).play( );
                     bonkCooldown = 0.5f;
                 }
+                return;
             }
 
             for (Entity checking : world.getEntities()) {

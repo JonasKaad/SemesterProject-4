@@ -12,6 +12,6 @@ public class BattleAIFactory implements IBattleAIFactory {
 
     @Override
     public IBattleAI getBattleAI(IBattleSimulation battleSimulation, IBattleParticipant participantToControl) {
-        return new BattleAI(participantToControl);
+        return new BattleAI(battleSimulation, participantToControl);
     }
 }
