@@ -134,7 +134,7 @@ public class Game implements ApplicationListener {
     }
 
     public void removeGameViewServiceList(IGameViewService gameViewService) {
-        if (gvm.getCurrentGameState().equals(gameViewService)) {
+        if (gvm.getCurrentGameView().equals(gameViewService)) {
             gdxThreadTasks.add(() -> gvm.setDefaultView());
             System.out.println("Threw player out of scene because it was unloaded!");
         }

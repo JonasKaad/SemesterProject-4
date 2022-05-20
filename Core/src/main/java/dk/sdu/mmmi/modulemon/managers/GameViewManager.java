@@ -10,7 +10,7 @@ import dk.sdu.mmmi.modulemon.common.services.IGameViewService;
 import dk.sdu.mmmi.modulemon.gameviews.MenuView;
 
 public class GameViewManager implements IGameViewManager {
-    private IGameViewService currentGameState;
+    private IGameViewService currentGameView;
     private IGameSettings settings;
     private SpriteBatch spriteBatch;
     private Image lastScreenBeforeChange;
@@ -25,23 +25,23 @@ public class GameViewManager implements IGameViewManager {
         setDefaultView();
     }
 
-    public void setView(IGameViewService state, boolean disposeCurrent) {
+    public void setView(IGameViewService view, boolean disposeCurrent) {
         //Take screenshot in order to not have flicking background, when new scene has transperant backgrounds.
         lastScreenBeforeChange = new Image(ScreenUtils.getFrameBufferTexture());
 
-        if (currentGameState != null && disposeCurrent) currentGameState.dispose();
-        System.out.println(String.format("Changed state to: %s", state.getClass().getName()));
-        currentGameState = state;
-        currentGameState.init(this);
+        if (currentGameView != null && disposeCurrent) currentGameView.dispose();
+        System.out.println(String.format("Changed state to: %s", view.getClass().getName()));
+        currentGameView = view;
+        currentGameView.init(this);
     }
 
-    public void setView(IGameViewService state) {
-        setView(state, true);
+    public void setView(IGameViewService view) {
+        setView(view, true);
     }
 
     public void update(GameData gameData) {
-        currentGameState.update(gameData, this);
-        currentGameState.handleInput(gameData, this);
+        currentGameView.update(gameData, this);
+        currentGameView.handleInput(gameData, this);
     }
 
     public void draw(GameData gameData) {
@@ -50,11 +50,11 @@ public class GameViewManager implements IGameViewManager {
             lastScreenBeforeChange.draw(spriteBatch, 1f);
             spriteBatch.end();
         }
-        currentGameState.draw(gameData);
+        currentGameView.draw(gameData);
     }
 
-    public IGameViewService getCurrentGameState() {
-        return currentGameState;
+    public IGameViewService getCurrentGameView() {
+        return currentGameView;
     }
 
     @Override
