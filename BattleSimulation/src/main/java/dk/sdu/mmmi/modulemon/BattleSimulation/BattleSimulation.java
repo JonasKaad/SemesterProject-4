@@ -62,7 +62,7 @@ public class BattleSimulation implements IBattleSimulation {
                 battleState.setActiveParticipant(firstToTakeTurn);
                 if (getAI()!=null) {
                     AIExecutor.execute(() -> {
-                        getAI().doAction(this);
+                        getAI().doAction();
                     });
                 } else {
                     nextEvent = new InfoBattleEvent("Waiting for an AI module", battleState.clone());
@@ -82,7 +82,7 @@ public class BattleSimulation implements IBattleSimulation {
             if (getAI()!=null) {
                 battleState.setActiveParticipant(battleState.getEnemy());
                 AIExecutor.execute(() -> {
-                    getAI().doAction(this);
+                    getAI().doAction();
                 });
             } else {
                 nextEvent = new InfoBattleEvent("Waiting for an AI module", battleState.clone());

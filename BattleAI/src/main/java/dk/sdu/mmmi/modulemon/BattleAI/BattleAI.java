@@ -74,7 +74,7 @@ public class BattleAI implements IBattleAI {
     }
 
     @Override
-    public void doAction(IBattleSimulation b) {
+    public void doAction() {
 
         System.out.println("alpha-beta pruning?: " + getUseAlphaBetaPruning());
 
