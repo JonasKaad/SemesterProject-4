@@ -16,16 +16,16 @@ public class GameViewManager implements IGameViewManager {
     private Image lastScreenBeforeChange;
 
     public GameViewManager() {
-        setDefaultState();
+        setDefaultView();
         spriteBatch = new SpriteBatch();
     }
 
     public void setSettings(IGameSettings settings) {
         this.settings = settings;
-        setDefaultState();
+        setDefaultView();
     }
 
-    public void setState(IGameViewService state, boolean disposeCurrent) {
+    public void setView(IGameViewService state, boolean disposeCurrent) {
         //Take screenshot in order to not have flicking background, when new scene has transperant backgrounds.
         lastScreenBeforeChange = new Image(ScreenUtils.getFrameBufferTexture());
 
@@ -35,8 +35,8 @@ public class GameViewManager implements IGameViewManager {
         currentGameState.init(this);
     }
 
-    public void setState(IGameViewService state) {
-        setState(state, true);
+    public void setView(IGameViewService state) {
+        setView(state, true);
     }
 
     public void update(GameData gameData) {
@@ -58,8 +58,8 @@ public class GameViewManager implements IGameViewManager {
     }
 
     @Override
-    public void setDefaultState() {
-        setState(new MenuView(this.settings));
+    public void setDefaultView() {
+        setView(new MenuView(this.settings));
     }
 }
 

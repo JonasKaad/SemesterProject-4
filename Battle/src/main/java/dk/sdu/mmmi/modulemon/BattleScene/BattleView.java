@@ -1,6 +1,5 @@
 package dk.sdu.mmmi.modulemon.BattleScene;
 
-import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.audio.Music;
 import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.Color;
@@ -156,7 +155,7 @@ public class BattleView implements IGameViewService, IBattleView {
         if (_battleCallback != null) {
             _battleCallback.onBattleEnd(new BattleResult(victoryBattleEvent.getWinner(), _battleSimulation.getState().getPlayer(), _battleSimulation.getState().getEnemy()));
         } else {
-            gameViewManager.setDefaultState();
+            gameViewManager.setDefaultView();
         }
     }
 
@@ -197,7 +196,7 @@ public class BattleView implements IGameViewService, IBattleView {
                 stuckSince = TimeUtils.millis();
             }
             if (TimeUtils.timeSinceMillis(stuckSince) > stuckThreshold) {
-                gameViewManager.setDefaultState();
+                gameViewManager.setDefaultView();
                 System.out.println("Aborted battleview. Was stuck. Probably waiting for monsters..");
             }
             return;
