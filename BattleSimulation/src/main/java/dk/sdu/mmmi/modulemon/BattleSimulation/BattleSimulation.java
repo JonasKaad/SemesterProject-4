@@ -165,7 +165,7 @@ public class BattleSimulation implements IBattleSimulation {
     }
 
     @Override
-    public void switchMonster(IBattleParticipant battleParticipant, IMonster monster) {
+    public synchronized void switchMonster(IBattleParticipant battleParticipant, IMonster monster) {
         if (battleState.getActiveParticipant()!=battleParticipant) {
             throw new IllegalArgumentException("It is not that battle participants turn!");
         }
@@ -181,7 +181,7 @@ public class BattleSimulation implements IBattleSimulation {
     }
 
     @Override
-    public void runAway(IBattleParticipant battleParticipant) {
+    public synchronized void runAway(IBattleParticipant battleParticipant) {
         if (battleParticipant!=battleState.getActiveParticipant()) {
             throw new IllegalArgumentException("It is not that battle participants turn!");
         }
