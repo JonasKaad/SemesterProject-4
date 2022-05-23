@@ -7,7 +7,7 @@ import java.io.IOException;
 import java.net.URISyntaxException;
 
 public class MonsterRegistry implements IMonsterRegistry {
-    IMonster[] monsters;
+    private IMonster[] monsters;
 
     public MonsterRegistry() throws IOException, URISyntaxException {
         monsters = MonsterParser.parseMonsters(

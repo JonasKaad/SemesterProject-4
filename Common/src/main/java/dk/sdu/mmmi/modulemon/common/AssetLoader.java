@@ -15,7 +15,7 @@ public class AssetLoader {
     private static final Object _instanceLock = new Object();
     private static AssetLoader instance;
 
-    Map<String, Object> assetMap;
+    private Map<String, Object> assetMap;
 
 
     public Texture getTextureAsset(String pathToAsset, Class classForAssetResources) {

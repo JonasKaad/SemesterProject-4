@@ -82,10 +82,10 @@ public class MenuView implements IGameViewService {
     private List<String> settingsValueList = new ArrayList<>();
     private boolean showSettings = false;
 
-    GameData gameData = new GameData();
+    private GameData gameData = new GameData();
 
     private IGameSettings settings;
-    SettingsRegistry settingsRegistry = SettingsRegistry.getInstance();
+    private SettingsRegistry settingsRegistry = SettingsRegistry.getInstance();
 
     public MenuView(IGameSettings settings) {
         this.settings = settings;
@@ -300,7 +300,7 @@ public class MenuView implements IGameViewService {
                 currentOption = 0;
             }
             IGameViewService selectedView = views.get(currentOption);
-            gvm.setState(selectedView);
+            gvm.setView(selectedView);
             if (selectedView instanceof IBattleView) {
                 chooseSound.play(getSoundVolumeAsFloat());
                 ((IBattleView) selectedView).startBattle(null, null, null);
