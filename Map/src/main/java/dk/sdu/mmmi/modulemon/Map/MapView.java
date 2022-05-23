@@ -508,7 +508,7 @@ public class MapView implements IGameViewService, IMapView {
                         gameData.setPaused(isPaused);
                         if (cam != null)
                             cam.position.set(gameData.getDisplayWidth() / 2, gameData.getDisplayHeight() / 2, 0);
-                        gameViewManager.setDefaultState();
+                        gameViewManager.setDefaultView();
                     }
                 }
             }
@@ -648,11 +648,11 @@ public class MapView implements IGameViewService, IMapView {
         List<IMonster> playerMonsters = playerMonsterTeamPart.getMonsterTeam();
         List<IMonster> enemyMonsters = enemyMonsterTeamPart.getMonsterTeam();
 
-        gameViewManager.setState((IGameViewService) battleView, false); // Do not dispose the map
+        gameViewManager.setView((IGameViewService) battleView, false); // Do not dispose the map
         cam.position.set(cam.viewportWidth / 2, cam.viewportHeight / 2, 0);
         mapMusic.stop();
         battleView.startBattle(playerMonsters, enemyMonsters, result -> {
-            gameViewManager.setState(MapView.this);
+            gameViewManager.setView(MapView.this);
             mapMusic.play();
             boolean playerWon = result.getWinner() == result.getPlayer();
             String winnerName = playerWon ? "Player" : "Enemy";

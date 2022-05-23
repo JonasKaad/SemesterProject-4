@@ -300,7 +300,7 @@ public class MenuView implements IGameViewService {
                 currentOption = 0;
             }
             IGameViewService selectedView = views.get(currentOption);
-            gvm.setState(selectedView);
+            gvm.setView(selectedView);
             if (selectedView instanceof IBattleView) {
                 chooseSound.play(getSoundVolumeAsFloat());
                 ((IBattleView) selectedView).startBattle(null, null, null);
