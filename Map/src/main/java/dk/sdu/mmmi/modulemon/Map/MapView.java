@@ -91,7 +91,7 @@ public class MapView implements IGameViewService, IMapView {
     private IGameViewManager gameViewManager;
     private IBattleView battleView;
     private Entity player;
-    Class<? extends Rectangle> rectToUse = Rectangle.class;
+    private Class<? extends Rectangle> rectToUse = Rectangle.class;
     private IGameSettings settings;
 
     @Override

@@ -10,12 +10,12 @@ public class SettingsRegistry {
     private static SettingsRegistry instance;
     private Map<UUID, String> settingsMap;
 
-    UUID music_volume = UUID.randomUUID();
-    UUID sound_volume = UUID.randomUUID();
-    UUID ai_alphaBeta = UUID.randomUUID();
-    UUID ai_processing_time = UUID.randomUUID();
-    UUID rectangle_style = UUID.randomUUID();
-    UUID battle_theme = UUID.randomUUID();
+    private UUID music_volume = UUID.randomUUID();
+    private UUID sound_volume = UUID.randomUUID();
+    private UUID ai_alphaBeta = UUID.randomUUID();
+    private UUID ai_processing_time = UUID.randomUUID();
+    private UUID rectangle_style = UUID.randomUUID();
+    private UUID battle_theme = UUID.randomUUID();
     private SettingsRegistry(){
         settingsMap = new HashMap<>();
         populateSettings();

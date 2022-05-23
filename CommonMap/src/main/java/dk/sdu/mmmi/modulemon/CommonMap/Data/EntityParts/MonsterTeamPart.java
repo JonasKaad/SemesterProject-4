@@ -9,7 +9,7 @@ import java.util.List;
 
 public class MonsterTeamPart implements EntityPart {
 
-    List<IMonster> monsterTeam;
+    private List<IMonster> monsterTeam;
 
 
     public MonsterTeamPart(List<IMonster> monsterTeam) {

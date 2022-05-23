@@ -9,7 +9,7 @@ import dk.sdu.mmmi.modulemon.common.services.IGameSettings;
 
 public class BattleAIFactory implements IBattleAIFactory {
 
-    IGameSettings settings = null;
+    private IGameSettings settings = null;
 
     public BattleAIFactory() {
 

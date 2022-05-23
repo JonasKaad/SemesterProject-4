@@ -82,10 +82,10 @@ public class MenuView implements IGameViewService {
     private List<String> settingsValueList = new ArrayList<>();
     private boolean showSettings = false;
 
-    GameData gameData = new GameData();
+    private GameData gameData = new GameData();
 
     private IGameSettings settings;
-    SettingsRegistry settingsRegistry = SettingsRegistry.getInstance();
+    private SettingsRegistry settingsRegistry = SettingsRegistry.getInstance();
 
     public MenuView(IGameSettings settings) {
         this.settings = settings;
