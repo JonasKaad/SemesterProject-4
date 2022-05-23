@@ -9,18 +9,18 @@ import java.util.Locale;
 import java.util.UUID;
 
 public class Monster implements IMonster {
-    String name;
-    MonsterType type;
-    int maxHitPoints;
-    int hitPoints;
-    int defence;
-    int attack;
-    int speed;
-    String frontSprite;
-    String backSprite;
-    List<IMonsterMove> moves;
-    int ID;
-    UUID uuid;
+    private String name;
+    private MonsterType type;
+    private int maxHitPoints;
+    private int hitPoints;
+    private int defence;
+    private int attack;
+    private int speed;
+    private String frontSprite;
+    private String backSprite;
+    private List<IMonsterMove> moves;
+    private int ID;
+    private UUID uuid;
 
     public Monster(String name, MonsterType type, int hitPoints, int maxHitPoints, int defence, int attack, int speed,  List<IMonsterMove> moves, String frontSprite, String backSprite, int ID, UUID uuid) {
         this.name = name;

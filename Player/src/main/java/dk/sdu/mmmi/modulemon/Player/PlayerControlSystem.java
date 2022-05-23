@@ -13,7 +13,7 @@ import static dk.sdu.mmmi.modulemon.common.data.GameKeys.*;
 
 public class PlayerControlSystem implements IEntityProcessingService {
 
-    String current = "down";
+    private String current = "down";
 
     @Override
     public void process(GameData gameData, World world) {
