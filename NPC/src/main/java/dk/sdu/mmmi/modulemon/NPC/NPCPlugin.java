@@ -21,9 +21,9 @@ public class NPCPlugin implements IGamePluginService{
     
     List<Entity> npcs;
     IMonsterRegistry monsterRegistry;
-    int[] team0 = new int[]{0, 2};
-    int[] team1 = new int[]{3, 4, 5};
-    int[] team2 = new int[]{3, 2, 4, 5, 1};
+    int[] team0 = new int[]{5};
+    int[] team1 = new int[]{0, 3};
+    int[] team2 = new int[]{3, 2, 4, 1};
 
     @Override
     public void start(GameData gameData, World world) {
