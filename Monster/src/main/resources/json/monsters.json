@@ -114,5 +114,22 @@
     ],
     "front": "/images/god_front.png",
     "back": "/images/god_back.png"
+  },
+  {
+    "id" : 7,
+    "name" : "Seagull",
+    "type" : "AIR",
+    "hp" : 74,
+    "defence" : 100,
+    "attack" : 100,
+    "speed" : 100,
+    "moves" : [
+      "screech",
+      "slam",
+      "eggBomb",
+      "waterBlast"
+    ],
+    "front": "/images/seagull_front.png",
+    "back": "/images/seagull_back.png"
   }
 ]

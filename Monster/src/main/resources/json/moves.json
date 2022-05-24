@@ -117,5 +117,12 @@
     "damage": 999999,
     "type": "NORMAL",
     "sound": "/sounds/dieforme.ogg"
+  },
+  {
+    "id": "screech",
+    "name": "Screech",
+    "damage": 60,
+    "type": "AIR",
+    "sound": "/sounds/screech.ogg"
   }
 ]

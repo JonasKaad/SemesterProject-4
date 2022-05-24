@@ -61,6 +61,7 @@ public class MapEntityPlugin implements IGamePluginService {
         ArrayList<IMonster> monstersInSecretVending = new ArrayList<>();
         if (monsterRegistry != null) {
             monstersInSecretVending.add(monsterRegistry.getMonster(3 % monsterRegistry.getMonsterAmount()));
+            monstersInSecretVending.add(monsterRegistry.getMonster(7 % monsterRegistry.getMonsterAmount()));
         }
         Entity secretVendingMachine = createVendingMachine(gameData, 37, 21, monstersInSecretVending);
         Entity healingMachine4 = createHealingMachine(gameData, 22, 15);
